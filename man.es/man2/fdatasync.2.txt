@@ -1,0 +1,63 @@
+FDATASYNC(2)     Manual del Programador de Linux     FDATASYNC(2)
+
+
+
+NOMBRE
+       fdatasync  - sincroniza los datos en memoria de un fichero
+       con los de disco
+
+SINOPSIS
+       #include <unistd.h>
+
+       #ifdef _POSIX_SYNCHRONIZED_IO
+
+       int fdatasync(int fd);
+
+       #endif
+
+DESCRIPCIÓN
+       fdatasync vuelca todos los búferes de datos de un  fichero
+       a  disco  (antes de que regrese la llamada al sistema). Se
+       parece a fsync pero no requiere actualizar metadatos tales
+       como la fecha/hora de acceso.
+
+       Las  aplicaciones  que acceden a bases de datos o ficheros
+       de registro  a  menudo  escriben  un  fragmento  de  datos
+       pequeño  (p.  ej.  una  línea en un fichero de registro) y
+       luego llaman a fsync inmediatamente para asegurarse de que
+       los  datos  escritos  se  guarden  físicamente en el disco
+       duro.  Desafortunadamente,  fsync  siempre  iniciará   dos
+       operaciones  de  escritura:  una  para  los  datos  recién
+       escritos y otra para actualizar la  hora  de  modificación
+       guardada  en el nodo-í. Si esta hora de modificación no es
+       una parte conceptual de la  transacción,  fdatasync  puede
+       emplearse  para evitar operaciones innecesarias de escrit­
+       ura del nodo-í en disco.
+
+VALOR DEVUELTO
+       En caso de éxito, se devuelve cero. En caso de error,  -1,
+       y se guarda en errno un valor apropiado.
+
+ERRORES
+       EBADF   fd  no  es un descriptor válido de fichero abierto
+               para escritura.
+
+       EROFS, EINVAL
+               fd pertenece a un fichero especial que  no  admite
+               sincronización.
+
+       EIO     Ha ocurrido un error durante la sincronización.
+
+FALLOS
+       Actualmente (Linux 2.0.23) fdatasync equivale a fsync.
+
+CONFORME A
+       POSIX1b (anteriormente, POSIX.4)
+
+VÉASE TAMBIÉN
+       fsync(2), B.O. Gallmeister, POSIX.4, O'Reilly, pp. 220-223
+       y 343.
+
+
+
+Linux 2.0.32            11 Diciembre 1997            FDATASYNC(2)

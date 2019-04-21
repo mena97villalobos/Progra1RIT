@@ -1,0 +1,58 @@
+PRCTL(2)         Manual del Programador de Linux         PRCTL(2)
+
+
+
+NOMBRE
+       prctl - operaciones sobre un proceso
+
+SINOPSIS
+       #include <linux/prctl.h>
+
+       int  prctl(int  option,  unsigned long arg2, unsigned long
+       arg3 , unsigned long arg4, unsigned long arg5);
+
+DESCRIPCIÓN
+       prctl es llamada con un primer argumento especificando qué
+       hacer  (con  los  valores definidos en <linux/prctl.h>), y
+       con más parámetros cuyo significado depende  del  primero.
+       Por   el  momento  la  única  opción  válida  definida  es
+       PR_SET_PDEATHSIG, y la  llamada  correspondiente  pone  la
+       señal  de  muerte  del padre del proceso actual a arg2 (un
+       valor de señal en el rango 1..maxsig, o cero para desacti­
+       var).   Ésta  es  la  señal que el proceso actual recibirá
+       cuando su padre muera. Este valor  se  desactiva  tras  un
+       fork().
+
+VALOR DEVUELTO
+       Si  no  hay error, se devuelve un cero.  En caso de error,
+       se devuelve -1, y errno toma el valor adecuado.
+
+ERRORES
+       EINVAL El  valor  de  option  no   se   reconoce,   o   es
+              PR_SET_PDEATHSIG  y  arg2 no es cero o un número de
+              señal.
+
+CONFORME A
+       Esta llamada es específica de Linux.  IRIX tiene una  lla­
+       mada al sistema ptctl (también introducida en Linux 2.1.44
+       como irix_prctl en la arquitectura MIPS), con prototipo
+
+       ptrdiff_t prctl(int option, int arg2, int arg3);
+
+       y opciones para obtener el máximo número de  procesos  por
+       usuario,  el  máximo número de procesadores que el proceso
+       llamante puede usar, conocer si un proceso específico está
+       actualmente  bloqueado,  obtener  o  activar  el tamaño de
+       stack máximo, etc., etc.
+
+DISPONIBILIDAD
+       La llamada al sistema ptctl()  fue  introducida  en  Linux
+       2.1.57.  No hay función de librería ptctl() todavía.
+
+VÉASE TAMBIÉN
+       signal(2)
+
+
+
+
+Linux 2.1.57             3 Febrero  1998                 PRCTL(2)

@@ -1,0 +1,46 @@
+PRINTF(1)                                               PRINTF(1)
+
+
+
+NAME
+       printf - formatea e imprime datos
+
+SINOPSIS
+       printf format [argumentos...]
+       printf {--help,--version}
+
+DESCRIPCIÓN
+       Esta  documentación no será mantenida y puede ser inexacta
+       o incompleta.  La documentación Texinfo es ahora la fuente
+       autorizada.
+
+       Esta  página de manual documenta la versión GNU de printf.
+       printf imprime  la  cadena  formato  ,  interpretando  las
+       directivas  `%' y los escapes `\' de la misma forma que la
+       función `printf' de C. El argumento format se rehusa  tan­
+       tas  veces  como  sea  necesario  para convertir todos los
+       argumentos dados.
+
+       printf interpreta `\0ooo' como un número octal
+        (`ooo' es de 0 a 3 dígitos) que especifica un carácter  a
+       imprimir,  y  `\xhhh' como un número hexadecimal (`hhh' es
+       de 1 a 3 dígitos) que especifican un carácter a  imprimir.
+       También  tiene  el  escape  adicional , `\c', que hace que
+       printf no origine más salidas, y una directiva  adicional,
+       `%b',  que  imprime  su  cadena  argumento con escapes `\'
+       interpretados de la forma en que están en la cadena format
+
+   OPCIONES
+       Cuando  GNU  printf  ise  llama con un único argumento, se
+       reconocen las siguientes opciones:
+
+       --help Imprime un mensaje de uso en la salida  estándar  y
+              termina correctamente.
+
+       --version
+              Imprime  información  sobre la versión en la salida
+              estándar y termina correctamente.
+
+
+
+FSF                    Utilidades Shell GNU             PRINTF(1)

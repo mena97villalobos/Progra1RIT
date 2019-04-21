@@ -1,0 +1,69 @@
+GETDENTS(2)      Manual del Programador de Linux      GETDENTS(2)
+
+
+
+NOMBRE
+       getdents - obtiene las entradas de un directorio
+
+SINOPSIS
+       #include <unistd.h>
+       #include <linux/dirent.h>
+       #include <linux/unistd.h>
+
+       _syscall3(int, getdents, uint, fd, struct dirent *, dirp, uint, count);
+
+       int getdents(unsigned int fd, struct dirent *dirp, unsigned int count);
+
+DESCRIPCIÓN
+       getdents  lee  varias  estructuras  dirent  del directorio
+       señalado por el puntero fd en el área de memoria  señalada
+       por  dirp.   El  parámetro  count es el tamaño del área de
+       memoria.
+
+       La  estructura dirent se declara de la siguente manera:
+
+              struct dirent
+              {
+                  long d_ino;               /* número de nodo-i */
+                  off_t d_off;              /* desplazamiento al próximo dirent */
+                  unsigned short d_reclen;  /* longitud de este dirent */
+                  char d_name [NAME_MAX+1]; /* Nombre del fichero (terminado en NUL) */
+              }
+
+       d_ino es un número de nodo-i.  d_off es la distancia desde
+       el  principio  del  directorio  al  comienzo  del  próximo
+       dirent.  d_reclen es el tamaño de todo el dirent.   d_name
+       es  un  nombre de fichero terminado en NUL (el carácter de
+       código 0).
+
+       Esta llamada sustituye a readdir(2).
+
+VALOR DEVUELTO
+       En caso de éxito de regresa el número de bytes leídos.  Si
+       se  llega  al final del directorio se devuelve 0.  En caso
+       de error se devuelve -1, y en la variable errno se pone un
+       valor apropiado.
+
+ERRORES
+       EBADF   Descriptor de fichero inválido fd.
+
+       EFAULT  El  argumento  apunta afuera del espacio de direc­
+               ciones del proceso llamador.
+
+       EINVAL  El búfer del resultado es demasiado pequeño.
+
+       ENOENT  El directorio no existe.
+
+       ENOTDIR El descriptor de fichero no se refiere a un direc­
+               torio.
+
+CONFORME A
+       SVr4,  SVID.  SVr4 documenta las condiciones de error adi­
+       cionales ENOLINK y EIO.
+
+VÉASE TAMBIÉN
+       readdir(2), readdir(3).
+
+
+
+Linux 1.3.6                1 Julio 1996               GETDENTS(2)

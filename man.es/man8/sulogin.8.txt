@@ -1,0 +1,63 @@
+SULOGIN(8)     Manual del Administrador de Sistemas    SULOGIN(8)
+
+
+
+NOMBRE
+       sulogin -- Conexión en modo monousuario
+
+SINOPSIS
+       sulogin [ -t timeout ] [ tty-device ]
+
+DESCRIPCIÓN
+       sulogin  es llamado por init(8) cuando el sistema comienza
+       en modo monousuario (esto se hace a través de una  entrada
+       en  inittab(5)).  Init  también  intenta  ejecutar sulogin
+       cuando se le pasa el flag -b desde el monitor de  arranque
+       (ej, LILO).
+
+       Al usuario se le muestra el siguiente mensaje:
+
+            Introduciendo la clave de root para su mantenimiento
+            (o tecleando Control-D para un comienzo normal):
+
+       sulogin conectará en el terminal actual, o para conexiones
+       opcionales se puede especificar en la  línea  de  comandos
+       (generalmente /dev/console).
+
+       Después   de   que  el  usuario  finalice  en  el  entorno
+       monousuario, o pulse control-d en el  prompt,  el  sistema
+       continuará  con  el  arranque en el nivel de ejecución por
+       defecto.
+
+VARIABLES DE ENTORNO
+       sulogin busca la variable de  entorno  SUSHELL  o  sushell
+       para  saber  que  entorno debe comenzar. Si la variable de
+       entorno no está puesta, probará a ejecutar el entorno  del
+       root desde /etc/passwd. Si falla retrocederá a /bin/sh.
+
+       Es muy útil colocar el flag -b en el inicio. Para arrancar
+       el sistema en modo monousuario, con el archivo de  sistema
+       raíz  montado como lectura/escritura, usando un entorno de
+       "grabación  falsa"  (failsafe)  que   está   estáticamente
+       enlazado (esté ejemplo es utilizado por el prompt de LILO)
+
+       boot: linux -b rw sushell=/sbin/sash
+
+ARCHIVOS
+       sulogin comprueba los siguiente archivos para encontrar la
+       clave  root.  Si están dañados o no existen, usará métodos
+       de retroceso de manera que el  entorno  no  preguntará  la
+       clave de acceso si están irreparablemente dañados.
+
+       /etc/passwd,
+       /etc/shadow (si existe)
+
+AUTOR
+       Miquel van Smoorenburg <miquels@cistron.nl>
+
+VÉASE TAMBIÉN
+       init(8), inittab(5).
+
+
+
+Linux                      15 Mayo 1996                SULOGIN(8)

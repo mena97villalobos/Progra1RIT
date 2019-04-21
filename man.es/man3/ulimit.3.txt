@@ -1,0 +1,55 @@
+ULIMIT(3)        Manual del Programador de Linux        ULIMIT(3)
+
+
+
+NOMBRE
+       ulimit - obtiene y modifica los límites del usuario
+
+SINOPSIS
+       #include <ulimit.h>
+
+       long ulimit(int cmd, long newlimit);
+
+DESCRIPCIÓN
+       Atención:  Esta  rutina  está  obsoleta.  glibc no propor­
+       cionará el fichero de cabecera. En lugar  de  ulimit  debe
+       usarse  getrlimit(2),  setrlimit(2) y sysconf(3).  Para la
+       orden del shell ulimit, vea bash(1).
+
+       La función ulimit obtendrá o modificará algún límite  para
+       el  proceso  actual.   El argumento cmd puede tener uno de
+       los siguientes valores.
+
+       UL_GETFSIZE
+              Devuelve el límite de  tamaño  de  un  fichero,  en
+              unidades de 512 bytes.
+
+       UL_SETFSIZE
+              Poner el límite de tamaño de un fichero.
+
+       3      (No  implementado  en Linux.)  Retorna la dirección
+              máxima posible del segmento de datos.
+
+       4      (Implementado pero sin una constante simbólica aso­
+              ciada.)   Devuelve el máximo número de ficheros que
+              el proceso puede abrir.
+
+
+VALOR DEVUELTO
+       Si tiene éxito, ulimit devuelve un valor no negativo.   Si
+       hay  error,  se devuelve un -1, y se modifica errno con el
+       valor correspondiente.
+
+ERRORES
+       EPERM  Un proceso no  root  ha  intentado  incrementar  un
+              límite.
+
+CONFORME A
+       SVID.
+
+VÉASE TAMBIÉN
+       bash(1), getrlimit(2), setrlimit(2), sysconf(3)
+
+
+
+Linux 2.0                 12 Junio 1998                 ULIMIT(3)

@@ -1,0 +1,157 @@
+SERVICES(5)      Manual del Programador de Linux      SERVICES(5)
+
+
+
+NOMBRE
+       services - Lista de servicios de red de Internet
+
+DESCRIPCIÓN
+       services  es  un  fichero ASCII que proporciona una corre­
+       spondencia entre nombres textuales cómodos para los servi­
+       cios  de internet y sus correspondientes números de puerto
+       y tipos de protocolo subyacentes.  Todo  programa  de  red
+       debería  mirar  este  fichero  para  obtener  el número de
+       puerto (y protocolo) para su servicio.
+
+       Las funciones getservent(3), getservbyname(3),  getservby­
+       port(3),  setservent(3),  y endservent(3) de la biblioteca
+       de C, permiten consultar este fichero desde un programa.
+
+       Los números de puerto son asignados por la IANA  (Internet
+       Assigned  Numbers  Authority: Autoridad para la Asignación
+       de Números de Internet), y su política  actual  es  la  de
+       asignar tanto los protocolos TCP y UDP cuando se asigna un
+       número de puerto. Por tanto, la mayoría  de  las  entradas
+       tendrán  dos  entradas, incluso para los servicios que son
+       exclusivos de TCP.
+
+       Los números de puerto por debajo de 1024 (los así llamados
+       "puertos  de  baja  numeración") sólo pueden ser enlazados
+       por el superusuario (ver bind(2), tcp(7), y udp(7).)  Esto
+       es así para que los clientes que se conecten a los puertos
+       de baja numeración puedan confiar en que el servicio  eje­
+       cutándose  en el puerto es la implementación estándar y no
+       un servicio  tramposo  ejecutado  por  un  usuario  de  la
+       máquina.  Los números de puerto bien conocidos especifica­
+       dos por la IANA se localizan normalmente es  este  espacio
+       exclusivo del superusuario.
+
+       La presencia de una entrada para un servicio en el fichero
+       services no significa, necesariamente, que el servicio  se
+       está   ejecutando   actualmente   en   la   máquina.   Vea
+       inetd.conf(5) para la configuración de los servicios ofre­
+       cidos  de Internet. Dese cuenta que no todos los servicios
+       de red son iniciados por inetd(8), por lo  que  no  apare­
+       cerán  en inetd.conf(5).  En particular, los servidores de
+       noticias (NNTP) y de correo (SMTP) frecuentemente se  ini­
+       cian desde los guiones de arranque del sistema.
+
+       La  localización  del  fichero services viene especificada
+       por _PATH_SERVICES en /usr/include/netdb.h.   Normalmente,
+       el valor asignado es /etc/services.
+
+       Cada línea describe un servicio, y tiene el formato:
+
+              service-name   port/protocol   [aliases ...]
+
+       donde:
+
+       service-name
+                 es  el nombre amigable por el que el servicio es
+                 conocido y buscado.  Distingue entre  mayúsculas
+                 y  minúsculas.  Normalmente, el programa cliente
+                 se especifica tras service-name.
+
+       port      es el número de puerto (en  decimal)  usado  por
+                 este servicio.
+
+       protocol  es  el  tipo de protocolo usado. Este campo debe
+                 coincidir con una  entrada  del  fichero  proto­
+                 cols(5).   Los  valores  típicos  incluyen tcp y
+                 udp.
+
+       aliases   es una lista separada, opcionalmente, por  espa­
+                 cios  o  tabuladores  de otros nombres para este
+                 servicio (pero consulte  más  abajo  la  sección
+                 ERRORES).  Nuevamente, se distingue entre mayús­
+                 culas y minúsculas.
+
+
+       Se pueden usar o bien espacios  o  bien  tabuladores  para
+       separar los campos.
+
+       Los  comentarios  comienzan  con  un '#' y terminan con un
+       final de línea. Las líneas en blanco se saltan.
+
+       service-name deben comenzar  en  la  primera  columna  del
+       fichero,  ya  que  no  se eliminan los espacios iniciales.
+       service-names puede ser cualquier secuencia de  caracteres
+       imprimibles,  excepto  espacios  y  tabuladores, aunque se
+       debe hacer una selección conservativa de  caractares  para
+       minimizar  problemas  de  interoperatibidad. Es decir, los
+       caracteres a-z, 0-9 y el guión (-) deben ser una  elección
+       sensata.
+
+       Las  líneas  que no coincidan con este formato no deberían
+       estar  presentes  en  el  fichero.  (Actualmente,  getser­
+       vent(3),  getservbyname(3) y getservbyport(3).  las saltan
+       silenciosamente. Sin embargo, no debería  fiarse  de  este
+       comportamiento.)
+
+       Como  característica  de  compatibilidad  hacia  atrás, la
+       barra inclinada (/) entre el número de puerto (port) y  el
+       nombre  del  protocolo  (protocol)  puede ser, de hecho, o
+       bien una barra inclinada o bien una coma (,). El uso de la
+       coma en instalaciones modernas se desprecia.
+
+       Este  fichero  se  podría  distribuir  a través de una red
+       usando un servicio de nombres de red como Yellow Pages/NIS
+       o BIND/Hesiod.
+
+       Un  ejemplo. El fichero services podría tener el siguiente
+       aspecto:
+
+              netstat         15/tcp
+              qotd            17/tcp          quote
+              msp             18/tcp          # message send protocol
+              msp             18/udp          # message send protocol
+              chargen         19/tcp          ttytst source
+              chargen         19/udp          ttytst source
+              ftp             21/tcp
+              # 22 - unassigned
+              telnet          23/tcp
+
+
+ERRORES
+       Hay un máximo de 35 alias, debido a la forma en  que  está
+       escrito el código de getservent(3).
+
+       Las  líneas  con  una  longitud superior a BUFSIZ (actual­
+       mente, 1024) caracteres serán ignoradas por getservent(3),
+       getservbyname(3),  y  getservbyport(3).  Sin embargo, esto
+       también provocará que la  siguiente  línea  sea  analizada
+       incorrectamente.
+
+FICHEROS
+       /etc/services
+              La lista de servicios de red de Internet.
+
+       /usr/include/netdb.h
+              Definición de _PATH_SERVICES
+
+VÉASE TAMBIÉN
+       getservent(3), getservbyname(3), getservbyport(3), setser­
+       vent(3),    endservent(3),    protocols(5),     listen(2),
+       inetd.conf(5), inetd(8).
+
+       RFC de Números Asignados, más recientemente RFC 1700, (AKA
+       STD0002)
+
+       Guide to Yellow Pages Service
+
+       Guide to BIND/Hesiod Service
+
+
+
+
+Linux                      11 Ene 1996                SERVICES(5)

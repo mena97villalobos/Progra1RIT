@@ -1,0 +1,82 @@
+GETLOGIN(3)      Manual del Programador de Linux      GETLOGIN(3)
+
+
+
+NOMBRE
+       getlogin, cuserid - obtiene nombre de usuario
+
+SINOPSIS
+       #include <unistd.h>
+
+       char * getlogin ( void );
+
+       #include <stdio.h>
+
+       char * cuserid ( char *cadena );
+
+DESCRIPCIÓN
+       getlogin  devuelve  un  puntero a una cadena de caracteres
+       que contiene el nombre del usuario que está en la terminal
+       controladora del proceso, o un puntero nulo si esta infor­
+       mación no puede determinarse. La cadena se reserva estáti­
+       camente  y puede ser sobreescrita en subsecuentes llamadas
+       a esta función o a cuserid.
+
+       cuserid devuelve un puntero a una cadena de caracteres que
+       contiene un nombre de usuario asociado con el UID efectivo
+       del proceso. Si cadena no es un puntero nulo, debe ser  un
+       vector  que pueda alojar al menos L_cuserid caracteres; la
+       cadena se coloca en este vector.  De otro modo se devuelve
+       un  puntero  a una cadena en un área estática. Esta cadena
+       se reserva estáticamente y puede ser sobreescrita en  sub­
+       secuentes llamadas a esta función o a getlogin.
+
+       La macro L_cuserid es una constante entera que indica cuán
+       grande puede necesitar ser un vector que almacene un  nom­
+       bre de usuario. Se declara en stdio.h.
+
+       Estas funciones permiten a su programa identificar positi­
+       vamente al usuario que lo está ejecutando (cuserid)  o  al
+       que  ha  entrado  en  esta  sesión (getlogin). (Que pueden
+       diferir cuando están implicados programas SUID).
+
+       Para la mayoría de los propósitos, es más útil emplear  la
+       variable  de  ambiente  LOGNAME  para  saber  quién  es el
+       usuario. Esto  es  más  flexible  precisamente  porque  el
+       usuario puede dar un valor arbitrario a LOGNAME.
+
+ERRORES
+       ENOMEM Memoria  insuficiente  para  alojar  la  estructura
+              passwd.
+
+FICHEROS
+       /etc/passwd             fichero de datos de cuentas de usuario
+       /var/run/utmp
+
+CONFORME A
+       POSIX.1.  System V tiene una función cuserid  que  usa  el
+       UID  real  en  vez  del  efectivo.  La  función cuserid se
+       incluyó en la versión de POSIX del año 1988, pero se quitó
+       en la de 1990.
+
+FALLOS
+       Desafortunadamente,  es  a meundo bastante fácil el liar a
+       getlogin().  A veces no funciona en absoluto, porque algún
+       programa estropeó el fichero utmp. Frecuentemente, sólo da
+       los primeros  8  caracteres  del  nombre  de  entrada.  El
+       usuario  que  esté  actualmente  en la tty controladora de
+       nuestro programa no tiene por qué ser el que lo hubo  eje­
+       cutado.  Evite getlogin() para propósitos relacionados con
+       la seguridad.
+
+       Nadie sabe con precisión qué es  lo  que  hace  cuserid();
+       evítelo en programas transportables; evítelo de todas for­
+       mas siempre: en su lugar emplee getpwuid()(getwuid()),  si
+       eso es lo que pretende.  NO UTILICE cuserid().
+
+VÉASE TAMBIÉN
+       geteuid(2), getuid(2)
+
+
+
+Linux 1.2.13              26 Enero 1998               GETLOGIN(3)

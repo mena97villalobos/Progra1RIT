@@ -1,0 +1,37 @@
+STRCHR(3)        Manual del Programador de Linux        STRCHR(3)
+
+
+
+NOMBRE
+       strchr,  strrchr  - localizan un carácter en una cadena de
+       ellos
+
+SINOPSIS
+       #include <string.h>
+
+       char *strchr(const char *s, int c);
+
+       char *strrchr(const char *s, int c);
+
+DESCRIPCIÓN
+       La función strchr() devuelve un puntero a la primera ocur­
+       rencia del carácter c en la cadena de caracteres s.
+
+       La función strrchr() devuelve un puntero a la última ocur­
+       rencia del carácter c en la cadena s.
+
+VALOR DEVUELTO
+       Las funciones strchr() y strrchr() devuelven un puntero al
+       elemento  de la cadena con el carácter coincidente, o NULL
+       si el carácter no se ha encontrado.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       index(3),  memchr(3),  rindex(3),  strpbrk(3),  strsep(3),
+       strspn(3), strstr(3), strtok(3)
+
+
+
+Linux                     12 Abril 1993                 STRCHR(3)

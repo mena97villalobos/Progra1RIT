@@ -1,0 +1,25 @@
+whatis(1)                                               whatis(1)
+
+
+
+NOMBRE
+       whatis - busca palabras en una base de datos propria
+
+SINOPSIS
+       whatis palabra_clave ...
+
+DESCRIPCIÓN
+       whatis busca el contenido de palabra_clave, en una base de
+       datos que contiene breves descripciones de  los  comandos,
+       mostrando todas las descripciones que contienen una plabra
+       idéntica (una plabra entera).
+
+       La base de datos de "whatis" es creada usando  el  comando
+       /usr/sbin/makewhatis.
+
+VEA TAMBIÉN
+       apropos(1), man(1).
+
+
+
+                             5/1/1991                   whatis(1)

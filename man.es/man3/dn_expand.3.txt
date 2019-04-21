@@ -1,0 +1,179 @@
+RESOLVER(3)      Manual del Programador de Linux      RESOLVER(3)
+
+
+
+NOMBRE
+       res_init,    res_query,    res_search,    res_querydomain,
+       res_mkquery,  res_send,  dn_comp,  dn_expand   -   rutinas
+       "resolver" (de resolución)
+
+SINOPSIS
+       #include <netinet/in.h>
+       #include <arpa/nameser.h>
+       #include <resolv.h>
+       extern struct state _res;
+
+       int res_init(void);
+
+       int res_query(const char *dname, int class, int type,
+              unsigned char *answer, int anslen);
+
+       int res_search(const char *dname, int class, int type,
+              unsigned char *answer, int anslen);
+
+       int res_querydomain(const char *name, const char *domain,
+              int class, int type, unsigned char *answer, int anslen);
+
+       int res_mkquery(int op, const char *dname, int class, int type,
+              char *data, int datalen, struct rrec *newrr, char *buf,
+              int buflen);
+
+       int res_send(const char *msg, int msglen, char *answer,
+              int anslen);
+
+       int dn_comp(unsigned char *exp_dn, unsigned char *comp_dn,
+              int length, unsigned char **dnptrs, unsigned char *exp_dn,
+              unsigned char **lastdnptr);
+
+       int dn_expand(unsigned char *msg, unsigned char *eomorig,
+              unsigned char *comp_dn, unsigned char *exp_dn, int length);
+
+DESCRIPCIÓN
+       Estas   funciones   hacen  peticiones  e  interpretan  las
+       respuestas de los servidores  de  nombres  de  dominio  de
+       Internet.
+
+       La  función  res_init()  lee los ficheros de configuración
+       (ver resolv+(8)) para conseguir el nombre del dominio  por
+       defecto,  orden  de búsqueda y la dirección(es) del servi­
+       dor(es) de nombres. Si  no  se  proporciona  servidor,  se
+       intenta  con  el host local. Si no se proporciona dominio,
+       se usa el asociado  al  host  local.  Este  puede  sobree­
+       scribirse con la variable de entorno LOCALDOMAIN.  Normal­
+       mente res_init() es ejecutado por la primera llamada a una
+       de las otras funciones.
+
+       La función res_query() pide al servidor de nombres el nom­
+       bre de dominio completamente cualificado name  de  type  y
+       class  especificados.   La  respuesta se deja en el buffer
+       answer de longitud anslen proporcionado por quien  realiza
+       la llamada.
+
+       La  función  res_search()  hace  una  petición y espera la
+       respuesta como res_query(),  pero  además  implementa  las
+       reglas  por  defecto  y  las  de  búsqueda controladas por
+       RES_DEFNAMES y RES_DNSRCH (ver más abajo la descripción de
+       las opciones de _res).
+
+       La  función res_querydomain() hace una petición utilizando
+       res_query() en la concatenación de name y domain.
+
+       Las siguientes son funciones de un  nivel  más  bajo  uti­
+       lizadas por res_query().
+
+       La  función res_mkquery() construye un mensaje de petición
+       en buf de longitud buflen para el nombre de dominio dname.
+       El  tipo  de  petición op normalmente es QUERY, pero puede
+       ser cualquiera de los tipos definidos en <arpa/nameser.h>.
+       newrr actualmente no se usa.
+
+       La  función  res_send()  envía una petición preformateada,
+       dada en msg de longitud msglen y devuelve la respuesta  en
+       answer   que   tiene   longitud  anslen.  Este  llamará  a
+       res_init(), si aún no ha sido llamado.
+
+       La función dn_comp() comprime el nombre de dominio  exp_dn
+       y  lo  guarda en el buffer comp_dn de longitud length.  La
+       compresión usa una matriz de  punteros  dnptrs  a  nombres
+       previamente  comprimidos  en el mensaje actual. El primero
+       de los punteros apunta al principio del mensaje y la lista
+       termina con NULL. El límite de la matriz está especificado
+       por lastdnptr.  Si dnptr es NULL, los nombres  de  dominio
+       no se comprimen. Si lastdnptr es NULL, la lista de etique­
+       tas no se actualiza.
+
+       La función dn_expand() expande el nombre de  dominio  com­
+       primido  comp_dn  a  un  nombre  de dominio completo, y es
+       puesto en el buffer exp_dn de  tamaño  length.  El  nombre
+       comprimido  está  contenido  en  una petición o mensaje de
+       respuesta, y msg apunta al principio del mensaje.
+
+       Las rutinas del "resolver" usan la configuración global  e
+       información  del  estado  contenida en la estructura _res,
+       definida en <resolv.h>.  El único campo que puede  manipu­
+       lar  normalmente  el  usuario  es _res.options. Este campo
+       puede contener un "o (OR) lógico" bit a bit de  las  sigu­
+       ientes opciones:
+
+
+       RES_INIT
+              Cierto si res_init() ha sido llamado.
+
+       RES_DEBUG
+              Imprimir mensajes de depuración.
+
+       RES_AAONLY
+              Aceptar    respuestas    autoritativas   solamente.
+              res_send()  continua  hasta   que   encuentra   una
+              respuesta autoritativa o devuelve un error. [Àún no
+              implementado].
+
+       RES_USEVC
+              Usar conexiones TCP para las peticiones, en vez  de
+              datagramas UDP.
+
+       RES_PRIMARY
+              Hacer  petición solamente al servidor de nombres de
+              dominio primario.
+
+       RES_IGNTC
+              Ignorar errores de truncado. No reintentar con TCP.
+              [Aún no implementado].
+
+       RES_RECURSE
+              Poner  a 1 el bit de recursión deseada en las peti­
+              ciones. La recursión  es  llevada  a  cabo  por  el
+              servidor  de nombres de dominio, no por res_send().
+              [Activado por defecto].
+
+       RES_DEFNAMES
+              Si está puesto a 1, res_search() añadirá el  nombre
+              de dominio por defecto a los nombres de componentes
+              simples, p.ej. aquellos  que  no  contienen  punto.
+              [Activado por defecto].
+
+       RES_STAYOPEN
+              Usado  con  RES_USEVC para mantener la conexión TCP
+              abierta entre peticiones.
+
+       RES_DNSRCH
+              Si está a 1, res_search() buscará nombres  de  host
+              en  el  dominio  actual  y en los dominios "padre".
+              Esta opción es usada por gethostbyname(3).   [Acti­
+              vado por defecto].
+
+VALOR REGRESADO
+       La  función  res_init()  devuelve  0 si hay éxito, o -1 si
+       hubo un error.
+
+       Las  funciones  res_query(),  res_search(),   res_querydo­
+       main(),  res_mkquery()  y res_send() devuelven la longitud
+       de la respuesta, o -1 si hubo un error.
+
+       Las funciones dn_comp() y dn_expand() devuelven la  longi­
+       tud del nombre comprimido, o -1 si hubo un error.
+
+FICHEROS
+       /etc/resolv.conf          fichero de configuración de resolver
+       /etc/host.conf            fichero de configuración de resolver
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       gethostbyname(3), hostname(7), named(8), resolv+(8)
+
+
+
+
+BSD                        21 May 1993                RESOLVER(3)

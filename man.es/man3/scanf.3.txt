@@ -1,0 +1,258 @@
+SCANF(3)         Manual del Programador de Linux         SCANF(3)
+
+
+
+NOMBRE
+       scanf,  fscanf, sscanf, vscanf, vsscanf, vfscanf - conver­
+       sión de la entrada con formato
+
+SINOPSIS
+       #include <stdio.h>
+       int scanf( const char *formato, ...);
+       int fscanf( FILE *flujo, const char *formato, ...);
+       int sscanf( const char *str, const char *formato, ...);
+
+       #include <stdarg.h>
+       int vscanf( const char *formato, va_list ap);
+       int vsscanf( const char *str, const char *formato, va_list ap);
+       int vfscanf( FILE *flujo, const char *formato, va_list ap);
+
+DESCRIPCIÓN
+       La familia scanf de funciones escudriña la  entrada  según
+       un  formato  como  se  describe más adelante. Este formato
+       puede contener especificadores de conversión; los resulta­
+       dos  de  tales  conversiones, si las hay, se guardan donde
+       apunten los argumentos punteros.  La función scanf lee  la
+       entrada del flujo de entrada estándar stdin, fscanf lee su
+       entrada del puntero a FILE flujo, y sscanf lee su  entrada
+       de la cadena de caracteres a la que apunte str.
+
+       La  función  vfscanf  es  análoga  a  vfprintf(3) y lee la
+       entrada del puntero a  FILE  flujo  utilizando  una  lista
+       variable  de  argumentos  de punteros (vea stdarg(3)).  La
+       función vscanf rastrea una lista variable de argumentos de
+       la entrada estándar y la función vsscanf la analiza de una
+       cadena de  caracteres;  estas  funciones  son  análogas  a
+       vprintf y vsprintf respectivamente.
+
+       Cada  argumento puntero sucesivo debe corresponder correc­
+       tamente con  cada  especificador  de  conversión  sucesivo
+       (pero  vea más adelante lo referente a `supresión'). Todas
+       las conversiones empiezan con el carácter % (signo de por­
+       centaje).  La  cadena  de caracteres formato puede también
+       contener otros caracteres.  El  espacio  en  blanco  (como
+       espacios,  tabuladores, o saltos de línea) en la cadena de
+       formato concuerda con cualquier  cantidad  de  espacio  en
+       blanco,  incluyendo ninguna, en la entrada. Cualquier otra
+       cosa concuerda solamente consigo misma. El análisis  acaba
+       cuando  un  carácter  de  la  entrada  no concuerda con un
+       carácter del formato. También  cuando  una  conversión  no
+       puede realizarse (vea más adelante).
+
+CONVERSIONES
+       Después  del  carácter % que marca el comienzo de una con­
+       versión puede haber una serie  de  caracteres  de  opción,
+       como sigue:
+
+       *      Suprime  la  asignación.  La  conversión  que sigue
+              ocurre como si nada, pero no se usa ningún puntero;
+              el   resultado  de  la  conversión  simplemente  se
+              descarta.
+
+       a      Indica que la conversión  será  s,  el  espacio  de
+              memoria  necesario para la cadena se obtendrá medi­
+              ante malloc() y el puntero a ella se asignará a  la
+              variable  puntero char, que no tiene que haber sido
+              inicializada anteriormente. Esta opción  no  existe
+              en C ANSI.
+
+       h      Indica  que  la  conversión será una de dioux o n y
+              que el puntero siguiente lo es a un short  int  (en
+              vez de a un int).
+
+       l      Indica bien que la conversión será una de dioux o n
+              y el puntero siguiente lo es a un long int (en  vez
+              de  a un int), o bien que la conversión será una de
+              efg y el puntero siguiente lo es a  un  double  (en
+              vez  de  a  un  float).  Especificar dos opciones l
+              equivale a la opción L.
+
+       L      Indica que la conversión será o bien efg y el sigu­
+              iente  puntero lo es a un long double o bien que la
+              conversión será dioux y  el  siguiente  puntero  lo
+              será  a un long long.  (Observe que long long no es
+              un tipo de C ANSI.  Un programa que utilice esto no
+              será transportable a todas las arquitecturas).
+
+       q      equivalente  a L.  Esta opción no existe en C ANSI.
+
+       Además de estas opciones, puede haber una  anchura  máxima
+       de  campo opcional, expresado como un entero en base diez,
+       entre el signo % y la conversión. Si no se da la  anchura,
+       se  supone  `infinita' (con una excepción, vea más abajo);
+       si se da, como mucho se miran los caracteres especificados
+       en  ella  cuando haya que procesar la conversión. Antes de
+       que ésta comience, la  mayoría  descartan  el  espacio  en
+       blanco; este espacio no cuenta para la anchura de campo.
+
+       Están disponibles las siguientes conversiones:
+
+       %      Concuerda  con  un '%' literal. Esto es, `%%' en el
+              formato concuerda con un solo carácter  '%'  en  la
+              entrada.  No  se  hace ninguna conversión, y no hay
+              ninguna asignación.
+
+       d      Concuerda con un entero  en  base  diez  con  signo
+              opcional; el siguiente puntero debe serlo a int.
+
+       D      Equivalente a ld; esto existe solamente por compat­
+              ibilidad con una forma antigua.  (Nota: esto ocurre
+              sólo en libc4. En libc5 y glibc %D se ignora silen­
+              ciosamente, provocando el fallo mistorioso de  pro­
+              gramas antiguos.)
+
+       i      Concuerda  con  un  entero  con  signo opcional; el
+              siguiente puntero debe serlo a int.  El  entero  se
+              lee  en base 16 si empieza por `0x' ó `0X'; en base
+              8 si empieza por `0', y en base 10 si  empieza  por
+              otro dígito. Sólo se usan caracteres que correspon­
+              dan a la base.
+
+       o      Concuerda con un entero octal sin signo;  el  sigu­
+              iente puntero debe serlo a unsigned int.
+
+       u      Concuerda  con un entero en base diez sin signo; el
+              siguiente puntero debe serlo a unsigned int.
+
+       x      Concuerda con un entero hexadecimal sin  signo;  el
+              siguiente puntero debe serlo a unsigned int.
+
+       X      Equivalente a x
+
+       f      Concuerda  con un número en coma flotante con signo
+              opcional; el siguiente puntero debe serlo a  float.
+
+       e      Equivalente a f.
+
+       g      Equivalente a f.
+
+       E      Equivalente a f
+
+       s      Concuerda con una secuencia de caracteres distintos
+              de blancos; el siguiente puntero debe serlo a char,
+              y el vector debe ser lo suficientemente grande como
+              para aceptar toda la secuencia y el  carácter  0  ó
+              NUL  final.   El  análisis  de la cadena de entrada
+              acaba en el siguiente espacio blanco  o  cuando  se
+              llega  a  la anchura de campo máxima, lo que ocurra
+              antes.
+
+       c      Concuerda con una secuencia de  anchura  caracteres
+              (1  por omisión); el siguiente puntero debe serlo a
+              char, y debe haber suficiente  espacio  para  todos
+              los  caracteres (no se añade el carácter NUL termi­
+              nador).  Se suprime el descarte de los blancos ini­
+              ciales.  Para  saltar un espacio en blanco inicial,
+              emplee un espacio explícito en el formato.
+
+       [      Concuerda con una secuencia no vacía de  caracteres
+              del  conjunto especificado de caracteres aceptados;
+              el siguiente puntero debe  serlo  a  char,  y  debe
+              haber  bastante  sitio para todos los caracteres en
+              la cadena, más un  NUL  terminal.   Se  suprime  el
+              descarte usual de los espacios en blanco iniciales.
+              La cadena se forma con caracteres de (o no  de)  un
+              conjunto  particular; el conjunto se define por los
+              caracteres entre el corchete abierto [ y un  carác­
+              ter  de  corchete de cierre ].  El conjunto excluye
+              esos caracteres si el primero después del  corchete
+              abierto  es  un acento circunflejo ^.  Para incluir
+              un corchete de cierre en el  conjunto,  póngalo  el
+              primero  tras el corchete abierto o el circunflejo;
+              en cualquiera otra posición indicará que termina el
+              conjunto.  El carácter guión - es también especial;
+              cuando se pone entre dos  otros  caracteres,  añade
+              todos  los  de enmedio al conjunto. Para incluir un
+              guión, póngalo como el último  carácter  antes  del
+              corchete  de  cierre final. Por ejemplo, `[^]0-9-]'
+              significa el  conjunto  de  `todos  los  caracteres
+              excepto el corchete de cierre, los dígitos del cero
+              al nueve, y el guión'.   La  cadena  acaba  con  la
+              aparición  de un carácter que no es (o, con un cir­
+              cunflejo, que sí es)  del  conjunto,  o  cuando  se
+              llega a la anchura opcional especificada.
+
+       p      Concuerda  con  un  valor  de tipo puntero (como se
+              imprima por `%p' en printf(3)); el  siguiente  pun­
+              tero debe serlo a void.
+
+       n      No  se  espera  concordar con nada; en su lugar, se
+              guarda el número de caracteres consumidos o  leídos
+              hasta  ahora de la entrada en donde apunte el sigu­
+              iente puntero, que debe serlo a int.   Esto  no  es
+              una  conversión,  aunque  pueda  suprimirse  con la
+              opción *.  El estándar de C dice: `La ejecución  de
+              una directriz %n no incrementa el número de asigna­
+              ciones devuelto al final de la ejecución', pero  el
+              Añadido  de  Correcciones  parece contradecir esto.
+              Probablemente  es  lo  mejor   no   hacer   ninguna
+              suposición  sobre  el efecto de las conversiones %n
+              en el valor de retorno de la función.
+
+
+
+VALOR DEVUELTO
+       Estas funciones devuelven el número  de  elementos  de  la
+       entrada asignados, que pueden ser menores que los formatos
+       suministrados para conversión, o incluso cero, en el  caso
+       de  un  fallo  de concordancia.  Cero indica que, mientras
+       había caracteres disponibles en  la  entrada,  no  ocurrió
+       ninguna asignación; normalmente esto es debido a un carác­
+       ter de entrada inválido, como un carácter alfabético  para
+       una conversión `%d'. Se devuelve el valor EOF si ha habido
+       un fallo de entrada  antes  de  ninguna  conversión,  como
+       cuando se llega al final de la entrada. Si ocurre un error
+       de lectura o se llega al final de la  entrada  después  de
+       que  se haya hecho alguna conversión al menos, se devuelve
+       el número de conversiones completadas hasta ese punto  con
+       éxito.
+
+VÉASE TAMBIÉN
+       strtol(3), strtoul(3), strtod(3), getc(3), printf(3)
+
+CONFORME A
+       Las  funciones  fscanf,  scanf,  y sscanf son conformes al
+       estándar ANSI C3.159-1989 (``C ANSI'').
+
+       La opción q es la notación de BSD 4.4 para  el  tipo  long
+       long,  mientras que ll o el empleo de L en conversiones de
+       enteros, es la notación de GNU.
+
+       La versión de Linux de estas funciones se basa en la  bib­
+       lioteca  libio de GNU.  Eche un vistazo a la documentación
+       en formato info de GNU libc (glibc-1.08) para una descrip­
+       ción más concisa.
+
+FALLOS
+       Todas  las  funciones  son  conformes completamente con el
+       estándar ANSI C3.159-1989, pero proporcionan las  opciones
+       adicionales  q y a así como un comportamiento adicional de
+       las opciones L y l.  Lo último puede ser considerado  como
+       un  fallo,  puesto  que  cambia  el  comportamiento de las
+       opciones definidas en el estándar ANSI C3.159-1989.
+
+       Algunas combinaciones de opciones definidas por C ANSI  no
+       tienen  sentido  en  C  ANSI  (p.ej., %Ld).  Aunque pueden
+       tener un comportamiento bien definido en  Linux,  esto  no
+       tiene por qué ser así en otras arquitecturas. Por lo tanto
+       es normalmente mejor usar opciones que  no  son  definidas
+       por C ANSI en absoluto, i.e., usar q en vez de L en combi­
+       nación con conversiones diouxX o ll.
+
+       El empleo de q no es el mismo que en BSD 4.4,  puesto  que
+       puede utilizarse en conversiones de coma flotante de forma
+       equivalente a L.
+
+
+
+LINUX                      7 Marzo 1998                  SCANF(3)

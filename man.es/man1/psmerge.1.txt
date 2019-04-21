@@ -1,0 +1,46 @@
+PSMERGE(1)                                             PSMERGE(1)
+
+
+
+NOMBRE
+       psmerge  -  filtro para unir varios ficheros PostScript en
+       uno solo
+
+SINOPSIS
+       psmerge [ -oout.ps ] [ file.ps ...  ]
+
+DESCRIPTION
+       Psmerge fusiona documentos PostScript en  un  único  docu­
+       mento. Solamente funciona en el caso específico en que los
+       ficheros fueron creados por la misma  aplicación,  con  la
+       misma  configuración  de  dispositivo  y  mismos  recursos
+       (fuentes, procsets, patrones, ficheros, etc) cargados.
+
+       Si se usa la opción -o la salida será enviada  al  fichero
+       determinado.  En  caso  contrario  se  enviará a la salida
+       estandard.
+
+       Psmerge fusiona múltiples ficheros concatenándolos  en  un
+       único fichero como si estuvieran en ficheros diferentes.
+
+AUTOR
+       Copyright (C) Angus J. C. Duggan 1991-1995
+
+VÉASE TAMBIÉN
+       psbook(1),  psselect(1),  pstops(1), epsffit(1), psnup(1),
+       psresize(1), psmerge(1), fixscribeps(1), getafm(1), fixdl­
+       srps(1),  fixfmps(1),  fixmacps(1),  fixpsditps(1),  fixp­
+       spps(1), fixtpps(1), fixwfwps(1), fixwpps(1),  fixwwps(1),
+       extractres(1), includeres(1)
+
+MARCAS REGISTRADAS
+       PostScript es una marca registrada de Adobe Systems Incor­
+       porated.
+
+FALLOS
+       psmerge es para un caso muy  específico,  por  lo  que  no
+       fusiona cualesquiera ficheros.
+
+
+
+                 PSUtils Release 1 Patchlevel 17       PSMERGE(1)

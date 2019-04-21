@@ -1,0 +1,22 @@
+IPCRM(8)         Manual del Programador de Linux         IPCRM(8)
+
+
+
+NOMBRE
+       ipcrm - eliminación de recursos ipc.
+
+SIPNOSIS
+       ipcrm [ shm | msg | sem ] id
+
+DESCRIPCIÓN
+       ipcrm borrará el recurso especificado por id.
+
+VÉASE TAMBIÉN
+       ipcs(8)
+
+AUTOR
+       krishna balasubramanian (balasub@cis.ohio-state.edu)
+
+
+
+Linux 0.99                9 Octubre 1993                 IPCRM(8)

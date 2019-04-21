@@ -1,0 +1,32 @@
+OBSOLETE(2)      Manual del Programador de Linux      OBSOLETE(2)
+
+
+
+NOMBRE
+       oldfstat,  oldlstat, oldstat, oldolduname, olduname - lla­
+       madas al sistema obsoletas
+
+SINOPSIS
+       Llamadas al sistema en desuso.
+
+DESCRIPCIÓN
+       El núcleo Linux 2.0 implementa  estas  llamadas  para  dar
+       soporte  a  ejecutables antiguos. Estas llamadas devuelven
+       estructuras  que  han  crecido  desde  su  primera  imple­
+       mentación,  pero  los ejecutables antiguos deben continuar
+       recibiendo estructuras antiguas más pequeñas.
+
+       Los ejecutables actuales deben enlazarse con las bibliote­
+       cas actuales y nunca deben emplear estas llamadas.
+
+CONFORME A
+       Estas  llamadas son únicas a Linux y no deberían emplearse
+       de nungún modo en nuevos programas.
+
+VÉASE TAMBIÉN
+       fstat(2), lstat(2),  stat(2),  uname(2),  undocumented(2),
+       unimplemented(2)
+
+
+
+Linux 2.0                22 Octubre 1996              OBSOLETE(2)

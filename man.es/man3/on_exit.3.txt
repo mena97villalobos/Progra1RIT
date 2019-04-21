@@ -1,0 +1,30 @@
+ON_EXIT(3)       Manual del programador de Linux       ON_EXIT(3)
+
+
+
+NOMBRE
+       on_exit  -  registra  una  función para ser invocada en la
+       terminación normal de un programa
+
+SINOPSIS
+       #include <stdlib.h>
+
+       int on_exit(void (*funcion)(int , void *), void *param);
+
+DESCRIPCIÓN
+       La función on_exit() registra la  funcion  dada  para  ser
+       invocada  en  la terminación normal de un programa, ya sea
+       vía exit(3) o vía el valor retornado por la  función  main
+       del  programa.   A  la  funcion se le pasa el parámetro de
+       exit(3) y el parámetro param de on_exit().
+
+VALOR REGRESADO
+       La función on_exit() devuelve el valor 0 en caso de éxito,
+       o -1 en caso contrario.
+
+VÉASE TAMBIÉN
+       exit(3), atexit(3).
+
+
+
+GNU                     2 de abril de 1993             ON_EXIT(3)

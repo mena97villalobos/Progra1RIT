@@ -1,0 +1,149 @@
+DLOPEN(3)        Manual del Programador de Linux        DLOPEN(3)
+
+
+
+NOMBRE
+       dlclose, dlerror, dlopen, dlsym - Interfaz de programación
+       con el cargador de enlaces dinámicos.
+
+SINOPSIS
+       #include <dlfcn.h>
+
+       void *dlopen (const char *nomfich, int indicador);
+       const char *dlerror(void);
+       void *dlsym(void *manejador, char *símbolo);
+       int dlclose (void *manejador);
+
+       Símbolos especiales: _init, _fini.
+
+DESCRIPCIÓN
+       dlopen carga una biblioteca dinámica desde el fichero nom­
+       brado  por la cadena que termina con el valor nulo nomfich
+       y  devuelve  un  "manejador"  opaco  para  la   biblioteca
+       dinámica.   Si  nomfich no es un camino absoluto (esto es,
+       no comienza con "/"), entonces el fichero se busca en  los
+       siguientes lugares:
+
+              Una  lista  de directorios separados por dos puntos
+              en la variable de entorno de usuario LD_LIBRARY.
+
+              La   lista   de   bibliotecas    especificada    en
+              /etc/ld.so.cache.
+
+              /usr/lib, seguida de /lib.
+
+       Si  nomfich es un apuntador nulo (NULL), entonces el mane­
+       jador devuelto corresponde al programa principal.
+
+       Las referencias externas en  la  biblioteca  se  resuelven
+       usando  las  bibliotecas en la lista de dependencias de la
+       misma, y cualquier otra biblioteca abierta previamenta con
+       el  indicador  RTLD_GLOBAL.  Si el ejecutable fue enlazado
+       con el indicador "-rdynamic", entonces los símbolos  glob­
+       ales  en  dicho ejecutable también se usarán para resolver
+       referencias en una bibliotaca cargada dinámicamente.
+
+       indicador debe ser  o  bien  RTLD_LAZY,  significando  que
+       resuelva  los  símbolos  no definidos según se vaya ejecu­
+       tando código de la biblioteca dinámica, o  bien  RTLD_NOW,
+       significando  que  deben resolverse todos los símbolos sin
+       definir antes de que dlopen vuelva, y que falle si esto no
+       se   puede   hacer.   Opcionalmente,  puede  aplicarse  la
+       operación "o" entre RTLD_GLOBAL e indicador, en cuyo  caso
+       los  símbolos  externos definidos en la biblioteca estarán
+       disponibles a otras bibliotecas cargadas posteriormente.
+
+       Si  la  biblioteca  exporta  una  rutina  llamada   _init,
+       entonces ese código se ejecuta antes de que dlopen vuelva.
+       Si la misma biblioteca se caga dos veces con dlopen(),  se
+       devuelve  el  mismo manejador de fichero. La biblioteca dl
+       mantiene  contadores  de  los  enlaces  para   manejadores
+       dinámicos  de  fichero, así que una biblioteca dinámica no
+       se desaloja hasta que dlclose ha sido llamado  sobre  ella
+       tantas veces como dlopen se ha realizado en ella.
+
+       Si  dlopen  falla por alguna razón, devuelve el valor nulo
+       NULL.  Puede obtenerse una cadena legible describiendo  el
+       error  más reciente ocurrido desde cualquiera de las ruti­
+       nas dl  (dlopen,  dlsym  o  dlclose)  mediante  dlerror().
+       dlerror  devuelve NULL si no han ocurrido errores desde la
+       iniciación o desde que se llamó la última vez. (Llamando a
+       dlerror()  dos  veces consecutivas, siempre se obtendrá el
+       NULL procedente de la segunda llamada).
+
+       dlsym toma  un  "manejador"  de  una  biblioteca  dinámica
+       devuelto  por  dlopen y el nombre del símbolo terminado en
+       nulo, devolviendo la dirección donde ese símbolo está car­
+       gado.  Si no se encuentra el símbolo, dlsym devuelve NULL;
+       de todas formas, el modo correcto de comprobar un error de
+       dlsym  es guardar el resultado de dlerror en una variable,
+       y entonces revisar si el valor guardado no es nulo.   Esto
+       es  así  porque  el valor del símbolo realmente podría ser
+       nulo.  También es  necesario  guardar  los  resultados  de
+       dlerror  en  una  variable  porque  si se llama otra vez a
+       dlerror devolverá nulo.
+
+       dlclose decrementa el contador de referencias al manejador
+       de  la  biblioteca  dinámica manejador.  Si el contador de
+       referencias llega a cero y ninguna otra biblioteca cargada
+       usa  símbolos  en ella, entonces se descarga la bilbioteca
+       dinámica. Si la biblioteca  dinámica  exporta  una  rutina
+       llamada _fini, entonces esa rutina se llama justo antes de
+       que la biblioteca se descargue.
+
+EJEMPLOS
+       Cargar la bibloteca matemática, e imprimir  el  coseno  de
+       2.0:
+              #include <dlfcn.h>
+
+              int main(int argc, char **argv) {
+                  void *manejador = dlopen ("/lib/libm.so", RTLD_LAZY);
+                  double (*cosine)(double) = dlsym(manejador, "cos");
+                  printf ("%f\n", (*cosine)(2.0));
+                  dlclose(manejador);
+              }
+
+              Si  este  programa  estuviera en un fichero llamado
+              "cucu.c", se construiría el programa con el comando
+              siguiente:
+
+                     gcc -rdynamic -o cucu cucu.c -ldl
+
+       Hacer lo mismo, pero comprobando los errores a cada paso:
+              #include <stdio.h>
+              #include <dlfcn.h>
+
+              int main(int argc, char **argv) {
+                  void *manejador;
+                  double (*cosine)(double);
+                  char *error;
+
+                  manejador = dlopen ("/lib/libm.so", RTLD_LAZY);
+                  if (!manejador) {
+                      fputs (dlerror(), stderr);
+                      exit(1);
+                  }
+
+                  cosine = dlsym(manejador, "cos");
+                  if ((error = dlerror()) != NULL)  {
+                      fputs(error, stderr);
+                      exit(1);
+                  }
+
+                  printf ("%f\n", (*cosine)(2.0));
+                  dlclose(manejador);
+              }
+
+RECONOCIMIENTOS
+       La  interfaz  estándar  dlopen  proviene  de  Solaris.  La
+       implementación Linux de dlopen en  principio  fue  escrita
+       por  Eric  Youngdale  con  ayuda  de  Mitch D'Souza, David
+       Engel, Hongjiu Lu, Andreas Schwab y otros.  La  página  de
+       manual la escribió Adam Richter.
+
+VÉASE TAMBIÉN
+       ld(1), ld.so(8), ldconfig(8), ldd(1), ld.so.info.
+
+
+
+Linux                      16 Mayo 1995                 DLOPEN(3)

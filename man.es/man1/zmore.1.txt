@@ -1,0 +1,151 @@
+ZMORE(1)                                                 ZMORE(1)
+
+
+
+NOMBRE
+       zmore - Filtro para la visualización detallada de ficheros
+       de texto comprimidos a través de la pantalla
+
+SINOPSIS
+       zmore [ nombre ...  ]
+
+DESCRIPCION
+       Zmore es un filtro que permite el examen de ficheros  com­
+       primidos  o  en texto puro de forma que se para al mostrar
+       una pantalla completa en una terminal.  zmore funciona  en
+       ficheros  comprimidos con compress, pack o gzip, y tambien
+       en ficheros sin comprimir.  Si un fichero no existe, zmore
+       bisca  un fichero con el mismo nombre, añadiendo la exten­
+       sión .gz, .z o .Z .
+
+       Zmore normalmente se  para  tras  cada  pantalla  completa
+       mostrada, indicando  --More-- al final de la pantalla.  Si
+       el usuario entonces envía un retorno de carro, se  muestra
+       una línea más.  Si el usuario envía un espacio, se muestra
+       otra pantalla completa. Luego enumeramos  otras  posibili­
+       dades.
+
+       Zmore busca en el fichero /etc/termcap para determinar las
+       características de  la  terminal,  y  para  determinar  el
+       tamaño  por  defecto  de  la ventana.  En una terminal con
+       capacidad para mostrar 24 líneas, el tamaño por defecto de
+       la ventana es de 22 líneas.  Para usar otro paginador dis­
+       tinto del que se usa por defecto, more,  indícalo  ponien­
+       dole a la variable de entorno PAGER el nombre del programa
+       deseado, como por ejemplo less.
+
+       Otras secuencias que pueden enviarse cuando zmore se para,
+       y  sus  efectos,  son  las  siguientes  (i es un parámetro
+       entero opcional, por defecto 1) :
+
+
+       i<espacio>
+              muestra i líneas más, (o otra pantalla completa  si
+              no se indica ningún parámetro)
+
+
+       ^D     muestra  11  líneas  más  (un ``scroll'').  Si i se
+              indíca, entonces el tamaño del scroll se  cambia  a
+              i.
+
+
+       d      igual que ^D (control-D)
+
+
+       iz     igual  que  escribir  un espacio, excepto que i, si
+              existe, se convierte en el nuevo tamaño de la  ven­
+              tana.  Notese  que el tamaño de la ventana vuelve a
+              ser el mismo que el tamaño por defecto al finalizar
+              el fichero actual.
+
+
+       is     salta  i  líneas y muestra una pantalla completa de
+              líneas.
+
+
+       if     salta i pantallas completas y  muestrauna  pantalla
+              completa de líneas.
+
+
+       q o Q  para  de  leer el fichero actual; pasa al siguiente
+              (si hay)
+
+
+       e o q  Cuando aparece el indicador --More--(Fichero  sigu­
+              iente:  file) este comando provoca que zmore salga.
+
+
+       s      Cuando aparece el indicador --More--(Fichero  sigu­
+              iente:  file)  este  comando  provoca  que zmore se
+              salte el siguiente fichero y continue.
+
+
+       =      Muestra el número de línea actual.
+
+
+       i/expr busca la cadena número i de  la  expresión  regular
+              expr.  Si no se encuentra la cadena (patrón), zmore
+              pasa al siguiente fichero (si hay).  En  caso  con­
+              trario, se muestra una pantalla completa, empezando
+              dos líneas antes de la línea donde se  encontró  la
+              expresión.   Los  carácteres  de  usuario  borrar y
+              matar (kill) se pueden usar para editar  la  expre­
+              sión  regular.   Borrar  pasada  la primera columna
+              cancela el comando de búsqueda.
+
+
+       in     busca la cadena número i  de  la  última  expresión
+              regular indicada.
+
+
+       !comando
+              invoca  una  shell con comando.  El carácter `!' en
+              "comando" se sustituye por el último comando shell.
+              La secuencia "\!" se sustituye por "!".
+
+
+       :q o :Q
+              para  de  leer el fichero actual; pasa al siguiente
+              (si hay) (igual que q o Q).
+
+
+       .      (punto) repite el comando anterior.
+
+       Los comandos tienen efecto inmediatamente, es decir, no es
+       necesario indicar el final de un comando con un retorno de
+       carro.  Al tiempo que el carácter del comando  se  da,  el
+       usuario  puede  enviar el carácter de matar la línea (line
+       kill) para cancelar el parámetro numérico que se está for­
+       mando.   Además,  el  usuario  puede enviar el carácter de
+       borrar, para volver a mostrar el mensaje --More--.
+
+       En cualquier momento cuando se está enviando algo hacia la
+       terminal,  el usuario puede enviar la tecla de salir (nor­
+       malmente control-\).  Zmore parará de enviar a  la  termi­
+       nal,  y  mostrará  el típico mensaje --More--.  El usuario
+       puede entonces mandar cualquiera de los comandos indicados
+       arriba   de  forma  normal.   Desafortunadamente,  algúnos
+       carácteres enviados a la terminal  se  pierden  cuando  se
+       hace  esto,  debido  a  que  los  carácteres  que  estaban
+       esperando en la cola de salida de la  terminal  se  borran
+       cuando se produce la señal de salir.
+
+       El  programa  cambia la terminal a modo noecho para que la
+       salida de carácteres pueda ser continua.  Lo que  escribes
+       entoces  no se mostrará en la terminal, excepto los coman­
+       dos / y ! .
+
+       Si la salida estandard no es una teletype, zmore  se  com­
+       porta como zcat zcat, excepto porque antes de cada fichero
+       se imprime una cabecera.
+
+FICHEROS
+       /etc/termcap        Base de datos de las teminales
+
+VÉASE TAMBIÉN
+       more(1), gzip(1), zdiff(1), zgrep(1), znew(1),  zforce(1),
+       gzexe(1)
+
+
+
+                                                         ZMORE(1)

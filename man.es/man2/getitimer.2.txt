@@ -1,0 +1,108 @@
+GETITIMER(2)     Manual del programador de Linux     GETITIMER(2)
+
+
+
+NOMBRE
+       getitimer,  setitimer - obtiene/asigna el valor de un tem­
+       porizador
+
+SINOPSIS
+       #include <sys/time.h>
+
+       int getitimer(int which, struct itimerval *value);
+       int setitimer(int which, const  struct  itimerval  *value,
+              struct itimerval *ovalue);
+
+DESCRIPCIÓN
+       El  sistema  proporciona  a cada proceso 3 temporizadores,
+       los cuales se decrementan en distintas escalas de  tiempo.
+       Cuando  ha  pasado  el  intervalo de tiempo definido en el
+       temporizador, se envía una señal al proceso, y  el  tempo­
+       rizador (potencialmente) vuelve a empezar.
+
+       ITIMER_REAL    se  decrementa  en  tiempo  real,  y  envía
+                      SIGALRM al expirar.
+
+       ITIMER_VIRTUAL se decrementa solo cuando el  proceso  esta
+                      ejecutándose, y envía SIGVTALRM al expirar.
+
+       ITIMER_PROF    se decrementa tanto cuando el proceso  esta
+                      ejecutándose  como  cuando  el sistema esta
+                      trabajando en nombre del proceso.
+                       Asociado con ITIMER_VIRTUAL,  este  tempo­
+                      rizador   suele  usarse  para  analizar  el
+                      tiempo consumido por la  aplicación  en  el
+                      espacio  de usuario y en espacio del nucleo
+                      SIGPROF es enviado al expirar.
+
+       Los valores del temporizador estan definidos en los  sigu­
+       ientes tipos de datos:
+            struct itimerval {
+                struct timeval it_interval; /* valor próximo */
+                struct timeval it_value;    /* valor actual */
+            };
+            struct timeval {
+                long tv_sec;                /* segundos */
+                long tv_usec;               /* microsegundos */
+            };
+
+       Getitimer(2)  rellena la estructura indicada por value con
+       el valor actual  para  el  temporizador  especificado  por
+       which   (uno  de  estos:  ITIMER_REAL,  ITIMER_VIRTUAL,  o
+       ITIMER_PROF).  El elemento it_value es inicializado  a  la
+       cantidad de tiempo que le falta al temporizador, o cero si
+       el temporizador  esta  deshabilitado.  De  forma  similar,
+       it_interval  es  iniciazliado  a  un  valor  por  defecto.
+       Setitimer(2) inicializa el  temporizador  especificado  al
+       valor  en  value.   Si ovalue no es cero, el antiguo valor
+       del temporizador es almacenado alli.
+
+       Los temporizadore se decrementan desde  it_value  a  cero,
+       generan  una  señal,  y  se inicializan a it_interval.  Un
+       temporizador al que se le asigna el valor  cero  (it_value
+       es  cero  o  el temporizador expira y it_interval es cero)
+       finaliza.
+
+       tv_sec y tv_usec son significativos en la determinación de
+       la duración del temporizador.
+
+       Los  temporizadores nunca expiran antes del tiempo especi­
+       ficado, lo hacen un tiempo constante poco después,  depen­
+       diente  de  la  resolución  del  temporizador  del sistema
+       (actualmente 10ms).  En el momento de la  expiración,  una
+       señal  será  generada y el temporizador será inicializado.
+       Si el temporizador expira mientrás el proceso esta  activo
+       (siempre  cierto  para  ITIMER_VIRT) la señal será enviada
+       inmediatamente al generarse.  De otra modo el  envio  será
+       aplazado  hasta  un tiempo después dependiente de la carga
+       de trabajo del sistema.
+
+
+VALOR DEVUELTO
+       En caso de éxito, devuelve 0. En caso de error, devuelve ,
+       -1  y errno es asignada apropiadamente.
+
+ERRORES
+       EFAULT  value o ovalue no son punteros válidos.
+
+       EINVAL  which  no  es  uno  de ITIMER_REAL, ITIMER_VIRT, o
+               ITIMER_PROF.
+
+CONFORME A
+       SVr4, 4.4BSD (Esta llamada al sistema apareció por primera
+       vez en 4.2BSD).
+
+VÉASE TAMBIÉN
+       gettimeofday(2), sigaction(2), signal(2).
+
+FALLOS
+       En  Linux, la generación y envio de una señal son acciones
+       distintas, y para cada señal solo se  permite  un  evento.
+       Es,  por  lo tanto, posible que en condiciones extremas de
+       sobrecarga, ITIMER_REAL expire antes de que  la  señal  de
+       una  anterior  expiración  haya  sido enviada.  La segunda
+       señal, en esta situación, será perdida.
+
+
+
+Linux 0.99.11             5 Agosto 1993              GETITIMER(2)

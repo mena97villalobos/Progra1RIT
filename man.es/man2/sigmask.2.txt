@@ -1,0 +1,66 @@
+SIGBLOCK(2)      Manual del Programador de Linux      SIGBLOCK(2)
+
+
+
+NOMBRE
+       sigblock,  siggetmask,  sigsetmask, sigmask - manipulan la
+       máscara de señales
+
+SINOPSIS
+       #include <signal.h>
+
+       int sigblock(int mascara);
+
+       int siggetmask(void);
+
+       int sigsetmask(int mascara);
+
+       int sigmask(int signum);
+
+DESCRIPCIÓN
+       Esta interfaz está anticuada  desde  que  existe  sigproc­
+       mask(2).
+
+       La llamada al sistema sigblock añade las señales especifi­
+       cadas en mascara al conjunto de  señales  que  actualmente
+       están bloqueadas para su envío.
+
+       La  llamada  al sistema sigsetmask reemplaza totalmente el
+       conjunto de  señales  bloqueadas  con  un  nuevo  conjunto
+       especificado  en mascara.  Las señales están bloqueadas si
+       el bit correspondiente en mascara está a 1.
+
+       El conjunto actual de señales bloqueadas  puede  obtenerse
+       empleando siggetmask.
+
+       La  macro sigmask sirve para construir la máscara para una
+       señal dada por su número o macro signum.
+
+
+VALOR DEVUELTO
+       siggetmask devuelve el conjunto actual de  señales  en  la
+       máscara.
+
+       sigsetmask  y  sigblock  devuelven el conjunto anterior de
+       señales en la máscara.
+
+OBSERVACIONES
+       Los prototipos de estas funciones sólo  están  disponibles
+       si se define __USE_BSD antes de inclui <signal.h>.
+
+       No  es  posible bloquear SIGKILL o SIGSTOP - esta restric­
+       ción viene impuesta calladamente por el sistema.
+
+
+CONFORME A
+       4.4BSD. Estas funciones aparecieron en BSD  4.3  y  no  se
+       recomienda  su empleo, pues seguramente serán retiradas en
+       el futuro.  Para programas nuevos utilice las funciones de
+       manejo de señales de POSIX.
+
+VÉASE TAMBIÉN
+       kill(2), sigprocmask(2), signal(7)
+
+
+
+Linux 1.3                 29 Enero 1998               SIGBLOCK(2)

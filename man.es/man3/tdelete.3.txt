@@ -1,0 +1,180 @@
+TSEARCH(3)       Manual del Programador de Linux       TSEARCH(3)
+
+
+
+NOMBRE
+       tsearch, tfind, tdelete, twalk - manejan un árbol binario
+
+SINOPSIS
+       #include <search.h>
+
+       void *tsearch (const void *key, void **rootp,
+                       int (*compar)(const void *, const void *));
+
+       void *tfind (const void *key, const void **rootp,
+                       int (*compar)(const void *, const void *));
+
+       void *tdelete (const void *key, void **rootp,
+                       int (*compar)(const void *, const void *));
+
+       void twalk (const void *root, void (*action) (const void *nodep,
+                                          const VISIT which,
+                                          const int depth));
+
+
+DESCRIPCIÓN
+       tsearch,  tfind, twalk y tdelete manejan un árbol binario.
+       Son una generalización del algoritmo T de  Knuth  (6.2.2).
+       El  primer  campo  de cada nodo del árbol es un puntero al
+       correspondiente elemento de datos. (El  programa  llamante
+       debe  almacenar  los  datos actuales).  compar apunta a la
+       rutina de comparación, que toma punteros a los dos elemen­
+       tos.   Debe  devolver  un entero negativo, cero o positivo
+       dependiendo de si el primer elemento  es  menor,  igual  o
+       mayor que el segundo.
+
+       tsearch busca un elemento en el árbol.  key apunta al ele­
+       mento buscado.  rootp apunta a la variable que apunta a la
+       raíz  del  árbol.  Si el árbol está vacío la variable a la
+       que apunta rootp debería estar a NULL.  Si se encuentra el
+       elemento  dentro  del árbol tsearch devuelve un puntero al
+       elemento.  Si no lo encuentra, tsearch lo añade y devuelve
+       un puntero al nuevo elemento.
+
+       tfind  es  como  tsearch, sólo que si no encuentra el ele­
+       mento tfind devuelve NULL.
+
+       tdelete borra un elemento del árbol.  Sus  argumentos  son
+       los mismos que los de tsearch.
+
+       twalk  realiza un recorrido en profundidad o en anchura de
+       un árbol binario. root apunta  al  nodo  de  comienzo  del
+       recorrido.   Si  el  nodo  no  es la raíz sólo se visitará
+       parte del árbol.  twalk llama  a  la  función  de  usuario
+       action cada vez que se visita un nodo (esto es, tres veces
+       para un nodo interno y una vez para  una  hoja).   action,
+       toma  tres  argumentos.   El primero es un puntero al nodo
+       que se está visitando.  El segundo es un entero cuyo valor
+       toma algundo de los valores preorder, postorder o endorder
+       dependiendo de si esta es la primera, sregunda  o  tercera
+       visita  al  nodo  interno o leaf si es la única vez que se
+       visita  la  hoja.   (Estos  símbolos  están  definidos  en
+       <search.h>).  El  tercer  argumento  es la profundidad del
+       nodo, siendo la profundidad de la raíz cero.
+
+VALOR DEVUELTO
+       tsearch devuelve un puntero al elemento igual del árbol, o
+       al  elemento añadido, o NULL si no hubo suficiente memoria
+       para añadir el elemento.  tfind  devuelve  un  puntero  al
+       elemento, o NULL si no se encuentra ninguno igual.  Si hay
+       múltiples elementos que concuerdan con la  clave  el  ele­
+       mento devuelto es inespecificado.
+
+       tdelete devuelve un puntero al padre del elemento borrado,
+       o NULL si no se encontró el elemento.
+
+       tsearch, tfind, y tdelete devuelven NULL si rootp es  NULL
+       en la entrada a la función.
+
+ADVERTENCIAS
+       twalk  toma  un  puntero  a la raíz, mientra que las otras
+       funciones toman un puntero a una variable que apunta a  la
+       raíz.
+
+       twalk  usa postorder con el significado "depués del subár­
+       bol izquierdo y  antes  del  subárbol  derecho".   Algunas
+       autoridades  llamana  a esto "inorden" y reservan "postor­
+       den" con el significado "después de ambos subárboles".
+
+       tdelete libera la memoria necesaria para el elemento en el
+       árbol.  El usuario es el responsable de liberar la memoria
+       de los correspondientes datos.
+
+       El programa de ejemplo depende del hecho de que  twalk  no
+       vuelve a referenciar a un nodo después de llamar a la fun­
+       ción de usuario con  el  argumento  "endorder"  o  "leaf".
+       Esto funciona con la biblioteca de GNU, pero no está en la
+       documentación SysV.
+
+EJEMPLO
+       El ejemplo siguiente inserta doce números aleatorios en un
+       árbol binario e imprime los números en orden.  Los números
+       son eliminados del  árbol  y  su  almacenamiento  liberado
+       durante el recorrido.
+
+           #include <search.h>
+           #include <stdlib.h>
+           #include <stdio.h>
+
+           void *root=NULL;
+
+           void *xmalloc(unsigned n)
+           {
+             void *p;
+             p = malloc(n);
+             if(p) return p;
+             fprintf(stderr, "insufficient memory\n");
+             exit(1);
+           }
+
+           int compare(const void *pa, const void *pb)
+           {
+             if(*(int *)pa < *(int *)pb) return -1;
+             if(*(int *)pa > *(int *)pb) return 1;
+             return 0;
+           }
+
+           void action(const void *nodep, const VISIT which, const int depth)
+           {
+             int *datap;
+             void *val;
+
+             switch(which)
+               {
+               case preorder:
+                 break;
+               case postorder:
+                 datap = *(int **)nodep;
+                 printf("%6d\n", *datap);
+                 break;
+               case endorder:
+                 datap = *(int **)nodep;
+                 (void)tdelete(datap, &root, compare);
+                 free(datap);
+                 break;
+               case leaf:
+                 datap = *(int **)nodep;
+                 printf("%6d\n", *datap);
+                 val = tdelete(datap, &root, compare);
+                 free(datap);
+                 break;
+               }
+             return;
+           }
+
+           int main()
+           {
+             int i, *ptr;
+             void *val;
+
+             for (i = 0; i < 12; i++)
+               {
+                 ptr = (int *)xmalloc(sizeof(int));
+                 *ptr = rand()&0xff;
+                 val = tsearch((void *)ptr, &root, compare);
+                 if(val == NULL) exit(1);
+               }
+             twalk(root, action);
+             return 0;
+           }
+
+CONFORME A
+       SVID
+
+VÉASE TAMBIÉN
+       qsort(3), bsearch(3), hsearch(3), lsearch(3)
+
+
+
+
+GNU                    24 de Sept. de 1995             TSEARCH(3)

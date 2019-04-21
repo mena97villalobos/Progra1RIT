@@ -1,0 +1,32 @@
+SEEKDIR(3)       Manual del Programador de Linux       SEEKDIR(3)
+
+
+
+NOMBRE
+       seekdir  -  determina  la posición de la siguiente llamada
+       readdir() en el flujo de directorio.
+
+SINOPSIS
+       #include <dirent.h>
+
+       void seekdir(DIR *dir, off_t offset);
+
+DESCRIPCIÓN
+       La función seekdir() determina la localización en el flujo
+       de directorio a partir de la cual empezará la próxima lla­
+       mada a readdir().  seekdir()  debería  ser  usado  con  un
+       desplazamiento devuelto por telldir().
+
+VALOR REGRESADO
+       La función seekdir() no devuelve ningún valor.
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       lseek(2),  opendir(3),  readdir(3),  closedir(3),  rewind­
+       dir(3), telldir(3), scandir(3)
+
+
+
+                           31 Mar 1993                 SEEKDIR(3)

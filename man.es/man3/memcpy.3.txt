@@ -1,0 +1,30 @@
+MEMCPY(3)        Manual del Programador de Linux        MEMCPY(3)
+
+
+
+NOMBRE
+       memcpy - copiar area de memoria
+
+SYNOPSIS
+       #include <string.h>
+
+       void *memcpy(void *dest, const void *src, size_t n);
+
+DESCRIPCIÓN
+       La funcion memcpy() copia n bytes desde el area de memoria
+       src al area dest.  Dichas areas de memoria no deben  tener
+       ningun punto de interseccion; en tal caso utilizar la fun­
+       cion  memmove(3) en lugar de memcpy().
+
+VALOR DEVUELTO
+       La funcion memcpy() devuelve un puntero a dest.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+VEA TAMBIÉN
+       bcopy(3), memccpy(3), memmove(3), strcpy(3), strncpy(3)
+
+
+
+GNU                       10 Abril 1993                 MEMCPY(3)

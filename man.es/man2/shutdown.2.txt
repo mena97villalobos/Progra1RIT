@@ -1,0 +1,47 @@
+SHUTDOWN(2)      Manual del Programador de Linux      SHUTDOWN(2)
+
+
+
+NOMBRE
+       shutdown - cierra parte de una conexión bidireccional
+
+SINOPSIS
+       #include <sys/socket.h>
+
+       int shutdown(int s, int como);
+
+DESCRIPCIÓN
+       La  llamada a shutdown causa que se cierre completamente o
+       en parte una conexión bidireccional en el zócalo  asociado
+       con s.  Si como es 0, no se permitirán más recepciones. Si
+       como es 1, no se permitirán más envíos. Si como es  2,  no
+       se permitirán más envíos ni recepciones.
+
+VALOR DEVUELTO
+       En  caso  de éxito, se devuelve cero. En caso de error, se
+       devuelve -1 y se pone un valor apropiado en errno.
+
+ERRORES
+       EBADF   s no es un desccriptor válido.
+
+       ENOTSOCK
+               s es un fichero, no un zócalo.
+
+       ENOTCONN
+               El zócalo especificado no está conectado.
+
+CONFORME A
+       4.4BSD (la función shutdown  apareció  por  primera
+       vez en 4.2BSD).
+
+FALLOS
+       Las  opciones  numéricas how deben ser reemplazadas
+       por las  opciones  SHUT_RD,  SHUT_WR  y  SHUT_RDWR,
+       según ordena "the Single Unix Specification".
+
+VÉASE TAMBIÉN
+       connect(2), socket(2)
+
+
+
+BSD                       28 Enero 1998               SHUTDOWN(2)

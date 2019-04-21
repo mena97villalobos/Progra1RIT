@@ -1,0 +1,40 @@
+SLEEP(1)                                                 SLEEP(1)
+
+
+
+NAME
+       sleep - retardo de un tiempo especificado
+
+SINOPSIS
+       sleep [--help] [--version] numero[smhd]...
+
+DESCRIPCIÓN
+       Esta  documentación no será mantenida y puede ser inexacta
+       o incompleta.  La documentación Texinfo es ahora la fuente
+       autorizada.
+
+       Esta  página  de manual documenta la versión GNU de sleep.
+       sleep detiene durante un tiempo especificado por  la  suma
+       de  los valores de los arguementos de la línea de comando.
+       Cada  argumento  es  un  número  seguido  por  una  unidad
+       opcional; por defecto es segundos. Las unidades son:
+
+       s      segundos
+
+       m      minutos
+
+       h      horas
+
+       d      días
+
+   OPCIONES
+       --help Imprime  un  mensaje de uso en la salida estándar y
+              termina correctamente.
+
+       --version
+              Imprime información sobre la versión en  la  salida
+              estándar y termina correctamente.
+
+
+
+FSF                    Utilidades Shell GNU              SLEEP(1)

@@ -1,0 +1,64 @@
+READDIR(3)       Manual del Programador de Linux       READDIR(3)
+
+
+
+NOMBRE
+       readdir - lee un directorio
+
+SINOPSIS
+       #include <sys/types.h>
+
+       #include <dirent.h>
+
+       struct dirent *readdir(DIR *dir);
+
+DESCRIPCIÓN
+       La  función readdir() devuelve un puntero a una estructura
+       dirent que representa la siguiente entrada  de  directorio
+       en  el  flujo  de  directorio al que apunte dir.  Devuelve
+       NULL cuando alcanza el fin-de-fichero o si hay un error.
+
+       Los datos devueltos por readdir()  son  sobreescritos  por
+       subsiguientes  llamadas a readdir() para el mismo flujo de
+       directorio.
+
+       La estructura dirent se define como sigue:
+
+              struct dirent {
+                      long            d_ino;        /* número i-nodo */
+                      off_t           d_off;        /* despl. al siguiente dirent */
+                      unsigned short  d_reclen;     /* long. de este registro */
+                      unsigned char   d_type;       /* tipo de fichero */
+                      char            d_name[256];  /* nombre del fichero */
+              };
+
+       Según POSIX, la estructura dirent contiene un  campo  char
+       d_name[]  de  tamaño  no especificado, con NAME_MAX carac­
+       teres como mucho precediendo al carácter cero  terminador.
+       El empleo de otros campos perjudicará la transportabilidad
+       de sus programas.
+
+
+FALLOS
+       El campo d_type no se implementa a partir de libc6 2.0.4 y
+       siempre devolverá 0 (desconocido).
+
+
+VALOR DEVUELTO
+       La  función readdir() devuelve un puntero a una estructura
+       dirent, o NULL si ocurre un error o se alcanza el  fin-de-
+       fichero.
+
+ERRORES
+       EBADF  Descriptor de flujo de directorio inválido dir.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3
+
+VÉASE TAMBIÉN
+       read(2),     opendir(3),     closedir(3),    rewinddir(3),
+       seekdir(3), telldir(3), scandir(3)
+
+
+
+Linux                     25 Julio 1997                READDIR(3)

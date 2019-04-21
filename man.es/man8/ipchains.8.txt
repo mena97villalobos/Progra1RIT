@@ -1,0 +1,475 @@
+IPCHAINS(8)                                           IPCHAINS(8)
+
+
+
+NAME
+       ipchains - IP administración de cortafuegos
+
+SINOPSIS
+       ipchains -[ADC] cadena especificación-de-regla [opciones]
+       ipchains -[RI] cadena numero-regla especificación-de-regla
+       [opciones]
+       ipchains -D cadena numero-regla [opciones]
+       ipchains -[LFZNX] [cadena] [opciones]
+       ipchains -P cadena objetivo [opciones]
+       ipchains -M [ -L | -S ] [opciones]
+
+DESCRIPCIÓN
+       Ipchains se usa para configurar,  mantener  e  inspeccioar
+       las  reglas  de  cortafuegos  IP  del  núcleo Linux. Estas
+       reglas se pueden dividir en 4  categorías  diferentes:  la
+       cadena de entrada IP, la cadena de salida IP, la cadena de
+       reenvío IP y las cadenas definidas por el usuario.
+
+       Para cada una de estas categorías se mantiene una tabla de
+       reglas separada, cualquiera de las cuales podría remitir a
+       una de las cadenas definidas por el usuario.
+
+       Váease ipfw(4) para más detalles.
+
+OBJETIVOS
+       Una regla  de  cortafuegos  especifica  citerios  para  un
+       paquete  y  un  objetivo.   Si  el paquete no concuerda se
+       examina la siguiente regla de la cadena; si concuerda,  la
+       siguiente  regla  se especifica por el valor del objetivo,
+       que puede ser el nombre de  una  cadena  definida  por  el
+       usuario  o  uno  de  los  valores especiales ACCEPT, DENY,
+       REJECT, MASQ, REDIRECT o RETURN.
+       ACCEPT significa dejar pasar el paquete.   DENY  significa
+       tirar  el paquete al suelo (denegar).  REJECT significa lo
+       mismo que denegar, pero más educado y fácil de depurar, ya
+       que devuelve en mensaje ICMP al remitente indicando que el
+       paquete fue elliminado.  (Observe que DENY y REJECT son lo
+       mismo para paquetes ICMP).
+       MASQ es sólo legal para reenvío y cadenas definidas por el
+       usuario, y sólo se puede usar cuando el núcleo está compi­
+       lado  con  CONFIG_IP_MASQUERADE  definida.   Con esto, los
+       paquetes se enmascaran como si estuvieran originados desde
+       el  host  local.  Más  aún,  los  paquetes devueltos serán
+       reconocidos y desenmascarados automáticamente  y  entonces
+       pasados a la cadena de reenvío.
+       REDIRECT  es  sólo  legal  para  las  cadenas de entrada y
+       definidas por el usuario, y sólo se puede usar  cuando  en
+       núcleo   linux   está  compilado  con  CONFIG_IP_TRANSPAR­
+       ENT_PROXY definido.  Con esto, los paquetes  se  redirigen
+       al socket local, incluso si son enviados a un host remoto.
+       Si el puerto de redirección especificado es 0, que  es  el
+       valor por defecto, el puerto objetivo de un paquete se usa
+       como puerto de redirección. Cuando se usa  este  objetivo,
+       se  puede  suministrar  un  argumento  extra, el número de
+       puerto.
+       Si se llega  al  final  de  una  cadena  definida  por  el
+       usuario, o se concuerda con una regla con objetivo RETURN,
+       se examina la siguiente regla de la  cadena  previa  (lla­
+       mada). Si se llega al final de una cadena predefinida o se
+       concuerda con una regla de la cadena  predefinida  con  el
+       objetivo  RETURN  el objetivo especificado por la política
+       de la cadena determina el destino del paquete.
+
+OPCIONES
+       Las opciones que reconoce ipchains se  pueden  dividir  en
+       varios grupos diferentes.
+
+   MANDATOS
+       Estas  opciones  indican  la acción específica que hay que
+       realizar; sólo se puede especificar una  de  ellas  en  la
+       línea  de  mandatos, salvo que más abajo se especifique lo
+       contrario. En todas las versiones largas de los nombres de
+       mandatos  y nombres de opciones, sólo es necesario especi­
+       ficar suficientes letras para asegurarse de  que  ipchains
+       puede distinguirla de las otras opciones.
+
+       -A, --append
+              Añade una o más reglas al final de la cadena selec­
+              cionada.  Cuando los nombres origen y/o destino  se
+              resuelven  a  más  de  una  dirección, se añade una
+              nueva regla para cada posible combinación de direc­
+              ción.
+
+       -D, --delete
+              Elimina una o más reglas de la cadena seleccionada.
+              Hay dos versiones de  este  comando:  la  regla  se
+              puede  especificar  como  el  número  de  la cadena
+              (empezando en 1 para la primera regla) o  como  una
+              regla que concuerde.
+
+       -R, --replace
+              Sustituye  una  regla de la cadena seleccionada. Si
+              los nombres  origen  y/o  destino  se  resuelven  a
+              múltiples  direcciones,  el  mandato  fallará.  Las
+              reglas se numeran comenzando por 1.
+
+       -I, --insert
+              Inserta una o más reglas en la cadena  seleccionada
+              con  el  número indicado de regla. Así, si la regla
+              tiene el número 1 la regla o reglas se insertan  al
+              principio de la cadena.
+
+       -L, --list
+              Muestra todas las reglas de la cadena seleccionada.
+              Si no hay cadena seleccionada, se listan todas  las
+              cadenas.  Es  legal especificar la opción -Z (cero)
+              también, en  cuyo  caso  no  se  puede  especificar
+              cadena.   La salida exacta está determinada por los
+              otros argumentos indicados.
+
+       -F, --flush
+              Vacía la cadena seleccionada. Es equivalente a bor­
+              rar todas las reglas una a una.
+
+       -Z, --zero
+              Pone a cero los contadores de octetos y paquetes de
+              todas las cadenas. Es legal  specificar  la  opción
+              -L,  --list (list) también, para ver los contadores
+              inmediatamente antes de que sean  borrados;  si  se
+              hace  esto  no  se puede indicar una cadena especí­
+              fica.  (Esto mostrará y borrará todo).
+
+       -N, --new-chain
+              Crea una nueva cadena definida por el  usuario  con
+              el  nombre dado. No puede haber un objetivo con ese
+              nombre existente.
+
+       -X, --delete-chain
+              Borra la cadena definida por el  usuario  especifi­
+              cada.  No  pueden haber referencias a la cadena (si
+              hay tiene que  borrar  o  sustituir  las  referidas
+              reglas  antes  de poder borrar la cadena). Si no se
+              dan argumentos, intentará eliminar todas las  cade­
+              nas no predefinidas.
+
+       -P, --policy
+              Fija  la  política  para  la  cadena con un destino
+              dado. Véase la sección OBJETIVOS para los objetivos
+              legles.  Sólo  las  cadenas  no  definidas  por  el
+              usuario pueden tener políticas, y  ni  las  cadenas
+              predefinidas ni las definidas por el usuario pueden
+              ser objetivos de política.
+
+       -M, --masquerading
+              Esta opción permite ver las conexiones enmascaradas
+              actualmente (en conjunción con la opción -L) o fija
+              los parámetros de enmascaramiento del  núcleo  (con
+              la opción -S).
+
+       -S, --set tcp tcpfin udp
+              Cambia  los plazos de tiempo (timeouts) usados para
+              enmascaramiento  Este  comando   siempre   toma   3
+              parámetros, que representan los valores de los tem­
+              porizadores  (en  segundos)  para   sesiones   TCP,
+              sesiones  TCP tras recibir un paquete FIN, y paque­
+              tes UDP respectivamente.  Un valor de  temporizador
+              0  significa  que se conserva el valor correspondi­
+              ente de la entrada. Esta opción sólo está permitida
+              en combinación con la bandera -M.
+
+       -C, --check
+              Verifica el paquete dado con la regla seleccionada.
+              Es extremadamente útil para comprobar,  ya  que  se
+              usan  las  mismas rutinas del núcleo para verificar
+              paquetes  "reales"  se  usan  para  verificar  este
+              paquete.  Se  puede  usar  para  verificar  cadenas
+              definidas por el usuario  y  cadenas  predefinidas.
+              Los  mismos argumentos que se usan para especificar
+              reglas de cortafuegos son los que se usan para con­
+              struir  el paquete el paquete que se quiere compro­
+              bar. En particular son obligatorias las banderas -s
+              (origen), -d (destino), -p (protocolo) y -i (inter­
+              faz).
+
+       -h     Ayuda.  Da una descripción (actualmente  breve)  de
+              la sintaxis del mandato.
+
+   PARÁMETROS
+       Los  siguientes parámetros afectan las especificaciones de
+       reglas (como se usan en los mandatos add, delete, replace,
+       append y check).
+
+       -p, --protocol[!] protocol
+              El  protocolo de la regla del paquete que se quiere
+              verificar.  El  protocolo  especificado  puede  ser
+              uno  de  los  siguientes:  tcp,  udp, icmp o all, o
+              puede ser un valor numérico, que representa uno  de
+              estos  protocolos  u  otro  diferente. También está
+              permitido un protocolo de nombre de /etc/protocols.
+              Un  argumento  "!"  antes del protocolo invierte el
+              test. El número cero es equivalente a all.   Proto­
+              colo  all  concordará  con cualquier protocolo y es
+              tomado por defecto cuando  se  omite  esta  opción.
+              All  no se puede usar en combinación con el mandato
+              check.
+
+       -s, --source [!] dirección/máscara] [!] [puerto[:puerto]]
+              Especificación de origen.  Dirección puede  ser  un
+              nombre  de  host,  un  nombre  de  red o una simple
+              dirección IP.  La máscara puede ser una máscara  de
+              red o un simple número que especifique el número de
+              unos (1) a la izquierda en la máscara de red.  Así,
+              una  máscara  de 24 es equivalente a 255.255.255.0.
+              Un argumento "!"  antes  de  la  especificación  de
+              dirección invierto el sentido de la dirección.
+              El origen puede incluir especificaciones de puertos
+              o tipo ICMP. Esto puede ser bien un nombre de  ser­
+              vicio, un número de puerto, un tipo numérico ICMP o
+              uno de los nombres de tipo ICMP  mostrados  por  el
+              mandato  ipchains  -h  icmp.  Observe que muchos de
+              estos nombres ICMP se refieren al tipo y código, lo
+              que significa que un código ICMP tras la bandera -d
+              es ilegal. En el resto de  este  párrafo,  un  port
+              significa  bien  una  especificación de puerto o un
+              tipo ICMP. Se puede especificar un rango usando  el
+              formato  puerto:puerto.   Si  se  omite  el  primer
+              puerto se supone "0"; si se  omite  el  último,  se
+              supone "65535".
+              Los  puertos  se  pueden especificar sólo en combi­
+              nación con los protocolos tcp, udp o  icmp  Un  "!"
+              antes  de  la  especificación de puerto invierte el
+              sentido. Cuando se especifica el mandato check,  se
+              requiere sólo un puerto, y si se especifica la ban­
+              dera -f (fragmento) no se permiten puertos. La ban­
+              dera --src es un alias para esta opción.
+
+       --source-port [!] [puerto[:puerto]]
+              Esto   permite  separar  las  especificaciones  del
+              puerto origen o rango de puertos. Véase la descrip­
+              ción  anterior  de la bandera -s para más detalles.
+              La bandera --sport es un alias de esta opción.
+
+       -d,    --destination    [!]    dirección[/máscara]     [!]
+       [puerto[:puerto]]
+              Especificación de destino.  Véase la descripción de
+              la  bandera -s (origen) para una detallada descrip­
+              ción de la sintaxis. Para ICMP, que no tiene  puer­
+              tos  un  "puerto  destino"  se  refiere a un código
+              numérico ICMP. La bandera --dst es un alias de esta
+              opción.
+
+       --destination-port [!] [puerto[:puerto]]
+              Esto  permite  separar especificacioens de puertos.
+              Véase la descripción de  la  bandera  -s  para  los
+              detalles.  la  bandera  --dport es un alias de esta
+              opción.
+
+       --icmp-type [!] nombre-de tipo
+              Esto permite especificaciones  de  tipo  ICMP  This
+              allows  specification  of  the  ICMP  type  (use la
+              opción -h icmp para ver los nombres  de  tipo  ICMP
+              válidos).   Con   frecuencia   es  más  conveniente
+              añadirlo a las especificacones de destino.
+
+       -j, --jump objetivo
+              Esto especifica el objetivo de la regla; i.e.,  qué
+              hacer  con el paquete si concuerda con la regla. El
+              objetivo puede  ser  una  cadena  definida  por  el
+              usuario  (no  en la que está la regla) o uno de los
+              objetivos especiales  que  decide  el  destino  del
+              paquete de forma inmediata. Si omitimos esta opción
+              en una regla, entonces la  concordancia  no  tendrá
+              efecto  sobre  el  destino  del  paquete,  pero  se
+              incremnetarán los contadores de la regla.
+
+       -i, --interface [!] nombre
+              Nombre opcional de un interfaz a través del cual se
+              reciben  los paquetes, o mediante el cual salen los
+              paquetes se envían. Cuando se omite esta opción  se
+              supone  una  cadena vacía, que tiene un significado
+              especial, y  concordará  con  cualquier  nombre  de
+              interfaz.  Cuando se usa el argumento "!" antes del
+              nombre de interfaz, se invierte el sentido.  Si  el
+              nombre  de interfaz termina en un "+" entonces con­
+              cordará cualquier nombre de  interfaz  que  empiece
+              con ese nombre.
+
+       [!]  -f, --fragment
+              Esto  significa  que  la  regla  sólo se refiere al
+              segundo o siguientes fragmentos de  paquetes  frag­
+              mentados.  Como no hay forma de indicar los puertos
+              origen y destino de tales paquetes (o  tipo  ICMP),
+              esos   paquetes,   tales  paquetes  no  verificarán
+              ninguna regla que los especifique. Cuando el  argu­
+              mento  "!"  precede a la bandera -f, se invierte el
+              sentido.
+
+   OTRAS OPCIONES
+       Se pueden especificar las siguientes opciones adicionales:
+
+       -b, --bidirectional
+              Modo  bidireccional.   La  regla concordará con los
+              paquetes IP en ambas direcciones;  esto  tiene  los
+              mismos  efectos que repetir la regla cambiando ori­
+              gen y destino.
+
+       -v, --verbose
+              Salida documentada.  Esta opción hace que  el  man­
+              tato  list  muestre  la driección del interfaz, las
+              opciones de la regla (si hay) y las  máscaras  TOS.
+              Los  contadores también se muestran con los sufijos
+              'K', 'M' o 'G' para multiplicadores 1000, 1,000,000
+              y  1,000,000,000  respectivamente (pero vea la ban­
+              dera -x para cambiar esto). Cuando  se usa en  com­
+              binación  con  -M,  la  información  relativa a los
+              núeros de secuencia  delta  también  se  mostrarán.
+              Para  añadir,  insertar,  borrar  y sustituir, esto
+              hace que se muestre inforamción detallada sobre  la
+              regla.
+
+       -n, --numeric
+              Salida numérica Las direcciones IP y los números de
+              puertos se  imprimirán  en  formato  numérico.  Por
+              defecto, el programa intentará mostrarlos como nom­
+              bres de hosts, nombres de redes o servicios (cuando
+              sea aplicable).
+
+       -l, --log
+              Activa  el  registro del núcleo de los paquetes que
+              concuerden. Cuando esta opción está activa para una
+              regla, el núcleo Linux imprimirá cierta información
+              de todos los paquetes que concuerden (como la  may­
+              oría  de  los  campos  de  cabeceras  IP)  mediante
+              printk().
+
+       -o, --output [tamaño-máximo]
+              Copia  los  paquetes  al  dispositivo  espacio   de
+              usuario.  Esto  es  en la actualidad principalmente
+              para desarrolladores que quieren jugar con  efectos
+              de cortafuegos en su espacio. El argumento opcional
+              tamaño-máximo se puede usar para limitar el  máximo
+              número  de  bytes  del paquete que se van a copiar.
+              Esta opción sólo es válida si el núcleo se ha  com­
+              pilado con CONFIG_IP_FIREWALL_NETLINK activo.
+
+       -m, --mark valor-marca
+              Marca  paquetes concordados. Los paquetes se pueden
+              marcar con un valor entero sin signo de 32 bits que
+              (algún  día) puede cambiar su manejo interno. Si no
+              es un "kernel hacker" no es probable que tenga  que
+              preocuparse  por  esto.   Si  la cadena valor-marca
+              empieza con + o -, este valor se añade o resta  del
+              valor  actual  del  valor de marca de paquetes (que
+              empieza  en cero).
+
+       -t, --TOS andmask xormask
+              Máscara usada para modificar el  campo  TOS  de  la
+              cabecera  IP.  Cuando  un paquete concuerda con una
+              regla, a su campo TOS, priemero se hace un and  con
+              la  primera  máscara  y  al resultado de esto se le
+              hace un xor con la segunda máscara. Las máscaras se
+              tiene que especificar como valores hexadecimales de
+              8-bit. Como el LSB del campo TOS debe quedar  inal­
+              terado  (RFC  1349),  los valores TOS, que hicieran
+              que se alterase, se  rechazan,  como  es  cualquier
+              regla  que  siempre  ponga más que el bit TOS.  Las
+              reglas que podrían poner múltiples  bits  TOS  para
+              ciertos  paquetes  originan avisos (enviados a std­
+              out) que se pueden ignorar si sabe que paquetes con
+              valores  TOS  nuncan  alcanzarán esta regla. Obvia­
+              mente manipular el TOS es un gesto sin  sentido  si
+              el objetivo de la regla es DENY o REJECT.
+
+       -x, --exact
+              Expande  números.   Muestra  el valor exacto de los
+              contadores de bytes y paquetes en lugar de sólo los
+              números  redondeados  en  K  (múltiplos  de 1000) M
+              (múltiplos de 1000K) o G (múltiplss de 1000M). Esta
+              opción sólo es relevante para el mandato -L.
+
+       [!] -y, --syn
+              Sólo  concuerda  con  paquetes  TCP  con el bit SYN
+              activo y los bits ACK y FIN limpios. Tales paquetes
+              se  usan para las solicitudes de inicio de conexión
+              TCP;  por  ejemplo,   bloqueando   tales   paquetes
+              entrantes  en un interfaz, prevendrá las conexiones
+              TCP, pero las conexioenes  salientes  no  se  verán
+              afectadas. Esta opción sólo tiene sentido cuando el
+              tipo de protocolo está como TCP. Si la bandera  "!"
+              flag  precede  al  "-y", el sentido de la opción se
+              invierte.
+
+FICHEROS
+       /proc/net/ip_fwchains
+       /proc/net/ip_masquerade
+
+BUGS
+       No hay forma de reiniciar los  contadores  de  paquetes  y
+       bytes en una única cadena. Es una limitación del núcleo.
+
+       No  se  realiza  la  detección  de bucles en ipchains; los
+       paquetes en un bucle se eliminan y se registran, pero esto
+       será  lo  primero que encontrará sobre esto si accidental­
+       mente crea un bucle.
+
+       La explicación de qué efectos tiene marcar un  paquete  es
+       vaga  intencianlamente  hasta  que  se  publique  la docu­
+       mentación del núcleo que describe las rutinas  de  secuen­
+       ciación de paquetes del núcleo.
+
+       No  hay  forma  de poner a cero los contadores de política
+       (i.e. las cadenas predefinidas).
+
+FALLOS
+       Este ipchains es muy diferente al ipfwadm by Jos  Vos,  ya
+       que  usa  los  nuevos  árboles  de cortafuegos IP. Su fun­
+       cionalidad incluye ipfwadm, y hay  normalmente  una  apli­
+       cación 1:1 de los mandatos. Hay, sin embargo, algunos cam­
+       bios con los que debería tener cuidado.
+
+       Los fragmentos se manejan de diferente  forma.  Todos  los
+       fragmentos  tras el primero usado se dejan pasar (que nor­
+       malmente es seguro); ahora se pueden  filtrar.  Esto  sig­
+       nifica que probablemente añadirá una regla específica para
+       aceptar  fragmentos  si  los  está  convirtiendo.  También
+       busque  las  antiguas reglas de contabilidad que verifican
+       los puertos origen y destino de 0xFFFF (0xFF para paquetes
+       ICMP)  que era la anterior forma de contabilizar los frag­
+       mentos.
+
+       La  reglas  de  contabilidad   ahora   simplemente   están
+       integradas en las cadenas de entrada y salidad; puede sim­
+       ular el anterior comportamiento como:
+        ipchains -N acctin
+        ipchains -N acctout
+        ipchains -N acctio
+        ipchains -I input -j acctio
+        ipchains -I input -j acctin
+        ipchains -I output -j acctio
+        ipchains -I output -j acctout
+       Esto crea tres cadenas definidas acctin, acctout y acctio,
+       que  son  para  contener  cualquier  regla de contabilidad
+       (estas reglas se deberían especificar sin una  bandera  -j
+       para  que los paquetes simplemente lo pasen sin perjudicar
+       nada).
+
+       A MASQ o REDIRECT  objetivos  encontrados  por  el  núcleo
+       fuera  de lugar (i.e. no durante una regla de reenvío o de
+       entrada respectivamente) ocasionarán un mensaje  a  syslog
+       y que el paquete sea descartado.
+
+       El  anterior comportamiento de concordancias con SYN y ACK
+       (que era previamente ignorado para  paquetes  no  TCP)  ha
+       cambiado;  la  opción  SYN  no  es  válida  para reglas no
+       específicas TCP.
+
+       La opción de concordancia ACK ( -k) ya no se  soporta;  la
+       combinación de !  y -y proporcionan la equivalencia).
+
+       Ahora  es  ilegal especificar una máscara TOS que acitve o
+       modifique el bit TOS menos significativo; previamente  las
+       máscaras  TOS  eran  modificadas  silenciosamente  por  el
+       núcleo si intentaban hacer esto.
+
+       La bandera -b ahora se gestiona simplemente  insertando  o
+       borrando un par de reglas, una con las especificaciones de
+       origen y destino intercambiadas.
+
+       No hay forma de especificar un interfaz por dirección: use
+       su nombre.
+
+VÉASE TAMBIÉN
+       ipfw(4)
+
+AUTOR
+       Rusty Russell <Paul.Russell@rustcorp.com.au>
+
+
+
+                          8 Febrero 1998              IPCHAINS(8)

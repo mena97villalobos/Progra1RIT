@@ -1,0 +1,27 @@
+ZFORCE(1)                                               ZFORCE(1)
+
+
+
+NOMBRE
+       zforce  -  forzar la extensión '.gz' en todos los ficheros
+       gzip
+
+SINOPSIS
+       zforce [ nombre ...  ]
+
+DESCRIPCIÓN
+       zforce fuerza una extensión .gz en todos los ficheros gzip
+       de  modo  que  gzip no los comprima dos veces.  Esto puede
+       ser útil para ficheros  con  nombres  truncados  tras  una
+       transferencia.   En sistemas con limitación para el nombre
+       de ficheros a 14 caracteres, el nombre original  es  trun­
+       cado   para  hacer  sitio  al  sufijo  .gz.  Por  ejemplo,
+       12345678901234 es renombrado a 12345678901.gz. Un  fichero
+       con nombre foo.tgz se dejaría intacto.
+
+VÉASE TAMBIÉN
+       gzip(1), znew(1), zmore(1), zgrep(1), zdiff(1), gzexe(1)
+
+
+
+                                                        ZFORCE(1)

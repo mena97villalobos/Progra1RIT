@@ -1,0 +1,34 @@
+BASENAME(1)                                           BASENAME(1)
+
+
+
+NOMBRE
+       basename - elimina directorios y sufijos de los nombres de
+       ficheros
+
+SINOPSIS
+       basename nombre [sufijo]
+       basename {--help,--version}
+
+DESCRIPCIÓN
+       Esta documentación no será mantenida y puede ser  inexacta
+       o incompleta.  La documentación Texinfo es ahora la fuente
+       autorizada.
+
+       Esta página de manual documenta la versión  GNU  de  base­
+       name.   El  comando  basename elimina cualquier componente
+       directorio de name; Si se especifica sufijo y es  idéntico
+       al final de nombre, se ellimina de nombre también .  base­
+       name imprime el nombre  resultante en la salida  estándar.
+
+   OPCIONES
+       --help Imprime  un  mensaje de uso en la salida estándar y
+              termina correctamente.
+
+       --version
+              Imprime información sobre la versión en  la  salida
+              estándar y termina correctamente.
+
+
+
+FSF                    Utilidades Shell GNU           BASENAME(1)

@@ -1,0 +1,276 @@
+gdb(1)                   Herramientas GNU                  gdb(1)
+
+
+
+NOMBRE
+       gdb - El depurador GNU
+
+SINOPSIS
+       gdb    [-help] [-nx] [-q] [-batch] [-cd=dir] [-f] [-b bps]
+              [-tty=dev] [-s symfile] [-e prog] [-se prog] [-c
+              core] [-x cmds] [-d dir] [prog[core|procID]]
+
+DESCRIPCIÓN
+       El  proposito  de  un  depurador  como  GDB es permitir al
+       usuario ver lo que está ocurriendo ``dentro'' de otro pro­
+       grama  mientras  que se está ejecutando -- o lo que estaba
+       haciendo en el momento que falló.
+
+       GDB puede hacer cuatro tipo de cosas (más otras cosas para
+       dar  soporte  a éstas) para ayudarte a capturar errores en
+       el acto:
+
+
+          ·   Comenzar tu programa, especificando cualquier  cosa
+              que pueda afectar a su comportamiento.
+
+
+          ·   Hacer  que  tu  programa  se  pare al cumplirse las
+              condiciones especificadas.
+
+
+          ·   Examinar que ha pasado, cuando tu  programa  se  ha
+              parado.
+
+
+          ·   Cambiar  cosas  de  tu  programa, de tal manera que
+              puedas experimentar corrigiendo los efectos  de  un
+              fallo y continuar para descubrir otros.
+
+
+
+       Puedes usar GDB para depurar programas escritos en C, C++,
+       y Modula-2.  El soporte para  Fortran  se  añadirá  cuando
+       esté listo un compilador GNU Fortran.
+
+       GDB  se  invoca con la orden de shell gdb.  Una vez comen­
+       zado, lee órdenes del terminal  hasta  que  le  dices  que
+       salga  con  la orden GDB quit. Usando la orden help puedes
+       obtener una ayuda directa del gdb.
+
+       Se puede ejecutar gdb sin argumentos ni opciones; pero  la
+       manera más común de comenzar GDB es con uno o dos argumen­
+       tos, especificando un programa  ejecutable  con  el  argu­
+       mento:
+
+       gdb programa
+
+
+       También  puedes  comenzar  con un programa ejecutable y un
+       fichero core específico:
+
+       gdb programa core
+
+
+       Puedes, en su lugar, especificar un  ID  de  proceso  como
+       segundo  argumento,  si  quieres  depurar  un  proceso  en
+       ejecución:
+
+       gdb programa 1234
+
+
+       ligaría GDB al proceso 1234 (al menos que  también  tengas
+       un fichero denominado `1234'; GDB busca un fichero core en
+       primer lugar).
+
+       Aquí están las ordenes más frecuentemente  necesitadas  en
+       GDB:
+
+       break [fichero:]función
+                Pone un punto de ruptura en función (en fichero).
+
+       run [arglist]
+              Comienza tu programa (con arglist,  si  se  especi­
+              fica).
+
+       bt     Backtrace: muestra la pila del programa.
+
+       print expr
+              Muestra el valor de una expresión.
+
+       c      Continua  ejecutando tu programa (después de parar,
+              p.e. en un punto de ruptura).
+
+       next   Ejecuta la siguiente línea del programa (después de
+              parar);  pasa sobre cualquier llamada a función que
+              apareciera en la línea.
+
+       step   Ejecuta la siguiente línea del programa (despué  de
+              parar);   entrando  en  cualquier llamada a función
+              que apareciera en la línea.
+
+       help [nombre]
+              Muestra información sobre la orden  GDB  nombre,  o
+              información general sobre como utilizar GDB.
+
+       quit   Salir de GDB.
+
+       Para  todos  los  detaller  sobre  GDB, véase Using GDB: A
+       Guide to the GNU  Source-Level  Debugger,  by  Richard  M.
+       Stallman  and  Roland  H.  Pesch.   El  mismo  texto  está
+       disponible en línea como la entrada  gdb  en  el  programa
+       info.
+
+OPCIONES
+       Cualquier  argumento  distinto  de  las opciones indica un
+       fichero ejecutable y un fichero core (o un ID de proceso);
+       es  decir, el primer argumento encontrado si la bandera de
+       opción asociada es equivalente a la  opción  `-se',  y  el
+       segundo,  si existe, es equivalente a la opción `-c' si es
+       el nombre de un fichero.   Muchas  opciones  tienen  tanto
+       formato largo como corto; ambos se muestra aquí.  Los for­
+       matos largos también se reconocen si los truncas,  siempre
+       que  sea  lo  suficientemente largo para que la opción que
+       representa no sea ambigüa.  (Si lo deseas, puedes  indicar
+       los argumentos de opción con `+' en  lugar de  `-', aunque
+       nosotros mostramos la convención más usual.)
+
+       Todas las opciones y argumentos en la línea de ordenes que
+       des  se  procesann en orden secuencial. El orden es impor­
+       tante cuando se usa la opción `-x'.
+
+
+       -help
+
+       -h     Lista todas las opciones, con explicaciones breves.
+
+
+
+       -symbols=fichero
+
+       -s fichero
+               Lee la tabla de símbolos del fichero fichero.
+
+
+       -exec=fichero
+
+       -e fichero
+                Usa el fichero fichero como el fichero ejecutable
+              a ejecutar cuando sea adecuado, y para examinar los
+              datos puros en unión con un volcado core.
+
+
+       -se=fichero
+                Lee la tabla de símbolos del fichero fichero y la
+              usa como el fichero ejecutable.
+
+
+       -core=fichero
+
+       -c fichero
+               Usa el fichero fichero como un volcado  core  para
+              examinar.
+
+
+       -command=fichero
+
+       -x fichero
+               Ejecuta las ordenes GDB del fichero fichero.
+
+
+       -directory=directorio
+
+       -d directorio
+                Añade  directorio  al  camino  de búsqueda de los
+              ficheros fuente.
+
+
+
+       -nx
+
+       -n     No ejecuta las ordenes de ningún  fichero  de  ini­
+              cialización  `.gdbinit'.   Normalmente, las ordenes
+              de estos ficheros se ejecutan después de que  todas
+              las opciones de comando y los argumentos hayan sido
+              procesados.
+
+
+
+       -quiet
+
+       -q     ``Quiet''.  No imprime los mensajes  introductorios
+              y  de copyright.   Estos mensajes también se supri­
+              men en el modo de trabajo por lotes.
+
+
+       -batch Se ejecuta en modo trabajo por lotes.  Finaliza con
+              estado  0 después de procesar todos los ficheros de
+              ordenes especificados con `-x' (y `.gdbinit', si no
+              está  inhibido).   Finaliza  con un estado distinto
+              del cero si ocurre un error durante la ejecución de
+              las ordenes GDB en los ficheros de ordenes.
+
+              El  modo de trabajo por lotes puede ser util cuando
+              se ejecuta GDB como un  filtro,  pot  ejemplo  para
+              bajarse  y  ejecutar un programa en otro ordenador;
+              para hacer que sea más útil, el mensaje
+
+              Program exited normally.
+
+
+              (que se muestra normalmente siempre que un programa
+              ejecutándose  bajo el control de GDB termina) no se
+              muestra cuando se ejecuta en modo  de  trabajo  por
+              lotes.
+
+
+       -cd=directorio
+                Ejecuta  GDB usando directorio como directorio de
+              trabajo, en lugar del directorio actual.
+
+
+       -fullname
+
+       -f     Emacs activa esta opción cuando ejecuta GDB como un
+              subproceso.  Indica al GDB que saque el nombre com­
+              pleto del fichero y el número de  línea  de  manera
+              estándar  y reconocible cada vez que se muestra una
+              porción de pila (lo que incluye  cada  vez  que  el
+              programa  se  para).   Este  formato reconocible se
+              parece a do caracteres ` 32', seguidos  del  nombre
+              del  fichero,  el número de línea y la posición del
+              caracter separados por comas, y  una  nueva  línea.
+              El  programa  de  interface Emacs-a-GDB usa los dos
+              caracteres program uses  the  two  ` 32'  como  una
+              señal para mostra el código fuente para la porción.
+
+
+       -b bps  Fija la velocidad de la línea (ratio de baudios  o
+              bits  por  segundo)  de  cualquier  interface serie
+              usado por GDB para la depuración remota.
+
+
+       -tty=dispositivo
+               Se ejecuta usando dispositivo como  la  entrada  y
+              salida estándar de tu programa.
+
+
+
+VÉASE TAMBIÉN
+       Entrada  `gdb'  en  info;  Using  GDB:  A Guide to the GNU
+       Source-Level Debugger, Richard M. Stallman and  Roland  H.
+       Pesch, July 1991.
+
+COPYING
+       Copyright (c) 1991 Free Software Foundation, Inc.
+
+       Permission  is  granted  to  make  and distribute verbatim
+       copies of this manual provided the  copyright  notice  and
+       this permission notice are preserved on all copies.
+
+       Permission is granted to copy and distribute modified ver­
+       sions of this manual under  the  conditions  for  verbatim
+       copying,  provided  that the entire resulting derived work
+       is distributed under the  terms  of  a  permission  notice
+       identical to this one.
+
+       Permission  is granted to copy and distribute translations
+       of this manual into another language, under the above con­
+       ditions for modified versions, except that this permission
+       notice may be included in  translations  approved  by  the
+       Free  Software  Foundation  instead  of  in  the  original
+       English.
+
+
+
+Herramientas GNU            4 Nov 1991                     gdb(1)

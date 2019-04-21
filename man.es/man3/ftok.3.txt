@@ -1,0 +1,54 @@
+FTOK(3)          Manual del Programador de Linux          FTOK(3)
+
+
+
+NOMBRE
+       ftok - convierte un nombre de camino y un identificador de
+       proyecto en una clave IPC de System V
+
+SINOPSIS
+       # include <sys/types.h>
+       # include <sys/ipc.h>
+
+       key_t ftok ( char *camino, char proy )
+
+DESCRIPCIÓN
+       La función convierte el nombre de  camino  de  un  fichero
+       existente y accesible y un identificador de proyecto a una
+       clave IPC de System V de tipo key_t.
+
+VALOR DEVUELTO
+       En caso de éxito el valor devuelto  será  el  valor  key_t
+       convertido;  en otro caso, -1 con errno indicando el error
+       como para la llamada al sistema stat(2).
+
+FALLOS
+       El valor key_t generado se obtiene llamando a  stat  sobre
+       el  fichero  de  disco  correspondiente  a camino para así
+       poder coger su número de nodo-í y el número menor de  dis­
+       positivo  del  sistema  de  ficheros  en el cual reside el
+       fichero de disco, después combinando el valor  de  8  bits
+       proy  junto  con  los  16  bits  más  bajos del número del
+       nodo-í, más los 8 bits del número  menor  de  dispositivo.
+       El  algoritmo  no  garantiza un valor único para la clave.
+       De hecho
+
+       ·      Dos nombres diferentes enlazados al  mismo  fichero
+              producen los mismos valores de clave.
+
+       ·      Emplear  los 16 bits más bajos del número de nodo-í
+              proporciona alguna  probabilidad  (también  pequeña
+              normalmente)  de  tener los mismos valores de clave
+              para nombres de ficheros con nodos-í diferentes.
+
+       ·      El no discriminar entre números mayores de disposi­
+              tivo,  da  alguna probabilidad de colisión (también
+              usualmente pequeña) para sistemas con  varios  con­
+              troladores de disco.
+
+VÉASE TAMBIÉN
+       ipc(5), msgget(2), semget(2), shmget(2), stat(2).
+
+
+
+Linux 0.99.13             21 Enero 1998                   FTOK(3)

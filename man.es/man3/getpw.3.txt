@@ -1,0 +1,54 @@
+GETPW(3)         Manual del Programador de Linux         GETPW(3)
+
+
+
+NOMBRE
+       getpw  -  Re-construye una línea del fichero de cuentas de
+       usuario
+
+SINOPSIS
+       #include <pwd.h>
+       #include <sys/types.h>
+
+       int getpw(uid_t uid, char *buf);
+
+DESCRIPCIÓN
+       La función getpw() reconstruye la  línea  del  fichero  de
+       cuentas de usuario para el usuario cuyo UID se da como uid
+       y el resultado se guarda en el sitio apuntado por buf.  El
+       búfer devuelto en buf contiene una línea con el formato
+
+              nombre:contraseña:uid:gid:gecos:dir:shell
+
+       La estructura passwd se define en <pwd.h> como sigue:
+
+              struct passwd {
+                      char    *pw_name;       /* nombre de usuario */
+                      char    *pw_passwd;     /* contraseña cifrada */
+                      uid_t   pw_uid;         /* id. del usuario */
+                      gid_t   pw_gid;         /* id. del grupo primario */
+                      char    *pw_gecos;      /* nombre real */
+                      char    *pw_dir;        /* directorio de inicio */
+                      char    *pw_shell;      /* programa caparazón */
+              };
+
+VALOR DEVUELTO
+       La  función  getpw()  devuelve  0  si  acaba bien, o -1 si
+       ocurre un error.
+
+ERRORES
+       ENOMEM Memoria  insuficiente  para  alojar  la  estructura
+              passwd.
+
+FICHEROS
+       /etc/passwd
+              fichero de datos de cuentas de usuario
+
+VÉASE TAMBIÉN
+       fgetpwent(3), getpwent(3), setpwent(3), endpwent(3), getp­
+       wnam(3), getpwuid(3), putpwent(3), passwd(5).
+
+
+
+
+GNU                       29 Enero 1998                  GETPW(3)

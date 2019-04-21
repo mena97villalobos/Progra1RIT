@@ -1,0 +1,47 @@
+PUTPWENT(3)      Manual del Programador de Linux      PUTPWENT(3)
+
+
+
+NOMBRE
+       putpwent - escribe una entrada en un fichero de usuarios
+
+SINOPSIS
+       #include <pwd.h>
+       #include <stdio.h>
+       #include <sys/types.h>
+
+       int putpwent(const struct passwd *p, FILE *flujo);
+
+DESCRIPCIÓN
+       La función putpwent() escribe una entrada de usuario de la
+       estructura p en el fichero asociado con flujo.
+
+       La estructura passwd se define en <pwd.h> así:
+
+              struct passwd {
+                      char    *pw_name;       /* nombre de usuario */
+                      char    *pw_passwd;     /* contraseña cifrada */
+                      uid_t   pw_uid;         /* UID */
+                      gid_t   pw_gid;         /* GID */
+                      char    *pw_gecos;      /* nombre real */
+                      char    *pw_dir;        /* directorio de casa */
+                      char    *pw_shell;      /* programa shell */
+              };
+
+VALOR DEVUELTO
+       La función putpwent() devuelve 0 en caso de éxito, ó -1 si
+       ocurre un error.
+
+ERRORES
+       EINVAL Argumento inválido (NULL).
+
+CONFORME A
+       SVID 3
+
+VÉASE TAMBIÉN
+       fgetpwent(3), getpwent(3), setpwent(3), endpwent(3), getp­
+       wnam(3), getpwuid(3), getpw(3)
+
+
+
+GNU                        5 Marzo 1998               PUTPWENT(3)

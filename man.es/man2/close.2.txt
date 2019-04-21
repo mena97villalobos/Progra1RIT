@@ -1,0 +1,58 @@
+CLOSE(2)         Manual del Programador de Linux         CLOSE(2)
+
+
+
+NOMBRE
+       close - cierra un descriptor de fichero
+
+SINOPSIS
+       #include <unistd.h>
+
+       int close(int fd);
+
+DESCRIPCIÓN
+       close  cierra  un descriptor de fichero de forma que ya no
+       se refiera a fichero alguno y pueda ser reutilizado.  Cua­
+       lesquiera  bloqueos mantenidos sobre el fichero con el que
+       estaba asociado, y propiedad del proceso,  son  eliminados
+       (sin importar qué descriptor de fichero fue utilizado para
+       obtener el bloqueo).
+
+       Si fd es la última copia de cierto descriptor de  fichero,
+       los recursos asociados con dicho descriptor son liberados;
+       si el descriptor fuera la última referencia a  un  fichero
+       que  haya  sido  eliminada  mediante unlink(2) entonces el
+       fichero es borrado.
+
+VALOR DEVUELTO
+       close devuelve 0 en caso de éxito y  -1  si  ocurre  algún
+       error.
+
+ERRORES
+       EBADF  fd no es un descriptor de fichero abierto válido.
+
+CONFORME A
+       SVID,  AT&T,  POSIX,  X/OPEN, BSD 4.3.  SVr4 documenta una
+       condición de error ENOLINK adicional.
+
+NOTA
+       El no comprobar el valor devuelto por close es un error de
+       programación  común  y  no obstante serio. Aquellas imple­
+       mentaciones de sistemas  de  ficheros  que  usan  técnicas
+       tales como la conocida por ``write-behind'' (``escribe por
+       detrás'') a  fin  de  incrementar  el  rendimiento  pueden
+       resultar  en  que  write(2)  tenga  éxito aunque aún no se
+       hayan escrito los datos. El  estado  de  error  puede  ser
+       informado  durante  una  posterior operación de escritura,
+       pero está garantizado que  será  informado  al  cerrar  el
+       fichero.   No comprobar el valor devuelto cuando se cierra
+       un fichero puede dar lugar a  una  pérdida  silenciosa  de
+       datos.   Esto  se  observa  especialmente en NFS y con las
+       cuotas de discos.
+
+VÉASE TAMBIÉN
+       open(2), fcntl(2), shutdown(2), unlink(2), fclose(3).
+
+
+
+Linux                     14 Abril 1996                  CLOSE(2)

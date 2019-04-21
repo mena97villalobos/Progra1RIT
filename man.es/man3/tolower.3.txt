@@ -1,0 +1,44 @@
+TOUPPER(3)       Manual del Programador de Linux       TOUPPER(3)
+
+
+
+NOMBRE
+       toupper,  tolower - convierte letras a mayúsculas o minús­
+       culas
+
+SINOPSIS
+       #include <ctype.h>
+
+       int toupper (int c);
+       int tolower (int c);
+
+DESCRIPCIÓN
+       toupper() convierte la letra c a mayúsculas, si  es  posi­
+       ble.
+
+       tolower()  convierte  la letra c a minúsculas, si es posi­
+       ble.
+
+VALOR DEVUELTO
+       El valor devuelto es la letra "convertida", o c si  no  se
+       pudo realizar la conversión.
+
+CONFORME A
+       ANSI - C, BSD 4.3
+
+FALLOS
+       Hay  que tener en cuenta que los detalles de qué es mayús­
+       cula o minúscula dependen de  cada  lengua  concreta.  [Si
+       sabes  traducir  esto que viene: c.c.portela@ieee.org] For
+       example, the  default  "C"  locale  does  not  know  about
+       umlauts, so no conversion is done for them.
+
+        Del  mismo modo, también existen letras minúsculas sin su
+       equivalénte mayúsculo (s "sharp" alemana).
+
+VÉASE TAMBIÉN
+       isalpha(3), setlocale(3), locale(7)
+
+
+
+GNU                        4-Abril-1993                TOUPPER(3)

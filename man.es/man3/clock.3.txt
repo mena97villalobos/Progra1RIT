@@ -1,0 +1,39 @@
+CLOCK(3)         Manual del Programador de Linux         CLOCK(3)
+
+
+
+NOMBRE
+       clock - Determina el tiempo de uso del procesador
+
+SINOPSIS
+       #include <time.h>
+
+       clock_t clock(void);
+
+DESCRIPCIÓN
+       La  función  clock()  devuelve una aproximación del tiempo
+       del procesador usado por el programa.
+
+VALOR DEVUELTO
+       El valor devuelto es el tiempo  de  CPU  usado  medido  en
+       clock_t;  para  obtener el equivalente en segundos, divida
+       el valor devuelto por CLOCKS_PER_SEC.
+
+CONFORME A
+       ANSI C
+
+FALLOS
+       El C estándar permite  que  la  función  devuelva  valores
+       arbitrarios  al  comienzo del programa; tome la diferencia
+       entre  el  valor  devuelto  por  una  llamada  clock()  al
+       comienzo  y  el  final del programa para obtener la máxima
+       portabilidad.
+
+       La función times() devuelve más información.
+
+VÉASE TAMBIÉN
+       times(2)
+
+
+
+GNU                       21 Abril 1993                  CLOCK(3)

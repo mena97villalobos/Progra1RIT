@@ -1,0 +1,47 @@
+PIDOF(8)       Manual del Administrador de Sistemas      PIDOF(8)
+
+
+
+NOMBRE
+       pidof  --  busca  el  ID de un programa que se está ejecu­
+       tando.
+
+SINOPSIS
+       pidof [-s] [-x]  [-o  omitpid]  [-o  omitpid..]   programa
+       [programa..]
+
+DESCRIPCIÓN
+       Pidof  busca  el  id  del proceso del nombre del programa.
+       Imprime los ids a la salida estándar.  Es  usado  general­
+       mente  en guiones que cambian el nivel de ejecución, espe­
+       cialmente cuando el sistema tiene  el  System-V  como  una
+       estructura   rc.   En  este  caso  los  guiones  están  en
+       /etc/rc?.d, donde ? es el nivel de ejecución.
+
+OPCIONES
+       -s     Lanzamiento simple - indica al  programa  que  solo
+              debe retornar un pid.
+
+       -x     También  guión - hace que el programa devuelva tam­
+              bién el id del entorno que ejecutó el guión.
+
+       -o omitpid
+              Le dice a pidof que omita los procesos  que  tienen
+              ese  id.  El  pid  especial %PPID puede usarse para
+              nombrar el proceso del  programa  pidof,  en  otras
+              palabras  la  llamada  al  entorno  o  al  guión de
+              entorno.
+
+NOTAS
+       pidof es un enlace simple  (simbólico)  para  el  programa
+       killall5, que debería estar también en /sbin.
+
+VÉASE TAMBIÉN
+       shutdown(8), init(8), halt(8), reboot(8)
+
+AUTOR
+       Miquel van Smoorenburg, miquels@cistron.nl
+
+
+
+Linux                      27 mayo 1997                  PIDOF(8)

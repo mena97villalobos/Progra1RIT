@@ -1,0 +1,60 @@
+GETGRENT(3)      Manual del Programador de Linux      GETGRENT(3)
+
+
+
+NOMBRE
+       getgrent,  setgrent,  endgrent  -  obtiene una entrada del
+       fichero de grupos
+
+SINOPSIS
+       #include <grp.h>
+       #include <sys/types.h>
+
+       struct group *getgrent(void);
+
+       void setgrent(void);
+
+       void endgrent(void);
+
+DESCRIPCIÓN
+       La función getgrent() devuelve un puntero a una estructura
+       que  contiene  la información de grupo de  /etc/group.  La
+       primera vez que se la llama devuelve la primera entrada; a
+       partir de ahí devuelve las entradas sucesivas.
+
+       La  función  setgrent()  rebobina el apuntador de posición
+       del fichero al principio del fichero /etc/group.
+
+       La función endgrent() cierra el fichero /etc/group.
+
+       La estructura group se define en <grp.h> como sigue:
+
+              struct group {
+                      char    *gr_name;        /* nombre del grupo */
+                      char    *gr_passwd;      /* contraseña del grupo */
+                      gid_t   gr_gid;          /* id. del grupo */
+                      char    **gr_mem;        /* miembros del grupo */
+              };
+
+VALOR DEVUELTO
+       La función getgrent() devuelve la dirección de la  estruc­
+       tura  con  información  del  grupo,  o  NULL si no hay más
+       entradas o ha ocurrido un error.
+
+ERRORES
+       ENOMEM No hay bastante memoria como para alojar la estruc­
+              tura con la información del grupo.
+
+FICHEROS
+       /etc/group
+              fichero con la base de datos de grupos
+
+CONFORME A
+       SVID 3, BSD 4.3
+
+VÉASE TAMBIÉN
+       fgetgrent(3), getgrnam(3), getgrgid(3)
+
+
+
+GNU                       26 Enero 1998               GETGRENT(3)

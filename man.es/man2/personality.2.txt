@@ -1,0 +1,45 @@
+PERSONALITY(2)   Manual del Programador de Linux   PERSONALITY(2)
+
+
+
+NOMBRE
+       personality  -  establece el dominio de ejecución del pro­
+       ceso
+
+SINOPSIS
+       int personality(unsigned long persona);
+
+DESCRIPCIÓN
+       Linux admite diferentes dominios de ejecución, o personal­
+       idades, para cada proceso. Entre otras cosas, los dominios
+       de ejecución le dicen a  Linux  cómo  asociar  números  de
+       señal  a  acciones  a tomar para cada señal. El sistema de
+       dominios de ejecución  permite  a  Linux  proporcionar  un
+       soporte  limitado para binarios compilados bajo otros sis­
+       temas operativos de tipo Unix.
+
+       personality hará que el dominio de ejecución  referenciado
+       por  persona sea el nuevo dominio de ejecución del proceso
+       en curso.
+
+VALOR DEVUELTO
+       En caso de éxito, persona es el nuevo dominio de ejecución
+       y  se  devuelve  la persona anterior. En caso de error, se
+       devuelve -1 y se pone un valor apropiado en errno.
+
+ERRORES
+       EINVAL  persona no se refiere a un  dominio  de  ejecución
+               válido.
+
+
+FICHEROS
+       /usr/include/linux/personality.h
+
+CONFORME A
+       personality  es específico de Linux y no debería emplearse
+       en programas que se pretendan transportables.
+
+
+
+
+Linux 2.0                 22 Julio 1996            PERSONALITY(2)

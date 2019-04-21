@@ -1,0 +1,51 @@
+GZEXE(1)                                                 GZEXE(1)
+
+
+
+NOMBRE
+       gzexe  - comprime ficheros ejecutables dejándoles el mismo
+       nombre
+
+SINOPSIS
+       gzexe [ -d ] [ nombre ...  ]
+
+DESCRIPCIÓN
+       La utilidad gzexe nos permite comprimir un  programa  eje­
+       cutable dejando el fichero comprimido con el mismo nombre,
+       de forma que al ejecutarlo se descomprima  automáticamente
+       y se ejecute el programa original (con una penalización en
+       cuanto al rendimiento). Por ejemplo,  tras  dar  la  orden
+       ``gzexe /bin/cat'' se crearán los dos ficheros siguientes:
+           -r-xr-xr-x  1 root  bin   9644 Feb 11 11:16 /bin/cat
+           -r-xr-xr-x  1 bin   bin  24576 Nov 23 13:21 /bin/cat~
+       /bin/cat~ es el fichero original y /bin/cat es el  fichero
+       ejecutable  comprimido.  Podemos  borrar /bin/cat~ una vez
+       que estemos seguros de  que  /bin/cat  funciona  correcta­
+       mente.
+
+       Esta  utilidad  es  más  útil  en  sistemas con discos muy
+       pequeños.
+
+OPCIONES
+       -d     Descomprime los ejecutables dados en  vez  de  com­
+              primirlos.
+
+VÉASE TAMBIÉN
+       gzip(1), znew(1), zmore(1), zcmp(1), zforce(1)
+
+ADVERTENCIAS
+       El ejecutable comprimido es un guión del shell. Esto puede
+       crear algunos agujeros de  seguridad.  En  particular,  el
+       ejecutable  comprimido  confía  en la variable de ambiente
+       PATH para encontrar gzip y algunas utilidades  más  (tail,
+       chmod, ln, sleep).
+
+FALLOS
+       gzexe intenta mantener los atributos de fichero originales
+       en el ejecutable comprimido, pero quizá tengamos que  cor­
+       regirlos  manualmente  en algunos casos, empleando chmod o
+       chown.
+
+
+
+                                                         GZEXE(1)

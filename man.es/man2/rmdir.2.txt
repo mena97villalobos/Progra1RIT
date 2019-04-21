@@ -1,0 +1,77 @@
+RMDIR(2)         Manual del Programador de Linux         RMDIR(2)
+
+
+
+NOMBRE
+       rmdir - borra un directorio
+
+SINOPSIS
+       #include <unistd.h>
+
+       int rmdir(const char *pathname);
+
+DESCRIPCIÓN
+       rmdir borra un directorio, el cual debe estar vacío.
+
+VALOR DEVUELTO
+       Si  éxito, se devuelve un cero.  Si error, -1 es devuelto,
+       y errno está configurado apropiadamente.
+
+ERRORES
+       EPERM   El sistema de ficheros que  contiene  pathname  no
+               soporta el borrado de directorios.
+
+       EFAULT  pathname  apunta  fuera  de  tu  espacio de direc­
+               cionamiento accesible.
+
+       EACCES  El acceso de escritura al directorio que  contiene
+               pathname no fue permitido por el proceso uid efec­
+               tivo, o uno de los directorios en pathname no per­
+               mitió el permiso de búsqueda(ejecución).
+
+       EPERM   EL   directorio  que  contiene  pathname  has  the
+               sticky-bit (S_ISVTX) set y el efectivo proceso  de
+               uid  no  es ni el uid del fichero a ser borrado ni
+               ese directorio que lo contiene, o  el  sistema  de
+               ficheros que contiene.
+
+       ENAMETOOLONG
+               pathname era demasiado largo.
+
+       ENOENT  Un  componente del directorio enA directory compo­
+               nent in pathname no existe o  es  un  enlace  sim­
+               bólico balanceado(supongo inistable).
+
+       ENOTDIR pathname, o un componente usado como un directorio
+               en pathname, no es, de hecho, un directorio.
+
+       ENOTEMPTY
+               pathname contiene otras entradas tales como . y ..
+               .
+
+       EBUSY   pathname  es  al  actual  directorio  de trabajo o
+               directorio de root de algunos procesos.
+
+       ENOMEM  Insuficiente memoria kernel estaba disponible.
+
+       EROFS   pathname se refiere a un fichero sobre un  sistema
+               de ficheros de sólo lectura.
+
+       ELOOP   Se han encontrado demasiados enlaces simbólicos al
+               resolver pathname.
+
+CONFORME A
+       SVr4, SVID, POSIX, BSD 4.3
+
+FALLOS
+       Algunos hechos desafortunados del protocolo NFS subyacente
+       pueden  provocar la desaparición inexperada de directorios
+       que todavía se están usando.
+
+VÉASE TAMBIÉN
+       rename(2), mkdir(2), chdir(2), unlink(2), rmdir(1), rm(1)
+
+
+
+
+Linux 0.99.7              24 Julio 1993                  RMDIR(2)

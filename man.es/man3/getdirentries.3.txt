@@ -1,0 +1,36 @@
+GETDIRENTRIES(3) Manual del Programador de Linux GETDIRENTRIES(3)
+
+
+
+NOMBRE
+       getdirentries  - obtiene entradas de directorio en un for­
+       mato independiente del sistema de ficheros
+
+SINOPSIS
+       #define __USE_BSD o #define __USE_MISC
+       #include <dirent.h>
+
+       ssize_t getdirentries(int fd, char *buf, size_t  nbytes  ,
+       off_t *pbase);
+
+DESCRIPCIÓN
+       Lee  entradas  de directorio del especificado por fd y las
+       guarda en el sitio apuntado por buf.  Como mucho  se  leen
+       nbytes  bytes. La lectura empieza en la posición *pbase, y
+       *pbase se actualiza con la nueva posición tras la lectura.
+
+VALOR DEVUELTO
+       getdirentries  devuelve  el  número de bytes leídos o cero
+       cuando llega al final del directorio.  Si ocurre un error,
+       se devuelve -1 y se pone un valor apropiado en errno.
+
+ERRORES
+       Vea  el  código  fuente de la biblioteca de Linux para los
+       detalles.
+
+VÉASE TAMBIÉN
+       open(2), lseek(2)
+
+
+
+BSD/MISC                  24 Enero 1998          GETDIRENTRIES(3)

@@ -1,0 +1,43 @@
+FCLOSE(3)        Manual del Programador de Linux        FCLOSE(3)
+
+
+
+NOMBRE
+       fclose - cierra un flujo de datos
+
+SINOPSIS
+       #include <stdio.h>
+
+       int fclose( FILE *flujo);
+
+DESCRIPCIÓN
+       La  función  fclose  disocia  el  flujo especificado de su
+       fichero asociado o conjunto de funciones. Si el  flujo  se
+       estuvo  empleando para salida, cualesquiera datos tampona­
+       dos se escriben antes  que  nada,  empleándose  para  ello
+       fflush(3).
+
+VALOR DEVUELTO
+       Se  devuelve  0 en caso de éxito. En otro caso se devuelve
+       EOF y se pone un valor apropiado  en  la  variable  global
+       errno  para indicar el error. En cualquier caso, cualquier
+       acceso posterior  al  flujo  (incluyendo  otra  llamada  a
+       fclose()) producirá un comportamiento indefinido.
+
+ERRORES
+       EBADF  El argumento flujo no es un flujo de datos abierto.
+
+       La función fclose también puede fallar, y ponerse un valor
+       en  errno  ,  para cualquiera de los errores especificados
+       para las rutinas close(2) o fflush(3).
+
+VÉASE TAMBIÉN
+       close(2), fflush(3), fopen(3), setbuf(3)
+
+CONFORME A
+       La función fclose es conforme con  ANSI  C3.159-1989  (``C
+       ANSI'').
+
+
+
+BSD                       12 Enero 1998                 FCLOSE(3)

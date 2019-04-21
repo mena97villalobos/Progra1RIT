@@ -1,0 +1,31 @@
+STRPBRK(3)       Manual del Programador de Linux       STRPBRK(3)
+
+
+
+NOMBRE
+       strpbrk - busca en una cadena un carácter de un conjunto
+
+SINOPSIS
+       #include <string.h>
+
+       char *strpbrk(const char *s, const char *accept);
+
+DESCRIPCIÓN
+       La  función strpbrk() localiza la primera ocurrencia en la
+       cadena s de cualquier carácter de la cadena accept.
+
+VALOR DEVUELTO
+       La función strpbrk() devuelve un puntero al carácter de  s
+       que coincida con uno de los caracteres de accept o NULL si
+       no se encuentra ninguno.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       index(3), memchr(3), rindex(3), strchr(3), strsep(3), str­
+       spn(3), strstr(3), strtok(3)
+
+
+
+GNU                       12 Abril 1993                STRPBRK(3)

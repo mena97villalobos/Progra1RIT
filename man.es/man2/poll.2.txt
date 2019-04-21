@@ -1,0 +1,83 @@
+POLL(2)          Manual del Programador de Linux          POLL(2)
+
+
+
+NOMBRE
+       poll - espera un evento en un descriptor de fichero
+
+SINOPSIS
+       #include <sys/poll.h>
+
+       int poll(struct pollfd *ufds, unsigned int nfds, int time­
+       out);
+
+DESCRIPCIÓN
+       poll es una variación de select.  Especifica un vector  de
+       nfds estructuras del tipo
+               struct pollfd {
+                       int fd;         /* Descriptor de fichero */
+                       short events;   /* Eventos solicitados */
+                       short revents;  /* Eventos ocurridos */
+               };
+       y un tiempo límite timeout en milisegundos. Un valor nega­
+       tivo indica un tiempo infinito.  El campo fd  contiene  el
+       descriptor  de  fichero  de  un fichero abierto.  El campo
+       events es un parámetro de entrada, una mascara de bits que
+       especifica  los  eventos  en  los  que  la aplicación está
+       interesada.  El campo revents es un parámetro  de  salida,
+       completado  por el núcleo con los eventos que han ocurrido
+       realmente, bien del tipo solicitado o bien de uno  de  los
+       tipos POLLERR, POLLHUP o POLLNVAL.  (Estos tres bits care­
+       cen de significado en el campo events y se pondrán a 1  en
+       el  campo revents en el momento en que la condición corre­
+       spondiente sea cierta).  Si no se ha producido ninguno  de
+       los  eventos  solicitados (y ningún error) para ninguno de
+       los descriptores de  fichero,  el  núcleo  espera  durante
+       timeout  milisegundos a que se produzca uno de estos even­
+       tos.  Los bits posibles en estas máscaras están  definidos
+       en <sys/poll.h>:
+           #define POLLIN    0x0001  /* Hay datos que leer */
+           #define POLLPRI   0x0002  /* Hay datos urgentes que leer */
+           #define POLLOUT   0x0004  /* La escritura ahora será no bloqueante */
+           #define POLLERR   0x0008  /* Condición de error */
+           #define POLLHUP   0x0010  /* Colgado */
+           #define POLLNVAL  0x0020  /* Petición inválida: fd no está abierto */
+       En <asm/poll.h> también se definen los valores POLLRDNORM,
+       POLLRDBAND, POLLWRNORM, POLLWRBAND y POLLMSG.
+
+VALOR DEVUELTO
+       En caso de éxito,  se  devuelve  un  número  positivo  que
+       indica  el  número de estructuras cuyo campo revents tiene
+       un valor distinto de cero  (en  otras  palabras,  aquellos
+       descriptores  para  los que se ha producido un evento o un
+       error). Un valor 0 indica que se  ha  cumplido  el  tiempo
+       límite (timeout) de la llamada y que no se ha seleccionado
+       ningún  descriptor  de  fichero.  En  caso  de  error,  se
+       devuelve -1 y se asigna a errno un valor apropiado.
+
+ERRORES
+       ENOMEM No  hay  espacio disponible para ubicar la tabla de
+              descriptores del fichero.
+
+       EFAULT El vector pasado como argumento no está ubicado  en
+              el espacio de direcciones del programa invocador.
+
+       EINTR  Se  ha  producido  una  señal  antes  de  cualquier
+              evento.
+
+CONFORME A
+       XPG4-UNIX.
+
+DISPONIBILIDAD
+       La llamada al sistema poll() se introdujo  en  la  versión
+       2.1.23 de Linux. La función de biblioteca poll() se intro­
+       dujo en la versión 5.4.28 de libc (y emula la  llamada  al
+       sistema  poll  mediante select si su núcleo no tiene dicha
+       llamada al sistema).
+
+VÉASE TAMBIÉN
+       select(2)
+
+
+
+Linux 2.1.23             7 Diciembre 1997                 POLL(2)

@@ -1,0 +1,139 @@
+SKILL(1)       Manual del Programador Local de UNIX      SKILL(1)
+
+
+
+NOMBRE
+       skill,  snice - señalan o cambian la prioridad de procesos
+       especificados
+
+SINOPSIS
+       skill [-signal] [-ivfwn] {tty user command pid}
+       snice [(-|+)priority] [-ivfwn] {tty user command pid}
+       skill -l
+
+DESCRIPCIÓN
+       Skill Envía la señal terminate a un conjunto de  procesos.
+       Si  se da un nombre ( o número ) de señal precedido por un
+       "-", esa señal se sustituirá  por  terminate.  El  comando
+       skill -l muestra una lista de señales disponibles.
+
+       Snice  altera la prioridad establecida para un conjunto de
+       procesos seleccionados.  Por defecto, la  nueva  prioridad
+       será  +4, pero se puede usar un argumento del tipo "+n" (ó
+       "-n") para especificar valores diferentes.  Cualquier pri­
+       oridad no válida será redondeada ascendente o descendente­
+       mente hasta llegar al primer valor aceptable.
+
+       Las opciones aceptadas por ambos comandos  son  las  sigu­
+       ientes:
+
+       -i     En  modo  interactivo,  se consulta al usuario ante
+              cada proceso candidato para una acción. Al  respon­
+              der  "y"  se  ejecutará la acción especificada. Por
+              otra parte, un ^D hace que skill o snice se cierren
+              inmediatamente.
+
+       -v     En  modo  de información ampliada, se muestra el id
+              de cada proceso sobre el  que  se  ha  actuado  con
+              éxito.
+
+       -f     En modo rápido, se le permite al código dependiente
+              de la máquina responsable de la lectura de los pro­
+              cesos que tome decisiones que contribuyan a mejorar
+              la velocidad a expensas  de  la  información  sobre
+              errores (por ejemplo, es posible que no se muestren
+              los comandos). Esta  opción  existe  principalmente
+              para ayudar a eliminar procesos fuera de control en
+              sistemas con diseños VM complicados.
+
+       -w     Muestra mensajes de advertencia ante procesos inal­
+              canzables.
+
+       -n     Muestra  los  ids  del  proceso pero no actúa sobre
+              ellos.
+
+       Todos los argumentos en la línea de comandos son  indepen­
+       dientes  en cuanto a su orden.  Skill y snice permiten que
+       los procesos se especifiquen usando cualquier  combinación
+       de  ttys,  nombres de usuario y comandos (además de ids de
+       procesos).  Sólo se actúa sobre procesos que coincidan con
+       algo  en  cada  una de las categorías. Una categoría vacía
+       asegura una coincidencia. Por ejemplo, "skill -HUP  vi  ex
+       tty00"  enviará la señal hangup a todos los procesos vi(1)
+       y ex(1) asociados con tty00.  Del mismo modo,  "snice  +10
+       find  root"  cambiará  la  prioridad de todos los procesos
+       find(1) que pertenezcan a root a +10.
+
+       Los usuarios sin privilegios solamente pueden cambiar  sus
+       propios  procesos  de modo que no necesitan especificar su
+       nombre de usuario como parte de la  lista  de  argumentos.
+       Por  otra  parte,  el  super-usuario  deberá  extremar  su
+       cuidado (por ejemplo, el comando "snice -5 vi" cambiará la
+       prioridad de todo proceso vi(1) en el sistema).
+
+       Dado  que skill y snice categorizan sus argumentos, existe
+       la posibilidad de que lo hagan incorrectamente ( por ejem­
+       plo, el caso de que un comando del sistema coincida con un
+       nombre de usuario). Ambos programas tratan de emparejar un
+       argumento con un tty, un nombre de usuario y un id de pro­
+       ceso , antes de clasificarlo como  comando.   Para  evitar
+       esto,  se  puede  forzar un argumento a un tipo particular
+       precediéndole de  "-c"  (comando),  "-u"  (usuario),  "-t"
+       (tty), o "-p" (id de proceso).
+
+       Los ids de los procesos no se conocen de antemano, de modo
+       que ha de buscarse la información necesaria en la  memoria
+       del  kernel  y en el dispositivo swap.  Además de esto, en
+       algunos  sistemas  se  busca  también  en  el  sistema  de
+       archivos  "/proc".  Cuando se descubre un proceso que con­
+       cuerda con cada categoría, se actúa  sobre  él  inmediata­
+       mente  (a  no  ser que se esté trabajando en modo interac­
+       tivo). Todos los  procesos  deben  pertenecer  al  usuario
+       actual  a  no  ser  que  él  o  ella sea el super-usuario.
+       Ninguno de los programas tratará nunca de actuar sobre  sí
+       mismo,  pero  cualquier otra cosa entra dentro de lo posi­
+       ble.
+
+       El estado de salida es normalmente 0; si el usuario comete
+       un error, se devuelve 1. Si ocurre un error de sistema, se
+       devuelve 2.
+
+ARCHIVOS
+       /vmunix             lista de nombres del sistema
+       /dev/mem       memoria física
+       /dev/kmem      memoria virtual del kernel
+       /dev/drum      dispositivo swap
+       /proc               sistema de archivos de procesos
+       /dev           examinado para emparejar ttys  con  números
+                      de dispositivo
+
+VÉASE TAMBIÉN
+       kill(1), nice(1), priocntl(1), renice(1), ps(1),
+       kill(2), setpriority(2), signal(2), proc(4)
+
+AUTOR
+       Jeff Forys
+
+CONTRIBUYEN
+       David Sharnoff      Greg Earle          Christos Zoulas
+       Gorodecki Tom       Mike Hibler         Ric Anderson
+
+FALLOS (BUGS)
+       Las cosas cambian mientras estos programas se están ejecu­
+       tando; es posible que se salten procesos de vez en  cuando
+       (la opción "-w" los muestra).
+
+       Los  nombres  de  comando  se  pueden  truncar a un tamaño
+       dependiente de la máquina.
+
+       En algunos sistemas operativos, estos programas son  inca­
+       paces de investigar procesos pertenecientes a otros usuar­
+       ios. A pesar  de  no  resultar  un  problema,  este  hecho
+       aparece  reflejado  en  el  aviso  "(but  N  could  not be
+       checked)" (pero N no se pudo comprobar) que aparece a con­
+       tinuación  del  mensaje  "no matching processes" (procesos
+       que no se han podido emparejar).
+
+
+
+                       15 de julio de 1994               SKILL(1)

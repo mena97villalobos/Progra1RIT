@@ -1,0 +1,114 @@
+MPROTECT(2)      Manual del Programador de Linux      MPROTECT(2)
+
+
+
+NOMBRE
+       mprotect  - controla el tipo de acceso permitido sobre una
+       región de memoria
+
+SINOPSIS
+       #include <sys/mman.h>
+
+       int mprotect(const void *addr, size_t len, int prot);
+
+DESCRIPCIÓN
+       mprotect controla la forma en que una sección  de  memoria
+       puede  ser  accedida.  Si un acceso no es permitido por la
+       protección dada, el programa recibe un SIGSEGV.
+
+       prot es un O-lógico a nivel de bits de los siguientes val­
+       ores:
+
+       PROT_NONE  La  memoria  no  puede  ser accedida de ninguna
+                  forma.
+
+       PROT_READ  La memoria puede ser leída.
+
+       PROT_WRITE La memoria puede ser escrita.
+
+       PROT_EXEC  La memoria puede contener código ejecutable.
+
+       La nueva protección reemplaza cualquier  protección  exis­
+       tente.   Por ejemplo, si la memoria había sido previamente
+       marcada PROT_READ, y mprotect se llama entonces  con  prot
+       igual a PROT_WRITE, no se prodrá leer.
+
+VALOR DEVUELTO
+       En  caso  de  éxito,  mprotect  devuelve cero.  En caso de
+       error, se devuelve -1,  y  se  asigna  a  errno  un  valor
+       apropiado.
+
+ERRORES
+       EINVAL  addr  no es un puntero válido, o no es un múltiplo
+               de PAGESIZE.
+
+       EFAULT  La memoria no puede ser accedida.
+
+       EACCES  La memoria  no  permite  el  acceso  especificado.
+               Esto  puede  ocurrir si, por ejemplo, asocia a una
+               zona de memoria mediante  mmap(2)  un  fichero  al
+               cual  sólo  tiene acceso de lectura y pide a mpro­
+               tect que lo marque PROT_WRITE.
+
+       ENOMEM  No se han podido reservar estructuras internas del
+               núcleo.
+
+EJEMPLO
+       #include <stdio.h>
+       #include <stdlib.h>
+       #include <errno.h>
+       #include <sys/mman.h>
+
+       #include <limits.h>    /* por PAGESIZE */
+       #ifndef PAGESIZE
+       #define PAGESIZE 4096
+       #endif
+
+       int
+       main(void)
+       {
+           char *p;
+           char c;
+
+           /* Reserva un búffer; por defecto, tendrá
+              protección PROT_READ|PROT_WRITE. */
+           p = malloc(1024+PAGESIZE-1);
+           if (!p) {
+               perror("malloc: imposible reservar 1024 bytes");
+               exit(errno);
+           }
+
+           /* Alinear a una dirección múltiplo de PAGESIZE,
+              suponiendo que sea una potencia de 2 */
+           p = (char *)(((int) p + PAGESIZE-1) & ~(PAGESIZE-1));
+
+           c = p[666];         /* Leer; bien */
+           p[666] = 42;        /* Escribir; bien */
+
+           /* Marca el búffer como de sólo-lectura. */
+           if (mprotect(p, 1024, PROT_READ)) {
+               perror("mprotect: imposible cambiar protección");
+               exit(errno);
+           }
+
+           c = p[666];         /* Leer; bien */
+           p[666] = 42;        /* Escribir; el programa recibe SIGSEGV
+                                  y muere*/
+
+           exit(0);
+       }
+
+CONFORME A
+       SVr4,  POSIX.1b  (formalmente  POSIX.4).   SVr4  define un
+       código de error  adicional,  EAGAIN.  Las  condiciones  de
+       error  de  SVr4  coinciden  debidamente  con las de Linux.
+       POSIX.1b dice que mprotect  sólo  puede  ser  usada  sobre
+       regiones de memoria obtenidas desde mmap(2).
+
+VÉASE TAMBIÉN
+       mmap(2)
+
+
+
+
+Linux 2.0                  31 Mayo 1997               MPROTECT(2)

@@ -1,0 +1,120 @@
+FSTAB(5)           Manual del Programador Linux          FSTAB(5)
+
+
+
+NOMBRE
+       fstab   -  Información  estática  sobre  los  sistemas  de
+       ficheros
+
+SINOPSIS
+       #include <fstab.h>
+
+DESCRIPCIÓN
+       El fichero fstab contiene  información  que  describe  los
+       diversos  sistemas de ficheros.  Los programas sólo pueden
+       leer fstab ; el administrador del sistema  es  responsable
+       de la creación y mantenimiento de este fichero. Cada línea
+       describe un sistema de ficheros; los campos en cada  línea
+       están  separados por tabs o espacios. El orden de los reg­
+       istros en fstab es importante porque fsck(8),  mount(8)  y
+       umount(8) recorren fstab secuencialmente a medida que tra­
+       bajan.
+
+       El primer campo, (fs_spec), describe el dispositivo  espe­
+       cial de bloque o sistema de ficheros remoto a ser montado.
+
+       El segundo campo, (fs_file), describe el punto de  montaje
+       para el sistema de ficheros. Para particiones de intercam­
+       bio (swap), este campo debe decir ``none''.
+
+       El tercer campo, (fs_vfstype), describe el tipo  del  sis­
+       tema  de  ficheros.  Actualmente,  el  sistema soporta los
+       siguientes tipos de sistemas de ficheros  (y  posiblemente
+       otros - consulte /proc/filesystems):
+
+       minix  Un sistema de ficheros local que soporta nombres de
+              ficheros de 14 o 30 caracteres de longitud.
+
+       ext    Un  sistema  de  ficheros  local  con  nombres   de
+              ficheros  mas  largos  y nodos-i mas grandes.  Este
+              sistema de ficheros fué reemplazado por el  sistema
+              ext2, y ya no debería ser utilizado.
+
+       ext2   Un sistema de ficheros local con nombres de fichero
+              mas largos, nodos-i mas  grandes,  y  muchas  otras
+              características.
+
+       xiafs  Un sistema de ficheros local con nombres de fichero
+              mas largos, nodos-i mas  grandes,  y  muchas  otras
+              características.
+
+       msdos  Un  sistema  de ficheros local para particiones MS-
+              DOS.
+
+       hpfs   Un sistema de ficheros local para particiones HPFS.
+
+       iso9660
+              Un sistema de ficheros local para usado para discos
+              CD-ROM.
+
+       nfs    Sistema de ficheros usado para  montar  particiones
+              de sistemas remotos.
+
+       swap   Una  partición  del  disco  usada por el sistema de
+              paginación.
+
+       Si vfs_fstype tiene el valor  ``ignore'',  la  entrada  es
+       ignorada.  Esto  es útil para ver aquellas particiones del
+       disco que no están siendo usadas.
+
+       El cuarto campo, (fs_mntops),  describe  las  opciones  de
+       montaje asociadas con el sistema de ficheros.
+
+       Es  una  lista  de  opciones separadas por comas. Contiene
+       como mínimo el tipo de montaje y otras opciones apropiadas
+       para  el  tipo  del  sistema  de  ficheros.  Las distintas
+       opciones para sistemas de ficheros locales están  documen­
+       tadas  en  mount(8).   Las  opciones  específicas para nfs
+       están documentadas en nfs(5).  Las siguientes opciones son
+       comunes  para  cualquier  tipo  de  sistema  de  ficheros:
+       ``noauto'' (no monta el sistema cuando se  ejecuta  "mount
+       -a",  p.ej.,  cuando arranca el sistema), y ``user'' (per­
+       mite que un usuario monte el sistema  de  ficheros).  Para
+       mayor información, véase mount(8).
+
+       El  quinto campo, (fs_freq), lo utiliza el comando dump(8)
+       para determinar qué sistemas  de  ficheros  necesitan  ser
+       volcados  (dumped).   Si  el quinto campo está vacío, dump
+       asume que el sistema de ficheros no necesita ser  volcado.
+
+       El  sexto  campo,  (fs_passno), lo usa el programa fsck(8)
+       para determinar el orden en el cual se van a chequear  los
+       sistemas de ficheros cuando el sistema arranca. El sistema
+       de ficheros raíz debería llevar fs_passno  igual  a  1,  y
+       otros sistemas de ficheros deberían llevar fs_passno igual
+       a 2.  Sistemas de ficheros en un mismo disco serán compro­
+       bados secuencialmente, pero sistemas de ficheros en difer­
+       entes discos serán comprobados al mismo tiempo  para  uti­
+       lizar  el paralelismo disponible en el equipo. Si el sexto
+       campo no está presente o tiene un valor de 0, fsck asumirá
+       que  los sistemas de ficheros no necesitan ser chequeados.
+
+       La forma apropiada de  leer  los  registros  de  fstab  es
+       usando las rutinas getmntent(3).
+
+FICHEROS
+       /etc/fstab El fichero fstab está en el directorio /etc.
+
+ERRORES
+       La documentación en mount(8) está generalmente más actual­
+       izada.
+
+VÉASE TAMBIÉN
+       getmntent(3), mount(8), swapon(8), nfs(5)
+
+HISTORIA
+       El formato del fichero fstab apareció en 4.0BSD.
+
+
+
+Linux 0.99              27 Noviembre 1993                FSTAB(5)

@@ -1,0 +1,193 @@
+PING(8)                     System Manager's Manual                    PING(8)
+
+NAME
+     ping - envía paquetes ICMP ECHO_REQUEST a servidores de red
+
+SINOPSIS
+     ping [-dfnqrvR] [-c count] [-i wait] [-l preload] [-p pattern] [-s
+     packetsize]
+
+DESCRIPCIÓN
+     Ping utiliza el datagrama obligatorio ICMP del protocolo ECHO_REQUEST
+     para solicitar una ICMP ECHO_RESPONSE por parte de un servidor o una
+     puerta de acceso.  Los datagramas ECHO_REQUEST ("pings") tienen una IP y
+     cabecera ICMP, seguidos por un ``struct timeval'' y un número arbitrario
+     de bytes "pad" usados para completar el paquete.  Las opciones son las
+     siguientes:
+
+     -c count
+             Para después de enviar (y recibir) count paquetes ECHO_RESPONSE.
+
+     -d      Establece la opción SO_DEBUG en el socket en uso.
+
+     -f      Envío masivo de pings.  Envía paquetes a la misma velocidad a la
+             que regresan o cien veces por segundo, lo que sea mayor.  Por
+             cada ECHO_REQUEST enviado se escribe un ".", mientras que por
+             cada ECHO_REPLY recibido se escribe un backspace.  Esto propor­
+             ciona una muestra rápida de cuántos paquetes se están perdiendo.
+             Sólo el super-usuario puede utilizar esta opción.  Esto puede
+             resultar muy peligroso en una red y debe usarse con precaución.
+
+     -i wait
+             Espera wait segundos entre el envío de cada paquete. Por defecto
+             se espera un segundo entre el envío de los paquetes.  Esta opción
+             es incompatible con la opción -f.
+
+     -l preload
+             Si se especifica preload, ping envía tantos paquetes tan rápido
+             como le sea posible antes de volver a su comportamiento normal.
+             Sólo el super-usuario puede usar esta opción.
+
+     -n      Sólo salida numérica.  No se realiza ningún intento de buscar
+             nombres simbólicos para las direcciones del servidor.
+
+     -p pattern
+             Se pueden especificar un total de 16 bytes "pad" para completar
+             el paquete que se envía.  Esto resulta útil para el diagnóstico
+             de problemas de red relaccionados con los datos.  Por ejemplo,
+             ``-p ff'' hará que el paquete enviado se complete en su totalidad
+             con unos.
+
+     -q      Salida muda.  No se muestra ninguna información excepto las
+             líneas de resumen al comenzar y al terminar.
+
+     -R      Registro de ruta.  Incluye la opción RECORD_ROUTE en el paquete
+             ECHO_REQUEST y muestra el buffer de ruta sobre los paquetes
+             devueltos.  Nótese que la cabecera IP tan sólo tiene tamaño sufi­
+             ciente para nueve rutas de este tipo.  Muchos servidores ignoran
+             y descartan esta opción.
+
+     -r      Pasa por alto las tablas de encaminamiento y envía datos directa­
+             mente a un ordenador en una red conectada a la propia.  Si el
+             ordenador receptor no está en una red con conexión directa, se
+             devuelve un error. Esta opción se puede usar para hacer ping a un
+             ordenador local a través de un interfaz que carezca de una ruta
+             que pase por él (por ejemplo, después de que el interfaz haya
+             sido anulado por routed(8).)
+
+     -s packetsize
+             Especifica el número de bytes de datos que se van a enviar.  La
+             cantidad por defecto es 56, que pasan a ser 64 bytes de datos
+             ICMP cuando se combinan con los 8 bytes de los datos de la
+             cabecera ICMP.
+
+     -v      Aumenta la longitud de la información del programa en pantalla.
+             Se listan los paquetes ICMP que no sean ECHO_RESPONSE que se
+             reciben.
+
+     Al usar ping para la detección de errores, debe de probarse primero en el
+     ordenador local, para verificar que el interfaz de red local funciona
+     correctamente.  Luego, deben probarse otros ordenadores y puertas de
+     acceso cada vez más lejos. Al hacerlo, se computan tanto el tiempo inver­
+     tido por los paquetes en su viaje de ida y vuelta como las estadísticas
+     de pérdida de paquetes.  Si se reciben paquetes duplicados, no se
+     incluyen en la estadística de pérdida de paquetes, aunque el tiempo
+     invertido en su viaje de ida y vuelta se usa para calcular las cantidades
+     de tiempo de viaje mínimas, medias y máximas.  Una vez que se ha enviado
+     (y recibido) la cantidad de paquetes especificada o si el programa se
+     cierra con un SIGNIT, se muestra un pequeño resumen en pantalla.
+
+     Si ping no recibe ningún paquete de respuesta en absoluto, se cerrará con
+     un código 1. Si ocurre un error, mostrará el código 2. En cualquier otro
+     caso, el programa terminará con un código 0. Esto hace posible utilizar
+     los códigos de terminación del programa para comprobar si el ordenador al
+     que se dirige el ping da señales de vida o no.
+
+     La finalidad de este programa es el de ser utilizado en la comprobación,
+     medición y mantenimiento de redes.  Debido a la sobrecarga de la red que
+     supone su uso, no resulta muy adecuado usar ping durante las operaciones
+     normales o en scripts automáticos.
+
+DETALLES DE LOS PAQUETES ICMP
+     Una cabecera IP sin opciones tiene un tamaño de 20 bytes.  Un paquete
+     ICMP ECHO_REQUEST contiene una cantidad adicional de 8 bytes de cabecera
+     ICMP seguida por una cantidad arbitraria de datos.  Cuando se especifica
+     un packetsize, éste indica el tamaño de esta porción extra de datos (por
+     defecto es 56).  Por lo tanto, la cantidad de datos recibidos dentro de
+     un paquete IP del tipo ICMP ECHO_REPLY será siempre 8 bytes mayor que el
+     espacio de datos requerido (la cabecera ICMP).
+
+     Si el espacio de datos tiene un tamaño de al menos 8 bytes, ping usa los
+     primeros 8 bytes de este espacio para incluir un registro de tiempo que
+     utiliza en el cómputo de  los tiempos de los viajes de ida y vuelta de
+     los paquetes.  Si se especifican menos de 8 bytes, el programa no propor­
+     cionará estos tiempos.
+
+PAQUETES DUPLICADOS Y DAÑADOS
+     Ping informará de los paquetes duplicados y dañados.  Nunca debe de
+     aparecer ningún paquete duplicado. Éstos parecen ocurrir por retrasmi­
+     siones inapropiadas a nivel de conexión.  Los paquetes duplicados pueden
+     aparecer en muchas situaciones y rara vez (por no decir nunca) son buena
+     señal, aunque la aparición de niveles bajos de duplicados no ha de ser
+     siempre una señal de alarma.
+
+     Los paquetes dañados constituyen obviamente una causa seria de alarma y
+     normalmente indican que en alguna lugar del camino seguido por el paquete
+     ping (en la red o en los ordenadores) hay hardware dañado.
+
+INTENTAR DIFERENTES PATRONES DE DATOS
+     La red no debería tratar a los paquetes de manera diferente en función de
+     los datos contenidos en la porción de datos.  Por desgracia, se sabe que
+     ha habido problemas relaccionados con los datos en algunas redes, que han
+     permanecido ocultos durante largos períodos de tiempo.  En muchas oca­
+     siones, el patrón problemático será aquel que no tiene suficientes "tran­
+     siciones", tales como todo unos o todo ceros.  No es necesario especi­
+     ficar un patrón de datos con todo ceros (por ejemplo) en la línea de
+     comandos porque el patrón que interesa está al nivel de la unión de los
+     datos, y la relación entre lo que tú escribes y lo que transmiten los
+     controladores puede ser complicada.
+
+     Esto quiere decir que si tienes un problema relacionado con datos proba­
+     blemente tendrás que hacer muchas pruebas para detectarlo.  Si tienes
+     suerte, es posible que consigas encontrar un archivo que, o bien no se
+     puede transmitir por tu red, o que tarda mucho más en enviarse que otros
+     archivos de tamaño similar.  En ese caso, puedes examinar este archivo en
+     busca de patrones repetidos que puedes comprobar usando la opción -p de
+     ping.
+
+DETALLES DEL TTL
+     El valor TTL de un paquete IP representa el número máximo de routers IP
+     que un paquete puede atravesar antes de ser deshechado.  En el trabajo
+     diario, lo normal es que cada router en internet reste exactamente uno
+     del campo TTL
+
+     La especificación TCP/IP dice que el valor del campo TTL para los paque­
+     tes TCP debe ser de 60, pero muchos sistemas usan valores más pequeños
+     (4.3 BSD usa 30, el 4.2 usaba 15).
+
+     El valor máximo posible para este campo es de 255, y la mayoría de los
+     sistemas Unix configuran el campo TTL de los paquetes ICMP ECHO_REQUEST
+     para un valor de 255.  Por eso notarás que puedes hacer "ping" a algunos
+     ordenadores, aunque no puedas alcanzarlos con telnet(1) o ftp(1).
+
+     En una operación normal, ping muestra el valor ttl de los paquetes que
+     recibe.  Cuando un sistema remoto recibe un paquete ping, puede hacer
+     cualquiera de estas tres cosas con el campo TTL en su respuesta:
+
+     ·   No cambiarlo; esto es lo que hacían los sistemas Unix de Berkeley
+         antes de la aparición del 4.3BSD-Tahoe En este caso, el valor TTL del
+         paquete recibido será de 255 menos el número de routers en el camino
+         desde el sistema remoto al ordenador que envía el ping.
+
+     ·   Cambiarlo por cualquier otro valor.  Algunas máquinas usan el mismo
+         valor para los paquetes ICMP que el que usan para los paquetes TCP,
+         por ejemplo 30 ó 60.  Otros puede que usen valores totalmente ines­
+         perados.
+
+FALLOS (BUGS)
+     Muchos ordenadores y puertas de acceso ignoran la opción RECORD_ROUTE.
+
+     La longitud máxima de la cabecera IP resulta demasiado pequeña para
+     opciones como RECORD_ROUTE puedan resultar completamente útiles.  Sin
+     embargo, no hay mucho que se pueda hacer sobre esto.
+
+     El ping masivo no se recomienda generalmente y sólo se debería hacer este
+     tipo de ping a una dirección en condiciones muy controladas.
+
+VÉASE TAMBIÉN
+     netstat(1), ifconfig(8), routed(8)
+
+HISTORIA
+     El comando ping apareció en 4.3BSD.
+
+Linux Netkit 0.09               August 30, 1996              Linux Netkit 0.09

@@ -1,0 +1,55 @@
+CACHEFLUSH(2)    Manual del Programador de Linux    CACHEFLUSH(2)
+
+
+
+NOMBRE
+       cacheflush  -  vacía  el contenido de la caché de instruc­
+       ciones y/o datos
+
+SINOPSIS
+       #include <asm/cachectl.h>
+
+       int cacheflush(char *addr, int nbytes, int cache);
+
+DESCRIPCIÓN
+       cacheflush vacía el  contenido  de  la(s)  caché(s)  indi­
+       cada(s)  por las direcciones de usuario en el rango addr a
+       (addr+nbytes-1).  cache puede ser uno  de  los  siguientes
+       valores:
+
+       ICACHE Purga la caché de instrucciones.
+
+       DCACHE Escribe  en  memoria e invalida las líneas de caché
+              válidas afectadas.
+
+       BCACHE Igual que (ICACHE|DCACHE).
+
+
+VALOR DEVUELTO
+       cacheflush devuelve 0 si finaliza con éxito o -1  en  caso
+       de  error. Si se detectan errores, la variable errno indi­
+       cará el tipo de error.
+
+ERRORES
+       EINVAL El parámetro cache no es  ninguno  de  los  valores
+              aceptados ICACHE, DCACHE, o BCACHE.
+
+       EFAULT Todo  o  parte  del  rango de direcciones de addr a
+              (addr+nbytes-1) no es accesible.
+
+
+FALLOS
+       La implementación actual  ignora  los  parámetros  addr  y
+       nbytes.  Por lo tanto siempre se vacía toda la caché.
+
+NOTA
+       Esta  llamada del sistema sólo está disponible en sistemas
+       basados en MIPS. No debería ser  usada  en  programas  que
+       pretendan ser portables.
+
+VÉASE TAMBIÉN
+       cachectl(2)
+
+
+
+Linux 2.0.32              27 Junio 1995             CACHEFLUSH(2)

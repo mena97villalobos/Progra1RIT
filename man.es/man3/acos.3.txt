@@ -1,0 +1,34 @@
+ACOS(3)          Manual del Programador de Linux          ACOS(3)
+
+
+
+NOMBRE
+       acos - función arco coseno
+
+SINOPSIS
+       #include <math.h>
+
+       double acos(double x);
+
+DESCRIPCIÓN
+       La  función acos() calcula el arco coseno de x; éste es el
+       valor cuyo coseno es x. Si x está fuera del rango -1 a  1,
+       acos() falla y a errno se le asigna un valor apropiado.
+
+VALOR DEVUELTO
+       La función acos() devuelve el arco coseno en radianes y el
+       valor se define matemáticamente para estar entre  0  y  PI
+       (inclusive).
+
+ERRORES
+       EDOM   x está fuera de rango.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       asin(3), atan(3), atan2(3), cos(3), sin(3), tan(3)
+
+
+
+GNU                        8 Junio 1993                   ACOS(3)

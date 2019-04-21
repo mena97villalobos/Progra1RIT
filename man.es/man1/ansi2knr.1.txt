@@ -1,0 +1,37 @@
+ANSI2KNR(1)                                           ANSI2KNR(1)
+
+
+
+NOMBRE
+       ansi2knr  -  convierte de C tipo ANSI a C tipo Kernighan &
+       Ritchie
+
+SINOPSIS
+       ansi2knr input_file output_file
+
+DESCRIPCIÓN
+       Si no se especifica fichero de  salida  (output_file),  la
+       salida va a parar a la salida estándar (stdout).
+       No hay mensajes de error.
+
+       ansi2knr  reconoce las funciones buscando algún nombre que
+       no sea identificador en el margen izquierdo,  seguido  por
+       un  paréntesis  izquierdo,  con un paréntesis derecho como
+       último carácter de la linea. Reconocerá una cabecera  mul­
+       tilinea  si  el  último  carácter  de  cada linea menos la
+       ultima es un paréntesis izquierdo o una coma. Estos  algo­
+       ritmos  ignoran  los espacios en blanco y los comentarios,
+       excepto que el nombre de la función  debe  ser  el  primer
+       elemento de la linea.
+
+       Las construcciones siguientes confundirán a estos algorit­
+       mos:
+            - Cualquier otra construcción que comience en el mar­
+       gen  izquierdo  y  siga la sintaxis explicada arriba (como
+       una macro o una llamada a función).
+            - Macros que trabajen con la sintaxis de la  cabecera
+       de la función.
+
+
+
+                        31 Diciembre 1990             ANSI2KNR(1)

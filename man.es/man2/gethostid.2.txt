@@ -1,0 +1,48 @@
+GETHOSTID(2)     Manual del Programador de Linux     GETHOSTID(2)
+
+
+
+NOMBRE
+       gethostid,  sethostid  - obtiene o asigna un identificador
+       único al anfitrión (host) actual.
+
+SINOPSIS
+       #include <unistd.h>
+
+       long int gethostid(void);
+       int sethostid(long int hostid);
+
+DESCRIPCIÓN
+       Obtiene o asigna un identificador único de 32-bits para el
+       ordenador actual. El identificador de 32-bits pretende ser
+       único entre todos los sistemas UNIX existentes. Este  nor­
+       malmente  asemeja  la  dirección  Internet para el sistema
+       local, dado por gethostbyname(3), y por lo tanto,  normal­
+       mente nunca necesita ser asignado.
+
+       El  uso  de la llamada sethostid está restringida al supe­
+       rusuario.
+
+       El argumento hostid se encuentra almacenado en el  fichero
+       /etc/hostid.
+
+VALOR DEVUELTO
+       gethostid   devuelve   el  identificador  de  32-bits  del
+       anfitrión (host) actual asignado por sethostid(2).
+
+CONFORME A
+       4.2BSD. Estas funciones se encuentran en  4.4BSD.  POSIX.1
+       no  define  estas  funciones, pero ISO/IEC 9945-1:1990 las
+       menciona  en  B.4.4.1.  SVr4  incluye  gethostid  pero  no
+       sethostid.
+
+FICHEROS
+       /etc/hostid
+
+VÉASE TAMBIÉN
+       hostid(1), gethostbyname(3)
+
+
+
+
+Linux 0.99.13              1 Julio 1996              GETHOSTID(2)

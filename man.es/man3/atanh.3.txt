@@ -1,0 +1,30 @@
+ATANH(3)         Manual del Programador de Linux         ATANH(3)
+
+
+
+NOMBRE
+       atanh - función arco tangente hiperbólica
+
+SINOPSIS
+       #include <math.h>
+
+       double atanh(double x);
+
+DESCRIPCIÓN
+       La función atanh() calcula la arco tangente hiperbólica de
+       x; es decir, el valor cuya tangente hiperbólica es x.   Si
+       el  valor absoluto de x es mayor que 1.0, atanh() devuelve
+       no-es-número (NaN) y se asigna a errno un valor  adecuado.
+
+ERRORES
+       EDOM   x está fuera del rango.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       asinh(3), acosh(3), cosh(3), sinh(3), tanh(3)
+
+
+
+Linux                     13 Junio 1993                  ATANH(3)

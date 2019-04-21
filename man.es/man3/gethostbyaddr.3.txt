@@ -1,0 +1,147 @@
+GETHOSTBYNAME(3) Manual del Programador de Linux GETHOSTBYNAME(3)
+
+
+
+NOMBRE
+       gethostbyname, gethostbyaddr, sethostent, endhostent, her­
+       ror, hstrerror - obtienen una entrada de anfitrión de red
+
+SINOPSIS
+       #include <netdb.h>
+       extern int h_errno;
+
+       struct hostent *gethostbyname(const char *name);
+
+       #include <sys/socket.h>          /* para AF_INET */
+       struct hostent *gethostbyaddr(const char *addr, int len, int type);
+
+       void sethostent(int stayopen);
+
+       void endhostent(void);
+
+       void herror(const char *s);
+
+       const char * hstrerror(int err);
+
+DESCRIPCIÓN
+       La función gethostbyname()  devuelve  una  estructura  del
+       tipo  hostent  para  el anfitrión (host) dado name.  Aquí,
+       name es ora un nombre de anfitrión, ora una dirección IPv4
+       en la notación normal de puntos, ora una dirección IPv6 en
+       la notación de dos puntos (y posiblemente de puntos). (Vea
+       la  RFC  1884  para  una descripción de las direcciones en
+       IPv6).  Si name es una dirección IPv4 o IPv6, no se  real­
+       iza  ninguna  búsqueda y gethostbyname() simplemente copia
+       name en el campo h_name y su equivalente struct in_addr en
+       el campo h_addr_list[0] de la estructura hostent devuelta.
+       Si name no termina con un punto y la variable de  ambiente
+       HOSTALIASES  está  asignada, se buscará primero name en el
+       fichero de alias señalado  por  HOSTALIASES.   (Vea  host­
+       name(7)  para  saber  cómo es el formato del fichero.)  Se
+       buscan el dominio actual y sus ancestros a menos que  name
+       termine en punto.
+
+       La  función  gethostbyaddr()  devuelve  una estructura del
+       tipo hostent para la dirección de anfitrión dada  addr  de
+       longitud  len  y  de tipo type. El único tipo de dirección
+       válido actualmente es AF_INET.
+
+       La función sethostent() especifica, si  stayopen  es  true
+       (1),  que se debería emplear un conector (socket) TCP para
+       las interrogaciones al servidor de nombres y que la conex­
+       ión  debería  permanecer abierta durante sucesivas pregun­
+       tas. De otro modo, las peticiones al servidor  de  nombres
+       utilizarán datagramas UDP.
+
+       La función endhostent() termina el uso de una conexión TCP
+       para las peticiones al servidor de nombres.
+
+       La (obsoleta) función herror() muestra en stderr  un  men­
+       saje de error asociado con el valor actual de h_errno.
+
+       La  (obsoleta) función hstrerror() toma un número de error
+       (habitualmente h_errno) y devuelve la cadena  del  mensaje
+       correspondiente.
+
+       Las  preguntas  al servidor de nombres llevadas a cabo por
+       gethostbyname() y gethostbyaddr() usan una combinación  de
+       uno  o  todos  los  servidores  de  nombres  named(8), una
+       declaración en /etc/hosts, y el Servicio de Información de
+       Red (NIS, antes Páginas Amarillas, YP), dependiendo de los
+       contenidos de  la  línea  order  en  /etc/host.conf.  (Vea
+       resolv+(8)).   La  acción  predeterminada  es  preguntar a
+       named(8), seguido por /etc/hosts.
+
+       La estructura hostent se define en <netdb.h> como sigue:
+
+              struct hostent {
+                      char    *h_name;        /* nombre oficial del anfitrión */
+                      char    **h_aliases;    /* lista de alias */
+                      int     h_addrtype;     /* tipo dirección anfitrión */
+                      int     h_length;       /* longitud de la dirección */
+                      char    **h_addr_list;  /* lista de direcciones */
+              }
+              #define h_addr  h_addr_list[0]  /* por compatibilidad atrás */
+
+       Los miembros de la estructura hostent son:
+
+       h_name El nombre oficial de un anfitrión.
+
+       h_aliases
+              Una cadena terminada en el  carácter  nulo  de  los
+              nombres alternativos para el anfitrión.
+
+       h_addrtype
+              El tipo de dirección; siempre AF_INET de momento.
+
+       h_length
+              La longitud de la dirección en bytes.
+
+       h_addr_list
+              Una  cadena terminada en nulo de direcciones de red
+              para el anfitrión en orden de bytes de red.
+
+       h_addr La primera dirección en h_addr_list por compatibil­
+              idad hacia atrás.
+
+VALOR DEVUELTO
+       Las  funciones gethostbyname() y gethostbyaddr() devuelven
+       la estructura hostent, o un puntero NULL si ha ocurrido un
+       error.  En  caso de error, la variable h_errno contiene un
+       número de error.
+
+ERRORES
+       La variable h_errno puede tener los siguientes valores:
+
+       HOST_NOT_FOUND
+              El anfitrión especificado es desconocido.
+
+       NO_ADDRESS o NO_DATA
+              El nombre  pedido  es  válido  pero  no  tiene  una
+              dirrección IP.
+
+       NO_RECOVERY
+              Ha ocurrido un error no recuperable del servidor de
+              nombres.
+
+       TRY_AGAIN
+              Ha ocurrido un error temporal sobre un servidor  de
+              nombres con autoridad. Intente luego más tarde.
+
+FICHEROS
+       /etc/host.conf
+              fichero de configuración del resolvedor
+
+       /etc/hosts
+              fichero de base de datos de anfitriones
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       resolver(3),  hosts(5), hostname(7), resolv+(8), named(8).
+
+
+
+
+BSD                       10 Enero 1995          GETHOSTBYNAME(3)

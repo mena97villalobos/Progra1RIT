@@ -1,0 +1,126 @@
+CONNECT(2)       Manual del Programador de Linux       CONNECT(2)
+
+
+
+NOMBRE
+       connect - inicia una conexión en un conector (socket)
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <sys/socket.h>
+
+       int  connect(int sockfd, const struct sockaddr *serv_addr,
+       socklen_t addrlen);
+
+DESCRIPCIÓN
+       El descriptor de fichero  sockfd  debe  referenciar  a  un
+       conector.   Si el conector es del tipo SOCK_DGRAM entonces
+       la dirección serv_addr  es  la  dirección  a  la  que  por
+       defecto  se  envían los datagramas y la única dirección de
+       la que se reciben datagramas. Si el conector es  del  tipo
+       SOCK_STREAM  o  SOCK_SEQPACKET, esta llamada intenta hacer
+       una conexión  a  otro  conector.  El  otro  conector  está
+       especificado  por  serv_addr, la cual es una dirección (de
+       longitud addrlen) en  el  espacio  de  comunicaciones  del
+       conector.   Cada  espacio  de comunicaciones interpreta el
+       parámetro serv_addr a su manera.
+
+       Generalmente, los conectores de  protocolos  orientados  a
+       conexión  pueden conectarse con éxito mediante connect una
+       vez solamente; los conectores de protocolos no  orientados
+       a  conexión  pueden usar connect múltiples veces para cam­
+       biar sus asociaciones. Los  conectores  de  protocolos  no
+       orientados   a  conexión  pueden  disolver  la  asociación
+       conectandose a una dirección en la que al miembro  sa_fam­
+       ily de sockaddr se le ha asignado el valor AF_UNSPEC.
+
+VALOR DEVUELTO
+       Si  la  conexión  o  enlace tiene éxito, se devuelve 0. En
+       caso de error, se devuelve -1, y se asigna a  la  variable
+       errno un valor apropiado.
+
+ERRORES
+       Los  siguientes  sólo  son  errores generales de conector.
+       Puede  haber  otros  códigos  de  error  específicos   del
+       dominio.
+
+       EBADF   Descriptor de fichero está mal.
+
+       EFAULT  La estructura de dirección del conector está fuera
+               del espacio de direcciones del usuario.
+
+       ENOTSOCK
+               El descriptor no está asociado con un conector.
+
+       EISCONN El conector ya está conectado.
+
+       ECONNREFUSED
+               Conexión rehusada por el servidor.
+
+       ETIMEDOUT
+               Finalizó el plazo de tiempo mientras se  intentaba
+               la  conexión.  El  servidor  puede estar demasiado
+               ocupado para aceptar nuevas conexiones.
+
+       ENETUNREACH
+               Red inaccesible.
+
+       EADDRINUSE
+               La dirección ya está en uso.
+
+       EINPROGRESS
+               El conector es no  bloqueante  y  la  conexión  no
+               puede completarse inmediatamente.  Es posible usar
+               select(2) o poll(2) para completarla seleccionando
+               el  conector  para  escritura.  Después que select
+               indique que la escritura es posible, use  getsock­
+               opt(2)  para  leer  la  opción  SO_ERROR  al nivel
+               SOL_SOCKET para determinar si connect se  completó
+               con  éxito  (BSO_ERROR  será  cero)  o  sin  éxito
+               (BSO_ERROR  será  uno  de  los  códigos  de  error
+               usuales  listados  aquí,  explicando  la razón del
+               fallo).
+
+       EALREADY
+               El conector es no bloqueante y todavía  no  se  ha
+               terminado un intento de conexión anterior.
+
+       EAGAIN  No  hay  más puertos locales libres o las entradas
+               en la cache  de  enrutamiento  son  insuficientes.
+               Para       PF_INET       vea       la       sysctl
+               net.ipv4.ip_local_port_range  en  ip(7)  para  ver
+               cómo incrementar el número de puertos locales.
+
+       EAFNOSUPPORT
+               La  dirección pasada no tiene la familia de direc­
+               ciones correcta en su campo sa_family.
+
+       EACCES, EPERM
+               El usuario ha intentado conectarse a una dirección
+               de  difusión (broadcast) sin que el conector tenga
+               activa la opción de difusión,  o  la  petición  de
+               conexión  ha fallado debido a una regla del corta­
+               fuegos local.
+
+CONFORME A
+       SVr4, 4.4BSD (la función connect apareció por primera  vez
+       en BSD 4.2).  SVr4 documenta adicionalmente los códigos de
+       error generales EADDRNOTAVAIL, EINVAL, EAFNOSUPPORT,  EAL­
+       READY,  EINTR,  EPROTOTYPE  y  ENOSR.   También  documenta
+       muchas  condiciones  de  error  adicionales  que   no   se
+       describen aquí.
+
+NOTA
+       El tercer argumento de connect es en realidad un entero (y
+       esto es lo que tienen BSD 4.*,  libc4  y  libc5).   Cierta
+       confusión en POSIX dio como resultado el actual socklen_t.
+       El estándar propuesto todavía no  ha  sido  adoptado  pero
+       glibc2  ya lo sigue y también tiene socklen_t. Vea también
+       accept(2).
+
+VÉASE TAMBIÉN
+       accept(2), bind(2), listen(2), socket(2), getsockname(2)
+
+
+
+Linux 2.2                 3 octubre 1998               CONNECT(2)

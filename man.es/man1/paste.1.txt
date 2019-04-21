@@ -1,0 +1,46 @@
+PASTE(1)                                                 PASTE(1)
+
+
+
+NOMBRE
+       paste - combina líneas de ficheros
+
+SINOPSIS
+       paste [-s] [-d delim-list] [--serial] [--delimiters=delim-
+       list] [--help] [--version] [file...]
+
+DESCRIPCIÓN
+       Esta documentación no se mantendrá en el  futuro  y  puede
+       ser  inexacta  o  incompleta.  La documentación en formato
+       Texinfo es actualmente la fuente autorizada.
+
+       Esta página del manual documenta la versión GNU de  paste.
+       paste  imprime  líneas  procedentes  de  cada  uno  de los
+       ficheros implicados, separadas por TABULADORES,  y  termi­
+       nadas  por  un  carácter  de nueva línea. Si no se indican
+       archivos como argumentos, usa  la  entrada  estándard.  Un
+       nombre de fichero `-' indica usar la entrada estándard.
+
+   OPCIONES
+       -s, --serial
+              Pega  las  líneas  de un fichero de una sola vez en
+              vez de una línea de cada fichero.
+
+       -d, --delimiters delim-list
+              Consecutivamente usa los caracteres  en  delim-list
+              en  vez de TABULADORES para separar las líneas mez­
+              cladas. Cuando  la  lista  delim-list  se  termina,
+              empieza  de  nuevo  por el primero de los delimita­
+              dores indicados.
+
+       --help Imprime un mensaje sobre el uso del comando y  ter­
+              mina  con  un código de estado indicando una ejecu­
+              ción correcta.
+
+       --version
+              Imprime la información sobre la versión en la  sal­
+              ida estándard y se termina.
+
+
+
+FSF                  Utilidades de Texto GNU             PASTE(1)

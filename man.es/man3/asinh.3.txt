@@ -1,0 +1,25 @@
+ASINH(3)         Manual del Programador de Linux         ASINH(3)
+
+
+
+NOMBRE
+       asinh - función arco seno hyperbólico
+
+SINOPSIS
+       #include <math.h>
+
+       double asinh(double x);
+
+DESCRIPCIÓN
+       La  función asinh() calcula el arco seno hyperbólico de x;
+       éste es el valor cuyo seno hiperbólico es x.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       acosh(3), atanh(3), cosh(3), sinh(3), tanh(3)
+
+
+
+                        Diciembre 19, 1995               ASINH(3)

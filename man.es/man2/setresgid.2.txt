@@ -1,0 +1,54 @@
+SETRESUID(2)     Manual del Programador de Linux     SETRESUID(2)
+
+
+
+NOMBRE
+       setresuid,  setresgid  - establecen el UID o GID efectivo,
+       real y salvado
+
+SINOPSIS
+       #include <unistd.h>
+
+       int setresuid(uid_t ruid, uid_t euid, uid_t suid);
+       int setresgid(gid_t rgid, gid_t egid, gid_t sgid);
+
+DESCRIPCIÓN
+       setresuid (introducido en Linux 2.1.44) establece  el  UID
+       real, efectivo y salvado del proceso en curso.
+
+       Los procesos de usuarios no privilegiados (esto es, proce­
+       sos con cada uno de los UIDs real, efectivo y salvado dis­
+       tintos  de  cero)  pueden  cambiar el UID real, efectivo y
+       salvado, cada uno a uno de: el UID actual, el UID efectivo
+       actual o el UID salvado actual.
+
+       El  súper-usuario puede establecer los UIDs real, efectivo
+       y salvado a valores arbitrarios.
+
+       Si uno de los parámetros es igual a -1,  el  valor  corre­
+       spondiente no se cambia.
+
+       De forma completamente análoga, setresgid establece el GID
+       real, efectivo y salvado del proceso  en  curso,  con  las
+       mismas  restricciones  para  procesos  con cada uno de los
+       UIDs real, efectivo y salvado distintos de cero.
+
+
+VALOR DEVUELTO
+       En caso de éxito, se devuelve cero. En caso de  error,  se
+       devuelve -1 y se pone en errno un valor adecuado.
+
+ERRORES
+       EPERM  El  proceso  en curso no era privilegiado e intentó
+              cambiar los IDs de una forma no permitida.
+
+CONFORME A
+       Esta llamada es específica de Linux.
+
+VÉASE TAMBIÉN
+       getuid(2),  setuid(2),  getreuid(2),  setreuid(2),  getre­
+       suid(2)
+
+
+
+Linux 2.1.44              26 Enero 1998              SETRESUID(2)

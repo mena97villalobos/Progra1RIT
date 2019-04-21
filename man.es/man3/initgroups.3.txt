@@ -1,0 +1,44 @@
+INITGROUPS(3)    Manual del Programador de Linux    INITGROUPS(3)
+
+
+
+NOMBRE
+       initgroups  -  inicializa la lista suplementaria de acceso
+       de grupos
+
+SINOPSIS
+       #include <grp.h>
+       #include <sys/types.h>
+
+       int initgroups(const char *user, gid_t group);
+
+DESCRIPCIÓN
+       La función initgroups() inicializa la lista de  acceso  de
+       grupos  leyendo  la  base  de datos de grupos /etc/group y
+       usando todos los grupos de los que  user  es  miembro.  Se
+       añade a la lista el grupo adicional group.
+
+VALOR REGRESADO
+       La  función initgroups() devuelve 0 si hubo éxito, o -1 si
+       ocurrió un error.
+
+ERRORES
+       EPERM  El proceso que realiza la llamada  no  tiene  sufi­
+              cientes privilegios.
+
+       ENOMEM Memoria  insuficiente para asignar la estructura de
+              información de grupo.
+
+FICHEROS
+       /etc/group              base de datos de grupos
+
+CONFORME A
+       SVID 3, BSD 4.3
+
+VÉASE TAMBIÉN
+       getgroups(2), setgroups(2)
+
+
+
+
+GNU                         5 Abr 1993              INITGROUPS(3)

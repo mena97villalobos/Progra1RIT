@@ -1,0 +1,43 @@
+re_comp(3)                     GNU                     re_comp(3)
+
+
+
+NOMBRE
+       re_comp,  re_exec  - funciones de expresiones regulares de
+       BSD
+
+SINOPSIS
+       #include <regex.h>
+
+       char *re_comp(char *exreg);
+       int re_exec(char *cadena);
+
+DESCRIPCIÓN
+       re_comp se emplea para compilar la expresión regular  ter­
+       minada en cero a la que apunte exreg.  El patrón compilado
+       ocupa un área  estática,  el  búfer  del  patrón,  que  se
+       sobreescribirá  en la próxima llamada a re_comp.  Si exreg
+       es NULL, no se efectúa ninguna operación y los  contenidos
+       del búfer del patrón no se alteran.
+
+       re_exec  se  usa para saber si la cadena acabada en cero a
+       la que apunte cadena concuerda con  la  expresión  regular
+       previamente compilada exreg.
+
+VALOR DEVUELTO
+       re_comp  devuelve  NULL  tras  una  compilación exitosa de
+       exreg y en otro caso devuelve un puntero a un  mensaje  de
+       error apropiado.
+
+       re_exec  devuelve  1  si  hay concordancia, cero si hay un
+       fallo.
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       regex(7), GNU regex manual
+
+
+
+Linux                      5 Marzo 1998                re_comp(3)

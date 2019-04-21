@@ -1,0 +1,164 @@
+ACCEPT(2)        Manual del programador de Linux        ACCEPT(2)
+
+
+
+NOMBRE
+       accept - acepta una conexión sobre un conector (socket).
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <sys/socket.h>
+
+       int   accept(int   s,  struct  sockaddr  *addr,  socklen_t
+       *addrlen);
+
+DESCRIPCIÓN
+       La función accept  se  usa  con  conectores  orientados  a
+       conexión (SOCK_STREAM, SOCK_SEQPACKET y SOCK_RDM).  Extrae
+       la primera petición de conexión de la cola  de  conexiones
+       pendientes,  le  asocia  un  nuevo  conector con las misma
+       propiedades que s y reserva un nuevo descriptor de fichero
+       para el conector, el cuál es el valor devuelto por la lla­
+       mada.  El conector original s no se ve afectado  por  esta
+       llamada.
+
+       El  argumento  s  es  un  conector  que ha sido creado con
+       socket(2), ligado a una dirección local con bind(2) y  que
+       se encuentra a la escucha tras un listen(2).
+
+       El argumento addr es un puntero a una estructura sockaddr.
+       Esta estructura se rellena con la dirección de la  entidad
+       con  la  que  se  conecta, tal y como la conoce la capa de
+       comunicaciones. El formato exacto de la  dirección  pasada
+       en  el parámetro addr viene determinado por la familia del
+       conector (vea socket(2) y las páginas de manual del proto­
+       colo   correspondiente).    El  argumento  addrlen  es  un
+       parámetro de entrada/salida: al efectuar la  llamada  debe
+       contener  el  tamaño de la estructura apuntada por addr; a
+       la salida, contendrá la longitud real  (en  bytes)  de  la
+       dirección devuelta. Cuando addr es NULL nada se rellena.
+
+       Si  no  hay conexiones pendientes en la cola y el conector
+       no está marcado como "no bloqueante", accept bloqueará  al
+       invocador hasta que se presente una conexión. Si el conec­
+       tor está marcado como no bloqueante y  no  hay  conexiones
+       pendientes en la cola, accept devolverá EAGAIN.
+
+       Para ser informado de las conexiones entrantes que se pro­
+       duzca en un conector, puede usar select(2) o poll(2).   Se
+       producirá  un evento de lectura en el intento de una nueva
+       conexión y entonces puede llamar a accept para obtener  un
+       conector  para  esa conexión. Alternativamente, puede con­
+       figurar el conector para  que  provoque  una  señal  SIGIO
+       cuando se produzca actividad en el conector; vea socket(7)
+       para más detalles.
+
+       Para determinados protocolos que necesitan  una  confirma­
+       ción  explícita, tales como DECNet, accept se puede inter­
+       pretar como una función  que,  simplemente,  desencola  la
+       siguiente  petición  de  conexión sin que ello implique la
+       confirmación.  Se sobreentiende la confirmación cuando  se
+       produce  una  lectura  o  escritura  normal sobre el nuevo
+       descriptor de fichero, y el rechazo  puede  ser  de  igual
+       manera  implícito cerrando el nuevo conector. Actualmente,
+       sólo DECNet tiene esta semántica en Linux.
+
+NOTAS
+       Puede que no siempre haya una conexión  esperando  después
+       de  que  se  produzca  una  señal  SIGIO, o después de que
+       select(2) o poll(2) devuelvan un evento de lectura, debido
+       a que la conexión podría haber sido eliminada por un error
+       asíncrono de red u otro hilo  antes  de  que  se  llame  a
+       accept.   Si  esto ocurre entonces la llamada se bloqueará
+       esperando a que llegue la siguiente conexión. Para  asegu­
+       rarse  de que accept nunca se bloquea, es necesario que el
+       conector s pasado tenga la opción O_NONBLOCK  activa  (vea
+       socket(7)).
+
+VALOR DEVUELTO
+       La  llamada  devuelve  -1  ante  un error. Si tiene éxito,
+       devuelve un entero no negativo que es  el  descriptor  del
+       conector aceptado.
+
+MANEJO DE ERRORES
+       La llamada accept de Linux pasa los errores de red ya pen­
+       dienes sobre el nuevo conector como un código de error  de
+       accept.   Este  comportamiento  difiere de otras construc­
+       ciones de conectores BSD. Para un  funcionamiento  fiable,
+       la  aplicación  debe detectar los errores de red definidos
+       por el protocolo tras una llamada  a  accept  y  tratarlos
+       como EAGAIN reintentado la operación. En el caso de TCP/IP
+       estos  son  ENETDOWN,  EPROTO,   ENOPROTOOPT,   EHOSTDOWN,
+       ENONET, EHOSTUNREACH, EOPNOTSUPP y ENETUNREACH.
+
+ERRORES
+       EAGAIN o EWOULDBLOCK
+              El  conector  está  marcado como no-bloqueante y no
+              hay conexiones que aceptar.
+
+       EBADF  El descriptor es inválido.
+
+       ENOTSOCK
+              El descriptor referencia a  un  fichero,  no  a  un
+              conector.
+
+       EOPNOTSUPP
+              El   conector   referenciado   no   es   del   tipo
+              SOCK_STREAM.
+
+       EFAULT El parámetro addr no se encuentra en una zona acce­
+              sible para escritura por el usuario.
+
+       EPERM  Las reglas del cortafuegos prohiben la conexión.
+
+       ENOBUFS, ENOMEM
+              No hay suficiente memoria disponible.
+
+       Además,  se  pueden  devolver otros errores de red para el
+       nuevo conector y que se encuentren definidos en el  proto­
+       colo.  Diferentes  núcleos  de Linux pueden devolver otros
+       errores diferentes como EMFILE,  EINVAL,  ENOSR,  ENOBUFS,
+       EPERM,   ECONNABORTED,  ESOCKTNOSUPPORT,  EPROTONOSUPPORT,
+       ETIMEDOUT, ERESTARTSYS.
+
+CONFORME A
+       SVr4, 4.4BSD (la función accept apareció por  primera  vez
+       en  BSD  4.2).  La página de manual de BSD documenta cinco
+       posibles respuestas de error (EBADF, ENOTSOCK, EOPNOTSUPP,
+       EWOULDBLOCK, EFAULT).  SUSv2 documenta los errores EAGAIN,
+       EBADF,  ECONNABORTED,  EFAULT,  EINTR,   EINVAL,   EMFILE,
+       ENFILE,  ENOBUFS,  ENOMEM,  ENOSR,  ENOTSOCK,  EOPNOTSUPP,
+       EPROTO, EWOULDBLOCK.
+
+NOTA
+       El tercer argumento de  accept  se  declaró  originalmente
+       como  un  `int  *' (y así está en libc4 y libc5 y en otros
+       muchos sistemas como BSD 4.*, SunOS 4, SGI);  el  estándar
+       propuesto POSIX 1003.1g quiso cambiarlo a `size_t *' y así
+       está en SunOS 5.  Más tarde, los borradores  POSIX  tenían
+       `socklen_t  *' y así lo tomaron the Single Unix Specifica­
+       tion y glibc2.  Citando a Linus Torvalds: _Cualquier_ bib­
+       lioteca  razonable  _debe_  hacer  que "socklen_t" sea del
+       mismo tamaño que int. Cualquier otra cosa destroza todo lo
+       de  la capa de conectores BSD. POSIX inicialmente estable­
+       ció el tipo a size_t y, de hecho, yo (y es de suponer  que
+       otros  aunque,  obviamente,  no demasiados) nos quejamos a
+       gritos. El ser de tipo size_t es completamente desastroso,
+       precisamente  porque,  por ejemplo, size_t muy rara vez es
+       del mismo tamaño que "int" en arquitecturas de 64  bit.  Y
+       _tiene_ que ser del mismo tamaño que "int" porque así está
+       en la interfaz de conectores BSD.  De cualquier modo,  los
+       de   POSIX   finalmente   tuvieron   una  idea  y  crearon
+       "socklen_t". Para  empezar,  no  deberían  haberlo  tocado
+       pero,  una  vez que lo hicieron, pensaron que debían tener
+       un tipo con nombre  propio  por  alguna  insondable  razón
+       (probablemente alguien no quería desprestigiarse por haber
+       cometido la estupidez original por  lo  que,  simplemente,
+       renombraron su metedura de pata de forma silenciosa).
+
+VÉASE TAMBIÉN
+       bind(2), connect(2), listen(2), select(2), socket(2)
+
+
+
+Página de Linux 2.2        7 Mayo 1999                  ACCEPT(2)

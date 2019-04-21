@@ -1,0 +1,51 @@
+STPCPY(3)        Manual del Programador de Linux        STPCPY(3)
+
+
+
+NOMBRE
+       stpcpy  -  copia  una cadena devolviendo un apuntador a su
+       final
+
+SINOPSIS
+       #include <string.h>
+
+       char *stpcpy(char *dest, const char *src);
+
+DESCRIPCIÓN
+       La función stpcpy() copia la cadena apuntada por  src  (la
+       cual  incluye  el caracter `\0' ) a la matriz apuntada por
+       dest.  Las cadenas no deben solaparse, y la cadena destino
+       dest  tiene  que ser lo suficientemente larga para recibir
+       la copia.
+
+VALOR DEVUELTO
+       stpcpy() devuelve un apuntador al final de la cadena  dest
+       (esto  es, la dirección del caracter terminador nulo) y no
+       al comienzo.
+
+EJEMPLO
+       Por ejemplo, este programa usa stpcpy para concatenar  foo
+       y bar para prodcir foobar, que entonces se imprime.
+
+                 #include <string.h>
+
+                 int
+                 main (void)
+                 {
+                   char *to = buffer;
+                   to = stpcpy (to, "foo");
+                   to = stpcpy (to, "bar");
+                   printf ("%s\n", buffer);
+                 }
+
+CONFORME A
+       Esta  función no es parte de las normas ANSI o POSIX, y no
+       es parte habitual de sistemas UNIX, aunque tampoco es  una
+       inveción de GNU.  Quizá venga del MS-DOS.
+
+VÉASE TAMBIÉN
+       strcpy(3), bcopy(3), memccpy(3), memcpy(3), memmove(3)
+
+
+
+GNU                  3 de Septiembre de 1995            STPCPY(3)

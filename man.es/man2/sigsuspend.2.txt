@@ -1,0 +1,354 @@
+SIGACTION(2)     Manual del Programador de Linux     SIGACTION(2)
+
+
+
+NOMBRE
+       sigaction, sigprocmask, sigpending, sigsuspend - funciones
+       POSIX de manejo de señales
+
+
+SINOPSIS
+       #include <signal.h>
+
+
+       int sigaction(int signum,  const  struct  sigaction  *act,
+       struct sigaction *oldact);
+
+       int  sigprocmask(int  how,  const  sigset_t *set, sigset_t
+       *oldset);
+
+       int sigpending(sigset_t *set);
+
+       int sigsuspend(const sigset_t *mask);
+
+
+DESCRIPCIÓN
+       La llamad al sistema sigaction se emplea para  cambiar  la
+       acción tomada por un proceso cuando recibe una determinada
+       señal.
+
+       signum especifica la señal y puede ser  cualquiera  válida
+       salvo SIGKILL o SIGSTOP.
+
+       Si act no es nulo, la nueva acción para la señal signum se
+       instala como act.  Si oldact no es nulo, la  acción  ante­
+       rior se guarda en oldact.
+
+       La estructura sigaction se define como
+
+              struct sigaction {
+                  void (*sa_handler)(int);
+                  void (*sa_sigaction)(int, siginfo_t *, void *);
+                  sigset_t sa_mask;
+                  int sa_flags;
+                  void (*sa_restorer)(void);
+              }
+
+       El  elemento  sa_restorer  está obsoleto y no debería uti­
+       lizarse.
+
+       sa_handler especifica la acción que se va  a  asociar  con
+       signum  y puede ser SIG_DFL para la acción predeterminada,
+       SIG_IGN para no tener en cuenta la señal, o un  puntero  a
+       una función manejadora para la señal.
+
+       sa_mask  da una máscara de señales que deberían bloquearse
+       durante la ejecución del manejador de  señal.  Además,  la
+       señal  que  lance el manejador será bloqueada, a menos que
+       se activen las opciones SA_NODEFER o SA_NOMASK.
+
+       sa_flags especifica un conjunto de opciones que  modifican
+       el comportamiento del proceso de manejo de señal. Se forma
+       por la aplicación del operador de bits OR a cero o más  de
+       las siguientes constantes:
+
+              SA_NOCLDSTOP
+                     Si   signum   es   SIGCHLD,   no  se  reciba
+                     notificación cuando los  procesos  hijos  se
+                     paren  (esto  es,  cuando los procesos hijos
+                     reciban una de las señales SIGSTOP, SIGTSTP,
+                     SIGTTIN o SIGTTOU).
+
+              SA_ONESHOT o SA_RESETHAND
+                     Restáurese la acción para la señal al estado
+                     predeterminado una vez que el  manejador  de
+                     señal haya sido llamado. (Esto es el compor­
+                     tamiento predeterminado  de  la  llamada  al
+                     sistema signal(2).)
+
+              SA_RESTART
+                     Proporciona un comportamiento compatible con
+                     la semántica de señales de BSD haciendo  re-
+                     ejecutables   algunas  llamadas  al  sistema
+                     entre señales.
+
+              SA_NOMASK o SA_NODEFER
+                     No se impida que se reciba la señal desde su
+                     propio manejador.
+
+              SA_SIGINFO
+                     El  manejador de señal toma 3 argumentos, no
+                     uno.  En  este  caso,  se  debe   configurar
+                     sa_sigaction  en  lugar  de sa_handler.  (El
+                     campo sa_sigaction fue añadido en la versión
+                     2.1.86 de Linux.)
+
+       El parámetro siginfo_t para sa_sigaction es una estructura
+       con los siguientes elementos
+
+              siginfo_t {
+                  int      si_signo;  /* Número de señal */
+                  int      si_errno;  /* Un valor errno */
+                  int      si_code;   /* Código de señal */
+                  pid_t    si_pid;    /* ID del proceso emisor */
+                  uid_t    si_uid;    /* ID del usuario real del proceso emisor */
+                  int      si_status; /* Valor de salida o señal */
+                  clock_t  si_utime;  /* Tiempo de usuario consumido */
+                  clock_t  si_stime;  /* Tiempo de sistema consumido */
+                  sigval_t si_value;  /* Valor de señal */
+                  int      si_int;    /* señal POSIX.1b */
+                  void *   si_ptr;    /* señal POSIX.1b */
+                  void *   si_addr;   /* Dirección de memoria que ha producido el fallo */
+                  int      si_band;   /* Evento de conjunto */
+                  int      si_fd;     /* Descriptor de fichero */
+              }
+       si_signo, si_errno y si_code están  definidos  para  todas
+       las señales.  kill(2), las señales POSIX.1b y SIGCHLD rel­
+       lenan si_pid y si_uid.   SIGCHLD también  rellena  si_sta­
+       tus, si_utime y si_stime.  si_int y si_ptr son especifica­
+       dos por el emisor de la señal POSIX.1b.
+        SIGILL, SIGFPE, SIGSEGV y SIGBUS rellenan si_addr con  la
+       dirección del fallo.  SIGPOLL rellena si_band y si_fd.
+
+       si_code  indica  por  qué  se  ha  enviado la señal. Es un
+       valor, no una máscara de bits.  Los valores que son  posi­
+       bles para cualquier señal se listan en la siguiente tabla:
+
+
+
+
+
+
+
+       +--------------------------------------------+
+       |                  si_code                   |
+       +-----------+--------------------------------+
+       |Valor      | Origen de la señal             |
+       +-----------+--------------------------------+
+       |SI_USER    | kill, sigsend o raise          |
+       +-----------+--------------------------------+
+       |SI_KERNEL  | El núcleo                      |
+       +-----------+--------------------------------+
+       |SI_QUEUE   | sigqueue                       |
+       +-----------+--------------------------------+
+       |SI_TIMER   | el cronómetro ha vencido       |
+       +-----------+--------------------------------+
+       |SI_MESGQ   | ha cambiado el estado de mesq  |
+       +-----------+--------------------------------+
+       |SI_ASYNCIO | ha terminado una E/S asíncrona |
+       +-----------+--------------------------------+
+       |SI_SIGIO   | SIGIO encolada                 |
+       +-----------+--------------------------------+
+       +----------------------------------------------+
+       |                   SIGILL                     |
+       +-----------+----------------------------------+
+       |ILL_ILLOPC | código de operación ilegal       |
+       +-----------+----------------------------------+
+       |ILL_ILLOPN | operando ilegal                  |
+       +-----------+----------------------------------+
+       |ILL_ILLADR | modo de direccionamiento ilegal  |
+       +-----------+----------------------------------+
+       |ILL_ILLTRP | trampa ilegal                    |
+       +-----------+----------------------------------+
+       |ILL_PRVOPC | código de operación privilegiada |
+       +-----------+----------------------------------+
+       |ILL_PRVREG | registro privilegiado            |
+       +-----------+----------------------------------+
+       |ILL_COPROC | error del coprocesador           |
+       +-----------+----------------------------------+
+       |ILL_BADSTK | error de la pila interna         |
+       +-----------+----------------------------------+
+       +----------------------------------------------------------+
+       |                         SIGFPE                           |
+       +-----------+----------------------------------------------+
+       |FPE_INTDIV | entero dividido por cero                     |
+       +-----------+----------------------------------------------+
+       |FPE_INTOVF | desbordamiento de entero                     |
+       +-----------+----------------------------------------------+
+       |FPE_FLTDIV | punto flotante dividido por cero             |
+       +-----------+----------------------------------------------+
+       |FPE_FLTOVF | desbordamiento de punto flotante             |
+       +-----------+----------------------------------------------+
+       |FPE_FLTUND | desbordamiento de punto flotante por defecto |
+       +-----------+----------------------------------------------+
+       |FPE_FLTRES | resultado de punto flotante inexacto         |
+       +-----------+----------------------------------------------+
+       |FPE_FLTINV | operación de punto flotante inválida         |
+       +-----------+----------------------------------------------+
+       |FPE_FLTSUB | subscript fuera de rango                     |
+       +-----------+----------------------------------------------+
+       +--------------------------------------------------------------------+
+       |                              SIGSEGV                               |
+       +------------+-------------------------------------------------------+
+       |SEGV_MAPERR | dirección no asociada a un objeto                     |
+       +------------+-------------------------------------------------------+
+       |SEGV_ACCERR | permisos inválidos para un objeto presente en memoria |
+       +------------+-------------------------------------------------------+
+
+
+       +--------------------------------------------------+
+       |                     SIGBUS                       |
+       +-----------+--------------------------------------+
+       |BUS_ADRALN | alineamiento de dirección inválido   |
+       +-----------+--------------------------------------+
+       |BUS_ADRERR | dirección física inexistente         |
+       +-----------+--------------------------------------+
+       |BUS_OBJERR | error hardware específico del objeto |
+       +-----------+--------------------------------------+
+       +-------------------------------------------------------------+
+       |                          SIGTRAP                            |
+       +-----------+-------------------------------------------------+
+       |TRAP_BRKPT | punto de parada de un proceso                   |
+       +-----------+-------------------------------------------------+
+       |TRAP_TRACE | trampa de seguimiento paso a paso de un proceso |
+       +-----------+-------------------------------------------------+
+       +---------------------------------------------------------------------+
+       |                              SIGCHLD                                |
+       +--------------+------------------------------------------------------+
+       |CLD_EXITED    | ha terminado un hijo                                 |
+       +--------------+------------------------------------------------------+
+       |CLD_KILLED    | se ha matado a un hijo                               |
+       +--------------+------------------------------------------------------+
+       |CLD_DUMPED    | un hijo ha terminado anormalmente                    |
+       +--------------+------------------------------------------------------+
+       |CLD_TRAPPED   | un hijo con seguimiento paso a paso ha sido detenido |
+       +--------------+------------------------------------------------------+
+       |CLD_STOPPED   | ha parado un hijo                                    |
+       +--------------+------------------------------------------------------+
+       |CLD_CONTINUED | un hijo parado ha continuado                         |
+       +--------------+------------------------------------------------------+
+       +------------------------------------------------+
+       |                    SIGPOLL                     |
+       +---------+--------------------------------------+
+       |POLL_IN  | datos de entrada disponibles         |
+       +---------+--------------------------------------+
+       |POLL_OUT | buffers de salida disponibles        |
+       +---------+--------------------------------------+
+       |POLL_MSG | mensaje de entrada disponible        |
+       +---------+--------------------------------------+
+       |POLL_ERR | error de E/S                         |
+       +---------+--------------------------------------+
+       |POLL_PRI | entrada de alta prioridad disponible |
+       +---------+--------------------------------------+
+       |POLL_HUP | dispositivo desconectado             |
+       +---------+--------------------------------------+
+
+       La llamada sigprocmask se emplea para cambiar la lista  de
+       señales  bloqueadas  actualmente.  El comportamiento de la
+       llamada depende del valor de how, como sigue:
+
+              SIG_BLOCK
+                     El conjunto  de  señales  bloqueadas  es  la
+                     unión  del  conjunto  actual  y el argumento
+                     set.
+
+              SIG_UNBLOCK
+                     Las señales en set se  quitan  del  conjunto
+                     actual   de  señales  bloqueadas.  Es  legal
+                     intentar el desbloqueo de una señal  que  no
+                     está bloqueada.
+
+              SIG_SETMASK
+                     El  conjunto  de  señales bloqueadas se pone
+                     según el argumento set.
+
+       Si oldset no es nulo, el valor anterior de la  máscara  de
+       señal se guarda en oldset.
+
+       La  llamada sigpending permite el examen de señales pendi­
+       entes (las que han sido producidas mientras  estaban  blo­
+       queadas). La máscara de señal de las señales pendientes se
+       guarda en set.
+
+       La llamada sigsuspend reemplaza temporalmente  la  máscara
+       de señal para el proceso con la dada por mask y luego sus­
+       pende el proceso hasta que se recibe una señal.
+
+
+VALOR DEVUELTO
+       sigaction, sigprocmask, sigpending y sigsuspend  devuelven
+       0 en caso de éxito y -1 en caso de error.
+
+
+ERRORES
+       EINVAL Se ha especificado una señal inválida. Esto también
+              se genera si se  hace  un  intento  de  cambiar  la
+              acción  para  SIGKILL  o SIGSTOP, que no pueden ser
+              capturadas.
+
+       EFAULT act, oldact, set u oldset apuntan  a  una  zona  de
+              memoria  que  no  forma parte válida del espacio de
+              direcciones del proceso.
+
+       EINTR  La llamada al sistema ha sido interrumpida.
+
+
+OBSERVACIONES
+       No es posible bloquear SIGKILL ni SIGSTOP con una  llamada
+       a  sigprocmask.   Los intentos de hacerlo no serán tenidos
+       en cuenta, silenciosamente.
+
+       De acuerdo con POSIX, el comportamiento de un proceso está
+       indefinido  después  de  que  no  haga  caso  de una señal
+       SIGFPE, SIGILL o SIGSEGV que no haya sido generada por las
+       funciones  kill()  o raise().  La división entera por cero
+       da un  resultado  indefinido.   En  algunas  arquitecturas
+       generará una señal SIGFPE.  (También, el dividir el entero
+       más negativo por -1 puede generar una señal  SIGFPE.)   No
+       hacer caso de esta señal puede llevar a un bucle infinito.
+
+       POSIX (B.3.3.1.3) anula el establecimiento de SIG_IGN como
+       acción  para  SIGCHLD.   Los comportamientos de BSD y SYSV
+       difieren, provocando el fallo en Linux de aquellos progra­
+       mas BSD que asignan SIG_IGN como acción para SIGCHLD.
+
+       La  especificación  POSIX  sólo  define  SA_NOCLDSTOP.  El
+       empleo de otros valores en sa_flags no es transportable.
+
+       La opción SA_RESETHAND es compatible con la  de  SVr4  del
+       mismo nombre.
+
+       La  opción  SA_NODEFER  es  compatible  con la de SVr4 del
+       mismo nombre bajo los  núcleos  1.3.9  y  posteriores.  En
+       núcleos  más viejos la implementación de Linux permitía la
+       recepción de cualquier señal, no  sólo  la  que  estábamos
+       instalando  (sustituyendo así efectivament cualquier valor
+       de sa_mask).
+
+       Los nombres SA_RESETHAND y SA_NODEFER para  compatibilidad
+       con  SVr4 están presentes solamente en las versiones de la
+       biblioteca 3.0.9 y mayores.
+
+       La opción SA_SIGINFO viene especificada por  POSIX.1b.  El
+       soporte para ella se añadió en la versión 2.2 de Linux.
+
+       sigaction  puede  llamarse  con  un segundo argumento nulo
+       para saber el manejador de señal en curso.  También  puede
+       emplearse  para comprobar si una señal dada es válida para
+       la máquina donde se está, llamándola con el segundo  y  el
+       tercer argumento nulos.
+
+       Vea  sigsetops(3) para detalles sobre manipulación de con­
+       juntos de señales.
+
+CONFORME A
+       POSIX, SVr4.  SVr4 no documenta la condición EINTR.
+
+
+VÉASE TAMBIÉN
+       kill(1), kill(2), killpg(2), pause(2), raise(3), siginter­
+       rupt(3), signal(2), signal(7), sigsetops(3), sigvec(2)
+
+
+
+Linux 2.2                  8 Mayo 1999               SIGACTION(2)

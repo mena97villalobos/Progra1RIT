@@ -1,0 +1,99 @@
+addr2line(1)    Herramientas de Desarrollo de GNU    addr2line(1)
+
+
+
+NOMBRE
+       addr2line  -  convierte direcciones a nombres de fichero y
+       números de línea
+
+
+SINOPSIS
+       addr2line
+              [-b nombrefbd | --target=nombrefbd] [-C|--demangle]
+              [-e nombrefichero | --exe=nombrefichero]
+              [-f|--functions] [-s|--basenames] [-H|--help]
+              [-V|--version] [dirección...]
+
+DESCRIPCIÓN
+       addr2line  traduce  direcciones  de  programa a nombres de
+       fichero y números de línea. Dada una dirección y  un  eje­
+       cutable,  emplea  la  información de depuración en el eje­
+       cutable para adivinar qué nombre de fichero  y  número  de
+       línea están asociados a una dirección dada.
+
+       El  ejecutable  a  emplear se especifica con la opción -e.
+       El nombre predeterminado es a.out.
+
+       addr2line tiene dos modos de operación.
+
+       En el primero, se especifican en la línea de  órdenes  di­
+       recciones hexadecimales, y addr2line muestra el nombre del
+       fichero y el número de línea para cada dirección.
+
+       En la segunda, addr2line lee direcciones exadecimales des­
+       de  la entrada estándar, y muestra el nombre del fichero y
+       el número de línea para cada dirección en la salida están­
+       dar. En este modo, addr2line puede emplearse en una inter­
+       conexión para convertir dinámicamente direcciones  escogi­
+       das.
+
+       El formato de la salida es NOMBREFICHERO:NUMLINEA. El nom­
+       bre de fichero y el número de línea para cada dirección se
+       muestran en una línea separada. Si se emplea la opción -f,
+       entonces cada línea NOMBREFICHERO:NUMLINEA viene precedida
+       por una línea NOMBREFUNCION que es el nombre de la función
+       que contiene a la dirección.
+
+       Si el nombre de fichero o el de función no pueden determi­
+       narse,  addr2line  mostrará dos signos de interrogación en
+       sus lugares. Si el número de línea no puede  determinarse,
+       addr2line mostrará el número 0.
+
+
+OPCIONES
+       -b nombrefbd
+
+       --target=nombrefbd
+              Especifica  que  el  formato del código objeto para
+              los ficheros objeto será nombrefbd.
+
+
+       -C
+
+       --demangle
+              Descodifica (demangle, reconfigura) nombres de sím­
+              bolos  de bajo nivel a nombres de nivel de usuario.
+              Aparte de quitar los subrayados iniciales  añadidos
+              por  el  sistema, esto hace que los nombres de fun­
+              ciones de C++ sean legibles.
+
+
+       -e nombrefichero
+
+       --exe=nombrefichero
+              Especifica el nombre del ejecutable para el que  se
+              deberán  traducir  las  direcciones.  El  nombre de
+              fichero predeterminado es a.out.
+
+
+       -f
+
+       --functions
+              Muestra nombres de funciones a la vez que  informa­
+              ción sobre ficheros y números de línea.
+
+
+       -s
+
+       --basenames
+              Muestra  solamente el nombre base de cada nombre de
+              fichero.
+
+
+VÉASE TAMBIÉN
+       La entrada de menú `Binutils' en Info; Las  Utilidades  de
+       Binarios de GNU, Roland H. Pesch (Octubre de 1991).
+
+
+
+Cygnus Solutions       27 de Marzo de 1997           addr2line(1)

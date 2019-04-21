@@ -1,0 +1,37 @@
+UNDOCUMENTED(2)  Manual del Programador de Linux  UNDOCUMENTED(2)
+
+
+
+NOMBRE
+       ningua - llamadas al sistema sin documentar
+
+SINOPSIS
+       Llamadas al sistema indocumentadas.
+
+DESCRIPCIÓN
+       A partir de la versión 2.0.34, hay 164 llamadas al sistema
+       listadas en el  fichero  /usr/include/asm/unistd.h.   Esta
+       página  de  manual  menciona  aquellas  llamadas que están
+       implementadas en el núcleo pero que no se han  documentado
+       en  una  página  de  manual.   Algunas  de  estas llamadas
+       todavía no tienen un prototipo en los ficheros cabecera de
+       libc.
+
+PETICIÓN
+       Si  tiene información sobre estas llamadas al sistema, por
+       favor, mire el  código  fuente  del  núcleo,  escriba  una
+       página de manual (usando un estilo similar al de las otras
+       páginas de manual de la sección 2 de Linux)  y  envíela  a
+       aeb@cwi.nl  para ser incluida en la próxima versión de las
+       páginas  de  manual  del   Linux   Documentation   Project
+       (Proyecto de Documentación de Linux).
+
+ESTADO
+       Actualmente, no hay llamadas al sistema sin documentar.
+
+VÉASE TAMBIÉN
+       obsolete(2), unimplemented(2)
+
+
+
+Linux 2.0.34              12 April 1996           UNDOCUMENTED(2)

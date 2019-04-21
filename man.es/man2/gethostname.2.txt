@@ -1,0 +1,56 @@
+GETHOSTNAME(2)   Manual del programador de Linux   GETHOSTNAME(2)
+
+
+
+NOMBRE
+       gethostname,  sethostname  -  obtiene/asigna el nombre del
+       host
+
+SINOPSIS
+       #include <unistd.h>
+
+       int gethostname(char *name, size_t len);
+       int sethostname(const char *name, size_t len);
+
+DESCRIPCIÓN
+       Estas funciones se usan para obtener o cambiar  el  nombre
+       del host del proceso actual.
+
+VALOR DEVUELTO
+       En  caso de éxito devuelve un 0. En caso de error,devuelve
+       un -1, y errno se asigna apropiadamente.
+
+ERRORES
+       EINVAL len es negativo o, para  sethostname,  len  es  mas
+              largo  que  el  máximo de tamaño permitido, o, para
+              gethostname en Linux/i386, len es mas corto que  el
+              tamaño actual.
+
+       EPERM  Para sethostname, realizar la llamada no hace falta
+              estar como superusuario.
+
+       EFAULT name es una dirección inválida.
+
+CONFORME A
+       SVr4, 4.4BSD  (esta función apareció por  primera  vez  en
+       4.2BSD).   POSIX.1 no define estas funciones, pero ISO/IEC
+       9945-1:1990 las menciona en B.4.4.1.
+
+FALLOS
+       Otras implementaciones de gethostname devuelven en caso de
+       éxito len bytes incluso si name es mas largo.  Linux/Alpha
+       obedece a este comportamiento.  Linux/i386,  sin  embargo,
+       devuelve  EINVAL en este caso (a partir de las bibliotecas
+       libc6 2.0.4).
+
+NOTAS
+       Sobre Linux/Alpha, gethostname es una llamada al  sistema.
+       Sobre  Linux/i386,  gethostname  está  implementada  en el
+       ámbito de bibliotecas mediante la llamada uname(2).
+
+VÉASE TAMBIÉN
+       getdomainname(2), setdomainname(2), uname(2)
+
+
+
+Linux 1.3.6               22 Julio 1995            GETHOSTNAME(2)

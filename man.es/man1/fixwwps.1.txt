@@ -1,0 +1,33 @@
+FIXWWPS(1)                                             FIXWWPS(1)
+
+
+
+NOMBRE
+       fixwwps  -  filtro que prepara documentos de Windows Write
+       para que PSUtils funcione
+
+SINOPSIS
+       fixwwps < WinWrite.ps > Fixed.ps
+
+DESCRIPCIÓN
+       Fixwwps es un filtro perl que "prepara" el PostScript  del
+       Windows  Write  para  que  funcione  correctamente  con el
+       paquete psutils de Angus Duggan.
+
+AUTOR
+       Copyright (C) Angus J. C. Duggan 1991-1995
+
+VÉASE TAMBIÉN
+       psbook(1), psselect(1), pstops(1),  epsffit(1),  psnup(1),
+       psresize(1), psmerge(1), fixscribeps(1), getafm(1), fixdl­
+       srps(1),  fixfmps(1),  fixmacps(1),  fixpsditps(1),  fixp­
+       spps(1),  fixtpps(1), fixwfwps(1), fixwpps(1), fixwwps(1),
+       extractres(1), includeres(1)
+
+MARCAS REGISTRADAS
+       PostScript es una marca registrada de Adobe Systems Incor­
+       porated.
+
+
+
+                 PSUtils Release 1 Patchlevel 17       FIXWWPS(1)

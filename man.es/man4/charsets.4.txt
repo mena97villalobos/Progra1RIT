@@ -1,0 +1,269 @@
+CHARSETS(4)      Manual del Programador de Linux      CHARSETS(4)
+
+
+
+NOMBRE
+       charsets  - internacionalización y conjuntos de caracteres
+       desde el punto de vista del programador
+
+DESCRIPCIÓN
+       Linux es un sistema operativo internacional. Varias de sus
+       utilidades  y controladores de dispositivos (incluyendo el
+       de la consola) admiten  conjuntos  de  caracteres  multil­
+       ingües  incluyendo  letras  del alfabeto latino con marcas
+       diacríticas, acentos, ligaduras, y  alfabetos  enteros  no
+       latinos incluyendo el griego, cirílico, árabe y hebreo.
+
+       Esta  página  de  manual presenta una visión de los están­
+       dares de conjuntos de caracteres desde el punto  de  vista
+       del programador, y cómo encajan todos juntos en Linux. Los
+       estándares en  discusión  incluyen  el  ASCII,  ISO  8859,
+       KOI8-R, Unicode, ISO 2022 e ISO 4873.
+
+
+ASCII
+       ASCII  (American  Standard  Code  For  Information, Código
+       Estándar Americano para la Información) es el conjunto  de
+       caracteres  original de 7 bits, diseñado inicialmente para
+       el inglés americano. Actualmente se describe en el  están­
+       dar ECMA-6.
+
+       En  Gran Bretaña se emplea una variante donde se reemplaza
+       el símbolo del sostenido o  almohadilla  o  libra  peso  o
+       número  (#)  por  la libra esterlina británica; cuando sea
+       preciso, las variantes americanas y británicas pueden dis­
+       tinguirse por los nombres "US ASCII" y "UK ASCII".
+
+       Como  Linux  fue  escrito  para  equipos  diseñados en los
+       EE.UU., admite US ASCII de modo nativo.
+
+
+ISO 8859
+       ISO 8859 es una serie de  conjuntos  de  caracteres  de  8
+       bits,  los cuales tienen como su primera mitad (7 bits) el
+       US ASCII, caracteres de control invisibles  en  las  posi­
+       ciones  128  a  159, y 96 gráficos fijos desde la posición
+       160 hasta la 255.
+
+       De éstos, el más importante es el ISO 8859-1 (Latin-1). Es
+       admitido  de  modo nativo por el controlador de consola de
+       Linux, muy bien admitido en X11R6 y es el conjunto de car­
+       acteres base de HTML.
+
+       El  soporte  de consola para los otros conjuntos de carac­
+       teres 8859 está disponible en Linux a través de utilidades
+       de  usuario  (como  setfont(8))  que modifican las asocia­
+       ciones de teclas y la tabla de gráficos EGA/VGA y  emplean
+       la tabla de tipos de letra de "correspondencia de usuario"
+       en el controlador de consola.
+
+       Aquí se presentan breves descripciones de cada conjunto:
+
+       8859-1 (Latin-1)
+              Latin-1 cubre la mayoría  de  lenguajes  de  Europa
+              Occidental  como  el albanés, catalán, danés, neer­
+              landés, inglés,  feroés,  finés,  francés,  alemán,
+              gallego,   gaélico,  islandés,  italiano,  noruego,
+              portugués, español y sueco. La falta  de  las  lig­
+              aduras  neerlandesa  ij, francesa oe y las comillas
+              antiguas ,,alemanas`` es tolerable.
+
+
+       8859-2 (Latin-2)
+              Latin-2 admite la mayoría de las lenguas eslavas  y
+              de  Centro-Europa  que  se  escriben con caracteres
+              latinos: checo, alemán,  húngaro,  polaco,  rumano,
+              croata, eslovaco y esloveno.
+
+
+       8859-3 (Latin-3)
+              Latin-3  es popular entre los autores de esperanto,
+              gallego, maltés y turco.
+
+       8859-4 (Latin-4)
+              Latin-4 introdujo letras para el estonio,  letón  y
+              lituano.   Esencialmente   está  obsoleto;  vea  el
+              8859-10 (Latin-6).
+
+       8859-5 Letras cirílicas para el búlgaro, bielorruso, mace­
+              donio,  ruso,  serbio  y  ucraniano. Los ucranianos
+              leen la letra `ghe' con palote como `heh' y necesi­
+              tarían   una  `ghe'  con  plumada  ascendente  para
+              escribir una correcta `ghe'. Vea la discusión sobre
+              el KOI8-R más abajo.
+
+       8859-6 Para el árabe. La tabla de glifos 8859-6 es un tipo
+              fijo de formas de letra separadas, pero  un  mecan­
+              ismo  de  visualización  correcto  debería combinar
+              éstas usando las formas iniciales, medias y finales
+              apropiadas.
+
+       8859-7 Admite el griego moderno.
+
+       8859-8 Admite el hebreo.
+
+       8859-9 (Latin-5)
+              Ésta  es  una  variante  del  Latin-1 que reemplaza
+              letras islandesas no muy usadas con otras turcas.
+
+       8859-10 (Latin-6)
+              El Latin 6  añade  las  últimas  letras  del  inuit
+              (esquimal  de  Groenlandia)  y del sami (lapón) que
+              faltaban en el Latin 4 para  cubrir  toda  el  área
+              nórdica.  RFC 1345 listaba un `latin6' preliminar y
+              diferente. El sami skolt aún  necesita  unos  pocos
+              acentos más que éstos.
+
+KOI8-R
+       El  KOI8-R  es un conjunto de caracteres no ISO popular en
+       Rusia. La primera mitad es el US ASCII; la segunda  es  un
+       conjunto de caracteres cirílico algo mejor diseñado que el
+       ISO 8859-5.
+
+       El soporte de consola para el KOI8-R  está  disponible  en
+       Linux  a través de utilidades de usuario (como setfont(8))
+       que modifican las asociaciones de teclas  y  la  tabla  de
+       gráficos EGA y emplean la tabla de tipos de letra de "cor­
+       respondencia de usuario" en el controlador de consola.
+
+
+UNICODE
+       Unicode (ISO 10646) es un estándar cuyo objetivo es repre­
+       sentar   inequívocamente   cada  glifo  conocido  en  cada
+       lenguaje humano. La codificación nativa de Unicode  es  de
+       32  bits (versiones más antiguas empleaban 16). Hay infor­
+       mación sobre Unicode en el URL <http://www.unicode.com>.
+
+       Linux representa Unicode empleando el Formato de Transfer­
+       encia Unicode de 8 bits (UTF-8). UTF-8 es una codificación
+       de Unicode de longitud variable. Emplea 1 byte para  codi­
+       ficar  7 bits, 2 bytes para 11 bits, 3 bytes para 16 bits,
+       4 bytes para 21 bits, 5 bytes para 26 bits, y 6 bytes para
+       31 bits.
+
+       Sean  0,  1,  x  el  0,  el 1 ó un bit arbitrario. Un byte
+       0xxxxxxx representa el carácter Unicode 00000000  0xxxxxxx
+       que codifica el mismo símbolo que el ASCII 0xxxxxxx.  Así,
+       ASCII va sin cambio alguno dentro de UTF-8, y la gente que
+       emplea  ASCII no nota ningún cambio: ni en el código ni en
+       tamaños de fichero.
+
+       Un byte 110xxxxx es el comienzo de un código de 2 bytes, y
+       110xxxxx  10yyyyyy  se  ensambla en 00000xxx xxyyyyyy.  Un
+       byte 1110xxxx es el comienzo de un código de  3  bytes,  y
+       1110xxxx   10yyyyyy   10zzzzzz  se  ensambla  en  xxxxyyyy
+       yyzzzzzz.  (Cuando se emplea UTF-8 para codificar  el  ISO
+       10646  de  31 bits, esta progresión continúa hasta códigos
+       de 6 bytes.)
+
+       Para los usuarios de ISO-8859-1, esto  significa  que  los
+       caracteres  con  el  último bit a 1 se codifican ahora con
+       dos bytes. Esto tiende a expandir los  ficheros  de  texto
+       ordinarios  en  un 1 ó 2%. Sin embargo no hay problemas de
+       conversión, puesto que los valores Unicode de los símbolos
+       de  ISO-8859-1  igualan  a  los correspondientes de los de
+       ISO-8859-1 (extendidos en 8 bits iniciales a 0). Para  los
+       usuarios  japoneses  esto  significa que los códigos de 16
+       bits de uso común actualmente, necesitarán tres bytes y se
+       requerirán  tablas  de  correspondencia.  Por  eso  muchos
+       japoneses prefieren el ISO 2022.
+
+       Observe que UTF-8 es auto-sincronizante: 10xxxxxx  es  una
+       cola,  y  cualquier  otro  byte es la cabeza de un código.
+       Observe que de la única manera que los bytes ASCII  apare­
+       cen en un flujo UTF-8 es como ellos mismos. En particular,
+       no hay NULs o '/'s incluidos que  formen  parte  de  algún
+       código más grande.
+
+       Puesto  que ASCII, y, en particular, NUL y '/', permanecen
+       inalterados, el núcleo no se entera de que se está  emple­
+       ando  UTF-8.  No  le  importa en absoluto para qué son los
+       bytes que está manejando.
+
+       La representación de los flujos de datos Unicode se maneja
+       normalmente a través de tablas de `subtipo' que hacen cor­
+       responder un subconjunto de Unicode a glifos. Internamente
+       el  núcleo  emplea  Unicode  para  describir el subtipo de
+       letra cargada en RAM de vídeo. Esto significa  que  en  el
+       modo UTF-8 uno puede emplear un conjunto de caracteres con
+       512 símbolos diferentes. Esto no basta  para  el  japonés,
+       chino  ni  coreano,  pero  es  bastante para la mayoría de
+       otros propósitos.
+
+
+ISO 2022 Y ISO 4873
+       Los estándares ISO 2022 y 4873 describen un modelo de con­
+       trol  de  tipo de letra basado en la VT100. Este modelo es
+       (parcialmente) admitido por  el  núcleo  de  Linux  y  por
+       xterm(1).  Es popular en Japón y Corea.
+
+       Hay  4  conjuntos de caracteres gráficos, llamados G0, G1,
+       G2 y G3, y uno de  ellos  es  el  conjunto  de  caracteres
+       actual  para los códigos con el bit más alto a 0 (inicial­
+       mente G0), y uno de ellos es  el  conjunto  de  caracteres
+       actual  para los códigos con el bit más alto a 1 (inicial­
+       mente G1). Cada conjunto de caracteres gráfico tiene 94  ó
+       96  caracteres,  y  es esencialmente un conjunto de carac­
+       teres de  7  bits.  Emplea  códigos  bien  entre  040-0177
+       (041-0176) o bien entre 0240-0377 (0241-0376).  G0 siempre
+       tiene de tamaño 94  y emplea códigos en el rango 041-0176.
+
+       El  cambio  entre  los  conjuntos de caracteres se realiza
+       empleando las funciones de cambio ^N (SO o LS1), ^O (SI  o
+       LS0),  ESC n (LS2), ESC o (LS3), ESC N (SS2), ESC O (SS3),
+       ESC ~ (LS1R), ESC } (LS2R), ESC | (LS3R).  La función  LSn
+       hace  que  el conjunto de caracteres Gn sea el actual para
+       los códigos con el bit más alto a 0.  La función LSnR hace
+       que  el  conjunto  de caracteres Gn sea el actual para los
+       códigos con el bit más alto a 1.  La función SSn hace  que
+       el  conjunto de caracteres Gn (n=2 ó 3) sea el actual para
+       el siguiente carácter solamente (tenga lo que tenga su bit
+       más alto).
+
+       Un  conjunto  de 94 caracteres se designa como el conjunto
+       de caracteres Gn por una secuencia  de  escape  ESC  (  xx
+       (para  G0),  ESC ) xx (para G1), ESC * xx (para G2), ESC +
+       xx (para G3), donde xx es un símbolo o un par de  símbolos
+       del Registro Internacional de Conjuntos de Caracteres Cod­
+       ificados ISO 2375.  Por ejemplo, ESC  (  @  selecciona  el
+       conjunto  de caracteres ISO 646 como el G0, ESC ( A selec­
+       ciona el conjunto de caracteres estándar de R.U.  (con  la
+       libra  esterlina  en  lugar  del signo numeral #), ESC ( B
+       selecciona el ASCII (con el dólar $ en lugar  del  símbolo
+       monetario ¤), ESC ( M selecciona un conjunto de caracteres
+       para lenguas africanas, ESC ( ! selecciona el conjunto  de
+       caracteres cubano, etc. etc. etc.
+
+       Un  conjunto  de 96 caracteres se designa como el conjunto
+       de caracteres Gn por una secuencia  de  escape  ESC  -  xx
+       (para  G1),  ESC . xx (para G2) o ESC / xx (para G3).  Por
+       ejemplo, ESC - G selecciona el alfabeto hebreo como el G1.
+
+       Un  conjunto  de  caracteres  multibyte se designa como el
+       conjunto de caracteres Gn por una secuencia de escape  ESC
+       $ xx o ESC $ ( xx (para G0), ESC $ ) xx (para G1), ESC $ *
+       xx (para G2), ESC $ + xx (para G3).  Por ejemplo, ESC $  (
+       C selecciona el conjunto de caracteres coreano para G0. El
+       conjunto de caracteres japonés seleccionado por  ESC  $  B
+       tiene  una  versión  más reciente seleccionada por ESC & @
+       ESC $ B.
+
+       ISO 4873 estipula un uso más reducido de conjuntos de car­
+       acteres,  donde  G0 está fijo (siempre ASCII), de modo que
+       G1, G2 y G3 sólo pueden ser llamados para códigos  con  el
+       bit  más  alto  a 1.  En particular, ^N y ^O ya no se usan
+       más, ESC ( xx sólo puede emplearse con xx=B y  ESC  )  xx,
+       ESC  * xx, ESC + xx son equivalentes a ESC - xx, ESC . xx,
+       ESC / xx, respectivamente.
+
+
+VÉASE TAMBIÉN
+       console(4), console_ioctl(4), console_codes(4)
+
+
+
+
+
+
+
+Linux                    5 Noviembre 1996             CHARSETS(4)

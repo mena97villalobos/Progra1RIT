@@ -1,0 +1,148 @@
+DU(1)                                                       DU(1)
+
+
+
+NOMBRE
+       du - estima el uso de espacio de ficheros
+
+SINOPSIS
+       du [opciones] [fichero...]
+
+       Opciones de POSIX: [-askx]
+
+       Opciones de GNU options (forma más corta): [-abchklmsxDLS]
+       [--help] [--version] [--]
+
+DESCRIPCIÓN
+       du informa de la cantidad de espacio de  disco  usada  por
+       los  ficheros  especificados, y por cada directorio en las
+       jerarquías cuyas raíces estén en los ficheros  especifica­
+       dos.   Aquí,  `espacio  de  disco usado' significa espacio
+       usado por la jerarquía de ficheros por debajo del  fichero
+       especificado.
+
+       Sin  argumentos,  du  informa del espacio de disco para el
+       directorio en curso.
+
+DETALLES DE POSIX
+       La salida es en unidades de 512 bytes, a menos que  se  dé
+       la opción -k, en cuyo caso es en unidades de 1024 bytes.
+
+DETALLES DE GNU
+       La  salida  es  en  unidades  de  1024 bytes (cuando no se
+       especifican unidades en las  opciones),  a  menos  que  la
+       variable de entorno POSIXLY_CORRECT esté definida, en cuyo
+       caso se sigue a POSIX.
+
+OPCIONES DE POSIX
+       -a     Muestra los números para todos los ficheros  encon­
+              trados, no solo para los directorios.
+
+       -k     Emplea  unidades de 1024 bytes en vez de las prede­
+              terminadas de 512 B.
+
+       -s     Solamente imprime en la salida el  uso  de  espacio
+              para  los  argumentos  realmente dados, no para sus
+              subdirectorios.
+
+       -x     Solamente cuenta el espacio en el mismo dispositivo
+              donde esté el argumento dado.
+
+OPCIONES DE GNU
+       -a, --all
+              Muestra  los  números  para  todos los ficheros, no
+              sólo para los directorios.
+
+       -b, --bytes
+              Muestra los tamaños en bytes, en vez  de  en  kilo­
+              bytes.
+
+       -c, --total
+              Muestra  un total para todos los argumentos después
+              de  que  éstos  se  hayan  procesado.  Esto   puede
+              emplearse  para  encontrar el uso de disco total de
+              un conjunto dado de ficheros o directorios.
+
+       -D, --dereference-args
+              Desreferencia enlaces simbólicos que sean  argumen­
+              tos  de  la  línea  de  órdenes.  No afecta a otros
+              enlaces simbólicos. Esto es de ayuda para encontrar
+              el  uso de disco de directorios, como /usr/tmp, que
+              son a menudo enlaces simbólicos.
+
+       -h, --human-readable
+              Añade una letra indicativa del tamaño, como M  para
+              megabytes, a cada tamaño.
+
+       -k, --kilobytes
+              Muestra los tamaños en kilobytes.
+
+       -l, --count-links
+              Cuenta  el tamaño de todos los ficheros, incluso si
+              ya han aparecido antes (como sucede con  un  enlace
+              duro).
+
+       -L, --dereference
+              Desreferencia  enlaces simbólicos (muestra el espa­
+              cio de disco usado por el fichero o  directorio  al
+              cual  apunte el enlace en vez del espacio usado por
+              el enlace mismo).
+
+       -m, --megabytes
+              Muestra los tamaños en bloques de  megabytes  (esto
+              es, 1,048.576 bytes).
+
+       -s, --summarize
+              Muestra solamente un total para cada argumento.
+
+       -S, --separate-dirs
+              Informa  del  tamaño  de  cada directorio separada­
+              mente, sin incluir los tamaños de  los  subdirecto­
+              rios.
+
+       -x, --one-file-system
+              Se  salta  los directorios que estén en sistemas de
+              ficheros diferentes de aquél donde  esté  el  argu­
+              mento que se esté procesando.
+
+OPCIONES ESTÁNDARES DE GNU
+       --help Muestra  un  mensaje en la salida estándar sobre el
+              modo de empleo y acaba con código de éxito.
+
+       --version
+              Muestra en la salida estándar información sobre  la
+              versión y luego acaba con código de éxito.
+
+       --     Termina la lista de opciones.
+
+FALLOS
+       En  sistemas  BSD,  du  da tamaños que son la mitad de los
+       valores correctos para ficheros que están  montados  desde
+       sistemas  HP-UX.  En sistemas HP-UX, da tamaños que son el
+       doble de los valores correctos para ficheros  montados  en
+       sistemas  BSD.  Esto es debido a un defecto en HP-UX; tam­
+       bién afecta al programa du de HP-UX.
+
+ENTORNO
+       La variable POSIXLY_CORRECT determina la  elección  de  la
+       unidad. Si no está definida, y la variable BLOCKSIZE tiene
+       un valor que empiece  por  `HUMAN',  entonces  el  compor­
+       tamiento  es como el de si se hubiera dado la opción -h, a
+       menos que se sustituya por las  opciones  -k  o  -m.   Las
+       variables  LANG, LC_ALL, LC_CTYPE y LC_MESSAGES tienen los
+       significados usuales.
+
+CONFORME A
+       POSIX 1003.2
+
+OBSERVACIONES
+       Esta página describe du según se encuentra en  el  paquete
+       fileutils-3.16;  otras  versiones  pueden diferir un poco.
+       Envíe por correo electrónico correcciones  y  adiciones  a
+       las  direcciones  aeb@cwi.nl,  aw@mail1.bet1.puv.fi y rag­
+       nar@lightside.ddns.org.  Informe de fallos en el  programa
+       a fileutils-bugs@gnu.ai.mit.edu.
+
+
+
+GNU fileutils 3.16         Agosto 1998                      DU(1)

@@ -1,0 +1,86 @@
+GETSERVENT(3)    Manual del Programador de Linux    GETSERVENT(3)
+
+
+
+NOMBRE
+       getservent, getservbyname, getservbyport, setservent, end­
+       servent - obtener valores de servicios
+
+SINOPSIS
+       #include <netdb.h>
+
+       struct servent *getservent(void);
+
+       struct servent *getservbyname(const char *name, const char *proto);
+
+       struct servent *getservbyport(int port, const char *proto);
+
+       void setservent(int stayopen);
+
+       void endservent(void);
+
+DESCRIPCIÓN
+       La función getservent() lee la siguiente línea del fichero
+       /etc/services  y  devuelve una estructura servent que con­
+       tiene en sus campos los campos de la línea.  Si  es  nece­
+       sario, se abre el fichero /etc/services.
+
+       La  función  getservbyname() devuelve una estructura  ser­
+       vent conteniendo los campos de la línea  de  /etc/services
+       que contiene el servicio name y usa el protocolo proto.
+
+       La función getservbyport() devuelve una estructura de tipo
+       servent con los datos de la línea que contiene  el  puerto
+       port (con los bytes en el orden de red) y usa el protocolo
+       proto.
+
+       La  función  setservent()  abre  y  reinicia  el   fichero
+       /etc/services.   Si stayopen es verdadero (1), entonces no
+       se cerrará el fichero entre llamadas a las funciones  get­
+       servbyname() y getservbyport().
+
+       La función endservent() cierra el fichero /etc/services.
+
+       La  estructura  servent  está  definida  en <netdb.h> como
+       sigue:
+
+              struct servent {
+                      char    *s_name;        /* nombre oficial del servicio */
+                      char    **s_aliases;    /* lista de alias */
+                      int     s_port;         /* número de puerto */
+                      char    *s_proto;       /* protocolo a usar */
+              }
+
+       Los miembros de la estructura servent son:
+
+       s_name El nombre oficial del servicio.
+
+       s_aliases
+              Una lista terminada en cero de nombres alternativos
+              para el servicio.
+
+       s_port El numero de puerto para el servicio, con sus bytes
+              en el orden de red.
+
+       s_proto
+              El nombre del protoclo a usar con este servicio.
+
+VALOR DEVUELTO
+       Las funciones getservent(), getservbyname()  y  getservby­
+       port()  devuelve una estructura de tipo servent, o un pun­
+       tero NULL si ha ocurrido un error o  se  ha  alcanzado  el
+       final del fichero.
+
+FICHEROS
+       /etc/services
+              Fichero de base de datos de servicios
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       getprotoent(3), getnetent(3), services(5)
+
+
+
+BSD                       22-Abril-1996             GETSERVENT(3)

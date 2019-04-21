@@ -1,0 +1,43 @@
+_EXIT(2)         Manual del programador de Linux         _EXIT(2)
+
+
+
+NOMBRE
+       _exit - Produce la terminación del proceso actual
+
+SINOPSIS
+       #include <unistd.h>
+
+       void _exit(int status);
+
+DESCRIPCIÓN
+       _exit  termina  inmediatamente  la  ejecución  del proceso
+       invocador.  Todos los descriptores  de  ficheros  abiertos
+       que  pertenezcan al proceso se cierran; todos los procesos
+       hijos son heredados por el proceso 1, init, y  al  proceso
+       padre se le envía la señal SIGCHLD.
+
+       status  es  el  valor  que se le devuelve al proceso padre
+       como estado de terminación del proceso, y  se  puede  leer
+       mediante una de las funciones de la familia de wait.
+
+VALOR DEVUELTO
+       _exit nunca regresa.
+
+CONFORME A
+       SVID, AT&T, POSIX, X/OPEN, BSD 4.3
+
+NOTAS
+       _exit  no  llama  a ninguna función registrada mediante la
+       función estándar atexit del ANSI C y no vacía los  almace­
+       namientos  temporales  (buffers)  de  E/S estándares. Para
+       hacer esto utilice exit(3).
+
+VÉASE TAMBIÉN
+       fork(2),   execve(2),   waitpid(2),   wait4(2),   kill(2),
+       wait(3), exit(3)
+
+
+
+
+Linux                     21 Julio 1993                  _EXIT(2)

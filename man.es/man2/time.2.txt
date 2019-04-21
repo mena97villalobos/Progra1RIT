@@ -1,0 +1,58 @@
+TIME(2)          Manual del Programador de Linux          TIME(2)
+
+
+
+NOMBRE
+       time - obtiene el tiempo de calendario, en segundos
+
+SINOPSIS
+       #include <time.h>
+
+       time_t time(time_t *t);
+
+DESCRIPCIÓN
+       time  devuelve el tiempo transcurrido, medido en segundos,
+       desde `la Época': las 0 horas 0 minutos 0 segundos, tiempo
+       universal  coordinado, del 1 de Enero de 1970. Esta medida
+       se llama el ``tiempo de calendario''.
+
+       Si t no es el puntero nulo, el valor devuelto  también  se
+       guarda en la zona de memoria a la que apunte t.
+
+VALOR DEVUELTO
+       En  caso  de  éxito se devuelve el tiempo transcurrido, en
+       segundos, desde la Época. En caso de  error,  se  devuelve
+       ((time_t)-1)  y  se  asigna  a  la variable errno un valor
+       apropiado.
+
+ERRORES
+       EFAULT  t apunta fuera de su espacio de direcciones  acce­
+               sible.
+
+OBSERVACIONES
+       POSIX.1  define  el  valor segundos desde la Época como el
+       número de segundos transcurridos entre un instante especí­
+       fico y la Época, calculados a partir del Tiempo Coordinado
+       Universal (UTC) según una fórmula que simplifica  la  con­
+       versión  ignorando  los segundos de salto y suponiendo que
+       todos los años divisibles por 4 son bisiestos.  Este valor
+       no es el mismo que el número real de segundos transcurrido
+       entre dicho instante y la Época debido a los  segundos  de
+       salto  y debido a que no se requiere que los relojes estén
+       sincronizados con una referencia estándar. La intención es
+       que  la  interpretación  de  los valores segundos desde la
+       Época sea consistente; vea POSIX.1 Anexo B 2.2.2 para  una
+       explicación más amplia.
+
+CONFORME A
+       SVr4, SVID, POSIX, X/OPEN, BSD 4.3 y C ANSI.
+       Bajo BSD 4.3, esta llamada se considera anticuada, pues se
+       tiene gettimeofday(2), que proporciona  un  resultado  más
+       preciso.   POSIX no especifica ninguna condición de error.
+
+VÉASE TAMBIÉN
+       ctime(3), date(1), ftime(3), gettimeofday(2)
+
+
+
+Linux 2.0.30            9 Septiembre 1997                 TIME(2)

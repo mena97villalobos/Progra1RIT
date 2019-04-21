@@ -1,0 +1,23 @@
+ARCH(1)          Manual del Programador de Linux          ARCH(1)
+
+
+
+NOMBRE
+       arch - muestra la arquitectura de la máquina
+
+SINOPSIS
+       arch
+
+DESCRIPCIÓN
+       arch is equivalente a uname -m.
+
+       En  los  sistemas  Linux actuales, arch imprime cosas como
+       "i386", "i486", "i586", "alpha", "sparc",  "arm",  "m68k",
+       "mips", "ppc".
+
+VÉASE TAMBIÉN
+       uname(1), uname(2)
+
+
+
+Linux 2.0                  4 Julio 1997                   ARCH(1)

@@ -1,0 +1,22 @@
+CHVT(1)                                                   CHVT(1)
+
+
+
+NOMBRE
+       chvt - cambia la terminal virtual en primer plano
+
+SINOPSIS
+       chvt N
+
+DESCRIPCIÓN
+       La orden chvt N hace que /dev/ttyN sea la terminal en uso.
+       (La pantalla correspondiente se crea si  no  existía  aún.
+       Para  deshacerse  de  VTs  que  no  se  usan, emplee deal­
+       locvt(1).)  La combinación de  teclas  (Ctrl-)AltIzda-F<N>
+       (con <N> en el rango 1-12) tiene usualmente un efecto sim­
+       ilar.
+
+
+
+
+                       26 de Enero de 1997                CHVT(1)

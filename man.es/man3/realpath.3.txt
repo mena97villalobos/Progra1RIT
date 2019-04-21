@@ -1,0 +1,60 @@
+REALPATH(3)       Manual del Progamador de Linux      REALPATH(3)
+
+
+
+NOMBRE
+       realpath  - devuelve el nombre de camino absoluto en forma
+       canónica
+
+SINOPSIS
+       #include <sys/param.h>
+       #include <unistd.h>
+
+       char *realpath(char *camino, char camino_resuelto[]);
+
+DESCRIPCIÓN
+       realpath expande todos los enlaces simbólicos  y  resuelve
+       referencias  a '/./', '/../' y los caracteres extra '/' en
+       la cadena de caracteres terminada en cero especificada por
+       camino y guarda el camino absoluto en forma canónica en el
+       búfer de tamaño MAXPATHLEN al que apunte  camino_resuelto.
+       El  camino resultante no tendrá enlaces simbólicos ni com­
+       ponentes '/./' o '/../'.
+
+VALOR DEVUELTO
+       Si no hay error, devuelve un puntero a camino_resuelto.
+
+       Si  lo  hay,  devuelve  un  puntero   NULL   y   pone   en
+       camino_resuelto  el  camino  absoluto  del  componente  de
+       camino que no pudo resolverse. La  variable  global  errno
+       toma un valor que indica el error.
+
+ERRORES
+       ENOTDIR Un  componente  del  prefijo  del  camino no es un
+               directorio.
+
+       EINVAL  El camino contiene un carácter con el bit más alto
+               a 1.
+
+       ENAMETOOLONG
+               Un  componente  de  un camino se pasa de MAXNAMLEN
+               caracteres, o el nombre de camino entero sobrepasa
+               MAXPATHLEN caracteres.
+
+       ENOENT  El fichero especificado no existe.
+
+       EACCES  No  hay permiso de paso para un componente prefijo
+               del camino.
+
+       ELOOP   Se han encontrado demasiados enlaces simbólicos al
+               traducir el camino.
+
+       EIO     Ha  ocurrido  un  error de E/S mientras se lee del
+               sistema de ficheros.
+
+VÉASE TAMBIÉN
+       readlink(2), getcwd(3)
+
+
+
+GNU                        5 Marzo 1998               REALPATH(3)

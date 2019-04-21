@@ -1,0 +1,72 @@
+SETPGID(2)       Manual del Programador de Linux       SETPGID(2)
+
+
+
+NOMBRE
+       setpgid,  getpgid,  setpgrp,  getpgrp - obtiene/pone grupo
+       del proceso
+
+SINOPSIS
+       #include <unistd.h>
+
+       int setpgid(pid_t pid, pid_t pgid);
+       pid_t getpgid(pid_t pid);
+       int setpgrp(void);
+       pid_t getpgrp(void);
+
+DESCRIPCIÓN
+       setpgid pone el ID de grupo de  proceso  del  especificado
+       por pid a pgid.  Si pid es cero, se emplea el PID del pro­
+       ceso en curso. Si pgid es cero, se emplea el PID del  pro­
+       ceso especificado por pid.
+
+       getpgid  devuelve el ID del grupo de proceso del especifi­
+       cado por pid.  Si pid es cero, se emplea el PID  del  pro­
+       ceso en curso.
+
+       En  la  biblioteca DLL 4.4.1 de Linux, setpgrp simplemente
+       llama a setpgid(0,0).
+
+       getpgrp equivale a getpgid(0).
+
+       Los grupos de proceso se emplean para la  distribución  de
+       señales,  y  por  las  terminales para arbitrar peticiones
+       para su entrada: los procesos que tienen el mismo grupo de
+       proceso que la terminal son en primer plano y pueden leer,
+       mientras que otros se bloquearán con una señal si intentan
+       leer.
+
+       Estas llamadas se usan pues por programas como csh(1) para
+       crear grupos de proceso cuando implementan el  control  de
+       trabajos.  Las llamadas TIOCGPGRP y TIOCSPGRP descritas en
+       termios(4) se emplean para obtener/poner el grupo de  pro­
+       ceso de la terminal de control.
+
+VALOR DEVUELTO
+       En  caso  de  éxito,  setpgid y setpgrp devuelven cero. En
+       caso de error. devuelven -1 y ponen un valor apropiado  en
+       errno.
+
+       getpgid  devuelve un grupo de proceso si acaba bien; -1 en
+       caso de error, y pone un valor apropiado en errno.
+
+       getpgrp siempre devuelve el grupo de proceso actual.
+
+ERRORES
+       EINVAL  pgid es menor que 0.
+
+       EPERM   Violaciones de permisos variadas.
+
+       ESRCH   pid no concuerda con ningún proceso.
+
+CONFORME A
+       Las  funciones  setpgid  y  getpgrp  siguen  el   estándar
+       POSIX.1.   La  función  setpgrp es de BSD 4.2.  La función
+       getpgid conforma con SVr4.
+
+VÉASE TAMBIÉN
+       getuid(2), setsid(2), tcsetpgrp(3), termios(4)
+
+
+
+Linux 1.2.4              6 Noviembre 1996              SETPGID(2)

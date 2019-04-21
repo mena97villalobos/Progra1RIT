@@ -1,0 +1,117 @@
+RCMD(3)          Manual del programador de Linux          RCMD(3)
+
+
+
+NOMBRE
+       rcmd, rresvport, iruserok, ruserok - Funciones que devuel­
+       ven un flujo (stream) hacia una orden remota
+
+SINOPSIS
+       #include <unistd.h>
+
+       int rcmd(char **ahost, int inport,  const  char  *locuser,
+       const char *remuser, const char *cmd, int *fd2p)
+
+       int rresvport(int *port)
+
+       int  iruserok(u_int32_t  raddr,  int superuser, const char
+       *ruser, const char *luser)
+
+       int ruserok(const char *rhost, int superuser,  const  char
+       *ruser, const char *luser)
+
+DESCRIPCIÓN
+       La función rcmd es utilizada por el superusuario para eje­
+       cutar una orden en una máquina remota usando un esquema de
+       autenticación basado en números de puertos reservados.  La
+       función rresvport devuelve el  descriptor  de  un  enchufe
+       (socket)  cuya dirección cae dentro del espacio de puertos
+       privilegidados.  Los  servidores  utilizan  las  funciones
+       iruserok  y  ruserok  para  autenticar  a los clientes que
+       solicitan servicios mediante rcmd.  Estas cuatro funciones
+       se  encuentran  en  el  mismo  fichero y son usadas por el
+       servidor rshd(8) (entre otros).
+
+       La función rcmd busca al anfitrión  (host)  *ahost  usando
+       gethostbyname(3),   devolviendo  -1  si  el  anfitrión  no
+       existe.  En caso contrario, se asigna a *ahost  el  nombre
+       estándar  del anfitrión y se establece una conexión con el
+       servidor que reside en el, bien definido, puerto de Inter­
+       net inport.
+
+       Si  la  conexión  tiene éxito, se devuelve al invocador un
+       socket  dentro  del   dominio   de   Internet   del   tipo
+       SOCK_STREAM,  y  dicho  socket  se convierte en la entrada
+       estándar (stdin) y la salida estándar (stdout) de la orden
+       remota.   Si  fd2p no es cero, se creará un canal auxiliar
+       hacia un proceso de control y  en  *fd2p  se  colocará  un
+       descriptor  para  dicho  canal.   El  proceso  de  control
+       devolverá la salida de error (descriptor de fichero número
+       2) de la orden remota sobre este canal, y también aceptará
+       sobre este canal el envío de bytes que se comportarán como
+       números  de  señal  de  UNIX para ser enviados al grupo de
+       procesos de la orden.  Si fd2p es 0, entonces la salida de
+       error estándar (stderr) (descriptor de fichero número 2 de
+       la orden remota) coincidirán con la salida estándar  (std­
+       out)  y  no  habrá  forma de enviar señales arbitrarias al
+       proceso remoto, aunque podrá  llamar  su  atención  usando
+       datos "fuera de orden" (out-of-band).
+
+       El protocolo se describe con detalle en rshd(8).
+
+       La función rresvport se utiliza para obtener un socket que
+       tenga una dirección privilegiada ligada a él. Este  socket
+       es  adecuado  para  ser  usado  por rcmd y otras funciones
+       diversas. Los puertos de Internet privilegiados son aquel­
+       los  que van de 0 a 1023. Sólo el superusuario puede ligar
+       una dirección de este tipo a un socket.
+
+       Las funciones iruserok y ruserok toman la dirección  IP  o
+       el  nombre  de  un  anfitrión remoto, respectivamente, dos
+       nombres de usuario y una bandera que indica si  el  nombre
+       del  usuario local es o no el del superusuario.  A contin­
+       uación, si el usuario NO es el superusuario, comprueba  el
+       fichero /etc/hosts.equiv.  Si dicha búsqueda no se realiza
+       o no tiene éxito, se comprueba el fichero  .rhosts  en  el
+       directorio  raíz  (home)  del usuario local para ver si se
+       permite la petición de servicio.
+
+       Si el  fichero  no  existe,  no  es  un  fichero  regular,
+       pertenece  a  alguien  que  no  es  el usuario ni el supe­
+       rusuario, o puede ser escrito por alguien que  no  sea  el
+       propietario,  la comprobación fracasa automáticamente.  Si
+       el nombre de la máquina aparece en el fichero  hosts.equiv
+       o  si  el  anfitrión  y  el  nombre  del usuario remoto se
+       encuentran en el fichero .rhosts, se  devuelve  un  0;  en
+       caso  contrario  iruserok  y  ruserok devuelven -1.  Si el
+       dominio local (como se obtiene de  gethostname(2))  es  el
+       mismo  que el dominio remoto, sólo se necesita especificar
+       el nombre de la máquina.
+
+       Si se conoce la dirección IP del anfitrión remoto, prefer­
+       entemente  se  debe  usar iruserok en lugar de ruserok, ya
+       que no necesita consultar al servidor DNS para el  dominio
+       del anfitrión remoto.
+
+ERRORES
+       La función rcmd devuelve un descriptor válido de socket en
+       caso de éxito. Devuelve -1 en caso de error y  muestra  un
+       mensaje de error en la salida de error estándar.
+
+       La  función  rresvport  devuelve  un  descriptor de socket
+       válido, y ya ligado, en caso de  éxito.   Devuelve  -1  en
+       caso  de  error  y  asigna  a errno un valor que indica la
+       razón del fallo.  Se sobrecarga el significado del  código
+       de  error  EAGAIN  para indicar que ``Todos los puertos de
+       red están en uso.''
+
+VÉASE TAMBIÉN
+       rlogin(1),   rsh(1),   intro(2),   rexec(3),    rexecd(8),
+       rlogind(8), rshd(8)
+
+HISTORIA
+       Estas funciones aparecieron en 4.2BSD.
+
+
+
+4.2BSD                     4 Junio 1993                   RCMD(3)

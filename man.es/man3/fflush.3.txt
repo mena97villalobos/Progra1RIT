@@ -1,0 +1,44 @@
+FFLUSH(3)        Manual del Programador de Linux        FFLUSH(3)
+
+
+
+NOMBRE
+       fflush - vuelca los datos de un flujo a disco
+
+SINOPSIS
+       #include <stdio.h>
+
+       int fflush(FILE *flujo);
+
+DESCRIPCIÓN
+       La  función fflush fuerza una escritura de todos los datos
+       tamponados para el flujo de salida dado,  o  actualiza  el
+       flujo  a  través  de la función de escritura subyacente al
+       flujo. El estado de apertura del flujo no se ve  afectado.
+
+       Si  el  argumento  flujo es NULL, fflush hace un volcado a
+       disco de todos los flujos de salida que estén abiertos.
+
+VALOR DEVUELTO
+       Se devuelve cero en  caso  de  éxito.  En  otro  caso,  se
+       devuelve  EOF  y  se  da  un valor apropiado a la variable
+       global errno para indicar el error.
+
+ERRORES
+       EBADF  El argumento flujo no es un  flujo  abierto,  o  no
+              está abierto para escritura.
+
+       La  función  fflush puede fallar también, y poner un valor
+       en errno , para cualquiera de  los  errores  especificados
+       para la rutina write(2).
+
+VÉASE TAMBIÉN
+       write(2), fopen(3), fclose(3), setbuf(3)
+
+CONFORME A
+       La  función  fflush  es conforme con ANSI C3.159-1989 (``C
+       ANSI'').
+
+
+
+BSD                    12 de Enero de 1998              FFLUSH(3)

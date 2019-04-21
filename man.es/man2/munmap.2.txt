@@ -1,0 +1,106 @@
+MMAP(2)          Manual del Programador de Linux          MMAP(2)
+
+
+
+NOMBRE
+       mmap,  munmap - ubica o elimina ficheros o dispositivos en
+       memoria
+
+SINOPSIS
+       #include <unistd.h>
+       #include <sys/mman.h>
+
+       caddr_t mmap(void *start, size_t length, int  prot  ,  int
+       flags, int fd, off_t offset);
+
+       int munmap(void *start, size_t length);
+
+DESCRIPCIÓN
+       La  función mmap intenta ubicar length bytes comenzando en
+       el desplazamiento offset desde el fichero (u otro  objeto)
+       espeficicado  por  fd  en  memoria,  preferiblemente en la
+       dirección start.  Esta última dirección es una  sugerencia
+       y  normalmente  se  especifica  como 0.  El lugar donde es
+       ubicado el objeto es devuelto por mmap.  El argumento prot
+       describe  la  protección de memoria deseada. Lo forman los
+       siguientes bits:
+
+       PROT_EXEC  Las páginas deben ser ejecutadas.
+
+       PROT_READ  Las páginas deben ser leídas.
+
+       PROT_WRITE Las páginas deben ser escritas.
+
+       PROT_NONE  Las páginas no pueden ser accedidas.
+
+       El parámetro flags especifica el tipo de objeto insertado,
+       las  opciones de asociación y si las modificaciones hechas
+       a la copia insertada en memoria son privadas al proceso  o
+       son compartidas por otras referencias. Tiene los bits:
+
+       MAP_FIXED  No  seleccionar  una  dirección  diferente a la
+                  especificada.  Si la dirección especificada  no
+                  puede ser utilizada, mmap fallará. Si MAP_FIXED
+                  es especificado, start debe ser un múltiplo del
+                  tamaño  de  página.  Utilizar  esta  opción  es
+                  desaconsejable.
+
+       MAP_SHARED Comparte este área con todos los otros  objetos
+                  que señalan a este objeto.
+
+       MAP_PRIVATE
+                  Crear un área privada "copy-on-write".
+
+       Debe  especificarse  exactamente  uno  de  los  parámetros
+       MAP_SHARED o MAP_PRIVATE.
+
+       Los tres parámetros anteriores están descritos en POSIX.1b
+       (formalmente  POSIX.4).   Linux también reconoce MAP_DENY­
+       WRITE, MAP_EXECUTABLE y MAP_ANON(YMOUS).
+
+       La llamada al sistema munmap borra las ubicaciones para el
+       rango de direcciones especificado, y produce referencias a
+       las direcciones dentro del rango a fin de generar referen­
+       cias a memoria inválidas.
+
+
+VALOR DEVUELTO
+       Si  ha  funcionado mmap devuelve un puntero al área reser­
+       vada.  En caso de error, es devuelto -1, y errno es  modi­
+       ficado  apropiadamente.   Si ha funcionado munmap devuelve
+       0, si hay error -1, y errno  es  fijada  (probablemente  a
+       EINVAL).
+
+ERRORES
+       EBADF  fd  no  es  un  descriptor  de  fichero  válido  (y
+              MAP_ANONYMOUS no ha sido fijado).
+
+       EACCES MAP_PRIVATE  fue  indicado,  pero  fd  no  ha  sido
+              abierto  para  lectura. O MAP_SHARED fue invocado y
+              PROT_WRITE fue fijado, y fd no  está  abierto  para
+              escritura.
+
+       EINVAL No es correcto start o length o offset.  (E.g., son
+              demasiado grandes, o  no  están  alineados  en  los
+              límites de un valor múltiplo de PAGESIZE).
+
+       ETXTBUSY
+              MAP_DENYWRITE  fue  fijado pero el objeto especifi­
+              cado por fd está abierto para escritura.
+
+       EAGAIN El fichero ha sido bloqueado, o se ha bloqueado una
+              cantidad excesiva de memoria.
+
+       ENOMEM No hay memoria disponible.
+
+CONFORME A
+       SVr4,  POSIX.1b (formalmente POSIX.4), 4.4BSD.  Svr4 docu­
+       menta los códigos de error ENXIO y ENODEV.
+
+VÉASE TAMBIÉN
+       getpagesize(2), msync(2), shm_open(2),  B.O.  Gallmeister,
+       POSIX.4, O'Reilly, pp. 128-129 and 389-391.
+
+
+
+Linux 1.3.86              12 Abril 1996                   MMAP(2)

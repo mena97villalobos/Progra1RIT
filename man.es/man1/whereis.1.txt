@@ -1,0 +1,80 @@
+WHEREIS(1)                                             WHEREIS(1)
+
+
+
+NOMBRE
+       whereis  - localiza los ficheros binarios, fuentes y pági­
+       nas del manual correspondientes a un programa
+
+SINOPSIS
+       whereis [ -bmsu ] [ -BMS directorio...  -f ] nombrefichero
+       ...
+
+DESCRIPCIÓN
+       whereis  localiza los fuentes, binarios y páginas del Man­
+       ual para los programas que se  especifiquen.   Primero,  a
+       los nombres suministrados se les quitan los componentes de
+       la izquierda  del  camino  y  cualquier  extensión  de  la
+       derecha  (simple) de la forma .ext, por ejemplo, .c.  Tam­
+       bién se manejan los prefijos de la forma s.  que  resultan
+       del  empleo  de  programas  de  control del código fuente.
+       whereis entonces intenta localizar los ficheros  del  pro­
+       grama  deseado en una lista de sitios estándares en Linux.
+
+OPCIONES
+       -b     Sólo busca los ficheros binarios.
+
+       -m     Sólo busca las páginas del Manual.
+
+       -s     Sólo busca los fuentes.
+
+       -u     Busca entradas inusuales. Se dice que un fichero es
+              inusual  si  no  tiene  una  entrada  de  cada tipo
+              pedido.   Así,  `whereis  -m  -u  *'  pregunta  por
+              aquellos  ficheros  en el directorio de trabajo que
+              no tengan documentación en el Manual.
+
+       -B     Cambia o de otra  forma  limita  los  sitios  donde
+              whereis busca los binarios.
+
+       -M     Cambia  o  de  otra  forma  limita los sitios donde
+              whereis busca las páginas del Manual.
+
+       -S     Cambia o de otra  forma  limita  los  sitios  donde
+              whereis busca los fuentes.
+
+       -f     Termina  la última lista de directorios y señala el
+              comienzo de nombres de ficheros, y  debe  emplearse
+              cuando  se use cualquiera de las opciones -B, -M, o
+              -S.
+
+EJEMPLO
+       Encontrar todos los ficheros en /usr/bin que no estén doc­
+       umentados en /usr/man/man1, con los fuentes en /usr/src:
+
+              % cd /usr/bin
+              % whereis -u -M /usr/man/man1 -S /usr/src -f *
+
+FICHEROS
+       /{bin,sbin,etc}
+
+       /usr/{lib,bin,old,new,local,games,include,etc,src,man,sbin,
+                           X386,TeX,g++-include}
+
+       /usr/local/{X386,TeX,X11,include,lib,man,etc,bin,games,emacs}
+
+VÉASE TAMBIÉN
+       chdir(2)
+
+FALLOS
+       Puesto que whereis emplea chdir(2) para ir más rápido, los
+       nombres de camino dados con las opciones -M, -S o -B deben
+       ser completos; esto es, deben empezar con un `/'.
+
+       whereis  tiene  unos caminos codificados en el propio pro­
+       grama, así que puede no siempre encontrar lo que Ud.  anda
+       buscando.
+
+
+
+                           8 Mayo 1994                 WHEREIS(1)

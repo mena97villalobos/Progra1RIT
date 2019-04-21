@@ -1,0 +1,722 @@
+ST(4)            Manual del Programador de Linux            ST(4)
+
+
+
+NOMBRE
+       st - dispositivo de cinta magnética SCSI
+
+SINOPSIS
+       #include <sys/mtio.h>
+
+       int ioctl(int fd, int request [, (void *)arg3])
+       int ioctl(int fd, MTIOCTOP, (struct mtop *)mt_cmd)
+       int ioctl(int fd, MTIOCGET, (struct mtget *)mt_status)
+       int ioctl(int fd, MTIOCPOS, (struct mtpos *)mt_pos)
+
+DESCRIPCIÓN
+       El  manejador (driver) st proporciona la interfaz para una
+       variedad de dispositivos de cinta magnética SCSI.  Actual­
+       mente,  toma el control de todos los dispositivos detecta­
+       dos de tipo "acceso secuencial".  El manejador  st  emplea
+       el número mayor de dispositivo 9.
+
+       Cada  dispositivo utiliza ocho números menores de disposi­
+       tivo. Los cinco bits más bajos en los números  menores  se
+       asignan  secuencialmente  en  el orden en que se detectan.
+       Los números menores se pueden agrupar en dos conjuntos  de
+       cuatro  números:  los  números menores de dispositivo (con
+       autorebobinado) principales, n, y los números de  disposi­
+       tivo "sin rebobinado", (n+128).  A los dispositivos abier­
+       tos que utilicen el número de dispositivo principal se les
+       enviará una orden REWIND cuando se cierren.  A los dispos­
+       itivos abiertos que utilicen el número de dispositivo "sin
+       rebobinado" no se les enviará esa orden.  (Dese cuenta que
+       usar un dispositivo con autorebobinado para posicionar  la
+       cinta  con,  por  ejemplo,  mt  no  produce  el  resultado
+       deseado: la cinta se rebobina después de la orden mt y  la
+       orden  siguiente comienza desde el principio de la cinta).
+
+       Dentro de  cada  grupo,  hay  disponibles  cuatro  números
+       menores  para  definir  dispositivos con diferentes carac­
+       terísticas (tamaño de bloque, compresión, densidad, etc.).
+       Cuando  el sistema arranca, sólo está disponible el primer
+       dispositivo. Los otros tres se activan cuando  se  definen
+       las carcterísticas por defecto (ver más abajo). (Cambiando
+       las constantes en tiempo de compilación, es  posible  cam­
+       biar  el  equilibrio entre el número máximo de unidades de
+       cinta y el número de números menores para cada unidad.  La
+       asignación  por  defecto permite controlar 32 dispositivos
+       de cinta. Por  ejemplo,  es  posible  controlar  hasta  64
+       unidades  de  cinta  con 2 números menores para diferentes
+       opciones).
+
+       Normalmente los dispositivos se crean con:
+              mknod -m 666 /dev/st0 c 9 0
+              mknod -m 666 /dev/st0l c 9 32
+              mknod -m 666 /dev/st0m c 9 64
+              mknod -m 666 /dev/st0a c 9 96
+              mknod -m 666 /dev/nst0 c 9 128
+              mknod -m 666 /dev/nst0l c 9 160
+              mknod -m 666 /dev/nst0l c 9 192
+              mknod -m 666 /dev/nst0a c 9 224
+
+       No existe el dispositivo de bloque correspondiente.
+
+       El manejador usa un buffer interno que tiene  que  ser  lo
+       suficientemente  grande para contener, al menos, un bloque
+       de la cinta. En los  núcleos  anteriores  al  2.1.121,  el
+       buffer  se reserva como un bloque contiguo. Esto limita el
+       tamaño de bloque al mayor bloque contiguo de  memoria  que
+       el  código  de asignación de memoria del núcleo puede pro­
+       porcionar. Actualmente, el límite es de 128KB para  arqui­
+       tecturas de 32 bits y 256KB para arquitecturas de 64 bits.
+       En núcleos posteriores el manejador reserva el  buffer  en
+       varias partes si es necesario. Por defecto, el número máx­
+       imo de partes es de 16.  Esto significa que el tamaño máx­
+       imo  de bloques es muy grande (2MB si es posible una asig­
+       nación de 16 bloques de 128KB).
+
+       El tamaño del buffer interno del manejador viene  determi­
+       nado  por  una  contante  en  tiempo de compilación que se
+       puede alterar con una opción de inicio del núcleo.  Aparte
+       de  esto, el manejador intenta reservar un buffer temporal
+       mayor en tiempo de ejecución si es necesario. Sin embargo,
+       la  asignación  en  tiempo de ejecución de grandes bloques
+       contiguos de memoria puede fallar y es aconsejable no con­
+       fiar  demasiado  en  la asignación dinámica de buffers con
+       núcleos anteriores al 2.1.121 (esto se aplica también a la
+       carga por demanda del manejador con kerneld o kmod).
+
+       El  manejador  no  soporta específicamente ninguna marca o
+       modelo de unidad de cinta. Después del arranque  del  sis­
+       tema  se definen las opciones de los dispositivos de cinta
+       a partir del firmware de la unidad.  Por  ejemplo,  si  el
+       firmware  de  la unidad selecciona un modo de bloque fijo,
+       el dispositivo de cinta usa el modo de  bloque  fijo.  Las
+       opciones  se  pueden  cambiar  con  llamadas  explícitas a
+       ioctl() y permanecen  activas  cuando  el  dispositivo  se
+       cierra  y  se  vuelve  a  abrir.  La  configuración de las
+       opciones afecta tanto al dispositivo  con  auto-rebobinado
+       como sin rebobinado.
+
+       Se  pueden indicar diferentes opciones para los diferentes
+       dispositos dentro del subgrupo  de  cuatro.  Las  opciones
+       entran  en  vigor cuando el dispositivo se abre. Por ejem­
+       plo, el administrador del sistema puede definir un dispos­
+       itivo  que escribe en modo de bloque fijo con un tamaño de
+       bloque concreto y otro que escribe en modo de bloque vari­
+       able (si la unidad de cinta soporta ambos modos).
+
+       El  majenador  soporta  particiones de cinta si son sopor­
+       tadas por la unidad. (Dese cuenta que las  particiones  de
+       cinta no tienen nada que ver con las particiones de disco.
+       Una cinta particionada se puede  ver  como  varias  cintas
+       lógicas  dentro  de  un mismo medio). El soporte de parti­
+       ciones se debe habilitar con ioctl. La posición  de  cinta
+       se  conserva  dentro de cada partición durante los cambios
+       de partición. La partición usada para las  operaciones  de
+       cinta  subsiguientes se selecciona con ioctl. El cambio de
+       partición se ejecuta junto con la siguiente  operación  de
+       cinta  para  evitar movimientos de cinta innecesarios.  El
+       número máximo de particiones en una cinta es definido  por
+       una constante en tiempo de compilación (originalmente cua­
+       tro). El manejador contiene un ioctl que  puede  formatear
+       una cinta con una o dos particiones.
+
+       El  dispositivo  /dev/tape  se  crea  normalmente  como un
+       enlace físico o simbólico al dispositivo de  cinta  prede­
+       terminado en el sistema.
+
+TRANSFERENCIA DE DATOS
+       El  manejador  soporta  tanto el funcionamiento en modo de
+       bloque fijo como en modo de bloque variable (si la  unidad
+       lo  soporta).  En el modo de bloque fijo la unidad escribe
+       bloques del tamaño especificado y el tamaño de  bloque  no
+       depende de la cantidad de bytes de las llamadas al sistema
+       de escritura. En el modo de bloque variable se escribe  un
+       bloque de cinta para cada llamada de escritura y el número
+       de bytes determina el tamaño del bloque  de  cinta  corre­
+       spondiente.  Dese  cuenta  que  los bloques en la cinta no
+       contienen ninguna información sobre el modo de  escritura:
+       cuando  se  lee,  lo  único importante es usar órdenes que
+       acepten los tamaños de los bloques en la cinta.
+
+       En el modo de bloque variable la cantida de  bytes  leídos
+       no tiene que coincidir exactamente con el tamaño de bloque
+       de la cinta. Si la cantidad de bytes es mayor que el sigu­
+       iente  bloque de la cinta, el manejador devuelve los datos
+       y la función devuelve el tamaño  real  de  bloque.  Si  el
+       tamaño  de  bloque  es  mayor que la cantidad de bytes, se
+       devuelve la cantidad de datos solicitada desde  el  inicio
+       del bloque y el resto del bloque se descarta.
+
+       En  el  modo  de  bloque fijo, la cantidad de bytes a leer
+       puede ser arbitraria si se habilita el uso de  buffers,  o
+       un  múltiplo del tamaño de bloque de la cinta si se desha­
+       bilita el  uso  de  buffers.  Los  núcleos  anteriores  al
+       2.1.121  permiten escrituras con cantidades de bytes arbi­
+       trarias si se habilita el uso de  buffers.  En  todos  los
+       otros  casos  (un  núcleo  anterior  al 2.1.121 con uso de
+       buffers deshabilitado o un núcleo nuevo)  la  cantidad  de
+       bytes a escribir debe ser un múltiplo del tamaño de bloque
+       de la cinta.
+
+       Automáticamente se escribe una  marca  de  fichero  en  la
+       cinta  si la última operación de cinta antes de cerrar era
+       un escritura.
+
+       Cuando se encuentra una marca de fichero durante las  lec­
+       turas,  ocurre  lo siguiente. Si quedan datos en el buffer
+       cuando se encuentra la marca de fichero, se devuelven  los
+       datos  del buffer. La próxima lectura devuelve cero bytes.
+       La siguiente lectura devuelve datos del siguiente fichero.
+       El  final de los datos grabados se indica devolviendo cero
+       bytes para dos lecturas consecutivas. La  tercera  lectura
+       devuelve un error.
+
+IOCTLS
+       El manejador admite tres peticiones ioctl.  Las peticiones
+       no reconocidas por el manejador st se pasan  al  manejador
+       SCSI.      Las    definiciones    de    abajo    son    de
+       /usr/include/linux/mtio.h:
+
+   MTIOCTOP - Efectuar una operación en la cinta
+       Esta petición toma un argumento de tipo (struct  mtop  *).
+       No  todas  las  unidades de cinta admiten todas las opera­
+       ciones.  El manejador retorna un error EIO  si  la  unidad
+       rechaza una operación.
+
+       /* Estructura para MTIOCTOP - orden de op. de cinta mag.: */
+       struct mtop {
+           short  mt_op;    /* operationes definidas abajo */
+           int    mt_count; /* cuántas de ellas */
+       };
+
+       Operaciones  de  Cinta Magnética para el uso normal de una
+       cinta:
+       MTBSF         Espacio  atrás  sobre  mt_count  marcas   de
+                     fichero.
+       MTBSFM        Espacio   atrás  sobre  mt_count  marcas  de
+                     fichero.  Reposiciona la cinta  a  la  parte
+                     EOT de la última marca de fichero.
+       MTBSR         Espacio atrás sobre mt_count registros (blo­
+                     ques de cinta).
+       MTBSS         Espacio atrás sobre mt_count marcas de  con­
+                     junto.
+       MTCOMPRESSION Habilita  la  compresión  de los datos de la
+                     cinta dentro de la unidad si mt_count no  es
+                     cero y deshabilita la compresión si mt_count
+                     es cero. Esta orden usa el  MODO  página  15
+                     (`MODE page 15') soportado por la mayoría de
+                     DATs.
+       MTEOM         Ir al fin del material grabado (para  añadir
+                     ficheros).
+       MTERASE       Borrar cinta.
+       MTFSF         Espacio   atrás  sobre  mt_count  marcas  de
+                     fichero.
+       MTFSFM        Espacio  atrás  sobre  mt_count  marcas   de
+                     fichero.   Reposiciona  la  cinta a la parte
+                     BOT de la última marca de fichero.
+       MTFSR         Espacio atrás sobre mt_count registros (blo­
+                     ques de cinta).
+       MTFSS         Espacio  atrás sobre mt_count marcas de con­
+                     junto.
+       MTLOAD        Ejecuta la orden SCSI de carga.  Se  dispone
+                     de  un  caso  especial para algunos autocar­
+                     gadores HP.  Si  mt_count  es  la  constante
+                     MT_ST_HPLOADER_OFFSET   más  un  número,  el
+                     número se envia a la unidad  para  controlar
+                     al autocargador.
+       MTLOCK        Bloquea la puerta de la unidad de cinta.
+       MTMKPART      Formatea  la cinta en una o dos particiones.
+                     Si mt_count no es cero, da el tamaño  de  la
+                     primera  partición  y  la  segunda partición
+                     contiene el resto de la cinta.  Si  mt_count
+                     es  cero, la cinta se formatea en una parti­
+                     ción.  Esta orden no está permitida para una
+                     unidad a menos que se habilite el soporte de
+                     particiones    para    la    unidad     (ver
+                     MT_ST_CAN_PARTITIONS más abajo).
+       MTNOP         No  op. - vuelca el búfer del manejador como
+                     efecto colateral.  Debería  emplearse  antes
+                     de leer el estado con MTIOCGET.
+       MTOFFL        Rebobina y apaga la unidad.
+       MTRESET       Pone la unidad en el estado inicial.
+       MTRETEN       Retensiona la cinta.
+       MTREW         Rebobina.
+       MTSEEK        Busca  y va al número de bloque especificado
+                     en mt_count.  Esta operación  requiere  bien
+                     una unidad SCSI-2 que admita la orden LOCATE
+                     (dirección específica del dispositivo), bien
+                     una  unidad  SCSI-1  compatible con Tandberg
+                     (Tandberg, Archive Viper,  Wangtek,  ...  ).
+                     El  número de bloque debería ser uno previa­
+                     mente devuelto por MTIOCPOS si  se  utilizan
+                     direcciones específicas del dispositivo.
+       MTSETBLK      Establece la longitud de bloque de la unidad
+                     al valor especificado en mt_count.  Una lon­
+                     gitud  de bloque cero pone la unidad en modo
+                     de tamaño de bloque variable.
+       MTSETDENSITY  Pone la densidad de la cinta según el código
+                     en mt_count.  Los códigos de densidad sopor­
+                     tados por una unidad se pueden encontrar  en
+                     la documentación de la unidad.
+       MTSETPART     La  partición  activa se cambia a mt_count .
+                     Las particiones se numeran a partir de cero.
+                     Esta  orden  no se permite para una unidad a
+                     menos que se habilite el soporte  de  parti­
+                     ciones  para la unidad (ver MT_ST_CAN_PARTI­
+                     TIONS más abajo).
+       MTUNLOAD      Ejecuta  la  orden  SCSI  de  descarga   (no
+                     expulsa la cinta).
+       MTUNLOCK      Desbloquea  la puerta de la unidad de cinta.
+       MTWEOF        Escribe mt_count marcas de fichero.
+       MTWSM         Escribe mt_count marcas de conjunto.
+
+       Operaciones  de  Cinta  Magnética  para   configurar   las
+       opciones del dispositivo (a realizar por el superusuario):
+       MTSETDRVBUFFER
+               Establece varias opciones de la unidad y el  mane­
+               jador  según  los  bits  codificados  en mt_count.
+               Éstas consisten en el modo de uso de buffers de la
+               unidad,  13  opciones  booleanas del manejador, el
+               umbral  de  escritura  del  buffer,  valores   por
+               defecto  del tamaño de bloque y de densidad y pla­
+               zos de tiempo (sólo en núcleos >= 2.1).  Una única
+               operación  puede afectar a un único elemento de la
+               lista de debajo (los  booleanos  cuentan  como  un
+               elemento).
+
+               Un  valor  que tenga ceros en los 4 bits más altos
+               se empleará para establecer  el  modo  de  tampon­
+               amiento  de la unidad.  Los modos de tamponamiento
+               son:
+
+                   0   La unidad no informará del estado GOOD  en
+                       órdenes de escritura hasta que los bloques
+                       de datos se escriban realmente en el mate­
+                       rial magnético.
+                   1   La unidad puede devolver un estado GOOD en
+                       órdenes de escritura tan pronto como todos
+                       los  datos  se  hayan transferido al búfer
+                       interno de la unidad.
+                   2   La unidad puede devolver un estado GOOD en
+                       órdenes  de  escritura tan pronto como (a)
+                       todos los datos se  hayan  transferido  al
+                       búfer  interno  del manejador, y (b) todos
+                       los datos en búferes, provinientes de ini­
+                       ciadores   diferentes,   hayan  sido  bien
+                       escritos en el material magnético.
+
+               Para controlar el umbral de escritura, el valor en
+               mt_count     debe     incluir     la     constante
+               MT_ST_WRITE_THRESHOLD aplicándole el  operador  de
+               bits O inclusivo con un número de bloque en los 28
+               bits de más bajo orden.  El número  de  bloque  se
+               refiere  a  bloques de 1024 bytes, no al tamaño de
+               bloque físico de la cinta.   El  umbral  no  puede
+               exceder  el tamaño del búfer interno del manejador
+               (vea DESCRIPCIÓN, arriba).
+
+               Para activar y desactivar las  opciones  booleanas
+               el  valor en mt_count debe incluir una de las con­
+               stantes     MT_ST_BOOLEANS,     MT_ST_SETBOOLEANS,
+               MT_ST_CLEARBOOLEANS  o  MT_ST_BOOLEANS operada con
+               un  O  lógico  inclusivo  a  nivel  de  bits   con
+               cualquier  combinación de las siguientes opciones,
+               según se desee.  Usando MT_ST_BOOLEANS  se  pueden
+               asignar  a  las  opciones los valores definidos en
+               los bits correspondientes.  Con  MT_ST_SETBOOLEANS
+               se   pueden   configurar  las  opciones  de  forma
+               selectiva y selectivamente borradas con MT_ST_DEF­
+               BOOLEANS.
+
+               Las  opciones  por  defecto para un dispositivo de
+               cinta se configuran con MT_ST_DEFBOOLEANS. Un dis­
+               positivo  de cinta no activo (por ejemplo, un dis­
+               positivo con número menor  32  o  160)  se  activa
+               cuando  sus  opciones  por  defecto se definen por
+               primera vez. Un dispositivo activado  herenda  del
+               dispositivo   activado  durante  el  arranque  las
+               opciones no configuradas explícitamente.
+
+               Las opciones booleanas son:
+
+               MT_ST_BUFFER_WRITES  (Por omisión: verdad)
+                      Todas las operaciones de  escritura  van  a
+                      través  de  búferes  en  el  modo de bloque
+                      fijo.  Si esta opción es falsa y la  unidad
+                      emplea  un  tamaño de bloque fijo, entonces
+                      todas las operaciones  de  escritura  deben
+                      ser  un múltiplo del tamaño de bloque. Esta
+                      opción  debe  ponerse   como   falsa   para
+                      escribir   confiablemente  archivos  multi­
+                      volúmenes.
+               MT_ST_ASYNC_WRITES  (Por omisión: verdad)
+                      Cuando esta opción es  verdad,  las  opera­
+                      ciones de escritura regresan inmediatamente
+                      sin esperar que los datos se transfieran  a
+                      la  unidad  si  los datos caben en el búfer
+                      del  manejador.   El  umbral  de  escritura
+                      determina  cuán  lleno  debe estar el búfer
+                      antes de que  se  dé  una  nueva  orden  de
+                      escritura  SCSI.   Cualquier error devuelto
+                      por la unidad se mantendrá en espera  hasta
+                      la  siguiente  operación.  Esta opción debe
+                      ponerse como falsa para escribir confiable­
+                      mente archivos multivolúmenes.
+               MT_ST_READ_AHEAD  (Por omisión: verdad)
+                      Esta  opción  hace que el manejador propor­
+                      cione un búfer para la lectura,  y  lectura
+                      por  adelantado  en el modo de bloque fijo.
+                      Si esta opción es falsa y la unidad  emplea
+                      un  tamaño  de  bloque fijo, entonces todas
+                      las operaciones de lectura deben  ser  para
+                      un múltiplo del tamaño de bloque.
+               MT_ST_TWO_FM  (Por omisión: falso)
+                      Esta  opción modifica el comportamiento del
+                      manejador cuando un fichero se  cierra.  La
+                      acción  normal es escribir una simlpe marca
+                      de fichero. Si la opción es verdad el mane­
+                      jador  escribirá  dos  marcas  de fichero y
+                      hará un espacio atrás sobre el segundo.
+
+                      Nota: Esta opción no debería ponerse a ver­
+                      dad  para  unidades de cinta QIC puesto que
+                      son incapaces de sobreescribir una marca de
+                      fichero.  Estas unidades detectan el fin de
+                      datos grabados  mirando  si  hay  cinta  en
+                      blanco en vez de dos marcas de fichero con­
+                      secutivas. La mayoría de las otras unidades
+                      actuales  también  detectan el final de los
+                      datos grabados y el uso de  dos  marcas  de
+                      fichero  es  normalmente  necesario sólo al
+                      intercambiar cintas con algunos otros  sis­
+                      temas.
+
+               MT_ST_DEBUGGING  (Por omisión: falso)
+                      Esta opción activa varios mensajes de depu­
+                      ración del manejador (sólo es  efectiva  si
+                      se  compiló  la unidad con DEBUG definida a
+                      un valor no cero).
+               MT_ST_FAST_EOM  (Por omisión: falso)
+                      Esta opción hace que la operación MTEOM  se
+                      envíe  directamente a la unidad, acelerando
+                      potencialmente la operación  pero  haciendo
+                      que el manejador pierda la pista del número
+                      de fichero en  curso  normalmente  devuelto
+                      por     la     petición    MTIOCGET.     Si
+                      MT_ST_FAST_EOM  es   falso   el   manejador
+                      responderá  a  una  petición MTEOM saltando
+                      hacia adelante sobre los ficheros.
+               MT_ST_AUTO_LOCK (Por omisión: falso)
+                      Cuando esta opción es verdad, la puerta  de
+                      la unidad se bloquea cuando se abre el dis­
+                      positivo y se desbloquea cuando se  cierra.
+               MT_ST_DEF_WRITES (Por omisión: falso)
+                      Las  opciones  de  cinta (tamaño de bloque,
+                      modo, compresión, etc.) pueden  cambiar  al
+                      cambiar  de  un  dispositivo  ligado  a una
+                      unidad a otro dispositivo ligado a la misma
+                      unidad  dependiendo  de cómo se definan los
+                      dispositivos.  Esta opción define cuándo es
+                      el  manejador  el  que  fuerza  los cambios
+                      usando órdenes SCSI y cúando se  confía  en
+                      las  capacidades  del  autodetección de las
+                      unidades. Si esta opción es falsa, el mane­
+                      jador  envía  inmediatamente  órdenes  SCSI
+                      cuando se  cambia  el  dispositivo.  Si  la
+                      opción es verdad, no se envían órdenes SCSI
+                      hasta que se  solicite  una  escritura.  En
+                      este  caso  se  permite  al  firmware de la
+                      unidad detectar la estructura de  la  cinta
+                      al  leer  y  sólo  se usan las órdenes SCSI
+                      para asegurarse de que una cinta se escribe
+                      según la especificación correcta.
+               MT_ST_CAN_BSR (Por omisión: falso)
+                      Algunas  veces,  cuando  se usa lectura por
+                      adelantado, se debe retrocer la cinta a  la
+                      posición  correcta cuando se cierra el dis­
+                      positivo y, para este propósito, se utiliza
+                      la  orden SCSI para retrocer sobre los reg­
+                      istros. Algunas unidades  más  antiguas  no
+                      pueden procesar esta orden de manera fiable
+                      y se puede usar esta opción para mandar  al
+                      manejador  no  usar  la orden. El resultado
+                      final es que, con lectura por adelantado  y
+                      el  modo de bloque fijo, la cinta podría no
+                      estar correctamente posicionada  dentro  de
+                      un fichero cuando el dispositivo se cierra.
+               MT_ST_NO_BLKLIMS (Por omisión: falso)
+                      Algunas unidades no aceptan la  orden  SCSI
+                      READ BLOCK LIMITS. Si se usa esto, el mane­
+                      jador no usará la orden.  El  inconveniente
+                      es  que  el  manejador  no  puede comprobar
+                      antes de enviar órdenes  si  el  tamaño  de
+                      bloque  seleccionado  es  aceptable  por la
+                      unidad.
+               MT_ST_CAN_PARTITIONS (Por omisión: falso)
+                      Esta opción habilita el soporte  de  varias
+                      particiones dentro de una cinta.  La opción
+                      se aplica a todos los dispositivos  ligados
+                      a la unidad.
+               MT_ST_SCSI2LOGICAL (Default: false)
+                      Esta  opción obliga al manejador a usar las
+                      direcciones lógicas de bloques definidas en
+                      el  estándar SCSI-2 al realizar la búsqueda
+                      y comunicar operaciones (tanto con la órden
+                      MTSEEK  como  con  MTIOCPOS y al cambiar la
+                      partición de la cinta). En  otro  caso,  se
+                      usan  las  direcciones específicas del dis­
+                      positivo. Es muy recomendable activar  esta
+                      opción  si  la  unidad  soporta direcciones
+                      lógicas ya que también  cuentan  marcas  de
+                      fichero.  Hay algunos dispositivos que sólo
+                      soportan direcciones lógicas de bloque.
+               MT_ST_SYSV (Por omisión: falso)
+                      Cuando se habilita esta opción, los dispos­
+                      itivos  de  cinta usan la semántica de Sys­
+                      temV. En caso contrario, se usa  la  semán­
+                      tica  BSD.  La  diferencia  más  importante
+                      entre ambas semánticas es qué ocurre cuando
+                      un  dispositivo  utilizado  para lectura se
+                      cierra: en la semántica SYSV  la  cinta  se
+                      avanza  hasta  pasar  la siguiente marca de
+                      fichero si esto no ha ocurrido ya  al  usar
+                      el  dispositivo.  En  la  semántica  BSD la
+                      posición de la cinta no cambia.
+               EJEMPLO
+                      struct mtop mt_cmd;
+                      mt_cmd.mt_op = MTSETDRVBUFFER;
+                      mt_cmd.mt_count = MT_ST_BOOLEANS |
+                                 MT_ST_BUFFER_WRITES |
+                                 MT_ST_ASYNC_WRITES;
+                      ioctl(fd, MTIOCTOP, &mt_cmd);
+
+               El tamaño de bloque por defecto para  un  disposi­
+               tivo  se  puede configurar con MT_ST_DEF_BLKSIZE y
+               el código de densidad por defecto se puede config­
+               urar  con  MT_ST_DEFDENSITY.  Los valores para los
+               parámetros se operan con un O lógico con el código
+               de operación.
+
+               Con  los  núcleos 2.1.x y posteriores, los valores
+               de los plazos de tiempo (timeout) se  pueden  con­
+               figurar  con la suborden MT_ST_SET_TIMEOUT operado
+               con un O lógico con el plazo de tiempo  en  segun­
+               dos.   El  plazo  largo  de tiempo (usado para los
+               rebobinados y  otras  órdenes  que  pueden  tardar
+               mucho    tiempo)    se    puede   configurar   con
+               MT_ST_SET_LONG_TIMEOUT. Los  valores  por  defecto
+               del  núcleo son muy grandes para asegurarse de que
+               una órden exitosa no será cancelada  para  ninguna
+               unidad.  Debido a esto, el manejador puede parecer
+               atascado aun cuando sólo esté esperando a  que  se
+               cumpla el plazo de tiempo. Estas órdenes se pueden
+               usar para configurar más valores útiles  para  una
+               unidad específica. Los plazos de tiempo configura­
+               dos para un dispostivo se aplican a todos los dis­
+               positivos ligados a la misma unidad.
+
+   MTIOCGET - Obtiene el estado
+       Esta  petición toma un argumento de tipo (struct mtget *).
+
+       /* estructura para MTIOCGET - orden estado de cinta mag */
+       struct mtget {
+           long   mt_type;
+           long   mt_resid;
+           /* los ss. registros son dependientes del dispositivo */
+           long   mt_dsreg;
+           long   mt_gstat;
+           long   mt_erreg;
+           /* Los ss. 2 campos no se usan siempre */
+           daddr_t          mt_fileno;
+           daddr_t          mt_blkno;
+       };
+
+       mt_type    El fichero de cabecera  define  muchos  valores
+                  para  mt_type, pero el manejador actual informa
+                  sólo de los tipos genéricos  MT_ISSCSI1  (cinta
+                  genérica  SCSI-1)  y MT_ISSCSI2 (cinta genérica
+                  SCSI-2).
+       mt_resid   contiene el número de partición  actual  de  la
+                  cinta.
+       mt_dsreg   informa  de  los  valores actuales de la unidad
+                  para el tamaño de bloque (en los  24  bits  más
+                  bajos)  y  para  la densidad (en los 8 bits más
+                  altos).   Estos  campos  están  definidos   por
+                  MT_ST_BLKSIZE_SHIFT,        MT_ST_BLKSIZE_MASK,
+                  MT_ST_DENSITY_SHIFT, y MT_ST_DENSITY_MASK.
+       mt_gstat   da información de estado  genérica  (independi­
+                  ente  del dispositivo).  El fichero de cabecera
+                  define macros  para  comprobar  estos  bits  de
+                  estado:
+                  GMT_EOF(x):  La  cinta  está  posicionada justo
+                      tras una marca de  fichero  (siempre  falso
+                      tras una operación MTSEEK).
+                  GMT_BOT(x):  La cinta está posicionada al prin­
+                      cipio del  primer  fichero  (siempre  falso
+                      tras una operación MTSEEK).
+                  GMT_EOT(x): Una operación de cinta ha alcanzado
+                      el Final de Cinta físico.
+                  GMT_SM(x): La cinta  está  posicionada  actual­
+                      mente  en  una  marca  de conjunto (siempre
+                      falso tras una operación MTSEEK).
+                  GMT_EOD(x): La cinta está posicionada al  final
+                      de datos grabados.
+                  GMT_WR_PROT(x):  La  unidad  está  protegida de
+                      escritura.  Para algunas unidades esto tam­
+                      bién   puede   significar   que  no  admite
+                      escribir en el tipo de medio físico actual.
+                  GMT_ONLINE(x):  El  último open() encontró a la
+                      unidad con una cinta puesta y lista para la
+                      operación.
+                  GMT_D_6250(x),   GMT_D_1600(x),   GMT_D_800(x):
+                      Esta  información  de   estado   "genérica"
+                      informa de la densidad actual para unidades
+                      de cinta de 9 pistas y ½ in. solamente.
+                  GMT_DR_OPEN(x): La unidad no  tiene  una  cinta
+                      puesta.
+                  GMT_IM_REP_EN(x):  Modo  de  informe inmediato.
+                      Este bit se activa si no hay  garantías  de
+                      que  los datos se hayan escrito físicamente
+                      en la cinta cuando la llamada de  escritura
+                      termina.  Se  le  asigna el valor cero sólo
+                      cuando el manejador no usa buffers para los
+                      datos  y la unidad no está configurada para
+                      usar buffers de datos.
+       mt_erreg   El único  campo  definido  en  mt_erreg  es  el
+                  número de errores recuperados en los 16 bits de
+                  más bajo orden (como se define por  MT_ST_SOFT­
+                  ERR_SHIFT   y  MT_ST_SOFTERR_MASK).   Debido  a
+                  inconsistencias en la forma en que las unidades
+                  informan  de errores recuperados, este número a
+                  menudo no  es  mantenido  (la  mayoría  de  las
+                  unidades  no  informan, por defecto, de errores
+                  leves pero esto se puede cambiar con una  orden
+                  SCSI MODE SELECT).
+       mt_fileno  devuelve el número de fichero actual (empezando
+                  por cero).  Este valor se pone a -1  cuando  el
+                  número  de fichero se desconoce (p. ej. después
+                  de MTBSS o MTSEEK).
+       mt_blkno   da el número de  bloque  (empezando  por  cero)
+                  dentro  del fichero actual.  Este valor se pone
+                  a -1 cuando el número de  bloque  se  desconoce
+                  (p. ej. después de MTBSF, MTBSS, o MTSEEK).
+
+   MTIOCPOS - Obtener la posición en la cinta
+       Esta petición toma un argumento de tipo (struct mtpos *) y
+       devuelve la noción que tiene el manejador  del  número  de
+       bloque  de  cinta  actual, que no es el mismo que mt_blkno
+       devuelto por MTIOCGET.   Esta  unidad  debe  ser  de  tipo
+       SCSI-2  y  debe  admitir la orden READ POSITION (dirección
+       específica del dispositivo) o una unidad SCSI-1 compatible
+       Tandberg (Tandberg, Archive Viper, Wangtek, ... ).
+
+       /* estructura para MTIOCPOS - orden obtener posición cinta mag. */
+       struct     mtpos {
+           long   mt_blkno; /* número de bloque en curso */
+       };
+
+
+VALOR DEVUELTO
+       EIO           La  operación  pedida  no  ha podido comple­
+                     tarse.
+
+       ENOSPC        Una operación de escritura no  pudo  comple­
+                     tarse  porque  la  cinta  llegó al final del
+                     material magnético.
+
+       EACCES        Se intentó escribir o borrar una cinta  pro­
+                     tegida  para  escritura.   (Este error no se
+                     detecta durante open().)
+
+       EFAULT        Los parámetros de la orden apuntan a memoria
+                     que no pertenece al proceso invocador.
+
+       ENXIO         Durante la apertura, el dispositivo de cinta
+                     no existe.
+
+       EBUSY         El dispositivo ya está en uso o el manejador
+                     ha sido incapaz de reservar un búfer.
+
+       EOVERFLOW     Se ha intentado leer o escribir un bloque de
+                     longitud variable que es mayor que el  búfer
+                     interno del manejador.
+
+       EINVAL        Una  llamada  a  ioctl()  tenía un argumento
+                     incorrecto, o un tamaño de bloque pedido era
+                     ilegal.
+
+       ENOSYS        ioctl() desconocido.
+
+       EROFS         Se   ha  intentado  realizar  una  operación
+                     `open' con O_WRONLY o O_RDWR cuando la cinta
+                     de  la  unidad está protegida contra escrit­
+                     ura.
+
+FICHEROS
+       /dev/st*  : dispositivos de cinta SCSI con autorebobinado
+       /dev/nst* : dispositivos de cinta SCSI sin rebobinado
+
+AUTOR
+       El manejador ha sido escrito por by Kai Mäkisara (Kai.Mak­
+       isara@metla.fi)  a partir del manejador escrito por Dwayne
+       Forsyth. Varias otras personas también han contribuido  al
+       manejador.
+
+VÉASE TAMBIÉN
+       mt(1)
+
+       El fichero README.st de los fuentes del núcleo contiene la
+       información más reciente del manejador y sus posibilidades
+       de configuración.
+
+NOTAS
+       1. Cuando se intercambian datos entre sistemas, ambos sis­
+       temas deben coincidir en el tamaño físico del bloque de la
+       cinta.  Los  parámetros de una unidad después del arranque
+       no son, con frecuencia, los que la mayoría de los sistemas
+       operativos  usan con estos dispositivos. La mayoría de los
+       sistemas usan unidades en modo de bloque  variable  si  la
+       unidad soporta ese modo. Esto es aplicable a la mayoría de
+       las unidades modernas, incluyendo DATs, unidades de recor­
+       rido  helicoidal  de 8mm, DLTs, etc. Puede ser aconsejable
+       usar estas unidades en modo variable también en Linux  (es
+       decir,  use MTSETBLK o MTSETDEFBLK en el arranque del sis­
+       tema para establecer el modo), al menos cuando  se  inter­
+       cambien  datos  con sistemas externos. El inconveniente de
+       esto es que se debe usar un tamaño de bloque de cinta bas­
+       tante  largo  para obtener tasas de transferencia de datos
+       aceptables sobre el bus SCSI.  2.  Muchos  programas  (por
+       ejemplo, tar) permiten al usuario especificar el tamaño de
+       bloque en la línea de órdenes. Dese cuenta que esto deter­
+       mina  el  tamaño  físico del bloque en la cinta sólo en el
+       modo de bloque variable.
+
+       3. Para usar unidades de cinta SCSI, el  manejador  básico
+       de  SCSI, el manejador de un adaptador SCSI y el manejador
+       de cintas SCSI deben estar bien  configurados  dentro  del
+       núcleo  o cargados como módulos. Si el manejador de cintas
+       SCSI no está presente,  se  reconoce  la  unidad  pero  el
+       soporte   de   cinta  descrito  en  esta  página  no  está
+       disponible.
+
+       4. El manejador escribe los mensajes de error  a  la  con­
+       sola/registro(log).  Los códigos SENSE escritos en algunos
+       mensajes se traducen automática a texto si se han  habili­
+       tado en la configuración del núcleo los mensajes SCSI pro­
+       lijos.
+
+COPYRIGHT
+       Copyright © 1995 Robert K. Nichols.
+       Copyright © 1999 Kai Mäkisara.
+
+       Se da permiso para hacer y distribuir copias idénticas  de
+       este  manual  supuesto  que la nota de copyright y ésta de
+       permiso se preservan en todas las copias.  El  fichero  de
+       cabecera  del código fuente contiene permisos adicionales.
+
+
+
+Linux 2.0 - 2.2           18 enero 1999                     ST(4)

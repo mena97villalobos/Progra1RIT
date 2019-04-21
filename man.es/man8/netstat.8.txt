@@ -1,0 +1,384 @@
+NETSTAT(8)       Manual del Programador de Linux       NETSTAT(8)
+
+
+
+NOMBRE
+       netstat  -  Muestra  conexiones  de red, tablas de encami­
+       namiento, estadísticas de  interfaces,  conexiones  enmas­
+       caradas y mensajes del tipo netlink.
+
+
+SINOPSIS
+       netstat   [-venaoc]   [--tcp|-t]   [--udp|-u]   [--raw|-w]
+       [--unix|-u] [--inet|--ip] [--ax25] [--ipx] [--netrom]
+
+
+
+       netstat  [-veenc]  [--inet]  [--ipx]  [--netrom]   [--ddp]
+       [--ax25] {--route|-r}
+
+
+
+       netstat [-veenac] {--interfaces|-i} [iface]
+
+
+
+       netstat [-enc] {--masquerade|-M}
+
+
+
+       netstat [-cn] {--netlink|-N}
+
+
+
+       netstat {-V|--version} {-h|--help}
+
+DESCRIPCIÓN
+       Netstat  muestra  información de los subsistemas de red en
+       Linux.
+
+   (sin opciones)
+       Se puede ver el estado de las conexiones de red al  listar
+       los  conectores  (sockets)  abiertos. Esta es la operación
+       por defecto: si no se especifica ninguna familia de direc­
+       ciones, se mostrarán los conectores activos para todas las
+       familias de direcciones  configuradas.  Con  -e  se  puede
+       obtener  información  adicional  (userid, identificador de
+       usuario). Con el modificador -v  se  consigue  que  nestat
+       muestre  familias  de  direcciones conocidas no soportadas
+       por el núcleo. La opción -o muestra información  adicional
+       sobre  los  temporizadores  de  red.  -a muestra todos los
+       conectores, incluyendo los conectores a la escucha  en  el
+       servidor.  La  familia  de  direcciones  inet mostrará los
+       conectores de tipo raw, udp y tcp.
+
+
+   -r, --route
+       Con la opción -r, --route se obtienen las tablas de encam­
+       inamiento del núcleo en el mismo formato que usa route -e.
+       netstat -er utiliza el formato de route.   Véase  route(8)
+       para más detalles.
+
+
+   -i, --interface iface
+       Al  usar  la opción -i, --interfaces se mostrará una tabla
+       de todos los interfaces (o del iface especificado).   Para
+       ello,  se  usará  el  formato ifconfig -e y se describe en
+       ifconfig(8).  netstat -ei muestra  una  tabla  o  un  sólo
+       interfaz  de red del mismo modo que lo hace ifconfig.  Con
+       la opción -a se pueden incluir interfaces no configurados.
+       (o sea, que no tienen establecida la opción U=UP).
+
+
+   -M, --masquerade
+       Se  puede  ver  también  una  lista  de todas las sesiones
+       enmascaradas. Con la opción -e se puede  incluir  informa­
+       ción referente a la numeración de secuencias y deltas cau­
+       sada por las reescrituras de  datos  en  sesiones  de  FTP
+       (comando  PORT).  La capacidad de usar máscaras sirve para
+       ocultar al mundo exterior ordenadores con  direcciones  de
+       red  no  oficiales,  tal  y  como  se describe en ipfw(4),
+       ipfwadm(8) e ipfw(8).
+
+
+   -N, --netlink
+       Las versiones más recientes  del  núcleo  disponen  de  un
+       canal de comunicación entre el núcleo y el usuario llamado
+       netlink. Se pueden obtener de /dev/route mensajes sobre la
+       creación o destrucción de rutas o interfaces (36,0).
+
+
+OPCIONES
+   -v, --verbose
+       Explica  al  usuario  lo que está sucediendo de una manera
+       más prólija en palabras. En particular,  muestra  informa­
+       ción  de  gran  utilidad  sobre familias de direcciones no
+       configuradas.
+
+
+   -n, --numeric
+       Muestra direcciones numéricas en vez de tratar de determi­
+       nar un ordenador, puerto o nombre de usuario simbólicos.
+
+   -A, --af family
+       Usa  un  método  diferente para establecer las familias de
+       direcciones.  family es una lista de palabras referentes a
+       familias  de  direcciones  separadas  por comas (',') como
+       inet, unix, ipx, ax25, netrom y ddp.  Esto tiene el  mismo
+       efecto que usar las opciones largas --inet, --unix, --ipx,
+       --ax25, --netrom y --ddp.
+
+
+   -c, --continous
+       Esta opción hace que netstat muestre la tabla seleccionada
+       en  pantalla  continuamente  cada  segundo  hasta  que  el
+       usuario lo interrumpa.
+
+
+
+INFORMACIÓN EN PANTALLA
+   Conexiones a Internet activas (TCP, UDP, RAW)
+   Proto
+       El protocolo (tcp, udp, raw) usado por el conector.
+
+
+   Recv-Q
+       La cantidad de bytes  no  copiados  por  el  programa  del
+       usuario conectado a este conector.
+
+   Send-Q
+       La  cantidad  de  bytes  no  reconocidos  por el ordenador
+       remoto.
+
+   Local Address
+       La dirección local (nombre del ordenador local)  y  número
+       de  puerto  del conector. A no ser que se dé la opción -n,
+       se resolverá la dirección del  conector  según  su  nombre
+       canónico,  y el número de puerto se traduce a su número de
+       servicio correspondiente.
+
+
+   Foreign Address
+       La dirección remota (nombre del  ordenador  remoto)  y  el
+       número  de puerto del conector. Al igual que ocurre con la
+       dirección local:puerto, la opción -n desactiva la  resolu­
+       ción de nombres de servicio y de ordenador.
+
+
+   State
+       El  estado  del conector. Dado que no existen estados para
+       el tipo RAW y normalmente no se usan  para  el  UDP,  esta
+       columna  puede  dejarse  en blanco.  Normalmente puede ser
+       uno de los siguientes valores:
+
+       ESTABLISHED
+              El conector tiene una conexión establecida.
+
+       SYN_SENT
+              El conector está tratando de establecer una  conex­
+              ión activamente.
+
+       SYN_RECV
+              Se  ha recibido una petición de conexión de la red.
+
+       FIN_WAIT1
+              El conector está cerrado y la conexión se está cer­
+              rando.
+
+       FIN_WAIT2
+              La   conexión  está  cerrada  y  el  conector  está
+              esperando que el remoto haga lo mismo.
+
+       TIME_WAIT
+              El conector, tras el cierre de la misma, se encuen­
+              tra  todavía  esperando para manejar paquetes en la
+              red.
+
+       CLOSED El conector no está en uso.
+
+       CLOSE_WAIT
+              Habiéndose  cerrado  el  punto  remoto,   se   está
+              esperando a que el conector local se cierre.
+
+       LAST_ACK
+              El  extremo  remoto  se  ha  cerrado y se cierra el
+              conector local. Esperando confirmación.
+
+       LISTEN El  conector  está  a  la  escucha  de   conexiones
+              entrantes.  Estos  conectores se muestran solamente
+              si la opción -a,--listening está presente.
+
+       CLOSING
+              Ambos conectores se están cerrando pero aún no  han
+              sido enviados todos los datos.
+
+       UNKNOWN
+              Se desconoce el estado del conector.
+
+
+   User
+       El  nombre  o el identificador de usuario (UID) del propi­
+       etario del conector.
+
+
+   Timer
+       (pendiente de escribirse)
+
+
+
+   Conectores de dominio Unix activos.
+   Proto
+       El protocolo (normalmente Unix) que usa el conector.
+
+
+   RefCnt
+       El cómputo de referencia (es decir, procesos  relacionados
+       con el uso de este conector)
+
+
+   Flags
+       Se  muestran  SO_ACCEPTON (mostrada como ACC), SO_WAITDATA
+       (W) o SO_NOSPACE (N).  SO_ACCECPTON se usa  en  conectores
+       que  no  se encuentran en uso si sus procesos correspondi­
+       entes están a la espera de una petición de  conexión.   El
+       resto de flags normalmente carecen de interés.
+
+   Type
+       Existen varios tipos de acceso a conectores:
+
+       SOCK_DGRAM
+              El conector se usa en modo Datagrama (sin conexión)
+
+       SOCK_STREAM
+              Este es un conector stream (con conexión).
+
+       SOCK_RAW
+              El conector se usa como un conector RAW.
+
+       SOCK_RDM
+              Este otro es capaz de distribuir mensajes de  forma
+              fiable.
+
+       SOCK_SEQPACKET
+              Este es un conector para paquetes secuenciales.
+
+       SOCK_PACKET
+              Conector para un interfaz de tipo RAW.
+
+       UNKNOWN
+              ¿Quién  sabe lo que nos traerá el futuro? Rellénese
+              este espacio :-)
+
+
+
+   State
+       Este campo deberá contener una de las palabras siguientes:
+
+       FREE   El conector no ha sido asignado.
+
+       LISTENING
+              El  conector  se encuentra a la espera de una peti­
+              ción de conexión. Estos conectores normalmente sólo
+              se muestran si se usa a opción -a,--listening.
+
+       CONNECTING
+              El  conector  está a punto de establecer una conex­
+              ión.
+
+       CONNECTED
+              El conector está conectado.
+
+       DISCONNECTING
+              El conector está desconectado.
+
+       (empty)
+              El conector no está conectado a otro.
+
+       UNKNOWN
+              Este estado no debería aparecer nunca.
+
+
+   Path
+       Muestra la ruta comleta (path) de los  procesos  asociados
+       al conector.
+
+
+
+   Conectores IPX activos
+       (esta  parte tendrá que escribirla alguien que entienda de
+       esto)
+
+
+
+   Conectores NET/ROM activos
+       (esta parte tendrá que escribirla alguien que entienda  de
+       esto)
+
+
+
+   Conectores AX.25 activos
+       (esta  parte tendrá que escribirla alguien que entienda de
+       esto)
+
+
+
+NOTAS
+       Desde la aparición de la versión 2.2 del núcleo netstat -i
+       ya  no  muestra  las estadísticas de inerfaces alias. Para
+       conseguir contadores basados en interfaces alias  es  pre­
+       ciso  especificar  normas  explícitas  usando  el  comando
+       ipchains(8).
+
+
+ARCHIVOS
+       /etc/services -- El archivo de traducción de servicios
+
+       /proc/net/dev -- Información sobre dispositivos
+
+       /proc/net/raw -- Información sobre conectores RAW
+
+
+       /proc/net/tcp -- Información sobre conectores TCP
+
+       /proc/net/udp -- Información sobre conectores UDP
+
+       /proc/net/unix -- Información sobre conectores de  dominio
+       Unix
+
+       /proc/net/ipx -- Información sobre conectores IPX
+
+       /proc/net/ax25 -- Información sobre conectores AX25
+
+       /proc/net/appeltalk  --  Información  sobre conectores DDP
+       (appeltalk)
+
+       /proc/net/nr -- Información sobre conectores NET/ROM
+
+       /proc/net/route -- Información sobre el encaminamiento  IP
+       del núcleo
+
+       /proc/net/ax25_route   --  Información  sobre  el  encami­
+       namiento AX25 del núcleo
+
+       /proc/net/ipx_route -- Información sobre el encaminamiento
+       IPX del núcleo
+
+       /proc/net/nr_nodes -- Lista de nodos NET/ROM del núcleo
+
+       /proc/net/nr_neigh -- Vecinos NET/ROM del núcleo
+
+       /proc/net/ip_masquerade  --  Conexiones  con  máscara  del
+       núcleo
+
+
+
+
+VÉASE TAMBIÉN
+       route(8),  ifconfig(8),   ipfw(4),   ipfw(8),   ipfwadm(8)
+       ipchains(8)
+
+
+
+ERRORES
+       Puede  que aparezca información extraña de forma ocasional
+       si un conector cambia mientras está siendo  examinado.  Es
+       bastante improbable que ocurra.
+       La  opción  netstat -i se describe tal y como debería fun­
+       cionar tras una pequeña limpieza de código de  la  versión
+       BETA del paquete de herramientas de red.
+
+
+AUTORES
+       El  interfaz  de  usuario  de netstat fue escrito por Fred
+       Baumgarten <dc6iq@insu1.etec.uni-karlsruhe.de>  la  página
+       de   manual,   básicamente  por  Matt  Welsh  <mdw@tc.cor­
+       nell.edu>.   Fue   puesta   al   día    por    Alan    Cox
+       <Alan.Cox@linux.org>  pero aún podría mejorar con algo más
+       de trabajo.
+       La página de manual y los comandos incluidos en el paquete
+       de herramientas de red fueron reescritos en su totalidad a
+       partir de Bernd Eckenfels <ecki@linux.de>.
+
+
+
+Herramientas de Red      20 Febrero 1999               NETSTAT(8)

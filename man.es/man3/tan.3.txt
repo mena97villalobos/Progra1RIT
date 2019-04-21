@@ -1,0 +1,25 @@
+TAN(3)           Manual del Programador de Linux           TAN(3)
+
+
+
+NOMBRE
+       tan - función tangente
+
+SINOPSIS
+       #include <math.h>
+
+       double tan(double x);
+
+DESCRIPCIÓN
+       La  función  tan() devuelve la tangente de x, donde x está
+       en radianes.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       acos(3), asin(3), atan(3), atan2(3), cos(3), sin(3)
+
+
+
+GNU                       12 Marzo 1998                    TAN(3)

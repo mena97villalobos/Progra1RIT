@@ -1,0 +1,79 @@
+RARP(8)          Manual del Programador de Linux          RARP(8)
+
+
+
+NOMBRE
+       rarp - manipula la tabla RARP del sistema
+
+SINOPSIS
+       rarp [-V] [--version] [-h] [--help]
+       rarp -a
+       rarp [-v] -d hostname ...
+       rarp [-v] [-t type] -s hostname hw_addr
+
+DESCRIPCIÓN
+       Rarp  manipula la tabla RARP del núcleo de varias maneras.
+       Las opciones primarias son las de borrar  una  entrada  de
+       mapeado  de  dirección y establecer una nueva manualmente.
+       Para propósitos de depuración,  el  programa  arp  permite
+       también un vaciado total de la tabla RARP.
+
+OPCIONES
+       -V     Muestra la versión de RARP en uso.
+
+       -v     Muestra  al  usuario lo que sucede de manera ampli­
+              ada.
+
+       -t type
+              Al establecer o leer la tabla RARP, este  parámetro
+              opcional  le dice a rarp qué clase de entradas debe
+              buscar. El valor por defecto de este  parámetro  es
+              ether (es decir, el código de hardware 0x01 para la
+              IEEE 802.3 10Mbps Ethernet.  Otros  valores  pueden
+              incluir  también  tecnologías  de  red  como  AX.25
+              (ax25) y NET/ROM (netrom).
+
+       -a
+
+       --list Lista las entradas de la tabla RARP.
+
+       -d hostname
+
+       --delete hostname
+              Borra todas las entradas de la tabla RARP  para  el
+              ordenador especificado.
+
+       -s hostname hw_addr
+
+       --set hostname hw_addr
+              Crea  una  entrada  de  mapeado de direcciones RARP
+              para el ordenador especificado en hostname estable­
+              ciendo  una dirección de hardware hw_addr.  El for­
+              mato de la dirección de hardware depende  del  tipo
+              de hardware, pero para la mayoría de ellos se puede
+              asumir la presentación normal. Para el tipo  Ether­
+              net,  éste consiste en 6 bytes en formato hexadeci­
+              mal, separados por dos puntos (:).
+
+¡OJO!
+       Algunos sistemas (en  particular  sistemas  Sun  antiguos)
+       asumen  que  el ordenador que responde a una petición RARP
+       puede pproporcionar también otros  servicios  de  arranque
+       remoto.  Por lo tanto, no se debe añadir nunca una entrada
+       RARP de modo gratuito, a no ser que se desee  provocar  la
+       ira del administrador de red.
+
+FICHEROS
+       /proc/net/rarp,
+
+VÉASE TAMBIÉN
+       arp(8), route(8), ifconfig(8), netstat(8)
+
+AUTORES
+       Ross D. Martin, <martin@trcsun3.eas.asu.edu>
+       Fred N. van Kempen, <waltje@uwalt.nl.mugnet.org>
+       Phil Blundell, <Philip.Blundell@pobox.com>
+
+
+
+Herramientas de Red       4 Agosto 1997                   RARP(8)

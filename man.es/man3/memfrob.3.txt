@@ -1,0 +1,37 @@
+MEMFROB(3)       Manual del Programador de Linux       MEMFROB(3)
+
+
+
+NOMBRE
+       memfrob - cifra un área de memoria
+
+SINOPSIS
+       #include <string.h>
+
+       void *memfrob(void *s, size_t n);
+
+DESCRIPCIÓN
+       La función memfrob() cifra los primeros n bytes de la zona
+       de memoria s haciendo un XOR (O exclusivo) de cada  carác­
+       ter  con  el número 42.  El efecto puede invertirse emple­
+       ando de nuevo memfrob() en la zona de memoria cifrada.
+
+       Observe que esta función no  es  una  rutina  correcta  de
+       cifrado puesto que la constante para el XOR está fijada de
+       antemano, y por tanto esta función  sólo  es  válida  para
+       ocultar cadenas de caracteres temporalmente.
+
+VALOR DEVUELTO
+       La  función memfrob() devuelve un puntero al área de memo­
+       ria cifrada.
+
+CONFORME A
+       La función memfrob() es única a  la  Biblioteca  de  C  de
+       Linux y a la de GNU.
+
+VÉASE TAMBIÉN
+       strfry(3)
+
+
+
+GNU                        4 Marzo 1998                MEMFROB(3)

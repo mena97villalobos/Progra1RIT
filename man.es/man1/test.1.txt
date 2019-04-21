@@ -1,0 +1,114 @@
+TEST(1)                                                   TEST(1)
+
+
+
+NOMBRE
+       test - verifica tipos de ficheros y compara valores
+
+SINOPSIS
+       test [expr]
+       test {--help,--version}
+
+DESCRIPCIÓN
+       Este  documento ya no es mantenido y puede ser impreciso o
+       incompleto.  La  documentación  de  Texinfo  es  ahora  la
+       fuente de información recomendada.
+
+       Esta  página  del manual documenta la versión GNU de test.
+       Hay que tener en cuenta que la mayoría de shells tienen un
+       comando  interno  con  el  mismo nombre y con prestaciones
+       parecidas.
+
+       test devuelve el valor 0 (cierto) o 1 (falso)  dependiendo
+       de  la  evaluación  de la expresión condicional expr.  Las
+       expresiones pueden ser unarias  o  binarias.   Las  expre­
+       siones  unarias  son  utilizadas a menudo para examinar el
+       estado de un fichero. También se permiten operaciones  con
+       cadenas de carácteres y comparaciones numéricas.
+
+       -b fichero
+              Cierto  si  fichero  existe  y es un dispositivo de
+              bloques.
+       -c fichero
+              Cierto si fichero existe y  es  un  dispositivo  de
+              carácteres.
+       -d fichero
+              Cierto si fichero existe y es un directorio.
+       -e fichero
+              Cierto si fichero existe.
+       -f fichero
+              Cierto si fichero existe y es un fichero normal.
+       -g fichero
+              Cierto  si  fichero  existe y tiene el bit de grupo
+              activado.
+       -k fichero
+              Cierto si fichero tiene el bit de sticky  activado.
+       -L fichero
+              Cierto  si fichero existe y es un enlace simbólico.
+       -p fichero
+              Cierto si fichero existe y es una tubería nombrada.
+       -r fichero
+              Cierto si fichero existe y es legible.
+       -s fichero
+              Cierto  si  fichero existe y su tamaño es mayor que
+              cero.
+       -S fichero
+              Cierto si fichero existe y es un socket.
+       -t [df]
+              Cierto si df está abierto en un terminal. Si fd  es
+              omitido, se toma 1 (salida estándar) por defecto.
+       -u fichero
+              Cierto  si fichero existe y tiene el bit de usuario
+              activo.
+       -w fichero
+              Cierto si fichero existe y es escribible.
+       -x fichero
+              Cierto si fichero existe y es ejecutable.
+       -O fichero
+              Cierto si fichero existe y es propiedad del identi­
+              ficador efectivo del usuario.
+       -G fichero
+              Cierto si fichero existe y es propiedad del identi­
+              ficador efectivo del grupo.
+       fichero1 -nt fichero2
+              Cierto si fichero1 es más reciente (en  base  a  la
+              fecha de modificación) que fichero2.
+       fichero1 -ot fichero2
+              Cierto si fichero1 es más antiguo que fichero2.
+       fichero1 -ef fichero2
+              Cierto  si  fichero1  y  fichero2  tienen  el mismo
+              número de dispositivo y de nodo-i.
+       -z cadena
+              Cierto si la longitud de cadena es cero.
+       -n cadena
+       cadena Cierto si la longitud de cadena no es cero.
+       cadena1 = cadena2
+              Cierto si las cadenas son iguales.
+       cadena1 != cadena2
+              Cierto si las cadenas no son iguales.
+       ! expr Cierto si expr es falsa.
+       expr1 -a expr2
+              Cierto si expr1 y expr2 son ciertas.
+       expr1 -o expr2
+              Cierto si expr1 o expr2 son ciertas.
+       arg1 OP arg2
+              OP es uno de los siguientes valores: -eq, -ne, -lt,
+              -le,  -gt,  o -ge.  Estos operadores binarios arit­
+              méticos devuelven cierto si  arg1  es  igual,  dis­
+              tinto,  menor  que, menor o igual que, mayor que, o
+              mayor o igual que arg2,  respectivamente.   arg1  y
+              arg2  pueden  ser  enteros positivos, enteros nega­
+              tivos, o la expresión especial -l cadena,  la  cual
+              significa la longitud de cadena.
+   OPCIONES
+       Cuando  GNU test es invocado con exactamente un argumento,
+       las siguientes opciones son reconocidas:
+       --help Escribe un mensaje en la salida  estándar  y  acaba
+              sin provocar error.
+       --version
+              Escribe  información  sobre la versión en la salida
+              estándar y acaba sin provocar error.
+
+
+
+FSF                  Utilidades Shell de GNU              TEST(1)

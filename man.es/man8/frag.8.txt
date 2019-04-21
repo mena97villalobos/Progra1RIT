@@ -1,0 +1,43 @@
+FRAG(8)          Manual del Programador de Linux          FRAG(8)
+
+
+
+NOMBRE
+       frag - comprobador simple de fragmentación
+
+SINOPSIS
+       /usr/sbin/frag [ -s [ -s ]] nombre-fichero ...
+
+DESCRIPCIÓN
+       frag  mostrará la fragmentación del sistema de ficheros en
+       un nombre-fichero especificado.  Si el  nombre-fichero  es
+       un directorio, frag descenderá recursivamente por él.
+
+OPCIONES
+       -s     Silencioso  (puede ponerse 1 ó 2 veces).  El primer
+              -s elimina las estadísticas de fichero a fichero, y
+              sólo   muestra  los  directorios  examinados  y  un
+              resumen. El segundo -s elimina la impresión de  los
+              directorios, y sólo muestra un sumario. Esta opción
+              es útil cuando frag se emplea sobre un  directorio.
+
+VÉASE TAMBIÉN
+       mkfs(8), fsck(8), mkefs(8), efsck(8)
+
+FALLOS
+       frag  se  quedará atrapado en un bucle infinito en el sis­
+       tema de ficheros /proc.
+
+AUTORES
+       V1.0 por Werner Almesberger
+       V1.1 por Steffen Zahn: añadido del recorrido recursivo  de
+       directorios
+       V1.2 por Rob Hooft: añadido de la cuenta de agujeros
+       V1.3 por Steffen Zahn: no tener en cuenta enlaces simbóli­
+       cos, no cruzar los límites de sistemas de ficheros, obten­
+       ción  del  tamaño  de  bloque  del  sistema de ficheros en
+       tiempo de ejecución.
+
+
+
+Linux 0.99                 8 Enero 1994                   FRAG(8)

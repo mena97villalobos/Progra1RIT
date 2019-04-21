@@ -1,0 +1,32 @@
+GETSID(2)        Manual del Programador de Linux        GETSID(2)
+
+
+
+NOMBRE
+       getsid - obtener identificador de sesión
+
+SINOPSIS
+       #include <unistd.h>
+
+       pid_t getsid(pid_t pid);
+
+DESCRIPCIÓN
+       getsid(0)  devuelve el identificador de sesión del proceso
+       invocador.  getsid(p) devuelve el identificador de  sesión
+       del proceso con identificador p.
+
+ERRORES
+       En caso de error, se devuelve -1. El único error que puede
+       ocurrir es ESRCH, cuando no se  encontró  un  proceso  con
+       identificador p.
+
+CONFORME A
+       SVr4,  que  documenta  una  condición  de error adicional,
+       EPERM.
+
+VÉASE TAMBIÉN
+       setsid(2).
+
+
+
+Linux 1.3.85              11 Abril 1996                 GETSID(2)

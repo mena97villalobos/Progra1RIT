@@ -1,0 +1,104 @@
+charmap(5)              Manual del Usuario             charmap(5)
+
+
+
+NOMBRE
+       charmap  -  símbolos  de caracteres para definir codifica­
+       ciones de caracteres
+
+DESCRIPCIÓN
+       Una descripción de conjunto de caracteres (mapcar)  define
+       un  conjunto  de  caracteres  disponibles  y sus codifica­
+       ciones.  Todos  los  conjuntos  de  caracteres   admitidos
+       deberían  tener como subconjunto el conjunto de caracteres
+       transportable.    Éste   se   define   en    el    fichero
+       /usr/share/nls/charmap/INVARIANT para referencia.
+
+SINTAXIS
+       El  fichero de mapcar comienza con una cabecera, que puede
+       constar de las siguientes palabras reservadas:
+
+       <codeset>
+              a la que sigue el nombre del código.
+
+       <mb_cur_max>
+              seguido por el  número  máximo  de  bytes  para  un
+              carácter multi-byte.  De momento no se admiten car­
+              acteres multi-byte. El valor predeterminado es 1.
+
+       <mb_cur_min>
+              seguido por el número mínimo de bytes de un  carác­
+              ter.   Este  valor  debe  ser  menor  o  igual  que
+              mb_cur_max.  Si no se especifica, vale  mb_cur_max.
+
+       <escape_char>
+              seguido  por un carácter que debe emplearse como el
+              carácter de escape para el resto del  fichero  para
+              señalar  caracteres  que  deban interpretarse de un
+              modo especial. Si no se dice otra cosa, es la barra
+              invertida ( \ ).
+
+       <comment_char>
+              seguido  por un carácter que se empleará como el de
+              comentario en el resto del fichero. Por omisión  es
+              el sostenido ( # ).
+
+
+       La definición del mapcar propiamente dicho comienza con la
+       palabra reservada CHARMAP en la primera columna.
+
+       Las líneas siguientes pueden tener una de las  dos  formas
+       siguientes para definir las codificaciones de caracteres:
+
+       <nombre-simbólico> <codificación> <comentarios>
+              Esta forma define exactamente un carácter y su cod­
+              ificación.
+
+       <nombre-simbólico>... <codificación> <comentarios>
+              Esta forma define una pareja de caracteres. Esto es
+              útil  solamente  para caracteres multi-byte, que de
+              momento no están implementados.
+
+
+       La última línea en un fichero de  definición  mapcar  debe
+       contener END CHARMAP.
+
+NOMBRES SIMBÓLICOS
+       Un  nombre  simbólico  para un carácter contiene solamente
+       caracteres del conjunto de caracteres  transportable.   El
+       nombre  propiamente  dicho  está  encerrado entre ángulos.
+       Los caracteres que sigan al <escape_char>  se  interpretan
+       como ellos mismos; por ejemplo, la secuencia '<\\\>>' rep­
+       resenta el nombre simbólico '\>' encerrado entre  ángulos.
+
+CODIFICACIÓN DE CARÁCTER
+       La codificación puede estar en cada una de las tres formas
+       siguientes:
+
+       <escape_char>d<número>
+              con un número en base 10
+
+       <escape_char>x<número>
+              con un número hexadecimal
+
+       <escape_char><número>
+              con un número octal.
+
+
+
+ARCHIVOS
+       /usr/share/nls/charmap/*
+
+AUTOR
+       Jochen Hein (jochen.hein@delphi.central.de)
+
+CONFORME A
+       POSIX.2
+
+VEA
+       setlocale(3),   localeconv(3),    locale(1),    locale(5),
+       localedef(1),
+
+
+
+Soporte de Lengua Nacional 17 Dic 1997                 charmap(5)

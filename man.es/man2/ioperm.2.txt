@@ -1,0 +1,49 @@
+IOPERM(2)        Manual del Programador de Linux        IOPERM(2)
+
+
+
+NOMBRE
+       ioperm - establece permisos en los puertos de entrada/sal­
+       ida
+
+SINOPSIS
+       #include <unistd.h> /* para libc5 */
+       #include <sys/io.h> /* para glibc */
+
+       int ioperm(unsigned long desde,  unsigned  long  num,  int
+       encender);
+
+DESCRIPCIÓN
+       Ioperm establece los bits de permiso de acceso a los puer­
+       tos para el proceso para num  bytes,  empezando  desde  la
+       dirección  del puerto desde, al valor encender.  El empleo
+       de ioperm requiere privilegios de root.
+
+       Solamente  se  pueden  especificar  de  esta  manera   los
+       primeros  0x3ff  puertos  de  E/S.  Para más puertos, debe
+       emplearse la función iopl.  Los permisos no se heredan  en
+       un  fork(),  pero sí están en un exec(). Esto es útil para
+       proporcionar permisos de acceso  a  puertos  a  tareas  no
+       privilegiadas.
+
+VALOR DEVUELTO
+       En  caso  de éxito, se devuelve cero. En caso de error, se
+       devuelve -1, y se pone en errno un valor apropiado.
+
+CONFORME A
+       ioperm es específico de Linux y no  debería  emplearse  en
+       programas pretendidamente transportables.
+
+NOTAS
+       Libc5 la trata como una llamada al sistema y posee un pro­
+       totipo en  <unistd.h>.   Glibc1  no  tiene  un  prototipo.
+       Glibc2  posee  un  prototipo  tanto  en <sys/io.h> como en
+       <sys/perm.h>.  Evite el último, sólo está disponible en la
+       arquitectura i386.
+
+VÉASE TAMBIÉN
+       iopl(2)
+
+
+
+Linux                    22 Octubre 1996                IOPERM(2)

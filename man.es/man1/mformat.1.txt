@@ -1,0 +1,167 @@
+MFORMAT(1)                                             MFORMAT(1)
+
+
+
+NOMBRE
+       mformat  -  Añade  un  sistema  de  archivos  MS-DOS  a un
+       diskette formateado a bajo nivel.
+
+
+NOTA
+       Esta página de manual ha sido generada  automáticamente  a
+       partir de la documentación texinfo de mtools. Sin embargo,
+       el proceso es sólo aproximado, y algunos  elementos  tales
+       como  referencias  cruzadas,  notas  al  pie e índices, se
+       pierden en este proceso de traducción.   De  hecho,  estos
+       elementos no tienen una representación adecuada en el for­
+       mato de las páginas del manual. Por otra  parte,  sólo  se
+       han  traducido los elemntos específicos de cada comando, y
+       se ha desechado de la versión de la página del  manual  la
+       información  general  de mtools. Por este motivo, le aviso
+       encarecidamente que use el documento texinfo original.
+
+       *    Para generar un copia imprimible del  documento  tex­
+       info use los siguientes comandos:
+
+                     ./configure; make dvi; dvips mtools.dvi
+
+
+
+       *      Para generar una copia html, ejecute:
+
+                     ./configure; make html
+
+              Puede  encontrar  un  html   preconfeccionado   en:
+              `http://linux.wauug.org/pub/knaff/mtools'
+
+       *      Para  generar un copia info (visualizable usando el
+              modo info de emacs), ejecute:
+
+                     ./configure; make info
+
+
+
+       El documento texinfo parece más bonito en html o cuando se
+       imprime. De hecho, la versión info contiene ciertos ejemp­
+       los que son difíciles de leer debido a las convenciones de
+       notación usadas en info.
+
+
+DESCRIPCIÓN
+       El  comando  mformat  se  usa  para  incluir un sistema de
+       ficheros MS-DOS en un diskette formateado a bajo nivel. Su
+       síntaxis es:
+
+       mformat  [-t cilindros] [-hcabezas] [-s sectores] [-l eti­
+       queta de volumen] [-F] [-I fsVersión]  [-S  sizecode]  [-2
+       sectores  en  pista0] [-M tamaño software del sector] [-a]
+       [-X] [-C] [-Hsectores ocultos] [-r sectores raiz] [-B sec­
+       tor de arranque] [-1] [-k] dispositivo:
+
+
+       Mformat  incluye  un sistema de ficheros MS-DOS (sector de
+       arranque, FAT y directorio raiz) a un diskete  que  ya  ha
+       sido formateado a bajo nivel con UNIX.
+
+       Soporta las siguientes opciones: (Las opciones S, 2, 1 y M
+       no existirán si la copia de mtools ha sido  compilada  sin
+       la opción USE_2M).
+
+
+   Opciones
+       t      Número de cilindros.
+
+       h      Número de cabezas (caras).
+
+       s      Número  de  sectores  por  pista.  Si se ha dado la
+              opción 2m, será el número de sectores  equivalentes
+              de 512bytes en pistas genéricas. Si la opción 2m no
+              ha sido dada, será el número  de  sectores  físicos
+              por   pista   (que  pueden  ser  mucho  mayores  de
+              512bytes).
+
+       l      Etiqueta opcional de volumen.
+
+       S      El sizecode. El tamaño del sector es 2 ^  (sizecode
+              + 7).
+
+       2      Formato  2m. El parámetro para esta opción describe
+              el número de sector en la pista 0  de  la  cara  0.
+              Esta  opción se recomienda para sectores mayores de
+              lo normal.
+
+       1      No usa un formato 2m, incluso si la  geometría  del
+              disco es 2m.  geometry.
+
+       M      Tamaño software del sector. Este parámetro describe
+              el tamaño del sector en bytes usado por el  sistema
+              de ficheros MS-DOS. Por defecto es el tamaño físico
+              del sector.
+
+       a      Si se pone esta opción, un número de  serie  estilo
+              Atari  es generado. Atari guarda su número de serie
+              en la etiqueta OEM.
+
+       X      Formatea el disco como un disco XDF. Mirar  sección
+              XDF  para  más  detalles.  El disco debe haber sido
+              antes formateado a bajo nivel  usando  la  utilidad
+              xdfcopy incluida en el paquete fdutils.
+
+       C      Crea  el  fichero imagen del disco para instalar el
+              sistema de ficheros MS-DOS en él. Obviamente,  esto
+              es  inútil en dispositivos físicos como diskettes o
+              particiones de disco duro.
+
+       H      Número de sectores ocultos. Este parámetro es  útil
+              para  formatear  particiones  de  disco  duro,  las
+              cuales no están  alineadas  en  límites  de  pistas
+              (p.e.  la  primera  cabeza  de  la primera pista no
+              pertenece a la partición, pero contiene  una  tabla
+              de  partición).  En este caso el número de sectores
+              ocultos es en general el  número  de  sectores  por
+              cilindro. Esta opción  no ha sido probada.
+
+       n      Número de serie.
+
+       F      Formatea la partición como FAT32 (experimental).
+
+       I      Fija  el identificador fsVersion cuando formatea un
+              dispositivo FAT32. Para enterarnos,  ejecuta  minfo
+              en  un  dispositivo  FAT32,  y  escribeme sobre los
+              resultados, así podré incluir el valor correcto  en
+              versiones futuras de mtools.
+
+       c      Fija el tamaño de un cluster (en sectores). Si este
+              tamaño gerará una  FAT  demasiado  grande  para  su
+              número  de  bits, mtools automáticamente incrementa
+              el tamaño del cluster hasta que la FAT es suficien­
+              temente pequeña.
+
+       r      Fija  el  tamaño del directorio raiz (en sectores).
+              Sólo es aplicable a FATs de 12 y 16 bits.
+
+       B      Usa el sector de arranque guardado en el fichero  o
+              dispositivo  dado,  en  vez de usar el propio. Sólo
+              los  campos  de  geometría  son  actualizados  para
+              igualarlos con los parámetros de los discos fuente.
+
+       k      Mantiene en lo posible el sector de arranque  exis­
+              tente.  Sólo  se actualizan los campos de geometría
+              para igualarlos con los parámetros  de  los  discos
+              fuente.
+
+       Para  formatear diskettes en densidad distinta a la densi­
+       dad por defecto, debes poner (por lo menos) los parámetros
+       que cambian a los por defecto.
+
+       Mformat  devuelve 0 en caso de éxito o 1 en caso de fallo.
+
+       No registra información de bloques defectuosos en la  FAT,
+       usa mkmanifest para eso.
+
+VÉASE TAMBIÉN
+       La documención en formato info de Mtools.
+
+
+
+mtools-3.7                29 Junio 1997                MFORMAT(1)

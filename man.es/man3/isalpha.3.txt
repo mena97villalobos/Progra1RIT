@@ -1,0 +1,113 @@
+ISALPHA(3)       Manual del Programador de Linux       ISALPHA(3)
+
+
+
+NOMBRE
+       isalnum,  isalpha,  isascii,  isblank,  iscntrl,  isdigit,
+       isgraph,  islower,  isprint,  ispunct,  isspace,  isupper,
+       isxdigit - rutinas de clasificación de caracteres
+
+SINOPSIS
+       #include <ctype.h>
+
+       int isalnum (int c);
+       int isalpha (int c);
+       int isascii (int c);
+       int isblank (int c);
+       int iscntrl (int c);
+       int isdigit (int c);
+       int isgraph (int c);
+       int islower (int c);
+       int isprint (int c);
+       int ispunct (int c);
+       int isspace (int c);
+       int isupper (int c);
+       int isxdigit (int c);
+
+DESCRIPCIÓN
+       Estas  funciones  comprueban si c, que debe tener el valor
+       de un unsigned char o EOF, cae dentro de una cierta  clase
+       de caracteres de acuerdo con la localización en curso.
+
+       isalnum()
+              comprueba si el carácter es alfanumérico; es equiv­
+              alente a (isalpha(c) || isdigit(c)).
+
+       isalpha()
+              comprueba si  el  carácter  es  alfabético;  en  la
+              localización  estándar "C", es equivalente a (isup­
+              per(c) || islower(c)).  En algunas  localizaciones,
+              pueden  existir caracteres adicionales para los que
+              isalpha() sea verdad: letras que no sean ni mayúcu­
+              las ni minúsculas.
+
+       isascii()
+              comprueba si c es un valor unsigned char de 7 bits,
+              que encaje dentro del conjunto de caracteres ASCII.
+              Esta función es una extensión de BSD y de SVID.
+
+       isblank()
+              comprueba  si el carácter es un blanco; esto es, un
+              espacio o un tabulador. Esta función es una  exten­
+              sión de GNU.
+
+       iscntrl()
+              comprueba si el carácter es de control.
+
+       isdigit()
+              comprueba si el carácter es un dígito (de 0 a 9).
+
+       isgraph()
+              comprueba si el carácter es imprimible, exceptuando
+              el espacio en blanco.
+
+       islower()
+              comprueba si el carácter es una letra minúscula.
+
+       isprint()
+              comprueba si el carácter es imprimible,  incluyendo
+              el espacio en blanco.
+
+       ispunct()
+              comprueba  si  el carácter es imprimible sin ser un
+              espacio ni un carácter alfanumérico; o sea,  si  es
+              un signo de puntuación.
+
+       isspace()
+              comprueba  si el carácter es uno de los de espacios
+              en blanco. En  las  localizaciones  "C"  y  "POSIX"
+              éstos  son:  espacio, salto de página ('\f'), salto
+              de línea ('\n'), retorno de carro ('\r'), tabulador
+              horizontal ('\t'), y tabulador vertical ('\v').
+
+       isupper()
+              comprueba si el carácter es una letra mayúscula.
+
+       isxdigit()
+              comprueba  si el carácter es un dígito hexadecimal,
+              o sea, uno de 0 1 2 3 4 5 6 7 8 9 a b c d e f A B C
+              D E F.
+
+VALOR DEVUELTO
+       Los  valores  devueltos  son  no-cero si el carácter c cae
+       dentro de la clase pedida, y cero si no.
+
+CONFORME A
+       ANSI - C, BSD 4.3.  isascii() es una extensión  de  BSD  y
+       también una extensión de SVID.  isblank() es una extensión
+       de GNU.
+
+NOTA
+       Los detalles de qué  caracteres  pertenecen  a  qué  clase
+       dependen  de  la localización en curso. Por ejemplo, isup­
+       per() no reconocerá  una  Å  (`a'  mayúscula  con  círculo
+       encima) como una letra mayúscula en la localización prede­
+       terminada C.
+
+VÉASE TAMBIÉN
+       tolower(3), toupper(3), setlocale(3), ascii(7), locale(7)
+
+
+
+
+GNU                      26 Febrero 1998               ISALPHA(3)

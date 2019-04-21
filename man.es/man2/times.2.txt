@@ -1,0 +1,37 @@
+TIMES(2)         Manual del Programador de Linux         TIMES(2)
+
+
+
+NOMBRE
+       times - obtiene los tiempos del proceso
+
+SINOPSIS
+       #include <sys/times.h>
+
+       clock_t times(struct tms *buf);
+
+DESCRIPCIÓN
+       times  guarda los tiempos del proceso en curso en el sitio
+       al que apunta buf.
+
+       struct tms está definida así en /usr/include/sys/times.h:
+
+       struct  tms  {
+                    clock_t tms_utime;  /* tiempo de usuario */
+                    clock_t tms_stime;  /* tiempo de sistema */
+                    clock_t tms_cutime; /* t. de usuario del hijo */
+                    clock_t tms_cstime; /* t. de sistema del hijo */
+                    };
+
+       times devuelve el número de pulsos del reloj que han tran­
+       scurrido desde que el sistema ha estado en activo.
+
+CONFORME A
+       SVr4, SVID, POSIX, X/OPEN, BSD 4.3
+
+VÉASE TAMBIÉN
+       time(1), getrusage(2), wait(2)
+
+
+
+Linux 0.99.11             6 Febrero 1998                 TIMES(2)

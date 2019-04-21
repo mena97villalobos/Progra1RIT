@@ -1,0 +1,45 @@
+NICE(1)                                                   NICE(1)
+
+
+
+NOMBRE
+       nice  -  ejecuta  un programa con la prioridad de planifi­
+       cación modificada
+
+SINOPSIS
+       nice [-n adjustment]  [-adjustment]  [--adjustment=adjust­
+       ment] [--help] [--version] [command [arg...]]
+
+DESCRIPCIÓN
+       Esta documentación no va a ser mantenida a partir de ahora
+       y puede ser inexacta o incompleta. La  documentación  Tex­
+       info es ahora la fuente autorizada.
+
+       Esta página de manual documenta la versión de GNU de nice.
+       Nótese que muchos shells disponen de comandos propios  con
+       el mismo nombre y con similares funcionalidades.
+
+       Si  no  se añaden argumentos, nice imprime la prioridad de
+       planificación actual, que es heredada.  De otra modo, nice
+       ejecuta  el  comando  (command)  dado  con la prioridad de
+       planificación ajustada.  Si no se añade un ajuste (adjust­
+       ment),  la prioridad del comando es incrementada en 10. El
+       superusuario puede especificar ajustes negativos. La  pri­
+       oridad  puede  ser ajustada por nice en el rango entre -20
+       (la prioridad más alta) a 19 (la más baja).
+
+   OPCIONES
+       -n adjustment, -adjustment, --adjustment=adjustment
+              Añade el ajuste dado (adjustment) en vez de 10 a la
+              prioridad del comando.
+
+       --help Imprime  por la salida estándar un mensaje de ayuda
+              sobre el uso y termina satisfactoriamente.
+
+       --version
+              Imprime por la salida estándar información sobre la
+              versión y termina satisfactoriamente.
+
+
+
+FSF                Utilidades del Shell de GNU            NICE(1)

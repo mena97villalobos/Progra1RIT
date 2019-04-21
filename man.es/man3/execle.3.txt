@@ -1,0 +1,125 @@
+EXEC(3)          Manual del Programador de Linux          EXEC(3)
+
+
+
+NOMBRE
+       execl, execlp, execle, execv, execvp - ejecutan un fichero
+
+SINOPSIS
+       #include <unistd.h>
+
+       extern char **environ;
+
+       int execl( const char *camino, const char *arg, ...);
+       int execlp( const char *fichero, const char *arg, ...);
+       int execle( const char *camino, const  char  *arg  ,  ...,
+       char * const envp[]);
+       int execv( const char *camino, char *const argv[]);
+       int execvp( const char *fichero, char *const argv[]);
+
+DESCRIPCIÓN
+       La  familia de funciones exec reemplaza la imagen del pro­
+       ceso en curso con una nueva. Las  funciones  descritas  en
+       esta  página  del  Manual son interfaces para la primitiva
+       execve(2).  (Consulte la página del Manual de execve  para
+       información  detallada acerca del reemplazo del proceso en
+       curso.)
+
+       El primer argumento de estas funciones es el camino de  un
+       fichero que va a ser ejecutado.
+
+       El  const char *arg y puntos suspensivos siguientes en las
+       funciones execl, execlp, y execle pueden ser  contemplados
+       como  arg0,  arg1, ..., argn.  Todos juntos, describen una
+       lista de uno o más punteros a cadenas de caracteres termi­
+       nadas  en  cero,  que  representan  la lista de argumentos
+       disponible para el programa  ejecutado.  El  primer  argu­
+       mento,  por  convenio,  debe  apuntar al nombre de fichero
+       asociado con el fichero que se esté ejecutando.  La  lista
+       de argumentos debe ser terminada por un puntero NULL.
+
+       Las  funciones  execv  y  execvp proporcionan un vector de
+       punteros a cadenas de caracteres terminadas en  cero,  que
+       representan  la  lista  de  argumentos  disponible para el
+       nuevo programa. El primer argumento,  por  convenio,  debe
+       apuntar  al  nombre de fichero asociado con el fichero que
+       se esté ejecutando. El vector de punteros debe ser  termi­
+       nado por un puntero NULL.
+
+       La  función  execle también especifica el entorno del pro­
+       ceso ejecutado mediante  un  parámetro  adicional  que  va
+       detrás del puntero NULL que termina la lista de argumentos
+       de la lista de parámetros o el  puntero  al  vector  argv.
+       Este  parámetro adicional es un vector de punteros a cade­
+       nas de caracteres acabadas en cero y  debe  ser  terminada
+       por  un  puntero  NULL.   Las  otras funciones obtienen el
+       entorno para la nueva imagen de  proceso  de  la  variable
+       externa environ en el proceso en curso.
+
+       Algunas  de estas funciones tienen una semántica especial.
+
+       Las funciones execlp y execvp duplicarán las acciones  del
+       shell  al  buscar  un  fichero  ejecutable si el nombre de
+       fichero especificado no  contiene  un  carácter  de  barra
+       inclinada (/). El camino de búsqueda es el especificado en
+       el entorno por la variable PATH.  Si esta variable  no  es
+       especificada,   se   emplea   el   camino   predeterminado
+       ``:/bin:/usr/bin''. Además, ciertos errores se  tratan  de
+       forma especial.
+
+       Si  a  un  fichero  se  le  deniega el permiso (la función
+       intentada execve devuelve EACCES), estas funciones contin­
+       uarán  buscando  en el resto del camino de búsqueda. Si no
+       se encuentra otro fichero,  empero,  retornarán  dando  el
+       valor EACCES a la variable global errno .
+
+       Si  no  se  reconoce la cabecera de un fichero (la función
+       intentada execve devuelve ENOEXEC), estas funciones ejecu­
+       tarán  el  shell  con el camino del fichero como su primer
+       argumento. (Si este intento falla, no se busca más.)
+
+VALOR DEVUELTO
+       Si cualquiera de las funciones exec  regresa,  es  que  ha
+       ocurrido  un  error.  El  valor  de retorno es -1, y en la
+       variable global errno se pondrá el código  de  error  ade­
+       cuado.
+
+FICHEROS
+       /bin/sh
+
+ERRORES
+       Todas estas funciones pueden fallar y dar un valor a errno
+       para cualquiera de los errores especificados para la  fun­
+       ción execve(2).
+
+VÉASE TAMBIÉN
+       sh(1), execve(2), fork(2), environ(5), ptrace(2)
+
+COMPATIBILIDAD
+       En algunos otros sistemas, el PATH predeterminado tiene el
+       directorio de trabajo listado detrás de /bin  y  /usr/bin,
+       como  una  medida  anti-caballo  de  Troya. En libc 5.4.7,
+       Linux aún utiliza el valor de PATH predeterminado  con  el
+       tradicional "el directorio de trabajo, el primero".
+
+       El comportamiento de execlp y execvp cuando hay errores al
+       intentar ejecutar el fichero es una práctica  de  antiguo,
+       pero tradicionalmente no ha sido documentada y el estándar
+       POSIX no lo especifica.  BSD  (y  quizás  otros  sistemas)
+       hacen un sleep() automático y un reintento a continuación,
+       si se encuentra el error ETXTBSY. Linux trata esto como un
+       error  importante y el regreso de la función es inmediato.
+
+       Tradicionalmente, las funciones  execlp  y  execvp  hacían
+       caso omiso de todos los errores salvo los descritos arriba
+       y ENOMEM y E2BIG, que provocaban el regreso. Ahora también
+       regresan  si  tiene  lugar  algún  error  distinto  de los
+       descritos anteriormente.
+
+CONFORME A
+       Execl, execv, execle, execlp y execvp  son  conformes  con
+       IEEE Std1003.1-88 (``POSIX.1'').
+
+
+
+BSD                        9 Enero 1998                   EXEC(3)

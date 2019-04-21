@@ -1,0 +1,42 @@
+SETMETAMODE(1)                                     SETMETAMODE(1)
+
+
+
+NOMBRE
+       setmetamode  -  define  el  manejo  de  la  tecla Meta del
+       teclado
+
+SINOPSIS
+       setmetamode [ {meta|bit|metabit | esc|prefix|escprefix} ]
+
+DESCRIPCIÓN
+       Sin argumentos, setmetamode muestra el modo actual  de  la
+       tecla  Meta.   Con  un  argumento, establece el modo de la
+       tecla Meta como se  indique.   Se  informa  del  establec­
+       imiento antes y después del cambio.
+
+       El  modo de la tecla Meta es específico para cada VT (ter­
+       minal virtual) (y se emplea la VT correspondiente a stdin,
+       la  entrada  estándar).  Uno podría emplear setmetamode en
+       un /etc/rc para definir el estado inicial del modo  de  la
+       tecla Meta, p.ej. con
+            INITTY=/dev/tty[1-8]
+            for tty in $INITTY; do
+                 setmetamode escprefix < $tty
+            done
+
+OPCIONES
+       esc prefix escprefix
+              La tecla Meta envía un prefijo Escape.
+
+       meta bit metabit
+              La  tecla  Meta activa el bit de más alto orden del
+              carácter.
+
+VÉASE TAMBIÉN
+       loadkeys(1)
+
+
+
+
+                       30 de Enero de 1994         SETMETAMODE(1)

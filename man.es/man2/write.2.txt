@@ -1,0 +1,77 @@
+WRITE(2)         Manual del Programador de Linux         WRITE(2)
+
+
+
+NOMBRE
+       write - escribe a un descriptor de fichero
+
+SINOPSIS
+       #include <unistd.h>
+
+       ssize_t write(int fd, const void *buf, size_t num);
+
+DESCRIPCIÓN
+       write  escribe  hasta num bytes en el fichero referenciado
+       por el  descriptor  de  fichero  fd  desde  el  búfer  que
+       comienza  en  buf.  POSIX requiere que un read() que pueda
+       demostrarse que ocurra después que un write() haya  regre­
+       sado,  devuelva los nuevos datos. Observe que no todos los
+       sistemas de ficheros son conformes con POSIX.
+
+VALOR DEVUELTO
+       En caso de éxito, se devuelve el número de bytes  escritos
+       (cero  indica  pues que no se ha escrito nada). En caso de
+       error, se devuelve -1 y se  pone  un  valor  apropiado  en
+       errno.  Si  num  es  cero  y  el  descriptor de fichero se
+       refiere a un fichero regular, se devolverá 0  sin  que  se
+       cause  ningún  otro  efecto. Para un fichero especial, los
+       resultados no son transportables.
+
+ERRORES
+       EBADF  fd no es un descriptor válido de fichero o no  está
+              abierto para escritura.
+
+       EINVAL fd  está  asociado  a  un objeto que no es adecuado
+              para la escritura.
+
+       EFAULT buf está afuera del espacio de direcciones  accesi­
+              ble.
+
+       EPIPE  fd  está  conectado  a  una  tubería  o zócalo cuyo
+              extremo de lectura está cerrado. Cuando esto ocurre
+              el proceso de escritura recibirá una señal SIGPIPE;
+              si la captura, bloquea o no  tiene  en  cuenta,  se
+              devuelve el error EPIPE.
+
+       EAGAIN Se  ha  seleccionado  E/S  no  bloqueante empleando
+              O_NONBLOCK y no había sitio en la tubería o  zócalo
+              conectado  a  fd para escribir los datos inmediata­
+              mente.
+
+       EINTR  La llamada ha sido interrumpida por una señal antes
+              de que se haya escrito ningún dato.
+
+       ENOSPC El dispositivo que contiene al fichero referenciado
+              por fd no tiene sitio para los datos.
+
+       EIO    Ha ocurrido un error de E/S de bajo nivel  mientras
+              se estaba modificando el nodo-í.
+
+       Pueden  ocurrir  otros  errores,  dependiendo  del  objeto
+       conectado a fd.
+
+CONFORME A
+       SVr4, SVID, POSIX, X/OPEN, 4.3BSD.  SVr4 documenta  condi­
+       ciones   de  error  adicionales  EDEADLK,  EFBIG,  ENOLCK,
+       ENOLNK, ENOSR,  ENXIO,  EPIPE,  o  ERANGE.   En  SVr4  una
+       escritura  puede  ser  interrumpida  y  devolver  EINTR en
+       cualquier momento, no sólo justo antes de que  se  escriba
+       algún dato.
+
+VÉASE TAMBIÉN
+       open(2), read(2), fcntl(2), close(2), lseek(2), select(2),
+       ioctl(2), fsync(2), fwrite(3).
+
+
+
+Linux 2.0.32              13 Enero 1996                  WRITE(2)

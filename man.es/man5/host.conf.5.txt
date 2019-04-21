@@ -1,0 +1,88 @@
+HOST.CONF(5)     Administración del Sistema Linux    HOST.CONF(5)
+
+
+
+NOMBRE
+       host.conf  -  fichero  de  configuración del resolvedor de
+       nombres
+
+DESCRIPCIÓN
+       El fichero /etc/host.conf contiene información de configu­
+       ración  específica de la biblioteca del resolvedor de nom­
+       bres de Internet.  Debería contener una palabra  clave  de
+       configuración por cada línea, seguida de la información de
+       configuración apropiada. Las  palabras  clave  reconocidas
+       son  order,  trim, multi, nospoof y reorder.  Cada palabra
+       clave se describe separadamente a continuación.
+
+
+       order  Esta palabra  especifica  cómo  se  efectuarán  las
+              búsquedas   de  nombres  de  ordenadores.  Debe  ir
+              seguida de uno o más métodos de búsqueda, separados
+              por comas.  Métodos válidos son: bind, hosts y nis.
+
+       trim   Esta palabra puede ir repetida. Cada  vez  debe  ir
+              seguida por un solo nombre de dominio, con el punto
+              inicial. Cuando se dé esta palabra,  la  biblioteca
+              resolv+   automáticamente  quitará  el  nombre  del
+              dominio dado del final de cualquier nombre de orde­
+              nador  resuelto a través de DNS.  Esto está pensado
+              para el uso con  ordenadores  y  dominios  locales.
+              (Nota  relacionada:  trim  no afectará a nombres de
+              ordenador adquiridos mediante NIS  ni  mediante  el
+              fichero hosts. Debemos asegurarnos de que el primer
+              nombre de ordenador para cada entrada en el fichero
+              hosts  sea  totalmente  cualificado o no, según sea
+              apropiado para la instalación local.)
+
+       multi  Valores válidos son on y off.  Si está como on,  la
+              biblioteca  resolv+ devolverá todas las direcciones
+              válidas  para  un  ordenador  que  aparezca  en  el
+              fichero /etc/hosts, en vez de solamente la primera.
+              Esto está de forma predeterminada  como  off,  pues
+              puede    provocar   una   sustancial   pérdida   de
+              rendimiento  en  sitios  con  ficheros  hosts   muy
+              grandes.
+
+       nospoof
+              Valores  válidos son on y off.  Si está como on, la
+              biblioteca resolv+  intentará  prevenir  el  ataque
+              conocido  como  suplantación de nombre de ordenador
+              (``hostname spoofing'') para aumentar la  seguridad
+              de  rlogin y rsh.  Funciona de la siguiente manera:
+              tras efectuar una búsqueda de  dirección  de  orde­
+              nador,  resolv+ efectuará una búsqueda de nombre de
+              ordenador para esa dirección. Si los dos nombres no
+              concuerdan, la petición se considerará fallida.
+
+       alert  Si  esta opción está en on y la opción nospoof tam­
+              bién está activada, resolv+ registrará  un  mensaje
+              de  error  a través de syslog. El valor predetermi­
+              nado es off.
+
+       reorder
+              Valores válidos son on y off.   Si  está  como  on,
+              resolv+  intentará  reordenar  direcciones de orde­
+              nador de forma que las locales (o sea,  las  de  la
+              misma  subred) se listen primero cuando se haga una
+              llamada a gethostbyname(3).  El  reordenamiento  se
+              hace  para  todos los métodos de búsqueda. El valor
+              predeterminado es off.
+
+FICHEROS
+       /etc/host.conf
+              Fichero de configuración del resolvedor
+
+       /etc/resolv.conf
+              Fichero de configuración del resolvedor
+
+       /etc/hosts
+              Base de datos local de ordenadores
+
+VÉASE TAMBIÉN
+       gethostbyname(3), hostname(7), resolv+(8), named(8).
+
+
+
+
+Debian/GNU Linux           2 Enero 1997              HOST.CONF(5)

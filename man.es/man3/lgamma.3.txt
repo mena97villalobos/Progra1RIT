@@ -1,0 +1,32 @@
+LGAMMA(3)        Manual del Programador de Linux        LGAMMA(3)
+
+
+
+NOMBRE
+       lgamma - logaritmo de la función Gamma
+
+SINOPSIS
+       #include <math.h>
+
+       double lgamma(double x);
+
+DESCRIPCIÓN
+       La  función lgamma() devuelve el logaritmo del valor abso­
+       luto de la función Gamma. El signo de la función Gamma  se
+       devuelve en el entero externo signgam.
+
+       Para  valores  enteros  negativos  de x, lgamma() devuelve
+       HUGE_VAL y errno toma el valor ERANGE.
+
+ERRORES
+       ERANGE Argumento inválido: valor entero negativo de x.
+
+CONFORME A
+       SVID 3, BSD 4.3
+
+VÉASE TAMBIÉN
+       infnan(3)
+
+
+
+BSD                        2 Marzo 1998                 LGAMMA(3)

@@ -1,0 +1,83 @@
+GETNETENT(3)     Manual del Programador de Linux     GETNETENT(3)
+
+
+
+NOMBRE
+       getnetent,  getnetbyname,  getnetbyaddr, setnetent, endne­
+       tent - obtienen una entrada del fichero de redes
+
+SINOPSIS
+       #include <netdb.h>
+
+       struct netent *getnetent(void);
+
+       struct netent *getnetbyname(const char *nombre);
+
+       struct netent *getnetbyaddr(long red, int tipo);
+
+       void setnetent(int dejaloabierto);
+
+       void endnetent(void);
+
+DESCRIPCIÓN
+       La función getnetent() lee la línea siguiente del  fichero
+       /etc/networks  y  devuelve  una estructura netent que con­
+       tiene  los  campos  descompuestos  correspondientes  a  la
+       línea. El fichero /etc/networks se abre si es necesario.
+
+       La  función  getnetbyname() devuelve una estructura netent
+       correspondiente a la línea de /etc/networks que  concuerde
+       con el nombre de red nombre.
+
+       La  función  getnetbyaddr() devuelve una estructura netent
+       para la línea que concuerde con el número de  red  net  de
+       tipo tipo.
+
+       La   función   setnetent()  abre  y  rebobina  el  fichero
+       /etc/networks.   Si  dejaloabierto   es   verdadero   (1),
+       entonces el fichero no se cerrará entre llamadas a getnet­
+       byname() y getnetbyaddr().
+
+       La función endnetent() cierra /etc/networks.
+
+       La estructura netent se define en <netdb.h> como sigue:
+
+              struct netent {
+                      char    *n_name;          /* nombre oficial de red */
+                      char    **n_aliases;      /* lista de sinónimos */
+                      int     n_addrtype;       /* tipo de dirección de red */
+                      unsigned long int n_net; /* número de red */
+              }
+
+       Los miembros de la estructura netent son:
+
+       n_name El nombre oficial de la red.
+
+       n_aliases
+              Una lista terminada en cero de nombres alternativos
+              para la red.
+
+       n_addrtype
+              El tipo del número de red; siempre es AF_INET.
+
+       n_net  El  número  de  red  en orden de byte del ordenador
+              (``host'').
+
+VALOR DEVUELTO
+       Las funciones getnetent(), getnetbyname() y getnetbyaddr()
+       devuelven  la  estructura  netent,  o  un  puntero NULL si
+       ocurre un error o se llega al final del fichero.
+
+FICHEROS
+       /etc/networks           fichero de datos de redes
+
+CONFORME A
+       BSD 4.3
+       RFC 1101
+
+VÉASE TAMBIÉN
+       getprotoent(3), getservent(3), networks(5)
+
+
+
+BSD                       24 Julio 1993              GETNETENT(3)

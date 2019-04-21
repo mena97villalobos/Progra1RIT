@@ -1,0 +1,45 @@
+FREAD(3)         Manual del Programador de Linux         FREAD(3)
+
+
+
+NOMBRE
+       fread, fwrite - entrada/salida binaria de flujos de datos
+
+SINOPSIS
+       #include <stdio.h>
+
+       size_t  fread(  void *ptr, size_t tam, size_t nmiemb, FILE
+       *flujo);
+
+       size_t fwrite( const void *ptr, size_t tam, size_t nmiemb,
+       FILE *flujo);
+
+DESCRIPCIÓN
+       La  función  fread lee nmiemb elementos de datos, cada uno
+       de tam bytes de largo, del flujo  de  datos  apuntado  por
+       flujo, almacenándolos en el sitio apuntado por ptr.
+
+       La  función fwrite escribe nmiemb elementos de datos, cada
+       uno de tam bytes de largo, al flujo de datos apuntado  por
+       flujo, obteniéndolos del sitio apuntado por ptr.
+
+VALOR DEVUELTO
+       fread  y  fwrite  devuelven  el número de elementos (no de
+       caracteres) leídos o escritos correctamente. Si ocurre  un
+       error  o  se llega al fin-de-fichero, el valor devuelto es
+       un número menor del esperado (o cero).
+
+       fread no distingue entre fin-de-fichero y error,  así  que
+       quien  llame  a  esta  función debe emplear feof(3) y fer­
+       ror(3) para determinar qué ha ocurrido.
+
+VÉASE TAMBIÉN
+       feof(3), ferror(3), read(2), write(2)
+
+CONFORME A
+       Las funciones  fread  y  fwrite  son  conformes  con  ANSI
+       C3.159-1989 (``C ANSI'').
+
+
+
+BSD                       20 Enero 1998                  FREAD(3)

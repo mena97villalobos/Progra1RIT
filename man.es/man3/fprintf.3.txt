@@ -1,0 +1,342 @@
+PRINTF(3)        Manual del Programador de Linux        PRINTF(3)
+
+
+
+NOMBRE
+       printf,  fprintf,  sprintf,  vprintf, vfprintf, vsprintf -
+       conversión de salida formateada
+
+SINOPSIS
+       #include <stdio.h>
+
+       int printf(const char *format, ...);
+       int fprintf(FILE *stream, const char *format, ...);
+       int sprintf(char *str, const char *format, ...);
+       int snprintf(char *str, size_t size, const  char  *format,
+       ...);
+
+       #include <stdarg.h>
+
+       int vprintf(const char *format, va_list ap);
+       int  vfprintf(FILE  *stream,  const  char *format, va_list
+       ap);
+       int vsprintf(char *str, const char *format, va_list ap);
+       int vsnprintf(char *str, size_t size, const char  *format,
+       va_list ap);
+
+DESCRIPCIÓN
+       La  familia  de  funciones  printf  produce  una salida de
+       acuerdo a format como se describe abajo.  Printf y vprintf
+       escriben  su salida a stdout, el flujo de salida estándar;
+       fprintf y vfprintf escriben su salida al stream de  salida
+       dado;  sprintf,  snprintf, vsprintf y vsnprintf escriben a
+       una cadena de caracteres str.
+
+       Todas estas funciones escriben la salida bajo  el  control
+       de  una  cadena  format que especifica cómo los argumentos
+       posteriores  (o  los  argumentos  accedidos  mediante  las
+       facilidades de argumentos de longitud variables proporion­
+       adss por stdarg(3)) son convertidos para su salida.
+
+       Estas funciones devuelven el número de caracteres impresos
+       (no  incluyendo  el  carácter  `\0' usado para terminar la
+       salida de cadenas).  snprintf y vsnprintf no escriben  más
+       de  size bytes (incluyendo el carácter terminador '\0'), y
+       devuelven -1 si la salida se ha  truncado  debido  a  esta
+       limitación.   (Así  es  hasta  la  versión 2.0.6 de glibc.
+       Desde la versión 2.1  la  función  vsnprintf  devuelve  el
+       número  de  caracteres  (excluyendo el carácter terminador
+       '\0') que se habrían escrito en la cadena final si hubiera
+       habido suficiente espacio.)
+
+       La  cadena format está compuesta de cero o más directivas:
+       caracteres ordinarios (no %)- que se copian sin cambios al
+       flujo de salida, e indicaciones de conversión, cada una de
+       las cuales produce la búsqueda de cero  o  más  argumentos
+       posteriores.  Cada  especificación de conversión se intro­
+       duce mediante el carácter %.  Los argumentos deben  corre­
+       sponder  adecuadamente (tras la promoción de tipos) con el
+       indicador de conversión. Después de %, los siguientes car­
+       acteres pueden aparecer en secuencia:
+
+       ·      Cero o más de las siguientes banderas:
+
+              #      indica que el valor debe ser convertido a un
+                     ``formato alternativo''.  Para  las  conver­
+                     siones c, d, i, n, p, s, y u, esta opción no
+                     tiene  efecto.  Para  la  conversión  o,  se
+                     incrementa  la  precisión  del  número  para
+                     hacer que el primer carácterer de la  cadena
+                     de salida sea cero (excepto si se imprime el
+                     valor cero con una  precisión  explícita  de
+                     cero).   Para  las  conversiones  x  y X, la
+                     cadena `0x' (o `0X' para  conversiones  X  )
+                     precede  a  los resultados que son distintos
+                     de 0.  Para las conversiones e, E, f,  g,  y
+                     G,  el resultado contendrá un punto decimal,
+                     aún si ningún dígito lo sigue  (normalmente,
+                     sólo  aparece  un punto decimal en el resul­
+                     tado  de  aquellas  conversiones   que   son
+                     seguidas  de algún dígito). Para las conver­
+                     siones g y G, en el resultado no se eliminan
+                     los  ceros del final, como ocurriría en otro
+                     caso.
+
+              0      indica el relleno con ceros. Para todas  las
+                     converiones excepto para n, el valor conver­
+                     tido es rellenado a la izquierda  con  ceros
+                     en  vez  de  blancos.   Si en una conversión
+                     numérica (d, i, o, u, x, y X), se indica una
+                     precisión, la bandera 0 se ignora.
+
+              -      (una  bandera  de  ancho  de campo negativo)
+                     indica que el valor convertido  es  justifi­
+                     cado  a  la  izquierda  sobre  el límite del
+                     campo. Excepto para conversiones n, el valor
+                     convertido  es  rellenado  a  la derecha con
+                     blancos, en vez de a la izquierda con  blan­
+                     cos  o  ceros.  Un - sobreescribe un 0 si se
+                     indican ambos.
+
+                     (un espacio) indica que  se  debe  dejar  un
+                     espacio en blanco delante de un número posi­
+                     tivo producido por una conversión  de  signo
+                     (d, e, E, f, g, G, o i).
+
+              +      indica  que  siempre  se  colocará  el signo
+                     delante de un número producido por una  con­
+                     versión  con  signo.   Un  + sobreescribe un
+                     espacio si se usan ambos.
+
+              '      indica que en un argumento numérico la  sal­
+                     ida  va  a ser agrupada si la información de
+                     localización así lo indica. Dése cuenta  que
+                     muchas  versiones  de gcc no pueden analizar
+                     esta opción y producirán un "warning".
+
+       ·      Una cadena de dígitos  decimales  opcionales  indi­
+              cando un ancho de campo mínimo. Si el valor conver­
+              tido tiene menos caracteres que el ancho del campo,
+              se  rellenará  con  espacios a la izquierda (o a la
+              derecha si se ha indicado la  bandera  de  justifi­
+              cación  a  la  izquierda) para abarcar el ancho del
+              campo.
+
+       ·      Una precisión opcional, indicada por un punto (`.')
+              seguido por una cadena de dígitos también opcional.
+              Si se omite la cadena de dígitos, la  precisión  se
+              toma como cero. Esto da el número mínimo de dígitos
+              que deben aparecer en las conversiones d, i, o,  u,
+              x,  y  X,  el  número de dígitos que deben aparacer
+              tras el punto decimal en las conversiones e,  E,  y
+              f,  el máximo número de dígitos significativos para
+              las conversiones g y G, o el máximo número de  car­
+              acteres  a  imprimir  de  una cadena en las conver­
+              siones s
+
+       ·      El carácter opcional h, que indica que la siguiente
+              conversión  d,  i,  o,  u, x, o X corresponden a un
+              argumento short int o unsigned short int, o que  la
+              siguiente  conversión  n corresponde a un puntero a
+              un argumento short int
+
+       ·      El caracter opcional l (ele) indica  que  la  sigu­
+              iente  conversión d, i, o, u, x, o X se aplica a un
+              puntero a un argumento long  int  o  unsigned  long
+              int, que la siguiente conversión n corresponde a un
+              puntero a un argumento long int.  Linux proporciona
+              un uso no conforme a ANSI de dos banderas l como un
+              sinónimo de q o L.  Así ll se puede  usar  junto  a
+              las  conversiones  de  coma  flotante.  Sin embargo
+              este uso es fuertemente desaconsejado.
+
+       ·      El carácter L especifica que la  siguiente  conver­
+              sión  e,  E,  f,  g, o G corresponde a un argumento
+              long double, o que la siguiente conversión d, i, o,
+              u,  x,  o  X  corresponden a un argumento long long
+              Dése cuenta que long long no está  especificado  en
+              el  ANSI C y, por consiguiente, no es trasladable a
+              todas las arquitecturas.
+
+       ·      El carácter opcional q.  Es equivalente a  L.   Vea
+              las  secciones ESTÁNDARES Y FALLOS para comentarios
+              acerca del uso de ll, L, y q,
+
+       ·      Un carácter Z especificando que la  siguiente  con­
+              versión  de  enteros  (d,  i, o, u, x, o X), corre­
+              sponde a un argumento size_t.
+
+       ·      Un carácter que especifica el tipo de conversión  a
+              ser aplicado.
+
+       Se  puede  indicar  un  ancho  de campo o una precisión, o
+       ambos, mediante un asterisco `*' en lugar de una cadena de
+       dígitos.  En  este  caso,  un  argumento int suministra el
+       ancho de campo o la precisión. Un ancho de campo  negativo
+       se  trata  como  una bandera de justificado a la izquierda
+       seguida por un ancho de campo positivo; una precisión neg­
+       ativa se trata como si no se hubiese indicado.
+
+       Los indicadores de conversión y sus significados son:
+
+       diouxX El argumento int ( o la variante apropiada) es con­
+              vertida a un decimal con signo (d y i), a octal sin
+              signo (o, a decimal sin signo (u, a a notación hex­
+              adecimal sin signo (x y X).  Las letras abcdef  son
+              usadas  para  conversiones x; las letras ABCDEF son
+              usadas para conversiones X.  La precisión, si se ha
+              indicado alguna, da el mínimo número de dígitos que
+              deben aparecer; si  el  valor  convertido  requiere
+              menos dígitos, éste es rellenado a la izquierda con
+              ceros.
+
+       eE     El argumento double es redondeado y  convertido  al
+              formato [-]d.dddedd donde hay un dígito delante del
+              carácter del punto decimal y el número  de  dígitos
+              después  de  éste es igual a la precisión; si no se
+              indica precisión, ésta es tomada como 6; si la pre­
+              cisión  es  cero,  no  aparece el carácter de punto
+              decimal. Una conversión E usa la letra E (  en  vez
+              de  e)  para  introducir el exponente. El exponente
+              siempre contiene al menos dos dígitos; si el  valor
+              es cero, el exponente es 00.
+
+       f      El  argumento  double  es redondeado y convertido a
+              una notación decimal del estilo  [-]ddd.ddd,  donde
+              el número de dígitos después del carácter del punto
+              decimal es igual a la  especificación  de  la  pre­
+              cisión.  Si  no se indica precisión, ésta es tomada
+              como 6; si la precisión es explícitamente cero,  no
+              aparece  el  carácter del punto decimal. Si aparece
+              un  punto  decimal,  al  menos  aparece  un  dígito
+              delante de él.
+
+       g      El  argumento double es convertido al estilo de f o
+              e (o E para conversiones G ). La precisión  especi­
+              fica el número de dígitos significativos.  Si no se
+              indica precisión, se dan 6 dígitos; si la precisión
+              es cero, ésta es tratada como 1. Se utiliza el for­
+              mato de e si el exponente de su conversión es menor
+              que  -4  o  más  grande o igual a la precisión. Los
+              ceros finales se eliminan de  la  parte  fraccional
+              del  resultado; un punto decimal sólo aparece si es
+              seguido de al menos un dígito.
+
+       c      El argumento int es convertido a un unsigned  char,
+              y se escribe el carácter resultante.
+
+       s      Se  espera  que el argumento ``char *'' sea un pun­
+              tero a un arreglo (array) de tipo carácter (puntero
+              a una cadena de caracteres). Se escriben caracteres
+              del array hasta (pero no  incluyendo)  un  carácter
+              terminador NUL ; si se especifica una precisión, no
+              se escriben más caracteres del número especificado.
+              Si  se  da  una  precisión,  no  es  necesario  que
+              aparezca ningún carácter nulo; si  no  especificada
+              precisión,  o  es mayor que el tamaño de la cadena,
+              la cadena debe contener un carácter de  terminación
+              NUL.
+
+       p      El  argumento de tipo puntero ``void *'' se imprime
+              en hexadecimal (como si se hubiera indicado  %#x  o
+              %#lx).
+
+       n      El  número  de  caracteres  escritos hasta ahora se
+              guarda en el entero indicado por  el  argumento  de
+              tipo puntero ``int *'' (o una variante suya). No se
+              convierte ningún argumento.
+
+       %      Se escribe un `%'. No  se  convierte  ningún  argu­
+              mento.  La especificación completa de conversión es
+              `%%'.
+
+       En ningún caso un ancho de  campo  pequeño  o  inexistente
+       produce  el truncamiento del campo; si el resultado de una
+       conversión es más ancho que el campo, el campo se  expande
+       para contener el resultado convertido.
+
+
+EJEMPLOS
+       Para  imprimir  una  fecha y una hora de la forma `Sunday,
+       July 3, 10:02', donde weekday y month son punteros a cade­
+       nas:
+              #include <stdio.h>
+              fprintf(stdout, "%s, %s %d, %.2d:%.2d\n",
+                   weekday, month, day, hour, min);
+
+       Para imprimir con cinco lugares decimales:
+              #include <math.h>
+              #include <stdio.h>
+              fprintf(stdout, "pi = %.5f\n", 4 * atan(1.0));
+
+       Para reservar una cadena de 128 bytes e imprimir dentro de
+       ella:
+              #include <stdio.h>
+              #include <stdlib.h>
+              #include <stdarg.h>
+              char *newfmt(const char *fmt, ...)
+              {
+                        char *p;
+                        va_list ap;
+                        if ((p = malloc(128)) == NULL)
+                             return (NULL);
+                        va_start(ap, fmt);
+                        (void) vsnprintf(p, 128, fmt, ap);
+                        va_end(ap);
+                        return (p);
+              }
+
+VÉASE TAMBIÉN
+       printf(1), scanf(3)
+
+ESTÁNDARES
+       Las funciones fprintf, printf, sprintf, vprintf, vfprintf,
+       y vsprintf están conforme a ANSI C3.159-1989 (``ANSI C'').
+       La bandera q es la notación de BSD  4.4  para  long  long,
+       mientras  que  ll  o  el  uso  de L en las conversiones de
+       enteros es la notación GNU.
+
+       La versión de Linux de estas funciones está basada  en  la
+       biblioteca  libio  de  GNU.   Eche  un  vistazo a la docu­
+       mentación info de la libc (glibc-1.08)  de  GNU  para  una
+       descripción más concisa.
+
+
+FALLOS
+       Algunas  conversiones de coma flotante bajo Linux producen
+       pérdidas de memoria.
+
+       Todas las funciones cumplen completamente el estándar ANSI
+       C3.159-1989,  aunque  adicionalmente proporcionan las ban­
+       deras q, Z y ' así como el comportamiento adicional de las
+       banderas  L  y l.  Esto último se puede considerar como un
+       fallo, ya que cambia el  comportamiento  de  las  banderas
+       definidas en ANSI C3.159-1989.
+
+       El efecto de relleno del formato %p con ceros (bien por la
+       bandera 0, bien  por  especificar  una  precisión),  y  el
+       efecto  benigno (es decir, ninguno) de la bandera # en las
+       las conversiones %n y %p, así como las  combinaciones  sin
+       sentido  de las mismas, no son estándares; dichas combina­
+       ciones debe ser evitadas.
+
+       Algunas combinaciones de banderas definidas por ANSI C  no
+       tienen sentido (por ejemplo, %Ld).  Aunque pueden tener un
+       comportamiento bien definido en Linux, esto no  tiene  por
+       qué ser así en otras arquitecturas. Por tanto, normalmente
+       es mejor  no  usar  en  absoluto  banderas  que  no  estén
+       definidas en ANSI C, o sea, usar q en lugar de L en combi­
+       nación con las conversiones diouxX o ll.
+
+       El uso de q no es el mismo que en BSD 4.4,  ya  que  puede
+       ser  utilizado  en  conversiones de coma flotante de forma
+       equivalente a L.
+
+       Ya que sprintf y vsprintf asumen una  cadena  de  longitud
+       infinita,  los  invocadores  deben  tener  cuidado  de  no
+       sobrepasar el espacio actual; a menudo, esto es  imposible
+       de garantizar.
+
+
+
+Linux                     28 Enero 1996                 PRINTF(3)

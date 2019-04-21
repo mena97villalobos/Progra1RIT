@@ -1,0 +1,28 @@
+WATCH(1)           Manual del Progrmador Linux           WATCH(1)
+
+
+
+NOMBRE
+       watch  -  muestra  un  programa  con intervalos de actual­
+       ización
+
+SINOPSIS
+       watch [-n] segundos programa [ argumentos ...  ]
+
+DESCRIPCIÓN
+       watch es un programa basado en curses (3) que  le  permite
+       mostrar un programa mientras cambia. Por defecto, se actu­
+       aliza  el solo  cada  2  segundos.  Puede  especificar  el
+       número  de  segundos con la opción -n. Los paquetes curses
+       permiten una actualización rápida de la pantalla  mediante
+       la   optimización  del  cursor. El programa finalizará con
+       una interrupción de teclado, que dejará la pantalla en  un
+       estado limpio y válido.
+
+
+AUTORES
+       watch lo escribió Tony Rems <rembo@unisoft.com>
+
+
+
+Linux                   2 Septiembre 1997                WATCH(1)

@@ -1,0 +1,194 @@
+DUMPKEYS(1)                                           DUMPKEYS(1)
+
+
+
+NOMBRE
+       dumpkeys - vuelca las tablas de traducción de teclado
+
+SINOPSIS
+       dumpkeys    [   -hilfn   -cconjunto-de-caracteres   --help
+       --short-info    --long-info     --numeric     --full-table
+       --funcs-only   --keys-only  --compose-only  --charset=con­
+       junto-de-caracteres ]
+
+DESCRIPCIÓN
+       dumpkeys escribe, en la salida  estándar,  los  contenidos
+       actuales  de  las  tablas de traducción del controlador de
+       teclado, en el formato especificado por keymaps(5).
+
+       Mediante el empleo de varias opciones, se puede  controlar
+       el  formato  de  la salida y también se puede obtener otra
+       información del núcleo y de los  programas  dumpkeys(1)  y
+       loadkeys(1).
+
+OPCIONES
+       -h --help
+              Muestra  el  número  de  versión  del programa y un
+              sucinto mensaje sobre el modo de empleo en la  sal­
+              ida de error estándar del programa, y acaba.
+
+       -i --short-info
+              Muestra  algunas características del controlador de
+              teclado del núcleo. Los elementos que  se  muestran
+              son:
+
+              El  rango  de  códigos  de  teclas  admitido por el
+              núcleo
+
+                     Esto dice qué valores se pueden emplear tras
+                     la palabra reservada keycode en los ficheros
+                     de tablas  de  teclas.  Consulte  keymaps(5)
+                     para  obtener  más información y la sintaxis
+                     de estos ficheros.
+
+              Número de acciones asociables a una tecla
+
+                     Esto dice cuántas acciones diferentes  puede
+                     efectuar  una  tecla empleando varias teclas
+                     modificadoras. Si el valor es 16  por  ejem­
+                     plo,  uno  puede  definir  hasta 16 acciones
+                     diferentes para una tecla combinada con mod­
+                     ificadores. Cuando el valor es 16, probable­
+                     mente el núcleo conoce cuatro teclas modifi­
+                     cadoras,  que  se pueden presionar en difer­
+                     entes combinaciones junto con la tecla  para
+                     acceder a todas las acciones asociadas.
+
+              Rangos de códigos de acción admitidos por el núcleo
+
+                     Este elemento contiene una lista  de  rangos
+                     de códigos de acciones en notación hexadeci­
+                     mal.  Éstos  son  los  valores  que   pueden
+                     emplearse en la parte derecha de una defini­
+                     ción de tecla; esto  es,  las  uves  en  una
+                     línea
+
+                             keycode xx = vv vv vv vv
+
+                     (consulte keymaps(5) para obtener más infor­
+                     mación sobre el formato  de  las  líneas  de
+                     definición  de teclas).  dumpkeys(1) y load­
+                     keys(1) admiten una notación simbólica,  que
+                     es  preferible a la numérica, puesto que los
+                     códigos de acción pueden variar de núcleo  a
+                     núcleo  mientras  que los nombres simbólicos
+                     permanecen igual normalmente.  Sin  embargo,
+                     la  lista  de rangos de códigos de acción se
+                     puede emplear para determinar si  el  núcleo
+                     realmente  admite todos los símbolos conoci­
+                     dos por loadkeys(1), o hay  por  ahí  quizás
+                     algunas acciones admitidas por el núcleo que
+                     no tienen nombre simbólico  en  su  programa
+                     loadkeys(1).   Para ver esto, uno compara la
+                     lista de rangos con la lista de símbolos  de
+                     acción, vea la opción --long-info abajo.
+
+              Número  de  teclas  de  función  soportadas  por el
+              núcleo
+
+                     Esto dice el número de códigos de acción que
+                     pueden  emplearse para sacar cadenas de car­
+                     acteres. Estos códigos de acción se  asocian
+                     tradicionalmente  a  las teclas de función y
+                     edición del teclado y se definen para enviar
+                     secuencias   de   escape  normalizadas.  Sin
+                     embargo, uno  puede  redefinirlas  para  que
+                     envíen  líneas  de  órdenes  usuales, direc­
+                     ciones de  correo  electrónico  o  cualquier
+                     cosa  que  a uno se le ocurra. Especialmente
+                     si el número de este elemento es  mayor  que
+                     el  de  teclas  de  función  y edición de su
+                     teclado, uno  puede  tener  algunos  códigos
+                     "sobrantes"  de  acción  que puede asociar a
+                     combinaciones AltGr-letra, por ejemplo, para
+                     enviar  algunas  cadenas  de  caracteres  de
+                     utilidad.  Consulte  loadkeys(1)  para   más
+                     detalles.
+
+              Cadenas de función
+
+                     Uno  puede  ver las definiciones actuales de
+                     las teclas de función con la orden
+
+                             dumpkeys --funcs-only
+
+
+
+       -l --long-info
+              Esta opción le dice a dumpkeys que muestre un  lis­
+              tado  largo  de  información. La salida es la misma
+              que con la opción --short-info con la añadidura  de
+              la  lista de símbolos de acción admitidos por load­
+              keys(1) y dumpkeys(1), además de  con  los  valores
+              numéricos de los símbolos.
+
+
+       -n --numeric
+              Esta  opción  hace que dumpkeys se salte la conver­
+              sión de valores de código de acción a  la  notación
+              simbólica  y que los muestre en su lugar en el for­
+              mato hexadecimal.
+
+
+       -f --full-table
+              Esto hace que dumpkeys se salte  todos  los  atajos
+              heurísticos  (vea keymaps(5)) y muestre las asocia­
+              ciones de teclas en la forma canónica.  Primero  se
+              presenta una línea de mapas de teclado describiendo
+              las combinaciones  definidas  actualmente.  Después
+              para cada tecla se muestra una fila con una columna
+              por cada combinación con modificador. Por  ejemplo,
+              si  el  mapa  de teclado actual en uso emplea siete
+              modificadores, cada fila tendrá siete  columnas  de
+              código  de  acción. Este formato puede ser útil por
+              ejemplo para programas que post-procesen la  salida
+              de dumpkeys.
+
+
+       --funcs-only
+              Cuando se da esta opción, dumpkeys sólo muestra las
+              definiciones de cadenas de caracteres de las teclas
+              de  función.  Normalmente  dumpkeys  muestra  tanto
+              éstas como las asociaciones de teclas.
+
+
+       --keys-only
+              Cuando se da esta opción, dumpkeys sólo muestra las
+              asociaciones  de teclas. Normalmente dumpkeys mues­
+              tra tanto éstas como las definiciones de cadenas.
+
+
+       --compose-only
+              Cuando se da esta opción, dumpkeys sólo muestra las
+              combinaciones  con  la tecla Componer.  Esta opción
+              sólo está disponible si  su  núcleo  tiene  soporte
+              para la tecla Componer.
+
+
+       -cconjunto-de-caracteres  --charset=conjunto-de-caracteres
+              Esto  instruye a dumpkeys a que interprete los val­
+              ores de códigos de caracteres  de  acuerdo  con  el
+              conjunto  de  caracteres  especificado. Esto afecta
+              solamente a la traducción de valores de códigos  de
+              caracteres  a nombres simbólicos. Los valores váli­
+              dos para conjunto-de-caracteres son en la  actuali­
+              dad iso-8859-X, donde X es un dígito del 1 al 9. Si
+              no se  especifica  conjunto-de-caracteres,  se  usa
+              iso-8859-1.   Esta opción produce una línea de sal­
+              ida `charset "iso-8859-X"', que le dice a  loadkeys
+              cómo  interpretar el mapa de teclado. (Por ejemplo,
+              el signo de división ÷ es 0xf7 en  iso-8859-1  pero
+              0xba en iso-8859-8.)
+
+
+FICHEROS
+       /usr/share/keytables
+                           directorio    recomendado   para   los
+                           ficheros de tablas de teclas
+
+VÉASE TAMBIÉN
+       loadkeys(1), keymaps(5)
+
+
+
+                     1 de Septiembre de 1993          DUMPKEYS(1)

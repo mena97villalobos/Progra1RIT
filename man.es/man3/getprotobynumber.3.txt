@@ -1,0 +1,82 @@
+GETPROTOENT(3)   Manual del Programador de Linux   GETPROTOENT(3)
+
+
+
+NOMBRE
+       getprotoent,   getprotobyname,  getprotobynumber,  setpro­
+       toent, endprotoent - obtienen una entrada del  fichero  de
+       protocolos
+
+SINOPSIS
+       #include <netdb.h>
+
+       struct protoent *getprotoent(void);
+
+       struct protoent *getprotobyname(const char *nombre);
+
+       struct protoent *getprotobynumber(int proto);
+
+       void setprotoent(int dejaloabierto);
+
+       void endprotoent(void);
+
+DESCRIPCIÓN
+       La  función  getprotoent()  lee  la  siguiente  línea  del
+       fichero /etc/protocols y devuelve una estructura  protoent
+       que contiene los campos de que consta la línea. El fichero
+       /etc/protocols se abre si es necesario.
+
+       La función getprotobyname() devuelve una  estructura  pro­
+       toent para la línea de /etc/protocols que concuerde con el
+       nombre de protocolo nombre.
+
+       La función getprotobynumber() devuelve una estructura pro­
+       toent  para la línea que concuerde con el número de proto­
+       colo proto.
+
+       La  función  setprotoent()  abre  y  rebobina  el  fichero
+       /etc/protocols.  Si  dejaloabierto es verdad (1), entonces
+       el fichero no se cerrará entre llamadas a getprotobyname()
+       o a getprotobynumber().
+
+       La función endprotoent() cierra /etc/protocols.
+
+       La estructura protoent se define en <netdb.h> así:
+
+              struct protoent {
+                      char    *p_name;        /* nombre oficial de protocolo */
+                      char    **p_aliases;    /* lista de sinónimos */
+                      int     p_proto;        /* número de protocolo */
+              }
+
+       Los miembros de la estructura protoent son:
+
+       p_name El nombre oficial del protocolo.
+
+       p_aliases
+              Una  lista  terminada  en  cero de nombres alternos
+              para el protocolo.
+
+       p_proto
+              El número del protocolo.
+
+VALOR DEVUELTO
+       Las funciones getprotoent(), getprotobyname() y  getproto­
+       bynumber()  devuelven la estructura protoent, o un puntero
+       NULL si ocurre un  error  o  si  se  llega  al  final  del
+       fichero.
+
+FICHEROS
+       /etc/protocols
+              fichero con los datos de protocolos
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       getservent(3), getnetent(3), protocols(5)
+
+
+
+
+BSD                       29 Enero 1998            GETPROTOENT(3)

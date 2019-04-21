@@ -1,0 +1,35 @@
+IPC(2)           Manual del Programador de Linux           IPC(2)
+
+
+
+NOMBRE
+       ipc - llamadas al sistema de IPC de System V
+
+SINOPSIS
+       int  ipc(unsigned  int  llamada, int primero, int segundo,
+       int tercero, void *ptr, long quinto);
+
+DESCRIPCIÓN
+       ipc es un punto de entrada al núcleo común para  las  lla­
+       madas  IPC  de System V para mensajes, semáforos y memoria
+       compartida.  El argumento llamada determina a qué  función
+       de  IPC se ha de llamar; los otros argumentos se pasan tal
+       cuales a la llamada apropiada.
+
+       Los programas de usuario deberían llamar a  las  funciones
+       apropiadas  por  sus nombres usuales. Sólo los implementa­
+       dores de la biblioteca estándar y los buenos programadores
+       del núcleo necesitan conocer la existencia de ipc.
+
+CONFORME A
+       ipc es específica de Linux, y no debería emplearse en pro­
+       gramas pretendidamente transportables.
+
+VÉASE TAMBIÉN
+       msgctl(2),  msgget(2),  msgrcv(2),  msgsnd(2),  semctl(2),
+       semget(2),   semop(2),   shmat(2),   shmctl(2),  shmdt(2),
+       shmget(2)
+
+
+
+Linux 1.2.4              22 Octubre 1996                   IPC(2)

@@ -1,0 +1,67 @@
+CONFSTR(3)       Manual del Programador de Linux       CONFSTR(3)
+
+
+
+NOMBRE
+       confstr - obtiene variables cadena dependientes de la con­
+       figuración
+
+SINOPSIS
+       #define __USE_POSIX_2
+       #include <unistd.h>
+
+       size_t confstr(int name, char *buf, size_t len);
+
+DESCRIPCIÓN
+       confstr() obtiene el valor de una variable cadena dependi­
+       ente de la configuración.
+
+       El  argumento name es la variable del sistema a ser exami­
+       nada.  Se admiten las siguientes variables:
+
+       _CS_PATH
+              Un valor para la variable  PATH  que  indica  dónde
+              pueden ser encontradas todas las utilidades POSIX.2
+              estándar.
+
+       Si buf no es NULL, y len no es cero,  confstr()  copia  el
+       valor  de la cadena a buf truncado a len - 1 caracteres si
+       es necesario, con un caracter NUL como terminación.   Esto
+       puede ser detectado al comparar el valor devuelto por con­
+       fstr() con len.
+
+       Si len es cero y buf es NULL, confstr() sólo  devuelve  el
+       valor como se define más abajo.
+
+VALOR DEVUELTO
+       Si  name  no  corresponde  a una variable de configuración
+       válida, confstr() devuelve 0.
+
+EJEMPLOS
+       El siguiente fragmento de código determina el camino donde
+       se encuentran las utilidades de sistema POSIX.2:
+
+          char *pathbuf; size_t n;
+
+          n = confstr(_CS_PATH,NULL,(size_t)0);
+          if ((pathbuf = malloc(n)) == NULL) abort();
+          confstr(_CS_PATH, pathbuf, n);
+
+ERRORES
+       Si  el valor de name es inválido, errno toma el valor EIN­
+       VAL.
+
+CONFORME A
+       el propuesto POSIX.2
+
+FALLOS
+       POSIX.2 no es aún un estándar aprobado; la información  de
+       esta página de manual está sujeta a cambio.
+
+VÉASE TAMBIÉN
+       sh(1), exec(2), system(3)
+
+
+
+
+GNU                     25 Diciembre 1995              CONFSTR(3)

@@ -1,0 +1,132 @@
+SHUTDOWN(8)    Manual del Administrador de Sistemas   SHUTDOWN(8)
+
+
+
+NOMBRE
+       shutdown - cierra el sistema.
+
+SINOPSIS
+       /sbin/shutdown [-t sec] [-rkhncfF] time [warning-message]
+
+DESCRIPCIÓN
+       shutdown  cierra  el  sistema  de  modo  seguro. Todos los
+       usuarios conectados son notificados de que el  sistema  se
+       está  cerrando, y login(1) es bloqueado. Es posible cerrar
+       al sistema inmediatamente o tras una  pausa  especificada.
+       Todos  los  procesos  son notificados de que el sistema se
+       está cerrando mediante una señal SIGTERM. Esto  da  a  los
+       programas  como  vi(1) tiempo para guardar el archivo edi­
+       tado, correo y news  realizan  cambios  para  poder  salir
+       limpiamente,  etc.   shutdown hace su trabajo enviando una
+       señal al  proceso  init,  preguntándole  para  cambiar  de
+       nivel.   Runlevel  0 es utilizado para detener el sistema,
+       runlevel 6 es usado para reiniciar el sistema y runlevel 1
+       es usado para poner el sistema en un estado donde las tar­
+       eas administrativas pueden ser  ejecutadas;  esto  es  por
+       defecto si los flags -h o -r son puestos en shutdown. Para
+       ver que acciones son realizadas en parada o rearranque vea
+       las  entradas  apropiadas para estos niveles en el fichero
+       /etc/inittab.
+
+OPCIONES
+       -t seg Indica a init esperar seg segundos entre  el  envío
+              de  las señales de atención y eliminación, antes de
+              cambiar a otro nivel de ejecución.
+
+       -k     No realiza ninguna caída; solo envía el mensaje  de
+              atención a todo el mundo.
+
+       -r     Reinicia después de cerrarlo.
+
+       -h     Detiene el sistema después de cerrarlo.
+
+       -n     [ANULADO]  No  llama a init(8) para hacer la caída,
+              la hace por si mismo. El  uso  de  esta  opción  es
+              desaconsejado,  y  sus  resultados no serán siempre
+              los que esperas.
+
+       -f     Se saltará fsck al reiniciar.
+
+       -F     Fuerza a fsck al reiniciar.
+
+       -c     Cancela una caída en ejecución. Con esta opción  no
+              es  posible  darle  el  argumento time, pero puedes
+              introducir un mensaje explicativo en  la  línea  de
+              comandos que será enviado a todos los usuarios.
+
+       time   Cuando hacer la caída
+
+       warning-message
+              Mensaje enviado a todos los usuarios.
+
+       El   argumento   time  puede  tener  diferentes  formatos.
+       Primero, puede ser un tiempo absoluto en el formato hh:mm,
+       donde  hh son las horas (1 o 2 dígitos) y mm son los minu­
+       tos (en 2 dígitos). Segundo, puede estar en el formato +m,
+       en el cual m es el número de minutos a esperar. La palabra
+       now es sinónimo de +0.
+
+       El flag -f provoca un `arranque rápido'. Solamente crea un
+       archivo  de  aviso  /fastboot que puede ser probado por el
+       sistema la próxima vez. El archivo de  arranque  rc  puede
+       probar  si el fichero existe, y decide no ejecutar fsck(1)
+       mientras se cierra el sistema de esta manera.  Después  de
+       esto, el proceso arranque debe borrar /fastboot.
+
+       El  flag  -F provoca un `obligado fsck'. Solamente crea un
+       archivo de aviso /forcefsck que puede ser probado  por  el
+       sistema  la  próxima  vez. El archivo de arranque rc puede
+       probar si el fichero existe, y decide ejecutar fsck(1) con
+       un  flag  especial de `obligación' para la comprobación de
+       los ficheros de sistema desmontados.  Después de esto,  el
+       proceso de arranque debe borrar forcefsck.
+
+       El  flag  -n  provoca  un shutdown sin llamar a init, pero
+       eliminando todos los procesos  autoejecutables.   shutdown
+       entonces  desconectará  todas las partes, cuentas e inter­
+       cambios y desmontara todos los archivos de sistema.
+
+CONTROL DE ACCESO
+       shutdown puede ser llamado desde init(8) cuando se  pulsen
+       las  teclas  mágicas  CTRL-ALT-DEL,  creando  una  entrada
+       apropiada en /etc/inittab. Esto provoca  que  quien  tenga
+       acceso  físico  a la consola pueda cerrar el sistema. Para
+       prevenir esto, shutdown puede comprobar si  algún  usuario
+       autorizado  esta  conectado  en  alguna  consola  virtual.
+       Sishutdown es llamado  desde  init(8),  comprobará  si  el
+       archivo  /etc/shutdown.allow existe. Comparará los nombres
+       en este fichero con la lista de gente conectada en  conso­
+       las  virtuales (desde /var/run/utmp). Solo si uno de estos
+       usuarios autorizados o el root está conectado,  procederá.
+       Si no es así imprimirá el mensaje
+
+       shutdown: no authorized users logged in
+
+       a   la   consola  del  sistema  (física).  El  formato  de
+       /etc/shutdown.allow es un nombre de usuario por línea.  Se
+       permiten  líneas  vacías y comentarios (precedidos por #).
+       Actualmente hay un límite de 32 usuarios en este  archivo.
+
+ARCHIVOS
+       /fastboot
+       /etc/inittab
+       /etc/init.d/halt
+       /etc/init.d/reboot
+       /etc/shutdown.allow
+
+ERRORES
+       En  realidad  no  hay errores, pero la mayoría de usuarios
+       olvidan dar el argumento time y se quedan a cuadros con el
+       mensaje de error que shutdown genera. El argumento time es
+       obligatorio; en el 90 por ciento de los casos será la pal­
+       abra now.
+
+AUTOR
+       Miquel van Smoorenburg, miquels@cistron.nl
+
+VÉASE TAMBIÉN
+       fsck(8), init(1), halt(8), reboot(8)
+
+
+
+Linux                   26 noviembre 1997             SHUTDOWN(8)

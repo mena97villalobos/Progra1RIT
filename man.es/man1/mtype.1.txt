@@ -1,0 +1,82 @@
+MTYPE(1)         Manual del programador de Linux         MTYPE(1)
+
+
+
+NOMBRE
+       mtype - muestra el contenido de un fichero MSDOS
+
+
+NOTA
+       Esta  página  de manual ha sido generada automáticamente a
+       partir de la documentación texinfo de mtools. Sin embargo,
+       el  proceso  es sólo aproximado, y algunos elementos tales
+       como referencias cruzadas, notas  al  pie  e  índices,  se
+       pierden  en  este  proceso de traducción.  De hecho, estos
+       elementos no tienen una representación adecuada en el for­
+       mato  de  las  páginas del manual. Por otra parte, sólo se
+       han traducido los elemntos específicos de cada comando,  y
+       se  ha  desechado de la versión de la página del manual la
+       información general de mtools. Por este motivo,  le  aviso
+       encarecidamente que use el documento texinfo original.
+
+       *      Para generar un copia imprimible del documento tex­
+       info use los siguientes comandos:
+
+                     ./configure; make dvi; dvips mtools.dvi
+
+
+
+       *      Para generar una copia html, ejecute:
+
+                     ./configure; make html
+
+              Puede   encontrar   un  html  preconfeccionado  en:
+              `http://linux.wauug.org/pub/knaff/mtools'
+
+       *      Para generar un copia info (visualizable usando  el
+              modo info de emacs), ejecute:
+
+                     ./configure; make info
+
+
+
+       El documento texinfo parece más bonito en html o cuando se
+       imprime. De hecho, la versión info contiene ciertos ejemp­
+       los que son difíciles de leer debido a las convenciones de
+       notación usadas en info.
+
+
+DESCRIPCIÓN
+       El comando mtype se usa para mostrar los contenidos de los
+       ficheros MSDOS. Su sintaxis es:
+
+       mtype [-ts] ficheromsdos [ ficheromsdos... ] .)l
+
+
+       Mtype muestra el fichero MS-DOS indicado en la pantalla.
+
+       Además  de  las opciones estándar, Mtype permite las sigu­
+       ientes opciones en la línea de comandos:
+
+       t      Ver ficheros de texto.  Mtype traduce las  entradas
+              "retorno de carro"/"avance de linea" por un "avance
+              de línea".
+
+       s      Mtype elimina el bit alto de los datos.
+
+       El comando mcd se puede usar para establecer  el  disposi­
+       tivo  y  el  directorio de trabajo actual (relativo a  MS-
+       DOS), en otro caso el valor por defecto es  A:/.
+
+       Mtype devuelve 0 si termina de forma correcta, 1  en  caso
+       de fallo total, ó 2 en el caso de fallo parcial.
+
+       A  diferencia  de la versión MS-DOS de TYPE, mtype permite
+       múltiples argumentos.
+
+VÉASE TAMBIÉN
+       Documentos texinfo de Mtools
+
+
+
+mtools-3.7                29 Junio 1997                  MTYPE(1)

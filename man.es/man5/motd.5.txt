@@ -1,0 +1,27 @@
+MOTD(5)            Manual del Programador Linux           MOTD(5)
+
+
+
+NOMBRE
+       motd - mensaje del día
+
+DESCRIPCIÓN
+       login(1)   muestra  el  contenido  del  fichero  /etc/motd
+       después de un inicio de  sesión  (login)  con  éxito  pero
+       justo  antes  de  que ejecute el intérprete de comandos de
+       entrada al sistema.
+
+       "motd" significa "message of the day" (mensaje del día) y,
+       tradicionalmente,  este fichero se ha utizado para exacta­
+       mente eso (necesita muchos menos espacio de disco  que  un
+       correo a todos los usuarios).
+
+FICHEROS
+       /etc/motd
+
+VÉASE TAMBIÉN
+       login(1), issue(5)
+
+
+
+Linux                   29 Diciembre 1992                 MOTD(5)

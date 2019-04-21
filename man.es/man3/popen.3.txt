@@ -1,0 +1,94 @@
+POPEN(3)         Manual del Programador de Linux         POPEN(3)
+
+
+
+NOMBRE
+       popen, pclose - E/S de procesos
+
+SINOPSIS
+       #include <stdio.h>
+
+       FILE *popen(const char *orden, const char *tipo);
+
+       int pclose(FILE *flujo);
+
+DESCRIPCIÓN
+       La  función popen() inicia un proceso creando una tubería,
+       llamando a fork(2) para crear el proceso y  ejecutando  el
+       intérprete de comandos (shell).  Puesto que una tubería es
+       unidireccional por  definición,  el  argumento  tipo  sólo
+       puede  especificar  lectura o escritura, pero no ambos; el
+       flujo resultante es respctivamente de lectura o  escritura
+       exclusiva.
+
+       El argumento orden es un puntero a una cadena terminada en
+       cero que contiene una línea de orden del shell. Esta orden
+       se  pasa  a /bin/sh precedida de la opción -c; si se nece­
+       sita interpretar la línea, esto lo hace el shell. El argu­
+       mento  tipo  es  un puntero a una cadena terminada en cero
+       que debe ser o "r" para lectura o "w" para escritura.
+
+       El valor devuelto por popen() es un flujo  normal  de  E/S
+       estándar  a  todos  los efectos salvo en que debe cerrarse
+       con pclose() en vez de con  fclose().   Escribir  a  dicho
+       flujo  significa  escribir  en  la  entrada estándar de la
+       orden; la salida estándar de la orden es la misma  que  la
+       del  proceso  que  llamó  a popen(), a menos que la propia
+       orden modifique esto. De modo análogo, leer de un flujo de
+       `popen'  implica leer de la salida estándar de la orden, y
+       la entrada estándar de la orden es la  misma  que  la  del
+       proceso que llamó a popen.
+
+       Observe  que  los  flujos de salida de popen son completa­
+       mente tamponados (buffered) de forma predeterminada.
+
+       La función pclose espera que el proceso asociado  termine,
+       y  devuelve  el  estado  de  salida  de  la  orden como el
+       devuelto por wait4.
+
+VALOR DEVUELTO
+       La función popen devuelve NULL si las llamadas a fork(2) o
+       a pipe(2) fallan, o si no puede reservar memoria.
+
+       La función pclose devuelve -1 si wait4 devuelve un error o
+       se detecta algún otro error.
+
+ERRORES
+       La función popen no asigna un valor a errno  si  falla  la
+       reserva  de memoria. Si las funciones subyacentes fork() o
+       pipe() fallan, a errno se le asigna un valor apropiado. Si
+       el  argumento  mode es incorrecto y se detecta esta condi­
+       ción, a errno se le asigna el valor EINVAL.
+
+       Si pclose() no puede obtener el estado del hijo, se asigna
+       a errno el valor ECHILD.
+
+CONFORME A
+       POSIX.2
+
+FALLOS
+       Puesto  que  la entrada estándar de una orden abierta para
+       lectura comparte su puntero de posición con el proceso que
+       llamó  a popen(), si el proceso original ha hecho una lec­
+       tura tamponada, la posición en  la  entrada  de  la  orden
+       puede  no  ser la esperada. De forma similar, la salida de
+       una orden abierta para escritura puede  resultar  mezclada
+       con  la  del  proceso original. Esto último puede evitarse
+       llamando a fflush(3) antes de a popen.
+
+       Un fallo al ejecutar el  shell  es  indistinguible  de  un
+       fallo del shell al ejecutar la orden, o una salida inmedi­
+       ata de la orden. La única pista es  un  estado  de  salida
+       127.
+
+HISTORIA
+       Una  función  popen()  y otra pclose() apareció en UNIX de
+       AT&T Versión 7.
+
+VÉASE TAMBIÉN
+       fork(2), sh(1), pipe(2), wait4(2),  fflush(3),  fclose(3),
+       fopen(3), stdio(3), system(3).
+
+
+
+BSD                        7 Mayo 1998                   POPEN(3)

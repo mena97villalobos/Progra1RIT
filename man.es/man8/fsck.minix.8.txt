@@ -1,0 +1,126 @@
+FSCK(8)          Manual del Programador de Linux          FSCK(8)
+
+
+
+NOMBRE
+       fsck.minix - un comprobador de consistencia de sistemas de
+       ficheros Minix para Linux
+
+SINOPSIS
+       fsck.minix [ -larvsmf ] dispositivo
+
+DESCRIPCIÓN
+       fsck.minix realiza una comprobación de  consistencia  para
+       el  sistema  de ficheros MINIX de Linux. La versión actual
+       admite las opciones de nombre de fichero de 14  caracteres
+       y de 30 caracteres.
+
+       El  programa  supone que el sistema de ficheros está inac­
+       tivo.  fsck.minix no debería emplearse en  un  dispositivo
+       montado  a  menos  que  Ud.  esté seguro de que nadie está
+       escribiendo en él (y recuerde que el núcleo puede escribir
+       en él cuando busca ficheros).
+
+       El dispositivo tendrá usualmente la forma siguiente:
+              /dev/hda[1-63] (disco IDE 1)
+              /dev/hdb[1-63] (disco IDE 2)
+              /dev/sda[1-15] (disco SCSI 1)
+              /dev/sdb[1-15] (disco SCSI 2)
+
+       Si  el  sistema  de ficheros sufrió algún cambio (esto es,
+       fue reparado), entonces fsck.minix mostrará la frase "FILE
+       SYSTEM HAS CHANGED" ("el sistema de ficheros ha cambiado")
+       y hará un sync(2) tres veces antes de  salir.  Puesto  que
+       Linux  actualmente  no tiene dispositivos "crudos", no hay
+       necesidad de rearrancar en este momento (lo  contrario  de
+       un sistema que sí tenga dispositivos "crudos").
+
+AVISO
+       fsck.minix  no debería emplearse en un sistema de ficheros
+       montado. Usar fsck.minix en un sistema de ficheros montado
+       es  muy peligroso, debido a la posibilidad de que ficheros
+       borrados estén todavía en uso, ¡y  se  puede  dañar  seri­
+       amente  un  sistema de ficheros en perfecto estado! Si Ud.
+       tiene la absoluta necesidad de ejecutar fsck.minix  en  un
+       sistema  de ficheros montado (i.e., el sistema de ficheros
+       raíz), asegúrese de que nada está escribiendo en el disco,
+       y que no hay ficheros "zombis" esperando su borrado.
+
+OPCIONES
+       -l     Lista todos los nombres de fichero
+
+       -r     Efectúa reparaciones interactivas
+
+       -a     Efectúa   reparaciones   automáticas  (esta  opción
+              implica -r), y sirve para contestar todas las  pre­
+              guntas con la respuesta predeterminada. Observe que
+              esto puede ser extremadamente peligroso en el  caso
+              de daños extensos en el sistema de ficheros.
+
+       -v     Prolijo
+
+       -s     Muestra información del súper-bloque
+
+       -m     Activa  los  avisos  al  estilo  de  MINIX "modo no
+              limpiado"
+
+       -f     Fuerza la  comprobación  del  sistema  de  ficheros
+              incluso  si el sistema de ficheros fue marcado como
+              válido (esta marca la hace el núcleo cuando el sis­
+              tema de ficheros se desmonta).
+
+VÉASE TAMBIÉN
+       fsck(8),    fsck.ext(8),    fsck.ext2(8),   fsck.xiafs(8),
+       mkfs(8),   mkfs.minix(8),    mkfs.ext(8),    mkfs.ext2(8),
+       mkfs.xiafs(8).  reboot(8)
+
+DIAGNÓSTICOS
+       Hay  numerosos  mensajes  de  diagnóstico. Los mencionados
+       aquí son los más comúnmente vistos en el uso normal.
+
+       Si el dispositivo no existe, fsck.minix  mostrará  "unable
+       to  read super block" ("incapaz de leer el súper-bloque").
+       Si el dispositivo existe pero no es un sistema de ficheros
+       MINIX,  fsck.minix  imprimirá  "bad magic number in super-
+       block" ("mal numéro mágico en el súper-bloque").
+
+CÓDIGOS DE SALIDA
+       El código de salida devuelto por fsck.minix es la suma  de
+       los siguientes:
+
+       0      Sin errores
+
+       3      Errores del sistema de ficheros corregidos, el sis­
+              tema debería rearrancarse si el sistema de ficheros
+              estaba montado
+
+       4      Se  han  dejado errores del sistema de ficheros sin
+              corregir
+
+       8      Error operacional
+
+       16     Error de modo de empleo o de sintaxis
+
+       Para hacer honor a la verdad, solamente pueden  devolverse
+       0, 3, 4, 7, 8 y 16.
+
+AUTORES
+       El     gran     Linus     Benedictus     Torvalds    (tor­
+       valds@cs.helsinki.fi).
+       Valores  de  los  códigos   de   error   por   Rik   Faith
+       (faith@cs.unc.edu).
+       Añadió  soporte  para  la  bandera  de  sistema de fichero
+       válido: Dr. Wettstein (greg%wind.uucp@plains.nodak.edu).
+       Comprobación para impedir fsck  de  sistemas  de  ficheros
+       montados     añadida    por    Daniel    Quinlan    (quin­
+       lan@yggdrasil.com).
+       Soporte del sistema de ficheros de  Minix  versión  2  por
+       Andreas  Schwab (schwab@issan.informatik.uni-dortmund.de),
+       actualizado por Nicolai Langfeldt (janl@math.uio.no).
+       Parche   de    transportabilidad    por    Russell    King
+       (rmk@ecs.soton.ac.uk).
+
+
+
+
+Util-Linux 2.6             2 Julio 1996                   FSCK(8)

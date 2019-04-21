@@ -1,0 +1,33 @@
+ATOI(3)          Manual del Programador de Linux          ATOI(3)
+
+
+
+NOMBRE
+       atoi - convierte una cadena a un entero.
+
+SINOPSIS
+       #include <stdlib.h>
+
+       int atoi(const char *nptr);
+
+DESCRIPCIÓN
+       La  función  atoi()  convierte  la  porción  inicial de la
+       cadena apuntada por nptr a int.  El comportamiento  es  el
+       mismo que
+
+              strtol(nptr, (char **)NULL, 10);
+
+       excepto que atoi() no detecta errores.
+
+VALOR DEVUELTO
+       El valor convertido.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       atof(3), atol(3), strtod(3), strtol(3), strtoul(3)
+
+
+
+GNU                     23 Diciembre 1995                 ATOI(3)

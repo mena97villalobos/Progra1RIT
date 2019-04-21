@@ -1,0 +1,35 @@
+DREM(3)          Manual del Programador de Linux          DREM(3)
+
+
+
+NOMBRE
+       drem - función resto de coma flotante
+
+SINOPSIS
+       #include <math.h>
+
+       double drem(double x, double y);
+
+DESCRIPCIÓN
+       La  función  drem()  calcula  el resto de la división de x
+       entre y. El valor devuelto es x - n * y,  donde  n  es  el
+       cociente  de  x / y, redondeado al entero más cercano.  Si
+       el cociente es ½, se redondea al número par.
+
+VALOR DEVUELTO
+       La función drem() devuelve el resto, a  menos  que  y  sea
+       cero,  fallando  entonces  la  función  y poniendo EDOM en
+       errno.
+
+ERRORES
+       EDOM   El denominador y es cero.
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       fmod(3)
+
+
+
+                          21 Enero 1995                   DREM(3)

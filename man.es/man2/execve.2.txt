@@ -1,0 +1,152 @@
+EXECVE(2)        Manual del Programador de Linux        EXECVE(2)
+
+
+
+NOMBRE
+       execve - ejecuta un programa
+
+SINOPSIS
+       #include <unistd.h>
+
+       int  execve  (const  char  *filename, const char *argv [],
+       const char *envp[]);
+
+DESCRIPCIÓN
+       execve() ejecuta el programa indicado por filename.  file­
+       name  debe  ser  bien un binario ejecutable, bien un guión
+       shell (shell script) comenzando con una línea de la  forma
+       "#!  intérprete  [arg]". En el segundo caso, el intérprete
+       debe ser un nombre de camino válido para un ejecutable que
+       no  sea él mismo un guión y que será ejecutado como intér­
+       prete [arg] filename.
+
+
+       execve() no regresa en caso de éxito, y el código,  datos,
+       bss  y la pila del proceso invocador se reescriben con los
+       correspondientes del programa cargado. El  programa  invo­
+       cado  hereda  el  PID  del  proceso  invocador y cualquier
+       descriptor de fichero abierto que no se halla  configurado
+       para  "cerrar  en  ejecución" (close on exec). Las señales
+       pendientes del proceso padre se limpian.  Cualquier  señal
+       capturada  por  el proceso invocador es devuelta a su com­
+       portamiento por defecto.
+
+       Si el programa actual está bajo inspección de  ptrace,  se
+       le enviará una señal  SIGTRAP trás la ejecución exitosa de
+       execve().
+
+       Si el ejecutable es un ejecutable binario  a.out  enlazado
+       dinámicamente  que contiene "stubs" de bibliotecas compar­
+       tidas, se llama al enlazador dinámico de Linux,  ld.so(8),
+       al  comienzo de la ejecución para traer al núcleo las bib­
+       liotecas compartidas necesarias y  enlazar  el  ejecutable
+       con ellas.
+
+       Si  el  ejecutable es un ejecutable ELF enlazado dinámica­
+       mente, se usa el intérprete especificado  en  el  segmento
+       PT_INTERP  para  cargar  las bibliotecas compartidas nece­
+       sarias. Este intérprete es  usualmente  /lib/ld-linux.so.1
+       para los binarios enlazados con la versión 5 de la libc de
+       Linux o /lib/ld-linux.so.2 para los binarios enlazados con
+       la versión 2 de la libc de GNU.
+
+
+VALOR DEVUELTO
+       En  caso de éxito execve() no regresa mientras que en caso
+       de error el valor devuelto es -1, y a la variable errno se
+       le asigna un valor apropiado.
+
+ERRORES
+       EACCES  El  fichero  o  el  intérprete de guiones no es un
+               fichero regular.
+
+       EACCES  Se ha denegado el permiso  de  ejecución  para  el
+               fichero o el intérprete de guiones.
+
+       EACCES  El  sistema de ficheros está montado con la opción
+               noexec.
+
+       EPERM   El sistema de ficheros está montado con la  opción
+               nosuid,  el  usuario  no  es  el superusuario y el
+               fichero tiene activo el bit SUID o SGID.
+
+       EPERM   El proceso está siendo ejecutado paso a  paso,  el
+               usuario  no  es el superusuario y el fichero tiene
+               activo el bit SUID o SGID.
+
+       E2BIG   La lista de argumentos es demasiado grande.
+
+       ENOEXEC El  ejecutable  no  se  encuentra  en  un  formato
+               reconocible, es para una arquitectura incorrecta o
+               tiene algún otro error de formato  que  impide  su
+               ejecución.
+
+       EFAULT  filename apunta fuera de su espacio de direcciones
+               accesible.
+
+       ENAMETOOLONG
+               filename es demasiado largo.
+
+       ENOENT  El fichero filename  no  existe  o  no  existe  un
+               intérprete  de  guiones  o no existe un intérprete
+               ELF.
+
+       ENOMEM  No hay suficiente memoria disponible en el núcleo.
+
+       ENOTDIR Un componente del camino filename o del camino del
+               intérprete de guiones o del intérprete ELF  no  es
+               un directorio.
+
+       EACCES  Se  ha  denegado  el permiso de búsqueda en uno de
+               los componentes del camino filename o  del  camino
+               del intérprete de guiones.
+
+       ELOOP   Se  han econtrado demasiados enlaces simbólicos al
+               resolver filename, el  nombre  del  intérprete  de
+               guiones o el nombre del intérprete ELF.
+
+       ETXTBUSY
+               Uno  o más procesos han abierto el ejecutable para
+               escritura.
+
+       EIO     Se ha producido un error de E/S.
+
+       ENFILE  Se ha alcanzado el  límite  del  número  total  de
+               ficheros abiertos en el sistema.
+
+       EMFILE  El  proceso  ya tiene abiertos el número máximo de
+               fichero.
+
+       EINVAL  El  ejecutable  ELF  tiene  más  de  un   segmento
+               PT_INTERP  (es decir, ha intentado especificar más
+               de un intérprete).
+
+       EISDIR  El intérprete ELF es un directorio.
+
+       ELIBBAD El intérprete ELF no está en un formato  reconoci­
+               ble.
+
+CONFORME A
+       SVr4,  SVID, X/OPEN y BSD 4.3.  POSIX no documenta el sig­
+       nificado de #! pero, en  cualquier  caso,  es  compatible.
+       SVr4   documenta  las  condiciones  de  error  adicionales
+       EAGAIN, EINTR, ELIBACC, ENOLINK y EMULTIHOP; POSIX no doc­
+       umenta  las  condiciones  de error ETXTBSY, EPERM, EFAULT,
+       ELOOP, EIO, ENFILE, EMFILE, EINVAL, EISDIR ni ELIBBAD.
+
+
+NOTAS
+       Procesos SUID y SGID  no  pueden  ser  inspeccionados  con
+       ptrace().
+
+       La  longitud  máxima de línea en un ejecutable del tipo #!
+       es de 127 caracteres en la primera línea del fichero.
+
+       Linux ignora los bits SUID y SGID en los guiones shell.
+
+VÉASE TAMBIÉN
+       ld.so(8), execl(3), fork(2)
+
+
+
+Linux 2.0.30            3 Septiembre 1997               EXECVE(2)

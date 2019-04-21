@@ -1,0 +1,120 @@
+REBOOT(2)        Manual del Programador de Linux        REBOOT(2)
+
+
+
+NOMBRE
+       reboot - rearranca o habilita/inhabilita Ctrl-Alt-Supr
+
+SINOPSIS
+       Para  libc4  y libc5 la función de biblioteca y la llamada
+       al sistema son idénticas, y desde la  versión  2.1.30  del
+       núcleo  existen nombres simbólicos LINUX_REBOOT_* para las
+       constantes y un cuarto argumento para la llamada:
+
+       #include <unistd.h>
+       #include <linux/reboot.h>
+
+       int reboot (int magico, int otro_magico,  int  flag,  void
+       *arg);
+
+       Bajo glibc se han asignado nombres simbólicos RB_* a algu­
+       nas de las contantes involucradas y  la  función  de  bib­
+       lioteca  es  un envoltorio de 1 argumento de la llamada al
+       sistema de 3 argumentos:
+
+       #include <unistd.h>
+       #include <sys/reboot.h>
+
+       int reboot (int flag);
+
+DESCRIPCIÓN
+       La llamada reboot rearranca el sistema  o  habilita/inhab­
+       ilita  la  pulsación  de rearranque (abreviada CAS, ya que
+       por defecto es  Ctrl-Alt-Supr;  se  puede  cambiar  usando
+       loadkeys(1)).
+
+       Esta  llamada  al sistema fallará (con EINVAL) a menos que
+       magico  sea  igual   a   LINUX_REBOOT_MAGIC1   (esto   es,
+       0xfee1dead)  y otro_magico sea igual a LINUX_REBOOT_MAGIC2
+       (o sea, 672274793).  Sin embargo, también se permiten como
+       valores  de  otro_magico  LINUX_REBOOT_MAGIC2A  (esto  es,
+       85072278) desde la versión 2.1.17  y  LINUX_REBOOT_MAGIC2B
+       (es  decir, 369367448) desde la versión 2.1.97.  (Los val­
+       ores hexadecimales de estas constantes no tienen sentido.)
+       El argumento flag puede tener los siguientes valores:
+
+       LINUX_REBOOT_CMD_RESTART
+              (RB_AUTOBOOT,  0x1234567).   Se  muestra el mensaje
+              `Restarting system.' y se realiza inmediatamente un
+              rearranque  por  defecto.  Si no se precede por una
+              llamada a sync(2) se perderán datos.
+
+       LINUX_REBOOT_CMD_HALT
+              (RB_HALT_SYSTEM,  0xcdef0123;  desde   la   versión
+              1.1.76).   Se muestra el mensaje `System halted.' y
+              se detiene el sistema. El control se cede al  moni­
+              tor en ROM, si existe alguno.  Si no se precede por
+              una llamada a sync(2) se perderán datos.
+
+       LINUX_REBOOT_CMD_POWER_OFF
+              (0x4321fedc; desde la versión 2.1.30).  Se  muestra
+              el  mensaje  `Power down.', se detiene el sistema y
+              se apaga el sistema, si es posible.  Si no se  pre­
+              cede por una llamada a sync(2) se perderán datos.
+
+       LINUX_REBOOT_CMD_RESTART2
+              (0xa1b2c3d4;  desde la versión 2.1.30).  Se muestra
+              el mensaje `Restarting system with command '%s''  y
+              se  realiza inmediatamente un rearranque (usando la
+              cadena de orden dada en arg).  Si no se precede por
+              una llamada a sync(2) se perderán datos.
+
+       LINUX_REBOOT_CMD_CAD_ON
+              (RB_ENABLE_CAD, 0x89abcdef).  Se habilita la combi­
+              nación de teclas CAS.  Esto significa que una  pul­
+              sación  CAS producirá inmediatamente la acción aso­
+              ciada a LINUX_REBOOT_CMD_RESTART.
+
+       LINUX_REBOOT_CMD_CAD_OFF
+              (RB_DISABLE_CAD, 0).  Se inhabilita la  combinación
+              de  teclas  CAS.   Esto significa que una pulsación
+              CAS producirá el envío de la señal  SIGINT  a  init
+              (el  proceso  1),  y como consecuencia de esto este
+              proceso puede decidir una acción apropiada (quizás,
+              matar  todos  los  procesos, llamar a sync y reini­
+              ciar).
+
+       Sólo el súperusuario puede utilizar esta función.
+
+       El efecto exacto de las acciones anteriores depende de  la
+       arquitectura. Para la arquitectura i386, el argumento adi­
+       cional no hace nada por el momento (2.1.122), pero el tipo
+       de  rearranque  se puede determinar mediante argumentos en
+       la línea de órdenes del núcleo (`Reboot=...') para que sea
+       bien  `en caliente', bien `en frio', y bien hardware, bien
+       a través de la BIOS.
+
+VALOR DEVUELTO
+       En caso de éxito, se devuelve 0.  En  caso  de  error,  se
+       devuelve -1 y se pone un valor apropiado en errno.
+
+ERRORES
+       EINVAL Números mágicos o flag incorrectos.
+
+       EPERM  Un  usuario  distinto  de  root  intenta  llamar  a
+              reboot.
+
+CONFORME A
+       reboot es específico de Linux y no  debería  emplearse  en
+       programas que se pretendan transportables.
+
+FALLOS
+       En  un  sistema  basado  en glibc, los parámetros magico y
+       otro_magico no existen. Sólo existe el parámetro flag.
+
+VÉASE TAMBIÉN
+       sync(2), bootparam(7), ctrlaltdel(8), halt(8), reboot(8)
+
+
+
+Linux 2.1.122           24 Septiembre 1998              REBOOT(2)

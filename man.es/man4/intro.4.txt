@@ -1,0 +1,23 @@
+INTRO(4)         Manual del Programador de Linux         INTRO(4)
+
+
+
+NOMBRE
+       intro - Introducción a los archivos especiales
+
+DESCRIPCIÓN
+       Este capítulo describe los archivos especiales.
+
+FICHEROS
+       /dev/* -- archivos de dispositivo
+
+AUTORES
+       Mire  la  cabecera  de  cada  página del manual para saber
+       el/los autor/es y las  condiciones  de  derechos  de  uso.
+       ¡Tenga  en  cuenta  que estas condiciones pueden variar de
+       página en página!
+
+
+
+
+Linux                     30 Junio 1996                  INTRO(4)

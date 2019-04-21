@@ -1,0 +1,31 @@
+MBTOWC(3)        Manual del Programador de Linux        MBTOWC(3)
+
+
+
+NOMBRE
+       mbtowc  -  convierte  un carácter multibyte en un carácter
+       ancho
+
+SINOPSIS
+       #include <stdlib.h>
+
+       int mbtowc(wchar_t *pwc, const char *s, size_t n);
+
+DESCRIPCIÓN
+       La función mbtowc() convierte un carácter multibyte s, que
+       no  es mayor de n bytes, en un carácter ancho y, si pwc no
+       es NULL, guarda dicho carácter ancho en *pwc.
+
+VALOR DEVUELTO
+       mbtowc() devuelve el número de bytes en el carácter multi­
+       byte ó -1 si el carácter multibyte no es válido.
+
+CONFORME A
+       SVID 3, ISO 9899
+
+VÉASE TAMBIÉN
+       mblen(3), mbstowcs(3), wcstombs(3), wctomb(3)
+
+
+
+GNU                        3 Marzo 1998                 MBTOWC(3)

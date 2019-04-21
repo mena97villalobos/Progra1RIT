@@ -1,0 +1,56 @@
+UNDOCUMENTED(7)            Debian Linux           UNDOCUMENTED(7)
+
+
+
+NOMBRE
+       undocumented  -  No  existe  pagina en el manual para este
+       programa, utilidad o función.
+
+DESCRIPCIÓN
+       Este programa, utilidad o función no tiene una página útil
+       en  el manual.  Por favor no se dirija a nosotros indican­
+       donoslo, ya que lo tenemos clasificado como error;  cuando
+       haya  una  página  disponible,  será debidamente incluida,
+       corrigiendo así el fallo.   <http://www.debian.org/Bugs/>.
+       Si  es usted un escritor competente y no le importa inver­
+       tir su tiempo leyendo el código fuente y escribiendo  bue­
+       nas  páginas  del  manual, por favor escriba una mejor que
+       ésta. Así mismo, haga el favor de contactar con el  encar­
+       gado  del mantenimiento del paquete para evitar que varias
+       personas trabajen en la misma página.
+
+       Use las opciones siguientes si desea más información.
+
+       foo --help, foo -h, foo -?
+
+       info foo
+
+       whatis foo, apropos foo
+
+       mire los directorios /usr/doc/foo, /usr/lib/foo
+
+       dpkg --listfiles foo, dpkg --search foo
+
+       locate '*foo*'
+
+       find / -name '*foo*'
+
+       Si aún no ha encontrado la información  que  busca,  puede
+       enviar  una  petición  de  ayuda a la siguiente dirección:
+       debian-user@lists.debian.org.
+
+VÉASE TAMBIÉN
+       info(1),  whatis(1),   apropos(1),   dpkg(1),   locate(1),
+       find(1), updatedb(1), undocumented(2).
+
+AUTOR
+       Erick Branderhorst <branderh@debian.org>.
+
+AGRADECIMIENTOS
+       Kai   Henningsen,  Ian  Jackson,  David  H.  Silber,  Carl
+       Streeter.
+
+
+
+
+Proyecto Debian             Junio 1996            UNDOCUMENTED(7)

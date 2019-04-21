@@ -1,0 +1,266 @@
+FCNTL(2)         Manual del Programador de Linux         FCNTL(2)
+
+
+
+NOMBRE
+       fcntl - manipula el descriptor de fichero
+
+SINOPSIS
+       #include <unistd.h>
+       #include <fcntl.h>
+
+       int fcntl(int fd, int cmd);
+       int fcntl(int fd, int cmd, long arg);
+       int fcntl(int fd, int cmd, struct flock * lock);
+
+DESCRIPCIÓN
+       fcntl  realiza  una de las diversas y variadas operaciones
+       sobre fd.  La operación en cuestión se determina  mediante
+       cmd:
+
+       F_DUPFD  Hace  que arg sea una copia de fd, cerrando fd si
+                es necesario.
+
+                El mismo resultado se  puede  obtener  fácilmente
+                usando dup2.
+
+                Los  descriptores  antiguo  y nuevo pueden usarse
+                indistintamente.   Ambos    comparten    candados
+                (locks),  indicadores  de  posición de ficheros y
+                banderas (flags); por ejemplo, si la posición del
+                fichero  se  modifica  usando lseek en uno de los
+                descriptores, la posición del otro resulta  modi­
+                ficada simultáneamente.
+
+                Sin embargo, los dos descriptores no comparten la
+                bandera  close-on-exec  "cerrar-al-ejecutar".  La
+                bandera  close-on-exec  de la copia está desacti­
+                vada, singificando que se cerrará en ejecución.
+
+                En caso de éxito, se devuelve el  nuevo  descrip­
+                tor.
+
+       F_GETFD  Lee   la   bandera   close-on-exec.   Si  el  bit
+                FD_CLOEXEC es 0, el fichero  permanecerá  abierto
+                durante  exec,  en  caso  contrario se cerrará el
+                fichero.
+
+       F_SETFD  Asigna el valor de la  bandera  close-on-exec  al
+                valor  especificado por el bit FD_CLOEXEC de arg.
+
+       F_GETFL  Lee las banderas del descriptor (todas  las  ban­
+                deras,  según  hayan  sido asignadas por open(2),
+                serán devueltas).
+
+       F_SETFL  Asigna las banderas del descriptor al valor asig­
+                nado   por  arg.   Sólo  O_APPEND,  O_NONBLOCK  y
+                O_ASYNC pueden asignarse; las otras  banderas  no
+                se ven afectadas.
+
+                Las  banderas  se  comparten entre copias (hechas
+                con dup(2), fork(2), etc.) del  mismo  descriptor
+                de fichero.
+
+                Las  banderas  y  su semántica están descritas en
+                open(2).
+
+       F_GETLK, F_SETLK y F_SETLKW  se  utilizan  para  gestionar
+       candados  de  ficheros  discrecionales (discretionary file
+       locks).  El tercer argumento lock  es  un  puntero  a  una
+       struct flock (que puede ser sobrescrita por esta llamada).
+
+       F_GETLK
+              Devuelve la estructura flock que nos impide obtener
+              el candado, o establece el campo l_type del candado
+              a F_UNLCK si no hay obstrucción.
+
+       F_SETLK
+              El candado está cerrado (cuando l_type es F_RDLCK o
+              F_WRLCK) o abierto (cuando es F_UNLCK).  Si el can­
+              dado está cogido  por  alguien  más,  esta  llamada
+              devuelve -1 y pone en errno el código de error EAC­
+              CES o EAGAIN.
+
+       F_SETLKW
+              Como F_SETLK, pero en  vez  de  devolver  un  error
+              esperamos que el candado se abra.  Si se recibe una
+              señal a capturar mientras fcntl está esperando,  se
+              interrumpe  y  (después  de  que el manejador de la
+              señal  haya   terminado)   regresa   inmediatamente
+              (devolviendo -1 y asignado a errno el valor EINTR).
+
+       F_GETOWN, F_SETOWN, F_GETSIG y F_SETSIG se  utilizan  para
+       gestionar las señales de disponibilidad de E/S:
+
+       F_GETOWN
+              Obtiene el ID de proceso o el grupo de procesos que
+              actualmente recibe las señales SIGIO y SIGURG  para
+              los eventos sobre el descriptor de fichero fd.
+
+              Los  grupos  de  procesos se devuelven como valores
+              negativos.
+
+       F_SETOWN
+              Establece el ID de proceso o el grupo  de  procesos
+              que  recibirá  las  señales SIGIO y SIGURG para los
+              eventos sobre el descriptor de fichero fd.
+
+              Los grupos de procesos se especifican mediante val­
+              ores  negativos.   (Se  puede  usar  F_SETSIG  para
+              especificar una señal diferente a SIGIO).
+
+              Si activa la bandera de  estado  O_ASYNC  sobre  un
+              descriptor  de  fichero  (tanto si proporciona esta
+              bandera con la llamada open(2) como si usa la orden
+              F_SETFL  de  fcntl),  se  enviará  una  señal SIGIO
+              cuando sea posible la entrada o la salida sobre ese
+              descriptor de fichero.
+
+              El  proceso  o el grupo de procesos que recibirá la
+              señal se puede seleccionar usando la orden F_SETOWN
+              de  la  función fcntl.  Si el descriptor de fichero
+              es un enchufe (socket), esto  también  seleccionará
+              al recipiente de las señales SIGURG que se entregan
+              cuando llegan datos fuera  de  orden  (out-of-band,
+              OOB)   sobre   el  enchufe.  (SIGURG  se  envía  en
+              cualquier situación en la que select(2)  informaría
+              que  el enchufe tiene una "condición excepcional").
+              Si el descriptor de fichero corresponde a  un  dis­
+              positivo de terminal, entonces las señales SIGIO se
+              envían al grupo de procesos en primer plano  de  la
+              terminal.
+
+       F_GETSIG
+              Obtiene  la  señal  enviada  cuando la entrada o la
+              salida son posibles. Un valor cero significa que se
+              envía   SIGIO.  Cualquier  otro  valor  (incluyendo
+              SIGIO) es la señal enviada en su lugar  y  en  este
+              caso  se  dispone  de información adicional para el
+              manejador de señal si se instala con SA_SIGINFO.
+
+       F_SETSIG
+              Establece la señal enviada cuando la entrada  o  la
+              salida son posibles. Un valor cero significa enviar
+              la señal por defecto SIGIO.  Cualquier  otro  valor
+              (incluyendo SIGIO) es la señal a enviar en su lugar
+              y en este caso se dispone de  información  adiciona
+              para  el  manejador  de  señal  si  se  instala con
+              SA_SIGINFO.
+
+              Usando F_SETSIF con un valor  distinto  de  cero  y
+              asignando  SA_SIGINFO  para  el  manejador de señal
+              (vea sigaction(2)), se pasa información extra sobre
+              los  eventos  de  E/S al manejador en la estructura
+              siginfo_t.  Si  el  campo  si_code  indica  que  la
+              fuente  is  SI_SIGIO, el campo si_fd proporciona el
+              descriptor de fichero asociado con  el  evento.  En
+              caso  contrario,  no se indican qué descriptores de
+              ficheros hay  pendientes  y,  para  determinar  qué
+              descriptores de fichero están disponibles para E/S,
+              debería usar  los  mecanismos  usuales  (select(2),
+              poll(2), read(2) con O_NONBLOCK activo, etc.).
+
+              Seleccionando  una  señal  de  tiempo real POSIX.1b
+              (valor >= SIGRTMIN), se pueden encolar varios even­
+              tos  de E/S usando los mismos números de señal. (El
+              encolamiento depende de la memoria disponible).  Se
+              dispone  de  información extra si se asigna SA_SIG­
+              INFO al manejador de señal, como antes.
+
+       Usando estos mecanismos, un programa puede implementar E/S
+       totalmente  asíncrona,  sin  usar  select(2) ni poll(2) la
+       mayor parte del tiempo.
+
+       El uso de O_ASYNC, F_GETOWN y F_SETOWN  es  específico  de
+       Linux  y  BSD.   F_GETSIG  y  F_SETSIG  son específicos de
+       Linux.  POSIX  posee  E/S  asíncrona   y   la   estructura
+       aio_sigevent para conseguir cosas similares; estas también
+       están disponibles en Linux como parte de la biblioteca  de
+       C de GNU (GNU C Library, Glibc).
+
+VALOR DEVUELTO
+       Para  una  llamada con éxito, el valor devuelto depende de
+       la operación:
+
+       F_DUPFD  El nuevo descriptor.
+
+       F_GETFD  Valor de la bandera.
+
+       F_GETFL  Valor de las banderas.
+
+       F_GETOWN Valor del propietario del descriptor.
+
+       F_GETSIG Valor de la señal enviada cuando la lectura o  la
+                escritura  son  posibles  o  cero para el compor­
+                tamiento tradicional con SIGIO.
+
+       Para cualquier otra orden
+                Cero.
+
+       En caso de error el valor devuelto es -1,  y  se  pone  un
+       valor apropiado en errno.
+
+ERRORES
+       EACCES   La  operación  está  prohibida  por candados man­
+                tenidos por otros procesos.
+
+       EAGAIN   La operación está prohibida porque el fichero  ha
+                sido asociado a memoria por otro proceso.
+
+       EDEADLK  Se ha detectado que el comando F_SETLKW especifi­
+                cado provocaría un interbloqueo.
+
+       EFAULT   lock está fuera  de  su  espacio  de  direcciones
+                accesible.
+
+       EBADF    fd no es un descriptor de fichero abierto.
+
+       EINTR    El  comando F_SETLKW ha sido interrumpido por una
+                señal.  Para F_GETLK  y  F_SETLK,  la  orden  fue
+                interrumpida  por  una señal antes de que el can­
+                dado fuera comprobado o adquirido. Es más  proba­
+                ble  al poner un candado a un fichero remoto (por
+                ejemplo, un candado sobre NFS) pero algunas veces
+                puede ocurrir localmente.
+
+       EINVAL   Para  F_DUPFD,  arg  es  negativo  o mayor que el
+                valor máximo permitido. Para F_SETSIG, arg no  es
+                un número de señal permitido.
+
+       EMFILE   Para  F_DUPFD, el proceso ya ha llegado al número
+                máximo de descriptores de ficheros abiertos.
+
+       ENOLCK   Demasiados  candados  de  segmento  abiertos,  la
+                tabla de candados está llena o ha fallado un pro­
+                tocolo de candados remoto (por ejemplo,  un  can­
+                dado sobre NFS).
+
+       EPERM    Se ha intentado limpiar la bandera O_APPEND sobre
+                un fichero que tiene activo el atributo de  `sólo
+                añadir' (append-only).
+
+NOTAS
+       Los  errores  devueltos por dup2 son distintos de aquéllos
+       dados por F_DUPFD.
+
+CONFORME A
+       SVID, AT&T, POSIX, X/OPEN, BSD 4.3. Sólo  las  operaciones
+       F_DUPFD,  F_GETFD,  F_SETFD,  F_GETFL,  F_SETFL,  F_GETLK,
+       F_SETLK y F_SETLKW se especifican en POSIX.1.  F_GETOWN  y
+       F_SETOWN  son  BSD-ismos  no aceptados en SVr4; F_GETSIG y
+       F_SETSIG son específicos de Linux.  Las  banderas  legales
+       para  F_GETFL/F_SETFL  son  aquéllas  que acepta open(2) y
+       varían  entre  estos   sistemas;   O_APPEND,   O_NONBLOCK,
+       O_RDONLY  y  O_RDWR  son  las que se mencionan en POSIX.1.
+       SVr4 admite algunas otras opciones y banderas no  documen­
+       tadas aquí.
+
+       SVr4  documenta  las condiciones de error adicionales EIO,
+       ENOLINK y EOVERFLOW.
+
+VÉASE TAMBIÉN
+       open(2), socket(2), dup2(2), flock(2).
+
+
+
+Linux                   23 Diciembre 1998                FCNTL(2)

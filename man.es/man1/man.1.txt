@@ -1,0 +1,180 @@
+man(1)                                                     man(1)
+
+
+
+NOMBRE
+       man - formatar y mostrar las páginas de manual en-linea
+       manpath - determinar el camino de búsqueda inicial para el
+       utilizador
+
+SINOPSIS
+       man [-acdfhktw] [-m sistema] [-p string] [-C  fich_config]
+       [-M  path]  [-P paginador] [-S lista_sec] [sección] nombre
+       ...
+
+DESCRIPCIÓN
+       man formata y muestra las páginas del  manual  `en-linea'.
+       Esta  versión reconoce las variables de ambiente (environ­
+       ment) MANPATH y (MAN)PAGER (vea más lejos).  Si la sección
+       es indicada, man busca solamente en ella.  Es posible tam­
+       bién indicar el ordem de búsqueda en las secciones  y  que
+       preprocessamiento  efectuar con los manuales, por medio de
+       opciones en la linea de comando o variables  de  ambiente.
+       Si  nombre  contiene  el  carácter  `/' tratará primero un
+       fichero con ese nombre, permitiendo hacer  man  ./foo.5  o
+       mismo  man /cd/foo/bar.1.gz para formatar y ver un fichero
+       en particular.
+
+OPCIONES
+       -C  fich_config
+              Indica el fichero  de  configuración  a  usar;  por
+              omissión   será  usado  /usr//etc/man.config.  (Vea
+              man.conf(5).)
+
+       -M  path
+              Indica la lista de  directórios  donde  buscar  los
+              manuales.  Sin esta opción será consultada la vari­
+              able MANPATH.  Si tampoco esta  variable  estuviera
+              definida,  una  lista será obtenida por consulta de
+              /usr//etc/man.config. Un directório vacio  en  MAN­
+              PATH representa la lista anterior.
+
+       -P  paginador
+              Indica  cual  paginador/visualisador usar. Sin esta
+              opción tratará  de  consultar  la  variable  PAGER.
+              Normalmente, man usará /usr/bin/less -isr.
+
+       -S  lista_sec
+              Da  la lista de secciones (separadas por `:') donde
+              buscar y en que orden. Esta opción tiene  prioridad
+              sobre la variable MANSECT.
+
+       -a     Normalmente   man  muestra  el  primer  manual  que
+              encuentra. Esta opción le permite afichar todas las
+              páginas  de manual encontradas para la entrada nom­
+              bre.
+
+       -d     No muestra el manual, afichando  varia  información
+              para debugging.
+
+       -f     Equivalente a whatis.
+
+       -h     Aficha un breve mensaje de ayuda.
+
+       -k     Equivalente a apropos.
+
+       -m  sistema
+              Indica  um  conjunto de manuales diferentes aplica­
+              bles al sistema indicado.
+
+       -p  string
+              Especifica uma sequencia de preprocesadores a  usar
+              antes  de nroff o troff (los formatadores). Algumas
+              instalaciones Linux pueden no tener todos los  pre­
+              procesadores.  Algunos preprocesadores y las letras
+              a usar para indicarlos son: eqn (e), grap (g),  pic
+              (p),  tbl  (t), vgrind (v), refer (r).  Esta opción
+              tiene proridad sobre la variable MANROFFSEQ.
+
+       -t     Usar /usr/bin/groff -Tps -mandoc para formatar  las
+              páginas  de manual, la salida efectuándose por std­
+              out La salida de este comando puede  necesitar  ser
+              processada  por  otros  filtros  antes de poder ser
+              visualisada o imprimida.
+
+       -w o --path
+              No aficha las páginas de manual, pero muestra la(s)
+              localización(es)  de  los  ficheros que se hubieran
+              formatado y mostrado, para  la  entrada  de  nombre
+              indicado.  Si  no se da ninguna otra opción muestra
+              la lista de directórios que serian  recorridos  por
+              man durante la búsqueda. Si manpath es un lazo haci
+              man,  entonces  "manpath"  es  equivalente  a  "man
+              --path".   -W  Como  -w, pero aficha los nombres de
+              ficheros, uno por linea, sin ninguna otra  informa­
+              ción.  Muy  útil  en comandos shell del estilo: man
+              -aW man | xargs ls -l
+
+PÁGINAS FORMATADAS
+       Afin de ganar tiempo, man trata  de  guardar  les  páginas
+       formatadas  en  vez  de interpretarlas cada vez que se las
+       pide.  Tradicionalmente, las versiones formatadas  de  las
+       páginas  de REP/manX son guardadas en REP/catX, pero otras
+       correspondencias entre los directórios man  y  los  direc­
+       tórios   cat   pueden   ser   indicadas   en   el  fichero
+       /usr//etc/man.config. Si el directório «cat»  correspondi­
+       ente no existe, les páginas formatadas no serán guardadas.
+
+       Es posible de hacer man suid utilisador man. En ese  caso,
+       si  un directório cat pertenece a man y tiene el modo 0755
+       (solo  man  puede  escribir),  y  que  los  ficheros   cat
+       pertenecen  también  a  man  y  tienen el modo 0644 o 0444
+       (solo man puede escrir en ellos, o  nadie),  ningún  util­
+       isador normal podrá cambiar las páginas formatadas o poner
+       otros ficheros en el directório correspondiente. Si man no
+       es  suid,  los  directórios  cat debrán tener el modo 0777
+       afin que todo utilisador pueda dejar el resultado  de  los
+       formatajes  efectuados durante las consultaciones del man­
+       ual.
+
+       La opción -c fuerza el reformataje de una página, mismo si
+       un  fichero cat más reciente que el fichero fuente existe.
+
+
+AMBIENTE
+       MANPATH
+              Si MANPATH está definido, su valor será usado  como
+              lista  de  directórios (manpath) donde pueden estar
+              las entradas del manual.
+
+       MANROFFSEQ
+              Si MANROFFSEQ está definido, su valor determina los
+              preprocesamientos a aplicar antes de nroff o troff.
+              Normalmente, las páginas de manual,  son  preproce­
+              sadas por tbl antes de nroff.
+
+       MANSECT
+              Si  MANSECT existe, su valor indica las secciones a
+              recorrer.
+
+       PAGER  Si PAGER está definido, indicará el programa a usar
+              para   mostrar   el   manual.    Normalmente  usará
+              /usr/bin/less -isr.
+
+       LANG   Si LANG está definido, su valor  indica  el  nombre
+              del  sub-directório donde man comenzará la búsqueda
+              de las páginas de manual. Por ejemplo,  el  comando
+              «LANG=es  man  1  pepe» tendrá como efecto de hacer
+              una    búsqueda    de    la    página    pepe    en
+              .../es/man1/pepe.1,  y si ese fichero no existe, en
+              .../man1/pepe.1, ( ...  indica  un  directório  del
+              camino de búsqueda).
+
+       NLSPATH, LC_MESSAGES, LANG
+              Las  variables de ambiente NLSPATH y LC_MESSAGES (o
+              LANG cuando LC_MESSAGES no existe) juegan un  papel
+              en   la  localisación  del  catálogo  de  mensajes.
+              Notese que los programas como col(1) que son llama­
+              dos por man, también utilizan LC_CTYPE.
+
+       PATH   PATH  es  utilizado para la construcción del camino
+              de búsqueda por omisión.
+
+       SYSTEM SYSTEM empleado para obtener los sistemas  alterna­
+              tivos por omisión (en vista de la utilisación de la
+              opción -m ).
+
+VEA TAMBIÉN
+       apropos(1), whatis(1), less(1), groff(1).
+
+BUGS
+       -t solo funciona si existe un  programa  troff  o  equiva­
+       lente.
+
+TRADUCCIÓN
+       Pablo  Saratxaga, 1996. A partir de la página en portugués
+       de Vitor Duarte y la página en francés de René Cougnenc.
+
+
+
+                            15/3/1994                      man(1)

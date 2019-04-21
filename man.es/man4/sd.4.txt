@@ -1,0 +1,88 @@
+SD(4)            Manual del Programador de Linux            SD(4)
+
+
+
+NOMBRE
+       sd - controlador para las unidades de disco SCSI
+
+SINOPSIS
+       #include <linux/hdreg.h> /* para HDIO_GETGEO */
+       #include <linux/fs.h>    /* para BLKGETSIZE y BLKRRPART */
+
+CONFIGURACIÓN
+       El nombre del dispositivo de bloque tiene la  forma  sigu­
+       iente:  sdlp  ,donde  l es una letra que designa la unidad
+       física, y p es un número que designa la partición en dicha
+       unidad  física.  A  menudo,  el número de partición, p, se
+       omite  cuando  el  dispositivo  corresponde  a  la  unidad
+       entera.
+
+       Los  discos  SCSI tienen un número mayor de dispositivo de
+       8, y un número menor de dispositivo  de  la  forma  (16  *
+       número_unidad)  + número_partición, donde número_unidad es
+       el número de la unidad física según el orden de detección,
+       y número_partición se determina como sigue:
+
+       la partición 0 es la unidad entera
+       las particiones 1-4 son las particiones "primarias" DOS
+       las  particiones  5-8  son las particiones "extendidas" (o
+       "lógicas") DOS
+
+       Por ejemplo, /dev/sda tiene el número mayor 8, menor 0,  y
+       se  refiere a la primera unidad SCSI entera del sistema. Y
+       /dev/sdb3 tiene el número mayor 8, menor 19, y se  refiere
+       a la tercera partición "primaria" DOS de la segunda unidad
+       SCSI del sistema.
+
+       En este momento sólo están disponibles los dispositivos de
+       bloque.  Los  dispositivos crudos (raw devices) todavía no
+       han sido implementados.
+
+DESCRIPCIÓN
+       Las siguientes ioctl() están disponibles:
+
+       HDIO_GETGEO
+              Devuelve los parámetros del disco de la BIOS, en la
+              siguiente estructura:
+                     struct hd_geometry {
+                           unsigned char heads;    /*Número de cabezas*/
+                           unsigned char sectors;  /*Número de sectores*/
+                           unsigned short cylinders;    /*Número de cilindros*/
+                           unsigned long start;    /*Principio del disco*/
+                     };
+
+              Se  pasa  un  puntero  a  esta  estructura  como el
+              parámetro de ioctl(2).
+
+              La información  devuelta  en  el  parámetro  es  la
+              geometría del disco de la unidad, ¡tal y como la ve
+              el DOS!  Esta geometría no es la  geometría  física
+              de  la  unidad.  No  obstante, se utiliza para con­
+              struir la tabla de particiones de la  unidad  y  es
+              necesaria   para   el   adecuado  fucionamiento  de
+              fdisk(1),efdisk(1), y lilo(1).  Si  la  información
+              geométrica  no está disponible, todos los campos de
+              la estructura son cero.
+
+       BLKGETSIZE
+              Devuelve el tamaño del dispositivo en sectores.  El
+              parámetro de ioctl(2) debe ser un puntero a long.
+
+       BLKRRPART
+              Fuerza  la relectura de la tabla de particiones del
+              disco SCSI. No se necesita ningún parámetro.
+
+              También se  soportan  las  ioctl  scsi(4).   Si  se
+              requiere el parámetro para ioctl(2) y éste es NULL,
+              entonces ioctl(2) devolverá -EINVAL.
+
+FICHEROS
+       /dev/sd[a-h]: el dispositivo completo
+       /dev/sd[a-h][0-8]: particiones de bloque individuales
+
+VÉASE TAMBIÉN
+       scsi(4)
+
+
+
+Linux                      2 Julio 1996                     SD(4)

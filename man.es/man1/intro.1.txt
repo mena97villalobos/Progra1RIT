@@ -1,0 +1,19 @@
+INTRO(1)                 Manual de Linux                 INTRO(1)
+
+
+
+NOMBRE
+       intro - Introducción a órdenes de usuario
+
+DESCRIPCIÓN
+       Este capítulo describe órdenes de usuario.
+
+AUTORES
+       Busque en la cabecera de cada página del Manual el autor o
+       autores y las condiciones sobre  los  derechos  de  copia.
+       ¡Observe  que  éstos  pueden  ser  diferentes de página en
+       página!
+
+
+
+Linux                  24 de Julio de 1993               INTRO(1)

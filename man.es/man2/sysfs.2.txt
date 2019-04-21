@@ -1,0 +1,62 @@
+SYSFS(2)          Manual del Programador de Linu         SYSFS(2)
+
+
+
+x"
+
+NOMBRE
+       sysfs  -  devuelve información sobre el tipo de sistema de
+       ficheros
+
+SINTAXIS
+       int sysfs(int option, const char * fsname);
+
+       int sysfs(int option, unsigned int fs_index, char * buf);
+
+       int sysfs(int option);
+
+DESCRIPCIÓN
+       sysfs devuelve información sobre el  sistema  de  ficheros
+       presente  en  el  kernel. La form a concreta de la llamada
+       sysfs y la información devuelta depende de option eso es:
+
+
+       1      Traduce la tira que identifica el tipo  de  sistema
+              de  ficheros fsname en un tipo índice de sistema de
+              ficheros.
+
+       2      Traduce el  tipo  índice  de  sistema  de  ficheros
+              fs_index  en  una  tira  finalizada por un carácter
+              NULL. Esta tira sera escrita en el buffer  apuntado
+              por  buf.  Asegúrese que buf tiene suficiente espa­
+              cio para alojar la tira.
+
+       3      Devuelve el numero total de  sistemas  de  ficheros
+              presentes en el kernel.
+
+
+       El  numero  de  tipos  de  indices de sistemas de ficheros
+       comienza en cero.
+
+VALOR DEVUELTO
+       Si ha funcionado, sysfs devuelve el indice del sistema  de
+       ficheros  para  la  opcion  1, cero para la opcion 2, y en
+       numero de sistemas de ficheros configurados para la opcion
+       3.   Caso  de error, -1 es devuelto y el valor de errno es
+       fijado apropiadamente.
+
+ERRORES.
+       EINVAL fsname no es un identificador de sistema de fichero
+              valido.   fs_index  esta  fuera de rango; option es
+              invalido.
+
+       EFAULT O fsname o buf esta fuera  del  espacio  de  direc­
+              ciones accesible por vd.
+
+
+COMPATIBLE CON
+       SVr4.
+
+
+
+Linux 1.3.16           9 de Agosto de 1995               SYSFS(2)

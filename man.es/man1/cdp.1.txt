@@ -1,0 +1,138 @@
+cdp(1)             Reproductor de CDs de Audio             cdp(1)
+
+
+
+NOMBRE
+       cdplay  -- un programa interactivo en modo texto para con­
+       trolar y reproducir CDs de audio bajo Linux.
+
+SINOPSIS
+       cdp [ -h | -l | -n | -s ] [reproduce <pista-num>]
+       cdplay [ -h | -l | -n |  -s  ]  [reproduce  <num>]  [para]
+       [tabla]
+                  -s : Comienza en modo silencioso
+                  -h : ayuda
+                  -n : Desactiva la reproducción automática
+                  -l : comienzo lento (espera por init)
+          play  <num>  :  reproducción  automática desde la pista
+       <num> del CD
+                stop : Detiene el CD.
+               table : muestra la  tabla  de  contenidos  del  CD
+       desde la base de datos
+
+       Escribe  cdp  para  iniciar  el programa.  Habilita el NUM
+       LOCK de tu teclado numérico. Desde  el  programa  cdp,  al
+       pulsar  la  tecla  DEL  del teclado numérico se muestra un
+       menú de ayuda.  Mientras se está ejecutando,  el  programa
+       cdp muestra el número de pista en reproducción y el tiempo
+       total de duración del CD y de la pista actual reproducidos
+       hasta  ese  momento.   Nótese  que  el  tiempo total de CD
+       reproducido incluye todas las  pistas  del  CD,  contengan
+       audio o no.
+
+       Usa cdplay para usar la versión de cdp no interactiva.
+
+
+
+DESCRIPCIÓN
+       cdp  es  un programa interactivo en modo texto para repro­
+       ducir CDs de audio bajo Linux.  Se basa en WorkBone, que a
+       su vez se basa en los módulos "hardware.c", "database.c" y
+       "struct.c" del avanzado reproductor de CDs para X11  cono­
+       cido  como WorkMan.  cdp muestra las bases de datos de CDs
+       generadas por Workman. Permite también editar esta  infor­
+       mación.   cdp  espera encontrar el dispositivo /dev/cdrom.
+       Si no tienes este dispositivo, cambia  a  /dev  y  haz  un
+       enlace simbólico entre tu dispositivo y 'cdrom'. Por ejem­
+       plo, si tu dispositivo lector  de  CDs  se  llama  'mcd0',
+       entonces haz lo siguiente:
+
+                 cd /dev
+                 ln -sf mcd0 cdrom
+
+       Otra alternativa sería editar el archivo 'hardware.c' para
+       que figure el nombre de tu dispositivo  lector  de  CDs  y
+       recompilar  el programa.  cdp usa el teclado numérico como
+       panel de control para permitirte cambiar de pista,  repro­
+       ducir, hacer pausa, parar y continuar reproduciendo CDs de
+       audio.  Asegúrate de que la luz de NUM LOCK está encendida
+       al  usar cdp.  Se muestra un esquema gráfico en pantalla a
+       manera de guía. Los tiempos de ejecución se  actualizan  y
+       muestran también continuamente.
+
+                        +- teclado numérico --+
+                        |                     |
+                        |    7     8     9    |
+                        |                     |
+                        |    4     5     6    |
+                        |                     |
+                        |    1     2     3    |
+                        |                     |
+                        |    0          del   |
+                        |                     |
+                        +---------------------+
+
+
+       la tecla '9' del teclado numérico es "reproducir"
+       la tecla '8' del teclado numérico es "pausa/continuar"
+       la tecla '7' del teclado numérico es "parar"
+       la tecla '6' del teclado numérico es "pista siguiente"
+       la tecla '5' del teclado numérico es "volver a reproducir"
+       la tecla '4' del teclado numérico es "pista anterior"
+       la tecla '3' del teclado numérico es "avanzar 15 segundos"
+       la  tecla  '2' del teclado numérico es "parar en seco" (la
+       música para)
+       la tecla '1' del teclado numérico es "retroceder 15 segun­
+       dos"
+       la  tecla  '0'  del teclado numérico es "salida suave" (la
+       música continúa)
+       la tecla '.' del teclado numérico es "ayuda"
+       la tecla 'enter (o intro)' del teclado numérico es "editar
+       la canción actual"
+       la tecla 'a' es "editar el nombre del artista"
+       la tecla 'c' es "editar el nombre del CD"
+
+
+COPIADO
+       El  programa cdp tiene copyright de software libre despro­
+       visto de garantía de cualquier tipo, NI SIQUIERA la garan­
+       tía  implícita  de ser apto para su distribución comercial
+       ni destinado a un uso en particular. Úsalo bajo tu  propia
+       responsabilidad.   cdp  puede  usarse  de la manera que se
+       quiera siempre y cuando se cumplan las  disposiciones  GNU
+       General Public License version 2 de la Free Software Foun­
+       dation. Este software  debería  venir  acompañado  de  una
+       copia  de  la Licencia Pública General GNU. Puedes obtener
+       una copia de esta licencia escribiendo a:
+
+
+            Free Software Foundation, Inc.,
+            675 Mass Ave,
+            Cambridge, MA 02139, USA.
+
+
+FALLOS (BUGS)
+       Es improbable que desarrolle más el programa cdp.   Amplié
+       WorkBone  0.1  para que diese soporte a las bases de datos
+       de Workman.  Este programa es una extensión a  mayores  de
+       WorkBone  II 0.2 con soporte de edición de bases de datos.
+       Por favor, hazme saber cualquier solución  a  un  fallo  o
+       posterior  desarrollo  del  programa  que  puedas llevar a
+       cabo.  cdp funciona con un lector de CDRom Mitsumi FX001D,
+       pero  las  cantidades  mostradas  por  el  programa pueden
+       variar con respecto a otros aparatos. Sólo  se  usan  lla­
+       madas y rutinas genéricas del mismo modo que lo hace Work­
+       Man. A  diferencia  de  WorkBone,  cdp  usa  ncurses  para
+       mostrar  su pantalla. Si alguien está interesado en portar
+       el programa a otras plataformas, por favor mandadme un  e-
+       mail.
+
+       ¡que disfrutéis!
+
+       Sariel Har-Peled
+
+       sariel@math.tau.ac.il
+
+
+
+CD-Play 0.33               10 Nov 1995                     cdp(1)

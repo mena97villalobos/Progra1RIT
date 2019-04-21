@@ -1,0 +1,22 @@
+NOLOGIN(5)         Manual del Programador Linux        NOLOGIN(5)
+
+
+
+NOMBRE
+       nologin - evita que los usuarios no root entren al sistema
+
+DESCRIPCIÓN
+       Si el fichero /etc/nologin existe, login(1) sólo permitirá
+       acceder  al  usuario root.  A cualquier otro usuario se le
+       mostrará el contenido de este  fichero  y  sus  conexiones
+       serán rechazadas.
+
+FICHEROS
+       /etc/nologin
+
+VÉASE TAMBIÉN
+       login(1), shutdown(8)
+
+
+
+Linux                   29 Diciembre 1992              NOLOGIN(5)

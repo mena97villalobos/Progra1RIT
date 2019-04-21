@@ -1,0 +1,20 @@
+ATRUN(8)         Manual del Programador de Linux         ATRUN(8)
+
+
+
+NOMBRE
+       atrun - ejecuta comandos encolados para una ejecución pos­
+       terior
+
+SINOPSIS
+       atrun [-l carga_media] [-d]
+
+DESCRIPCIÓN
+       atrun ejecuta trabajos encolados por at(1).  Es  un  guión
+       shell que contiene una llamada ${exec_prefix}/sbin/atd con
+       la opción -s, y  se  proporciona  por  compatibilidad  con
+       instalaciones antiguas.
+
+
+
+local                   26 Noviembre 1996                ATRUN(8)

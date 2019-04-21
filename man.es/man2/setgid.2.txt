@@ -1,0 +1,55 @@
+SETGID(2)        Manual del Programador de Linux        SETGID(2)
+
+
+
+NOMBRE
+       setgid - establece la identidad de grupo
+
+SINOPSIS
+       #include <unistd.h>
+
+       int setgid(gid_t gid)
+
+DESCRIPCIÓN
+       setgid  establece  el  ID de grupo efectivo del proceso en
+       curso. Si quien llama a la función es el súper-usuario, se
+       ponen también las IDs de grupo real y salvado.
+
+       Bajo Linux, setgid está implementada como la versión POSIX
+       con la característica _POSIX_SAVED_IDS.  Esto permite  que
+       un  programa  SGID (distinto de root) renuncie a todos sus
+       privilegios de grupos, haga algún trabajo no privilegiado,
+       y  luego  recupere su ID de grupo efectivo original de una
+       manera segura.
+
+       Si el usuario es root o si el programa  es  SGID  a  root,
+       deben  tomarse  precauciones especiales. La función setgid
+       comprueba el GID efectivo de quien la llama  y  si  es  el
+       súper-usuario,  todos  los IDs relacionados con el proceso
+       se ponen a gid.  Después de esto,  es  imposible  para  el
+       programa recuperar sus privilegios de root.
+
+       Así,  un  programa  SGID  a  root  que desea temporalmente
+       renunciar a sus provilegios de root, asumir  la  identidad
+       de  un  grupo no-root y luego recuperar sus privilegios de
+       root no puede emplear setgid.  Esto se puede hacer con  la
+       llamada (no POSIX, BSD) setegid.
+
+VALOR DEVUELTO
+       En  caso  de éxito, se devuelve cero. En caso de error, se
+       devuelve -1, y se pone un valor apropiado en errno.
+
+ERRORES
+       EPERM   El usuario no es el súper-usuario, y gid  no  con­
+               cuerda  con  el ID efectivo ni salvado del proceso
+               que llama a la función.
+
+CONFORME A
+       SVr4, SVID.
+
+VÉASE TAMBIÉN
+       getgid(2), setregid(2), setegid(2)
+
+
+
+Linux 1.1.36              26 Enero 1998                 SETGID(2)

@@ -1,0 +1,198 @@
+pico(1)                                                   pico(1)
+
+
+
+Nombre
+       pico  - sencillo editor de texto en el estilo de Pine Com­
+       poser
+
+Sintaxis
+       pico [ opciones ] [ fichero ]
+
+Descripción
+       Pico es un sencillo editor de texto basado  en  el  editor
+       del  sistema  de  mensajes Pine. Al igual que en Pine, los
+       comandos son desplegados en la parte inferior de  la  pan­
+       talla,  y  se proporciona ayuda sensible al contexto. Con­
+       forme los caracteres son tecleados se insertan  inmediata­
+       mente en el texto.
+
+       Los  comandos  de edición se introducen empleando combina­
+       ciones con la tecla control. Como una  solución  para  los
+       programas  de comunicación que toman ciertos caracteres de
+       control, se puede simular  la  tecla  control  presionando
+       ESCAPE dos veces, seguida del carácter de control deseado,
+       por ejemplo "ESC ESC c" sería  el  equivalente  a  teclear
+       ctrl-c.   El editor cuenta con cinco características bási­
+       cas: justificación de párrafos, búsqueda, cortar/pegar por
+       bloque,  un  corrector  ortográfico,  y  un  navegador  de
+       ficheros.
+
+       La justificación de párrafo (o llenado) se efectúa  en  el
+       párrafo  que  contiene  al cursor en ese momento, o, si el
+       cursor se encuentra entre líneas, en el párrafo inmediata­
+       mente  inferior.  Los  párrafos se delimitan con líneas en
+       blanco, o con líneas  que  comiencen  con  un  espacio  en
+       blanco o un tabulador.  Se puede eliminar la justificación
+       inmediatamente después de haber sido  efectuada  empleando
+       la combinación de teclas control-U.
+
+       Las búsquedas de cadenas no diferencian entre mayúsculas y
+       minúsculas. Una búsqueda comienza en  la  posición  actual
+       del  cursor y abarca hasta el final del texto. La búsqueda
+       mas reciente se ofrece  como  valor  por  defecto  en  las
+       búsquedas subsiguientes.
+
+       Los bloques de texto pueden ser movidos, copiados o borra­
+       dos con el  adecuado  uso  de  los  comandos  para  marcar
+       (ctrl-^),   borrar  (ctrl-k)  y  restaurar  (ctrl-u).   El
+       comando borrar elimina el texto  entre  la  "marca"  y  la
+       posición actual del cursor, y lo coloca en el buffer "cor­
+       tar". El comando restaurar  efectúa  un  "pegado"   en  la
+       posición actual del cursor.
+
+       El  corrector ortográfico examina todas las palabras en el
+       texto. Este presenta cada palabra incorrectamente  escrita
+       para  su  corrección al tiempo que la resalta en el texto.
+       La corrección ortográfica puede ser cancelada en cualquier
+       momento.  Alternativamente, pico puede cambiar a la rutina
+       de corrección por defecto,  una  rutina  definida  por  la
+       variable  de  ambiente  SPELL. La rutina de reemplazo debe
+       leer la entrada estándar y escribir en la salida estándar.
+
+       El  navegador de ficheros se ofrece como una opción en los
+       prompts de los comandos "Read  File"  y  "Write  Out".  Su
+       propósito es ayudar en la búsqueda de ficheros específicos
+       y navegar en la jerarquía de directorios. Los  nombres  de
+       ficheros  con  sus  tamaños y nombres de directorios en el
+       directorio de trabajo actual se presentan para  su  selec­
+       ción.   El  directorio actual de trabajo se presenta en la
+       línea superior de la pantalla mientras  la  lista  de  los
+       comandos  disponibles ocupa las dos últimas. Se da soporte
+       a varias funciones básicas de  manipulación  de  ficheros:
+       renombrado de ficheros, copiado, y borrado.
+
+       Ayuda  más  específica  está  disponible  en el sistema de
+       ayuda en línea de pico.
+
+Opciones
+       +n     Provoca que pico inicie con el  cursor  colocado  n
+              líneas  dentro del fichero. (Nota: no dejar espacio
+              entre el signo "+" y el número)
+
+       -b     Habilita la opción de reemplazar las ocurrencias de
+              un texto utilizando el comando "Where is"
+
+       -d     Reasigna  la tecla "borrar" de manera que el carác­
+              ter sobre el que está el cursor se elimina en lugar
+              del carácter que esté a su izquierda.
+
+       -e     Habilita el completamiento de nombre de fichero.
+
+       -f     Utilizar  teclas de función para los comandos. Esta
+              opción es soportada únicamente en conjunción en  el
+              UW Enhanced NCSA telnet.
+
+       -h     Lista las opciones válidas de la línea de comandos.
+
+       -j     Habilita el  comando  "Goto"  en  el  navegador  de
+              ficheros.  Esto permite al comando indicar explíci­
+              tamente a pilot que directorio visitar.
+
+       -g     Habilitar el modo "Show Cursor" en el navegador  de
+              ficheros.  Provoca que el cursor sea colocado antes
+              de la selección actual en lugar de ser colocado  en
+              la esquina inferior izquierda del despliegue.
+
+       -k     Provoca  que el comando "Cut Text" elimine los car­
+              acteres desde la posición del cursor hasta el final
+              de la línea en lugar de eliminar la línea completa.
+
+       -m     Habilita la funcionalidad del ratón. Esto solo fun­
+              ciona  cuando pico se ejecuta desde una venta xterm
+              del sistema X Window.
+
+       -nn    La opción -nn habilita  la  notificación  de  nuevo
+              correo.  El  argumento  n  es opcional y especifica
+              cada cuanto, en segundos, se verifica el  buzón  en
+              busca  de  nuevo correo. Por ejemplo, -n60 hace que
+              pico busque nuevos mensajes de correo cada  minuto.
+              El  intervalo por defecto es 180 segundos, mientras
+              que el mínimo permitido es 30. (Nota:  no  se  debe
+              dejar espacio entre "n" y el numero)
+
+       -o dir Establece  el  directorio  de operación. Únicamente
+              los ficheros dentro de este directorio son  accesi­
+              bles.  De igual manera, el navegador de ficheros se
+              limita al sub-árbol de directorios  del  directorio
+              especificado.
+
+       -rn    Establece  la  columna usada para limitar el margen
+              derecho del comando "Justify"
+
+       -s corrector
+              Especificar un programa corrector alterno para usar
+              cuando se verifique la ortografía.
+
+       -t     Habilitar  el  modo "herramienta". Útil para cuando
+              pico se utiliza como editor dentro  de  otras  her­
+              ramientas  (ejm.  Elm,  Pnews).  Pico no confirmará
+              para salir,  y  no  renombrará  el  buffer  con  el
+              comando "Write Out".
+
+       -v     Ver el fichero únicamente, inhabilita las funciones
+              de  edición.
+
+       -w     Inhabilita el acomodamiento  de  palabras  (lo  que
+              permite editar líneas de gran longitud)
+
+       -x     Inhabilitar  el menú de teclas en la parte inferior
+              de la pantalla.
+
+       -z     Habilitar la suspensión de pico con ^Z
+
+       -q     Las definiciones termcap o terminfo para la  intro­
+              ducción de secuencias de escape se utiliza en pref­
+              erencia de las secuencias  definidas  por  defecto.
+              Esta opción solo está disponible si pico se compiló
+              con TERMCAP_WINS habilitado.
+
+       Por último, cuando una instancia de pico está corriendo  y
+       es  desconectada  (es  decir,  recibe  una  SIGHUP),  pico
+       guardará el trabajo actual,  si  es  necesario,  antes  de
+       salir.  El  trabajo  se  guarda  con  el nombre de fichero
+       actual con un ".save" añadido al  final.   Si  el  trabajo
+       actual no tiene nombre, se guarda como "pico.save".
+
+
+Fallos (Bugs)
+       La forma en la que las líneas más largas que el despliegue
+       se manejan no resulta obvia de forma inmediata. Las líneas
+       que continúan más allá del borde del despliegue se indican
+       con un símbolo '$' al  final  de  la  línea.   Las  líneas
+       largas  se  desplazan conforme el cursor se mueve a través
+       de ellas.
+
+Ficheros
+       pico.save        El trabajo interrumpido y sin nombre se guarda aquí.
+       *.save           El trabajo interrumpido en un fichero con nombre se guarda aquí.
+
+Autores
+       Michael Seibel <mikes@cac.washington.edu>
+       Laurence Lundblade <lgl@cac.washington.edu>
+       Pico se derivó originalmente de  MicroEmacs 3.6, por  Dave
+       G. Conroy.
+       Pico es una marca registrada de la Universidad de Washing­
+       ton.
+       Copyright 1989-1999 por la Universidad de Washington.
+
+Véase también
+       pine(1)
+       Distribución fuente (parte del Sistema de Mensajes Pine):
+          ftp://ftp.cac.washington.edu/mail/pine.tar.Z
+
+       $Date: 1999/02/04 18:40:44 $
+
+
+
+                           Versión 3.5                    pico(1)

@@ -1,0 +1,41 @@
+OUTB(2)          Manual del Programador de Linux          OUTB(2)
+
+
+
+NOMBRE
+       outb, outw, outl, outsb, outsw, outsl - salida por puerto
+       inb, inw, inl, insb, insw, insl - entrada desde puerto
+       outb_p, outw_p, outl_p, inb_p, inw_p, inl_p - E/S pausada
+
+
+DESCRIPCIÓN
+       Esta  familia  de funciones se emplea para hacer entrada y
+       salida de bajo nivel por puertos. Están diseñadas  princi­
+       palmente  para  uso  interno  del  núcleo, pero pueden ser
+       empleadas desde el espacio del usuario, dada  la  informa­
+       ción siguiente además de la dada en outb(9) .
+
+       Usted ha de compilar con -O o -O2 o similar. Las funciones
+       están definidas como macros en línea del preprocesador,  y
+       no  serán  sustituidas sin la opción de optimización acti­
+       vada, provocando referencias no  resueltas  en  tiempo  de
+       enlazado.
+
+       Usted  ha  de emplear ioperm(2) o alternativamente iopl(2)
+       para decirle al núcleo que permita a la aplicación  en  el
+       espacio  de  usuario  el  acceso  a  los puertos de E/S en
+       cuestión. Si no hace esto la aplicación recibirá un  fallo
+       de segmento.
+
+
+CONFORME A
+       outb  y familia son específicas del hardware. Los argumen­
+       tos puerto y valor están en orden opuesto a la mayoría  de
+       implementaciones de DOS.
+
+VÉASE TAMBIÉN
+       outb(9), ioperm(2), iopl(2)
+
+
+
+Linux                   29 Noviembre 1995                 OUTB(2)

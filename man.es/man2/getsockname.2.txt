@@ -1,0 +1,56 @@
+GETSOCKNAME(2)   Manual del Programador de Linux   GETSOCKNAME(2)
+
+
+
+NOMBRE
+       getsockname - obtener nombre de conexión
+
+SINOPSIS
+       #include <sys/socket.h>
+
+       int   getsockname(int   s  ,  struct  sockaddr  *  name  ,
+       socklen_t * namelen )
+
+DESCRIPCIÓN
+       Getsockname devuelve el nombre  actual  para  la  conexión
+       indicada.  El parámetro namelen debe ser inicializado para
+       indicar la cantidad de espacio  apuntador  por  name.   La
+       devolución  contiene  el tamaño actual del nombre devuelto
+       (en bytes).
+
+VALOR DEVUELTO
+       Si es correcto, devuelve un cero. Si hay  error,  devuelve
+       -1, y se asigna a errno un valor apropiado.
+
+ERRORES
+       EBADF   El argumento s no es un descriptor válido.
+
+       ENOTSOCK
+               El argumento s es un fichero, no una conexión.
+
+       ENOBUFS No  había  suficientes  recursos disponibles en el
+               sistema para llevar a cabo la operaicón.
+
+       EFAULT  El parametro name apunta a una memoria que no está
+               dentro  de  una  zona válida del espacio de direc­
+               ciones del proceso.
+
+CONFORME A
+       SVr4, 4.4BSD (la funcion getsockname apareció en  4.2BSD).
+       SVr4  documenta dos códigos de error adicionales, ENOMEM y
+       ENOSR.
+
+NOTA
+       El tercer argumento  de  getsockname  es  en  realidad  un
+       entero  (y  esto es lo que tienen BSD 4.*, libc4 y libc5).
+       Cierta confusión en POSIX dio  como  resultado  el  actual
+       socklen_t.  El estándar propuesto todavía no ha sido adop­
+       tado pero glibc2 ya lo sigue y  también  tiene  socklen_t.
+       Vea también accept(2).
+
+VÉASE TAMBIÉN
+       bind(2), socket(2)
+
+
+
+Página de Manual BSD      24 Julio 1993            GETSOCKNAME(2)

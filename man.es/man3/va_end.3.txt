@@ -1,0 +1,113 @@
+STDARG(3)        Manual del Programador de Linux        STDARG(3)
+
+
+
+NOMBRE
+       stdarg - lista de argumentos variable
+
+SINÓPSIS
+       #include <stdarg.h>
+
+       void va_start( va_list ap, last);
+       type va_arg( va_list ap, type);
+       void va_end( va_list ap);
+
+DESCRIPCIÓN
+       Una función podría ser llamada con un número de argumentos
+       variable de tipos  igualmente  variables.  El  archivo  de
+       cabecera  (include)  stdarg.h  declara  un  tipo va_list y
+       define tres macros para moverse a traves de una  lista  de
+       argumentos  cuyo  número  y  tipo no son conocidos para la
+       función llamada.
+
+       Dicha función debe declarar un objeto de tipo  va_list  el
+       cual  es  utilizado  por  las  macros  va_start, va_arg, y
+       va_end.
+
+       La macro va_start inicializa ap para su uso posterior  por
+       va_arg y va_end, y debe ser llamada en primer lugar.
+
+       El  parámetro last es el nombre del último parámetro antes
+       de la lista de argumentos variables, es decir,  el  último
+       parametro sobre el cual la función llamada conoce el tipo.
+
+       Dado que la dirección de este parámetro es  utilizada  por
+       la  macro va_start no debería ser declarado como una vari­
+       able de registro, como una función ni como un array.
+
+       La macro va_start no devuelve valor alguno.
+
+       La macro va_arg expande una expresión que contiene el tipo
+       y  el  valor del próximo argumento empleado en la llamada.
+       El  parámetro  ap  es  el  va_list  ap  inicializado   por
+       va_start.   Cada llamada a va_arg modifica ap por tanto la
+       siguiente  llamada  devolverá  el  próximo  argumento.  El
+       parámetro  type  es el nombre de un tipo especificado para
+       que para que el tipo de un puntero a un objeto que  es  de
+       dicho tipo pueda ser obtenido simplemente añadiendo un * a
+       type.
+
+       Si no hay próximo argumento, o si type  no  es  compatible
+       con  el tipo del próximo argumento, se producieran errores
+       impredecibles.
+
+       El primer uso de  la  macro  va_arg  despues  de  va_start
+       devuelve  el  argumento tras last.  Invocaciones sucesivas
+       devolverán los valores del resto de los argumentos.
+
+       La macro va_end manipula un retorno normal de  la  función
+       cuya  lista  de  argumentos  variable fue inicializada por
+       va_start.
+
+       La macro va_end no devuelve valor alguno.
+
+EJEMPLOS
+       La función foo toma una cadena de caracteres de formato  e
+       imprime el argumento asociado con cada caracter de formato
+       basado en el tipo.
+              void foo(char *fmt, ...)
+              {
+                   va_list ap;
+                   int d;
+                   char c, *p, *s;
+
+                   va_start(ap, fmt);
+                   while (*fmt)
+                        switch(*fmt++) {
+                        case 's':           /* string */
+                             s = va_arg(ap, char *);
+                             printf("string %s\n", s);
+                             break;
+                        case 'd':           /* int */
+                             d = va_arg(ap, int);
+                             printf("int %d\n", d);
+                             break;
+                        case 'c':           /* char */
+                             c = va_arg(ap, char);
+                             printf("char %c\n", c);
+                             break;
+                        }
+                   va_end(ap);
+              }
+
+CONFORME A
+       Las macros va_start, va_arg, y va_end concuerdan con  ANSI
+       C3.159-1989 (``ANSI C'').
+
+COMPATIBILIDAD
+       Estas  macros no son compatibles con las macros históricas
+       que reemplazan. Se puede encontrar una versión  compatible
+       "hacia atrás" en el fichero de cabecera varargs.h.
+
+ERRORES
+       Al contrario que las macros varargs , las macros stdarg no
+       permiten a los programadores  codificar  una  función  con
+       argumentos variables. Este problema genera trabajo princi­
+       palmente cuando se convierte código basado  en  varargs  a
+       stdarg  pero  además crea dificultades a las funciones que
+       quieran pasar todos sus argumentos en una función que toma
+       una lista de argumentos va_list , como vfprintf(3).
+
+
+
+BSD MANPAGE             29 Noviembre 1993               STDARG(3)

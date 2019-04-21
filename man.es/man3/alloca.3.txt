@@ -1,0 +1,37 @@
+ALLOCA(3)        Manual del Programador de Linux        ALLOCA(3)
+
+
+
+NOMBRE
+       alloca - concede memoria
+
+SINOPSIS
+       #include <stdlib.h>
+
+       void *alloca( size_t size);
+
+DESCRIPCIÓN
+       La  función  alloca  concede  size  bytes de espacio en el
+       marco de pila (stack frame) del invocador.   Este  espacio
+       temporal se libera automáticamente a la salida de una fun­
+       ción.
+
+VALOR DEVUELTO
+       La función alloca devuelve  un  puntero  al  comienzo  del
+       espacio  concedido.  Si  la  reserva falla, se devuelve el
+       puntero NULL.
+
+HISTORIA
+       Hay evidencias de que la función alloca apareció  en  32v,
+       pwb,  pwb.2,  3bsd,  y 4bsd. Hay una página de manual para
+       ella en BSD 4.3.  Linux usa la versión de GNU.
+
+FALLOS
+       La función alloca es dependiente de la arquitectura.
+
+VÉASE TAMBIÉN TAMBIÉN
+       brk(2), pagesize(2), calloc(3), malloc(3), realloc(3)
+
+
+
+GNU                     19 Diciembre 1995               ALLOCA(3)

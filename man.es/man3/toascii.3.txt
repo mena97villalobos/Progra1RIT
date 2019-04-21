@@ -1,0 +1,34 @@
+TOASCII(3)       Manual del Programador de Linux       TOASCII(3)
+
+
+
+NOMBRE
+       toascii - convierte un carácter a ASCII
+
+SINOPSIS
+       #include <ctype.h>
+
+       int toascii (int c);
+
+DESCRIPCIÓN
+       toascii()  convierte  c  a  un unsigned char de 7 bits que
+       constituye un carácter ASCII, borrando los bits altos.
+
+VALOR DEVUELTO
+       El valor devuelte es el carácter convertido.
+
+CONFORME A
+       SVID, BSD
+
+FALLOS
+       Mucha gente será infeliz si utilizas esta función. Conver­
+       tirá  letras  acentuadas en caracteres que nada tienen que
+       ver con la letra.
+
+VÉASE TAMBIÉN
+       isascii(3), toupper(3), tolower(3)
+
+
+
+
+GNU                     16-Septiembre-1995             TOASCII(3)

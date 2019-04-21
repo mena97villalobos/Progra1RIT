@@ -1,0 +1,30 @@
+GETENV(3)        Manual del Programador de Linux        GETENV(3)
+
+
+
+NOMBRE
+       getenv - obtiene una variable de ambiente
+
+SINOPSIS
+       #include <stdlib.h>
+
+       char *getenv(const char *nombre);
+
+DESCRIPCIÓN
+       La  función  getenv()  busca  en  la lista de ambiente una
+       cadena de caracteres que concuerde  con  la  apuntada  por
+       nombre. Las cadenas son de la forma nombre = valor.
+
+VALOR DEVUELTO
+       La  función  getenv()  devuelve un puntero al valor corre­
+       spondiente del ambiente, o NULL si no hay concordancia.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       putenv(3), setenv(3), unsetenv(3), environ(5)
+
+
+
+GNU                       26 Enero 1998                 GETENV(3)

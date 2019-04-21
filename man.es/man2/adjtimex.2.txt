@@ -1,0 +1,100 @@
+ADJTIMEX(2)      Manual del Programador de Linux      ADJTIMEX(2)
+
+
+
+NOMBRE
+       adjtimex - ajusta el reloj del núcleo
+
+SINOPSIS
+       #include <sys/timex.h>
+
+       int adjtimex(struct timex *buf);
+
+DESCRIPCIÓN
+       Linux  usa  el algoritmo de David L. Mills para ajustar el
+       reloj.  adjtimex lee y opcionalmente prepara parámetros de
+       ajuste para dicho algoritmo.
+
+       adjtimex  toma un indicador a una estructura timex , actu­
+       aliza los parámetros del núcleo a partir de los valores de
+       los campos, y devuelve la misma estructura con los valores
+       actuales del núcleo.   Esta  estructura  se  declara  como
+       sigue a continuación:
+
+       struct timex
+       {
+           int modes;           /* selector de modo*/
+           long offset;         /* ajuste de la hora (usec) */
+           long freq;           /* ajuste de la frecuencia (ppm escalada) */
+           long maxerror;       /* error máximo  (usec) */
+           long esterror;       /* error estimado  (usec) */
+           int status;          /* comando/estado del reloj*/
+           long constant;       /* pll constante de tiempo */
+           long precision;      /* precisión del reloj(usec) (sólo lectura) */
+           long tolerance;      /* tolerancia de la frecuencia del reloj (ppm)
+                                   (sólo lectura) */
+           struct timeval time; /* hora actual (sólo lectura) */
+           long tick;           /* usecs entre ticks del reloj */
+       };
+
+       El  campo  modes determina que parámetros serán asignados,
+       si es que hay  alguno.   Puede  contener  una  combinación
+       (mediante  una operación-O lógica) de cero o más elementos
+       de la lista siguiente:
+
+       #define ADJ_OFFSET            0x0001 /* ajuste de la hora */
+       #define ADJ_FREQUENCY         0x0002 /* ajuste de la frecuencia */
+       #define ADJ_MAXERROR          0x0004 /* error máximo de la hora*/
+       #define ADJ_ESTERROR          0x0008 /* error estimado de la hora */
+       #define ADJ_STATUS            0x0010 /* estado del reloj */
+       #define ADJ_TIMECONST         0x0020 /* pll constante de tiempo */
+       #define ADJ_TICK              0x4000 /* valor tick*/
+       #define ADJ_OFFSET_SINGLESHOT 0x8001 /* ajuste de hora; método antiguo */
+
+       Los usuarios comunes sólo puede  utilizar  un  valor  cero
+       para  mode.   Únicamente  el superusuario puede asignar un
+       valor a un parámetro.
+
+
+
+
+
+
+
+
+
+
+
+VALOR DEVUELTO
+       En caso de éxito, adjtimex devuelve el estado del reloj:
+
+              #define TIME_OK   0 /* reloj sincronizado */
+              #define TIME_INS  1 /* insertar segundo de salto */
+              #define TIME_DEL  2 /* borrar segundo de salto */
+              #define TIME_OOP  3 /* segundo de salto en progreso */
+              #define TIME_WAIT 4 /* se ha producido un segundo de salto */
+              #define TIME_BAD  5 /* reloj no sincronizado  */
+
+       En caso de fallo, adjtimex regresa -1 y  asigna  un  valor
+       apropiado a errno.
+
+ERRORES
+       EFAULT buf no apunta a una zona de memoria escribible.
+
+       EPERM  buf.mode  no  es  cero  y el usuario no es el supe­
+              rusuario.
+
+       EINVAL Se ha hecho un intento de asignar a  buf.offset  un
+              valor  fuera del intervalo -131071 a  +131071, o de
+              asignar a buf.status un valor no  contenido  en  la
+              lista  anteriormente  discutida,  o  de  asignar  a
+              buf.tick un valor fuera del intervalo  900000/HZ  a
+              1100000/HZ,  donde HZ es la frecuencia de interrup­
+              ción del reloj del sistema.
+
+VÉASE TAMBIÉN
+       settimeofday(2).
+
+
+
+Linux 2.0                 30 Julio 1997               ADJTIMEX(2)

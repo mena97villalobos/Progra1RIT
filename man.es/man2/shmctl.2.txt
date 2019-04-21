@@ -1,0 +1,147 @@
+SHMCTL(2)        Manual del programador de Linux        SHMCTL(2)
+
+
+
+NOMBRE
+       shmctl - control de memoria compartida
+
+SINOPSIS
+       #include <sys/ipc.h>
+
+       #include <sys/shm.h>
+
+       int shmctl(int shmid, int cmd, struct shmid_ds *buf);
+
+DESCRIPCIÓN
+       shmctl()  permite  al usuario recibir información sobre un
+       segmento de memoria compartida, establecer el dueño, grupo
+       y  permisos del segmento, así como destruirlo. La informa­
+       ción sobre el segmento identificado como shmid se devuelve
+       en una estructura shmid_ds:
+
+            struct shmid_ds {
+                 struct    ipc_perm shm_perm;  /* permisos de operación */
+                 int  shm_segsz;          /* tamaño del segmento (bytes) */
+                 time_t    shm_atime;          /* tiempo de la última unión */
+                 time_t    shm_dtime;          /* tiempo de la última separación */
+                 time_t    shm_ctime;          /* tiempo del último cambio */
+                 unsigned short shm_cpid; /* pid del creador */
+                 unsigned short shm_lpid; /* pid del último operador */
+                 short     shm_nattch;         /* nº de uniones actuales */
+                 /* Los siguientes son privados */
+                 unsigned short   shm_npages;  /* tamaño del segmento (páginas) */
+                 unsigned long   *shm_pages;
+                 struct shm_desc *attaches;    /* descriptores para uniones */
+            };
+
+       Los campos del miembro shm_perm pueden ser:
+
+            struct ipc_perm
+            {
+              key_t  key;
+              ushort uid;   /* euid y egid del dueño */
+              ushort gid;
+              ushort cuid;  /* euid y egid del creador */
+              ushort cgid;
+              ushort mode;  /* 9 bits más bajos de los modos de acceso */
+              ushort seq;   /* número de secuencia */
+            };
+
+       Están disponibles los siguientes cmds:
+
+       IPC_STAT    se  usa  para  copiar  la información sobre el
+                   segmento de memoria compartida en  la  memoria
+                   intermedia  buf. El usuario debe tener permiso
+                   de lectura del segmento de memoria compartida.
+
+       IPC_SET     se usa para aplicar los cambios que el usuario
+                   ha efectuado en los miembros uid, gid, o  mode
+                   del  campo  shm_perms. Sólo se usan los 9 bits
+                   más bajos de mode.  El miembro shm_ctime  tam­
+                   bién  es  actualizado.  El usuario debe ser el
+                   dueño, creador o el superusuario.
+
+       IPC_RMID    se usa para marcar el segmento como destruido.
+                   En realidad, se destruirá después de la última
+                   separación  (es  decir,  cuando   el   miembro
+                   shm_nattch  de la estructura asociada shmid_ds
+                   sea cero).  El  usuario  debe  ser  el  dueño,
+                   creador o el superusuario.
+
+       El  usuario debe asegurarse de que el segmento se destruye
+       al final; de lo contrario, las páginas de  dicho  segmento
+       que se cargaron en memoria al producir un fallo de página,
+       permanecerán en memoria o en el fichero de intercambio.
+
+       Además, el superusuario puede impedir o  permitir  que  un
+       segmento  de  memoria compartida pase al fichero de inter­
+       cambio con los siguientes comandos (sólo Linux):
+
+       SHM_LOCK    impide que un segmento de  memoria  compartida
+                   pase  al  fichero  de intercambio.  El usuario
+                   debe cargar  en  memoria  mediante  fallos  de
+                   página  cualquier  página  que  necesite estar
+                   presente después de que se  habilite  el  blo­
+                   queo.
+
+       SHM_UNLOCK  permite  sacar  del  fichero de intercambio al
+                   segmento de memoria compartida.
+
+       Las llamadas de control IPC_INFO, SHM_STAT y SHM_INFO  son
+       usadas  por el programa ipcs(8) para proporcionar informa­
+       ción sobre los recursos asignados.  En  el  futuro,  éstos
+       pueden  ser  modificados  según se necesite o movidos a un
+       sistema de ficheros proc.
+
+
+LLAMADAS DEL SISTEMA
+       fork() Después de un fork() el hijo hereda  los  segmentos
+              de memoria compartida unidos.
+
+       exec() Después de un exec() todos los segmentos de memoria
+              compartida unidos son separados (no destruidos).
+
+       exit() A través de exit() todos los segmentos  de  memoria
+              compartida unidos son separados (no destruidos).
+
+
+VALOR REGRESADO
+       En caso de éxito se devuelve 0, en caso de error -1.
+
+ERRORES
+       En  caso de error, errno tomará uno de los siguientes val­
+       ores:
+
+       EACCES      se   devuelve   si   se   pide   IPC_STAT    y
+                   shm_perm.modes  no  permite  acceso de lectura
+                   para msqid.
+
+       EFAULT      el argumento cmd  tiene  el  valor  IPC_SET  o
+                   IPC_STAT pero la dirección apuntada por buf no
+                   es accesible.
+
+       EINVAL      se devuelve si shmid no  es  un  identificador
+                   válido o cmd no es un comando válido.
+
+       EIDRM       se devuelve si shmid apunta a un identificador
+                   borrado.
+
+       EPERM       se devuelve si se intenta IPC_SET o IPC_RMID y
+                   el usuario no es el creador, el propietario, o
+                   el superusuario, y el usuario no tiene permiso
+                   para sus grupos o el resto del mundo.
+
+CONFORME A
+       SVr4,  SVID.  SVr4 documenta las condiciones de error adi­
+       cionales EINVAL, ENOENT, ENOSPC, ENOMEM, EEXIST.  Ni  SVr4
+       ni SVID documentan una condición de error EIDRM.
+
+VÉASE TAMBIÉN
+       shmget(2), shmop(2)
+
+
+
+
+
+
+Linux 0.99.11        28 de noviembre de 1993            SHMCTL(2)

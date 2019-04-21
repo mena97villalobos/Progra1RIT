@@ -1,0 +1,64 @@
+READLINK(2)      Manual del Programador de Linux      READLINK(2)
+
+
+
+NOMBRE
+       readlink - lee el valor de un enlace simbólico
+
+SINOPSIS
+       #include <unistd.h>
+
+       int  readlink(const  char  *camino, char *buf, size_t tam­
+       buf);
+
+DESCRIPCIÓN
+       readlink pone los contenidos del enlace  simbólico  camino
+       en  el búfer buf, que tiene de tamaño tambuf.  readlink no
+       añade un carácter NUL  a  buf.   Truncará  los  contenidos
+       (hasta  una longitud de tambuf caracteres), en caso de que
+       el búfer sea demasiado pequeño para alojar  todo  el  con­
+       tenido.
+
+VALOR DEVUELTO
+       La  llamada devuelve el número de caracteres puestos en el
+       búfer si acaba con éxito, o un  -1  si  ocurre  un  error,
+       poniendo el código correspondiente de error en errno.
+
+ERRORES
+       ENOTDIR Un  componente  del  prefijo  del  camino no es un
+               directorio.
+
+       EINVAL  tambuf no es positivo.
+
+       ENAMETOOLONG
+               El camino o un componente del camino es  demasiado
+               largo.
+
+       ENOENT  El fichero nombrado no existe.
+
+       EACCES  Se  deniega  el permiso de búsqueda para un compo­
+               nente del prefijo del camino.
+
+       ELOOP   Se encontraron demasiados  enlaces  simbólicos  al
+               traducir el nombre del fichero.
+
+       EINVAL  El fichero nombrado no es un enlace simbólico.
+
+       EIO     Ocurrió  un  error  de  E/S al leer del sistema de
+               ficheros.
+
+       EFAULT  buf se extiende afuera del espacio de  direcciones
+               reservado por el proceso.
+
+       ENOMEM  No hay suficiente memoria en el núcleo.
+
+CONFORME A
+       X/OPEN, 4.4BSD (la llamada al sistema readlink apareció en
+       4.2BSD).
+
+VÉASE TAMBIÉN
+       stat(2), lstat(2), symlink(2)
+
+
+
+Linux 2.0.30              21 Agosto 1997              READLINK(2)

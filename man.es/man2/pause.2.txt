@@ -1,0 +1,32 @@
+PAUSE(2)         Manual del Programador de Linux         PAUSE(2)
+
+
+
+NOMBRE
+       pause - espera una señal
+
+SINOPSIS
+       #include <unistd.h>
+
+       int pause(void);
+
+DESCRIPCIÓN
+       La  llamada  al sistema pause hace que el proceso en curso
+       se duerma hasta que reciba una señal.
+
+VALOR DEVUELTO
+       pause siempre devuelve -1, y errno toma el valor ERESTART­
+       NOHAND.
+
+ERRORES
+       EINTR  se ha recibido una señal.
+
+CONFORME A
+       SVr4, SVID, POSIX, X/OPEN, BSD 4.3
+
+VÉASE TAMBIÉN
+       kill(2), select(2), signal(2)
+
+
+
+Linux                     31 Agosto 1995                 PAUSE(2)

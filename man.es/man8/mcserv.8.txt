@@ -1,0 +1,86 @@
+mcserv(8)                                               mcserv(8)
+
+
+
+NOMBRE
+       mcserv - Servidor de ficheros de Midnight Commander.
+
+USO
+       mcserv [-diqvf] [-p NúmeroDePuerto]
+
+DESCRIPCIÓN
+       mcserv es el programa servidor para el sistema de ficheros
+       de red de Midnight Commander.  Proporciona acceso al  sis­
+       tema  de  ficheros  del  host a los clientes ejecutando el
+       sistema de ficheros Midnight (actualmente, sólo el  Gestor
+       de ficheros Midnight Commander).
+
+       Si  el  programa está funcionando como root éste intentará
+       obtener un puerto reservado
+
+       Si el sistema tiene un mapeador  de  puertos  funcionando,
+       entonces  el  puerto  será  registrado  con el mapeador de
+       puertos y los clientes serán automáticamente conectados al
+       puerto  adecuado.  Si el sistema no dispone de mapeador de
+       puertos, entonces deberá ser especificado  manualmente  un
+       puerto con la opción -p (VA.  abajo).
+
+
+OPCIONES
+       -d     Convierte  en  demonio. Deberíamos usar esta opción
+              si iniciamos el programa desde uno de los  ficheros
+              de  inicio  del  sistema.   Esta opción hace que el
+              programa controle cualquier  número  de  peticiones
+              que reciba creando una nueva copia de sí mismo para
+              cada cliente.
+
+       -q     Modo silencioso.
+
+       -p     Para hacer que el servidor  escuche  en  el  puerto
+              NúmeroDePuerto especificado.
+
+       -f     Fuerza  una  autorización  ftp si la clásica falla.
+              Esto sólo es útil en  sistemas  en  los  cuales  el
+              método de chequeo de clave de acceso no está sopor­
+              tado en esta versión de mcserv.  La autorización se
+              realiza  intentando conectar con el servidor de ftp
+              local e introduciendo el nombre  de  usuario  y  el
+              password.  el servidor ftp dice si introducimos los
+              datos de entrada al sistema válidos o si intruduci­
+              mos   una  clave  incorrecta.   Usaremos  ésto  con
+              cuidado y sólo cuando sea necesario.
+
+       -v     Activa el modo informativo.
+
+LICENCIA
+       Este programa  es  distribuido  bajo  las  condiciones  de
+       Licencia Pública General de GNU como publicado por la Fun­
+       dación de Software Gratuito  (Free  Software  Foundation).
+       Véase  la  ayuda  interna  para conocer los detalles de la
+       Licencia y la ausencia de garantía.
+
+Errores
+       Este programa  actualmente  utiliza  el  puerto  9876,  un
+       puerto  seguro del sistema.  Éste es un problema potencial
+       de seguridad dado que podría ser ejecutado  por  cualquier
+       usuario  en  el  sistema si el demonio del sistema no está
+       cargado.
+
+VÉASE TAMBIÉN
+       mc(1), portmap(8)
+
+
+       Página de Midnight Commander en el Web:
+            http://mc.blackdown.org/mc/
+
+
+AUTOR
+       Miguel de Icaza (miguel@roxanne.nuclecu.unam.mx).
+
+
+TRADUCTOR
+       Francisco Gabriel Aroca Tapia (fgat1@alu.um.es).
+
+
+
+                          23 Agosto 1998                mcserv(8)

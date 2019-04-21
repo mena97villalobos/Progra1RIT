@@ -1,0 +1,33 @@
+MEMCMP(3)        Manual del Programador de Linux        MEMCMP(3)
+
+
+
+NOMBRE
+       memcmp - compara areas de memoria
+
+SYNOPSIS
+       #include <string.h>
+
+       int memcmp(const void *s1, const void *s2, size_t n);
+
+DESCRIPCIÓN
+       La  funcion  memcmp()  compara los primeros n bytes de las
+       areas de memoria s1 y s2. Devuelve un entero menor,  igual
+       a o mayor que cero si s1 es, respectivamente, menor, igual
+       o mayor que s2.
+
+VALOR DEVUELTO
+       La funcion memcmp() devuelve  un  entero  menor,  igual  o
+       mayor  que  cero si s1 es, respectivamente, menor, igual o
+       mayor que s2.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       bcmp(3), strcasecmp(3), strcmp(3), strcoll(3), strncmp(3),
+       strncasecmp(3)
+
+
+
+                          10 Abril 1993                 MEMCMP(3)

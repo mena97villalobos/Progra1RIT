@@ -1,0 +1,73 @@
+CHROOT(2)        Manual del Programador de Linux        CHROOT(2)
+
+
+
+NOMBRE
+       chroot - cambia el directorio raíz.
+
+SINOPSIS
+       #include <unistd.h>
+
+       int chroot(const char *path);
+
+DESCRIPCIÓN
+       chroot  cambia  el directorio raíz a aquel especificado en
+       path.  Este directorio será usado como raíz para  aquellos
+       nombres  de camino que comiencen por /. El directorio raíz
+       es  heredado  por  todos  los  descendientes  del  proceso
+       actual.
+
+       Solamente  el  superusuario  puede  cambiar  el directorio
+       raíz.
+
+       Note que esta llamada no cambia el directorio  de  trabajo
+       actual, por lo que el directorio '.' puede estar fuera del
+       árbol enraizado en '/'.
+
+VALOR DEVUELTO
+       En caso de éxito 0, si hay algún error,  -1, y a la  vari­
+       able errno se le asigna un valor adecuado.
+
+ERRORES
+       Según  el  sistema  de  ficheros,  se pueden obtener otros
+       errores.  Los errores más  comunes  se  listan  a  contin­
+       uación:
+
+
+       EPERM   El UID efectivo no es 0.
+
+       EFAULT  path  apunta  fuera  de  su espacio de direcciones
+               accesibles.
+
+       ENAMETOOLONG
+               path es demasiado largo.
+
+       ENOENT  El fichero no existe.
+
+       ENOMEM  No  había  suficiente  memoria  disponible  en  el
+               núcleo.
+
+       ENOTDIR Un componente del camino path no es un directorio.
+
+       EACCES  Permiso de búsqueda denegado en uno de los  compo­
+               nentes del camino path.
+
+       ELOOP   Se  encontraron  demasiados  enlaces simbólicos al
+               resolver path.
+
+       EIO     Ocurrió un error de E/S.
+
+CONFORME A
+       SVr4, SVID, 4.4BSD y X/OPEN.  Esta función no es parte  de
+       POSIX.1.   SVr4  documenta además las condiciones de error
+       EINTR, ENOLINK  y  EMULTIHOP.   X/OPEN  no  documenta  las
+       condiciones de error EIO, ENOMEM ni EFAULT.  Esta interfaz
+       es clasificada por X/OPEN como legado.
+
+
+VÉASE TAMBIÉN
+       chdir(2)
+
+
+
+Linux 2.0.30              21 Agosto 1997                CHROOT(2)

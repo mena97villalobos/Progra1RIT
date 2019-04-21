@@ -1,0 +1,65 @@
+IOPL(2)          Manual del Programador de Linux          IOPL(2)
+
+
+
+NOMBRE
+       iopl - cambia nivel de privilegio de E/S
+
+SINOPSIS
+       #include <sys/io.h> /* para libc5 */
+       #include <sys/io.h> /* para glibc */
+
+       int iopl(int nivel);
+
+DESCRIPCIÓN
+       iopl  cambia  el nivel de privilegio de E/S del proceso en
+       curso, según se especifique en nivel.
+
+       Esta llamada es necesaria para permitir a los servidores X
+       compatibles  con  las tarjetas de vídeo 8514 ejecutarse en
+       Linux. Puesto que  estos  servidores  X  Window  requieren
+       acceso a todos los 65536 puertos de E/S, la llamada a iop­
+       erm no basta.
+
+       Además de otorgar acceso sin restricciones a  los  puertos
+       de  E/S,  la ejecución a un nivel de privilegio de E/S más
+       alto también permite al proceso inhabilitar las  interrup­
+       ciones.  Esto  probablemente echará abajo el sistema, y no
+       se recomienda pues.
+
+       Los permisos son heredados por fork() y exec().
+
+       El nivel de privilegio de E/S para un proceso normal es 0.
+
+VALOR DEVUELTO
+       En  caso  de éxito, se devuelve cero. En caso de error, se
+       devuelve -1, y se pone en errno un valor apropiado.
+
+ERRORES
+       EINVAL  nivel es mayor que 3.
+
+       EPERM   El usuario no es el súper-usuario.
+
+OBSERVACIONES EXTRAÍDAS DE LOS FUENTES DEL NÚCLEO
+       iopl tiene que emplearse cuando se quiere  acceder  a  los
+       puertos  de E/S más allá del rango 0x3ff: para tener todos
+       los 65536 puertos bit-mapeados se  necesitarían  8  kB  de
+       mapas de bits por proceso, lo que es algo excesivo.
+
+CONFORME A
+       iopl es específico de Linux y no debería emplearse en pro­
+       gramas pretendidamente transportables.
+
+NOTAS
+       Libc5 la trata como una llamada al sistema y posee un pro­
+       totipo  en  <unistd.h>.   Glibc1  no  tiene  un prototipo.
+       Glibc2 posee un prototipo  tanto  en  <sys/io.h>  como  en
+       <sys/perm.h>.  Evite el último, sólo está disponible en la
+       arquitectura i386.
+
+VÉASE TAMBIÉN
+       ioperm(2)
+
+
+
+Linux 0.99.11             24 Julio 1997                   IOPL(2)

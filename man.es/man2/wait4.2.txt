@@ -1,0 +1,141 @@
+WAIT4(2)         Manual del Programador de Linux         WAIT4(2)
+
+
+
+NOMBRE
+       wait3,  wait4  -  esperan la terminación de un proceso, al
+       estilo BSD
+
+SINOPSIS
+       #define _USE_BSD
+       #include <sys/types.h>
+       #include <sys/resource.h>
+       #include <sys/wait.h>
+
+
+       pid_t wait3(int *status, int options,
+             struct rusage *rusage)
+
+       pid_t wait4(pid_t pid, int *status, int options,
+             struct rusage *rusage)
+
+DESCRIPCIÓN
+       La función wait3 suspende la ejecución del proceso  actual
+       hasta  que  finalice  un  hijo o hasta que se produzca una
+       señal cuya acción sea finalizar el proceso actual o llamar
+       a  una función manejadora de señales. Si un hijo ha termi­
+       nado ya cuando se realiza la llamada  (lo  que  se  conoce
+       como proceso "zombie"), la función regresa inmediatamente.
+       Todos los recursos del sistema utilizados por el hijo  son
+       liberados.
+
+       La  función wait4 suspende la ejecución del proceso actual
+       hasta que un hijo, especificado por el argumento pid, haya
+       terminado  o  hasta  que se produzca una señal cuya acción
+       sea finalizar el proceso actual o  llamar  a  una  función
+       manejadora de señales.  Si el hijo especificado por pid ha
+       terminado cuando se realiza la llamada (lo que  se  conoce
+       como proceso "zombie"), la función regresa inmediatamente.
+       Todos los recursos del sistema utilizados por el hijo  son
+       liberados.
+
+       El valor de pid puede ser uno de los siguientes:
+
+       < -1   lo  que  significa que espera por cualquier proceso
+              hijo cuyo ID de grupo es igual al valor absoluto de
+              pid.
+
+       -1     que  significa  que  espera  por  cualquier proceso
+              hijo; esto es equivalente a llamar a wait3.
+
+       0      que significa esperar por  cualquier  proceso  hijo
+              cuyo ID de grupo es igual al del proceso invocador.
+
+       > 0    que significa esperar por el proceso hijo  cuyo  ID
+              es igual a pid.
+
+       El  valor  de  options es un OR de cero o más de las sigu­
+       ientes constantes:
+
+       WNOHANG que significa volver inmediatamente si no hay hijo
+               por el que esperar.
+
+       WUNTRACED
+               que  significa  volver  porque hay hijos que están
+               parados (estado stop), y de cuyo estado no  se  ha
+               recibido notificación.
+
+       Si  status no es NULL, wait3 o wait4 almacenan información
+       de estado en la memoria apuntada por status.
+
+       Este estado puede ser evaluado con las  siguientes  macros
+       (que toman como argumento el propio buffer (un int) -- ¡no
+       un puntero al buffer!):
+
+       WIFEXITED(status)
+               es distinto de cero si  el  hijo  terminó  normal­
+               mente.
+
+       WEXITSTATUS(status)
+               evalúa  los  ocho  bits  menos  significativos del
+               código de retorno del hijo que terminó, que pueden
+               haber  sido activados como un argumento en la lla­
+               mada a la función exit() o como un argumento  para
+               un  return  en  el  programa principal. Esta macro
+               sólo puede ser evaluada si WIFEXITED  devolvió  un
+               valor distinto de cero.
+
+       WIFSIGNALED(status)
+               devuelve "true" si el proceso hijo terminó a causa
+               de una señal no capturada.
+
+       WTERMSIG(status)
+               devuelve el número de la señal que causó el  final
+               del proceso hijo. Esta macro sólo puede ser evalu­
+               ada si WIFSIGNALED devolvió un valor  distinto  de
+               cero.
+
+       WIFSTOPPED(status)
+               devuelve  "true" si el proceso hijo que provocó el
+               retorno está  actualmente  parado;  esto  sólo  es
+               posible si la llamada se hizo usando WUNTRACED.
+
+       WSTOPSIG(status)
+               devuelve  el  número  de  la  señal que provocó la
+               parada del proceso hijo. Esta macro sólo puede ser
+               evaluada  si WIFSTOPPED devolvió un valor distinto
+               de cero.
+
+               Si rusage no es NULL, se rellenará  la  estructura
+               structrusage, según se define en <sys/resource.h>,
+               con información contable.  Ver  getrusage(2)  para
+               más detalles.
+
+VALOR DEVUELTO
+       El  ID  del  proceso hijo que terminó, -1 en caso de error
+       (en particular, cuando no existe un proceso hijo,  por  el
+       que no esperamos, del tipo especificado) o cero si se uti­
+       lizó WNOHANG y no había ningún hijo disponible todavía. En
+       los  dos  últimos  casos  errno será activado conveniente­
+       mente.
+
+ERRORES
+       ECHILD No existe un proceso hijo como  el  especificado  y
+              por el que no esperamos.
+
+       ERESTARTSYS
+              si  no  se activó WNOHANG y se capturó una señal no
+              bloqueada o una SIGCHLD.  Este  error  es  devuelto
+              por  la llamada al sistema.  El interfaz de la bib­
+              lioteca  no  permite  devolver  ERESTARTSYS,   pero
+              devolverá EINTR.
+
+CONFORME A
+       SVr4, POSIX.1
+
+VÉASE TAMBIÉN
+       signal(2), getrusage(2), wait(2), signal(7)
+
+
+
+Linux                     23 Junio 1997                  WAIT4(2)

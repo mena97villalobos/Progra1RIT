@@ -1,0 +1,31 @@
+LOADUNIMAP(8)                                       LOADUNIMAP(8)
+
+
+
+NOMBRE
+       loadunimap  -  carga  la  tabla del núcleo de asociaciones
+       unicode a tipo de letra
+
+SINOPSIS
+       loadunimap [ -o mapaviejo ] [ mapa ]
+
+DESCRIPCIÓN
+       El programa loadunimap carga en la  tabla  del  núcleo  de
+       asociaciones unicode a tipo de letra el mapa especificado.
+       Si no se da ninguno se asume def.  La extensión  predeter­
+       minada  (i.e.,  que  puede omitirse) es .uni.  Si se da la
+       opción -o el mapa antiguo se guarda en el fichero  especi­
+       ficado.   Normalmente  uno  no llama a loadunimap directa­
+       mente: su función también está incorporada en setfont.
+
+FICHEROS
+       /usr/share/consoletrans suele ser el directorio  predeter­
+       minado para los mapas.
+
+VÉASE TAMBIÉN
+       setfont(8)
+
+
+
+
+                       17 de Marzo de 1997          LOADUNIMAP(8)

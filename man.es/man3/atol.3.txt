@@ -1,0 +1,33 @@
+ATOL(3)          Manual del Programador de Linux          ATOL(3)
+
+
+
+NOMBRE
+       atol - convierte una cadena a un entero largo.
+
+SINOPSIS
+       #include <stdlib.h>
+
+       long atol(const char *nptr);
+
+DESCRIPCIÓN
+       La  función  atol()  convierte  la  porción  inicial de la
+       cadena apuntada por nptr a un entero  largo.   El  compor­
+       tamiento es el mismo que
+
+              strtol(nptr, (char **)NULL, 10);
+
+       excepto que atol() no detecta errores.
+
+VALOR DEVUELTO
+       El valor convertido.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       atof(3), atoi(3), strtod(3), strtol(3), strtoul(3)
+
+
+
+GNU                     23 Diciembre 1995                 ATOL(3)

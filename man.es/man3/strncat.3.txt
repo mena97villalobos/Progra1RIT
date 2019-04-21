@@ -1,0 +1,37 @@
+STRCAT(3)        Manual del Programador de Linux        STRCAT(3)
+
+
+
+NOMBRE
+       strcat, strncat - concatena dos cadenas
+
+SINOPSIS
+       #include <string.h>
+
+       char *strcat(char *dest, const char *src);
+
+       char *strncat(char *dest, const char *src, size_t n);
+
+DESCRIPCIÓN
+       La  función  strcat()  une  la cadena src a la cadena dest
+       sobreescribiendo el caracter `\0'  al  final  de  dest,  y
+       entonces  añade  un  caracter  final `\0'.  Las cadenas no
+       deben solaparse, y la cadena dest  debe  tener  suficiente
+       espacio para el resultado.
+
+       La  función  strncat()  es  similar,  excepto que sólo los
+       primeros n caracteres de src están unidos a dest.
+
+VALOR DEVUELTO
+       Las funciones strcat() y strncat()  devuelven  un  puntero
+       que apunta a la cadena resultante dest.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       bcopy(3), memccpy(3), memcpy(3), strcpy(3), strncpy(3)
+
+
+
+GNU                       11 Abril 1993                 STRCAT(3)

@@ -1,0 +1,28 @@
+PSFSTRIPTABLE(1)                                 PSFSTRIPTABLE(1)
+
+
+
+NOMBRE
+       psfstriptable - quita la tabla de caracteres Unicode empo­
+       trada de un tipo de consola
+
+SINOPSIS
+       psfstriptable fichero-de-tipos [fichero-de-salida]
+
+
+DESCRIPCIÓN
+       psfstriptable lee un tipo de consola en  formato  .psf  de
+       fichero-de-tipos,  o de la entrada estándar si fichero-de-
+       tipos es un guión (-), que puede tener una tabla de  tipos
+       Unicode  empotrada,  y escribe (en la salida estándar o en
+       el fichero especificado) un fichero de tipos de consola en
+       formato .psf sin una tabla de caracteres empotrada.
+
+VÉASE TAMBIÉN
+       setfont(8), psfaddtable(1), psfgettable(1)
+
+
+
+
+
+                      25 de Octubre de 1994      PSFSTRIPTABLE(1)

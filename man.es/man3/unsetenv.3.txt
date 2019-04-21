@@ -1,0 +1,39 @@
+SETENV(3)        Manual del Programador de Linux        SETENV(3)
+
+
+
+NOMBRE
+       setenv - cambia o añade una variable de ambiente
+
+SINOPSIS
+       #include <stdlib.h>
+
+       int setenv(const char *nombre, const char *valor, int sobrescribir);
+
+       void unsetenv(const char *nombre);
+
+DESCRIPCIÓN
+       La  función setenv() añade la variable nombre al entorno o
+       ambiente con el valor valor, si nombre no existe  ya.   Si
+       nombre  sí  existe ya en el ambiente, entonces su valor se
+       cambia a valor si sobrescribir es  distinto  de  cero;  si
+       sobrescribir  es cero, entonces el valor de nombre no cam­
+       bia.
+
+       La  función  unsetenv()  borra  la  variable  nombre   del
+       entorno.
+
+VALOR DEVUELTO
+       La  función  setenv() devuelve cero si acaba bien, ó -1 si
+       no había bastante espacio en el entorno.
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       getenv(3), putenv(3), environ(5)
+
+
+
+
+BSD                        8 Marzo 1998                 SETENV(3)

@@ -1,0 +1,214 @@
+IPC(5)           Manual del Programador de Linux           IPC(5)
+
+
+
+NOMBRE
+       ipc - Mecanismos de comunicación entre procesos del System
+       V
+
+SINOPSIS
+       # include <sys/types.h>
+       # include <sys/ipc.h>
+       # include <sys/msg.h>
+       # include <sys/sem.h>
+       # include <sys/shm.h>
+
+DESCRIPCIÓN
+       Esta página del manual hace referencia a la implementación
+       en  Linux de los mecanismos de comunicación entre procesos
+       del System V (IPC, InterProcess Communication):  colas  de
+       mensajes,  conjuntos  de  semáforos y segmentos de memoria
+       compartida.   En  la  siguiente  descripción,  la  palabra
+       recurso  se refiere a la instancia de uno de dichos mecan­
+       ismos.
+
+   Permisos de Acceso a Recursos
+       Para cada recurso el sistema  utiliza  una  estructura  de
+       datos  común de tipo struct ipc_perm para almacenar infor­
+       mación necesaria para determinar permisos al ejecutar  una
+       operación  ipc.   La  estructura  ipc_perm, definida en el
+       fichero de cabecera  <sys/ipc.h>  incluye  los  siguientes
+       miembros:
+
+            ushort cuid;    /* id del usuario creador */
+            ushort cgid;    /* id de grupo del usuario creador */
+            ushort uid; /* id del usuario dueño */
+            ushort gid; /* id de grupo del usuario dueño */
+            ushort mode; /* permisos de lectura/escritura */
+
+       El miembro mode de la estructura ipc_perm define, con  los
+       9  bits más bajos, los persmisos de acceso al recurso para
+       cualquier proceso que realice una llamada ipc al  sistema.
+       Los permisos se interpretan de la siguiente manera:
+
+            0400 Lectura para el usuario.
+            0200 Escritura para el usuario.
+            0040 Lectura para el grupo.
+            0020 Escritura para el grupo.
+            0004 Lectura para otros.
+            0002 Escritura para otros.
+
+       Los  bits 0100, 0010 y 0001 (bits de ejecución) no se uti­
+       lizan.  Además, "write" (permiso de escritura)  se  inter­
+       preta  efectivamente  como "alter" (permiso de alteración)
+       para un conjunto de semáforos.
+
+       El mismo fichero de cabecera del  sistema  también  define
+       las siguientes constantes simbólicas:
+
+       IPC_CREAT     Crea la entrada si la clave no existe.
+
+       IPC_EXCL      Falla si la clave existe.
+
+       IPC_NOWAIT    Devuelve  error si la petición debe esperar.
+
+       IPC_PRIVATE   Clave privada.
+
+       IPC_RMID      Elimina el recurso.
+
+       IPC_SET       Establece opciones del recurso.
+
+       IPC_STAT      Obtiene opciones del recurso.
+
+       Nótese que IPC_PRIVATE es de tipo key_t, mientras que  las
+       otras  constantes  simbólicas son campos señalizadores que
+       pueden combinarse usando operaciones 'or' en una  variable
+       de tipo int.
+
+   Colas de Mensajes
+       Una  cola de mensajes se identifica unívocamente usando un
+       número entero positivo (llamado msqid) y tiene una estruc­
+       tura  de datos asociada de tipo struct msquid_ds, definida
+       en <sys/msg.h>.  La  estructura  contiene  los  siguientes
+       miembros:
+
+            struct ipc_perm msg_perm;
+            ushort msg_qnum; /* número de mensajes en cola */
+            ushort  msg_qbytes; /* máximo número de bytes en cola
+       */
+            ushort msg_lspid; /* pid última llamada a msgsnd */
+            ushort msg_lrpid; /* pid última llamada a msgrcv */
+            time_t msg_stime; /* hora última llamada a msgsnd */
+            time_t msg_rtime; /* hora última llamada a msgrcv */
+            time_t msg_ctime; /* hora del último cambio */
+
+       msg_perm   ipc_perm estructura que especifica los permisos
+                  de acceso a la cola de mensajes.
+
+       msg_qnum   Número  actual  de  mensajes en la cola de men­
+                  sajes.
+
+       msg_qbytes Máximo número de bytes permitidos en  el  texto
+                  del mensaje en la cola de mensajes.
+
+       msg_lspid  ID  del proceso que ejecutó la última llamada a
+                  msgsnd.
+
+       msg_lrpid  ID del proceso que ejecutó la última llamada  a
+                  msgrcv.
+
+       msg_stime  Hora de la última llamada a msgsnd.
+
+       msg_rtime  Hora de la última llamada a msgrcv.
+
+       msg_ctime  Hora de la última llamada que cambió un miembro
+                  de la estructura msqid_ds.
+
+   Conjuntos de Semáforos
+       Un conjunto de semáforos se identifica unívocamente usando
+       un número entero positivo (llamado semid) y tiene asociada
+       la siguiente estructura de datos de tipo struct  semid_ds,
+       definida en <sys/sem.h>.  La estructura contiene los sigu­
+       ientes campos:
+
+            struct ipc_perm sem_perm;
+            time_t sem_otime; /* hora de la última operación */
+            time_t sem_ctime; /* hora del último cambio */
+            ushort sem_nsems; /* cantidad de semáforos en el con­
+       junto */
+
+       sem_perm   ipc_perm estructura que especifica los permisos
+                  de acceso al conjunto de semáforos.
+
+       sem_otime  Hora de la última llamada a semop.
+
+       sem_ctime  Hora de la última llamada a semctl  que  cambió
+                  un miembro de la estructura anterior o un miem­
+                  bro de algún semáforo del conjunto.
+
+       sem_nsems  Cantidad de semáforos  en  el  conjunto.   Cada
+                  semáforo  en  el  conjunto  se accede usando un
+                  entero positivo en el rango 0 a sem_nsems-1.
+
+       Un semáforo es una estructura de datos de tipo struct  sem
+       que contiene los siguientes miembros:
+
+            ushort semval;  /* valor del semáforo */
+
+            short sempid;   /* pid para la última operación */
+
+            ushort semncnt; /* cantidad de semval esperando a ser
+                            incrementados */
+
+            ushort semzcnt; /* cantidad  de  semáforos  esperando
+                            cuyo semval = 0 */
+
+
+       semval     Valor del semáforo: un entero no negativo.
+
+       sempid     ID del último proceso que realizó una operación
+                  de semáforo sobre este semáforo.
+
+       semncnt    Cantidad de procesos suspendidos esperando  que
+                  semval aumente.
+
+       semznt     Cantidad  de procesos suspendidos esperando que
+                  semval se haga cero.
+
+   Segmentos de Memoria Compartida
+       Un segmento de memoria compartida se  identifica  unívoca­
+       mente mediante un número entero positivo (llamado shmid) y
+       tiene una estructura de  datos  asociada  de  tipo  struct
+       shmid_ds, definida en <sys/shm.h>.  La estructura contiene
+       los siguiente miembros:
+
+            struct ipc_perm shm_perm;
+            int shm_segsz;       /* Tamaño del segmento */
+            ushort shm_cpid;     /* pid del creador */
+            ushort shm_lpid;     /* pid de la última operación */
+            short shm_nattch;    /* cantidad actual de conexiones
+       */
+            time_t shm_atime;    /* hora de la última conexion */
+            time_t shm_dtime;    /* hora última desconexión */
+            time_t shm_ctime;    /* hora del último cambio */
+
+       shm_perm   ipc_perm estructura que especifica los permisos
+                  de acceso al segmento de memoria compartida.
+
+       shm_segsz  Tamaño en bytes del segmento de memoria compar­
+                  tida.
+
+       shm_cpid   ID  del proceso que creo el segmento de memoria
+                  compartida.
+
+       shm_lpid   ID del último proceso que ejecutó  una  llamada
+                  del sistema shmat o shmdt.
+
+       shm_nattch Cantidad de conexiones activas actualmente para
+                  este segmento de memoria compartida.
+
+       shm_atime  Hora de la última llamada a shmat.
+
+       shm_dtime  Hora de la última llamada a shmdt.
+
+       shm_ctime  Hora de la última llamada a shmctl  que  cambió
+                  shmid_ds.
+
+VÉASE TAMBIÉN
+       ftok(3),  msgctl(2), msgget(2), msgrcv(2), msgsnd(2), sem­
+       ctl(2),   semget(2),   semop(2),   shmat(2),    shmctl(2),
+       shmget(2), shmdt (2).
+
+
+
+Linux 0.99.13            1 Noviembre 1993                  IPC(5)

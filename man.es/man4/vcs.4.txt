@@ -1,0 +1,90 @@
+VCS(4)           Manual del Programador de Linux           VCS(4)
+
+
+
+NOMBRE
+       vcs, vcsa - memoria de la consola virtual
+
+DESCRIPCIÓN
+       /dev/vcs0 es un dispositivo de carácter con número mayor 7
+       y número menor 0,  creado  normalmente  con  modo  0644  y
+       propietario  root.tty.  Designa la memoria del terminal de
+       consola virtual visualizado en ese momento.
+
+       /dev/vcs[1-63] son los dispositivos de carácter  para  los
+       terminales  de consola virtual. Tienen el número mayor 7 y
+       el número menor de 1 a 63, y se crean normalmente  con  el
+       modo  0644  y propietario root.tty. /dev/vcsa[0-63] son lo
+       mismo, pero incluyendo los  atributos,  y  prefijados  con
+       cuatro  bytes que indican las dimensiones de la pantalla y
+       la posición del cursor: líneas, columnas, x, y (x = y =  0
+       en la esquina superior izquierda de la pantalla).
+
+       Estos dispositivos reemplazan las ioctl de volcado de pan­
+       talla de console(4), de forma  que  el  administrador  del
+       sistema pueda controlar el acceso a través de los permisos
+       del sistema de ficheros.
+
+       Los dispositivos de las ocho primeras  consolas  virtuales
+       se pueden crear con:
+
+            for x in 0 1 2 3 4 5 6 7 8; do
+                 mknod -m 644 /dev/vcs$x c 7 $x;
+                 mknod -m 644 /dev/vcsa$x c 7 $[$x+128];
+            done
+            chown root:tty /dev/vcs*
+
+       No se aceptan peticiones de ioctl().
+
+EJEMPLOS
+       Se  puede hacer un volcado de pantalla de vt3 conmutando a
+       vt1 y tecleando cat /dev/vcs3 >foo. Nótese que  la  salida
+       no  contiene  caracteres  de nueva línea, por lo que puede
+       ser necesario algo de procesamiento  adicional,  como  por
+       ejemplo  en  fold -w 81 /dev/vcs3 | lpr o en (horror) set­
+       term -dump 3 -file /proc/self/fd/1.
+
+       El siguiente programa visualiza los atributos de  carácter
+       y  pantalla que se encuentran en la posición del cursor de
+       la segunda consola virtual, y después cambia su  color  de
+       fondo allí:
+
+            #include <unistd.h>
+            #include <stdio.h>
+            #include <fcntl.h>
+
+            int main()
+            {    int fd;
+                 struct {char lines, cols, x, y;} scrn;
+                 char ch, attrib;
+
+                 fd = open("/dev/vcsa2", O_RDWR);
+                 (void)read(fd, &scrn, 4);
+                 (void)lseek(fd, 4 + 2*(scrn.y*scrn.cols + scrn.x), 0);
+                 (void)read(fd, &ch, 1);
+                 (void)read(fd, &attrib, 1);
+                 (void)printf("c='%c' atrib=0x%02x\n", ch, attrib);
+                 attrib ^= 0x10;
+                 (void)lseek(fd, -1, 1);
+                 (void)write(fd, &attrib, 1);
+                 return 0;
+            }
+
+
+FICHEROS
+       /dev/vcs[0-63]
+       /dev/vcsa[0-63]
+
+AUTOR
+       Andries Brouwer <aeb@cwi.nl>
+
+HISTORIA
+       Disponible  a  partir  de  la versión 1.1.92 del núcleo de
+       Linux.
+
+VÉASE TAMBIÉN
+       console(4), tty(4), ttys(4), selection(1).
+
+
+
+Linux                      2 Julio 1996                    VCS(4)

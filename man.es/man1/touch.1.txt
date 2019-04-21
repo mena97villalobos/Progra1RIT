@@ -1,0 +1,153 @@
+TOUCH(1)                                                 TOUCH(1)
+
+
+
+NOMBRE
+       touch - cambia la fecha de un archivo.
+
+SINOPSIS
+       touch [-acm][-r archivo_referencia|-t fecha] archivo...
+
+       Versión en desuso:
+       touch [-acm][ugly_time] archivo...
+
+       Version GNU:
+       touch  [-acfm]  [-r  archivo]  [-t fechadecimal] [-d time]
+       [--time={atime,access,use,mtime,modify}]    [--date=fecha]
+       [--reference=archivo]  [--no-create]  [--help] [--version]
+       [--] archivo...
+
+DESCRIPCIÓN
+       touch cambia la  fecha  de  acceso  y/o  modificación  del
+       archivo especificado file.  Las fechas a cambiar son modi­
+       ficadas a la fecha actual, a menos  q  la  opción  -r  sea
+       especificada,  en  cuyo caso es cambiada a la fecha corre­
+       spondiente del archivo archivo_referencia, o la opción  -t
+       sea  especificada, en cuyo caso es cambiada a la especifi­
+       cada time.  Ambas fechas son cambiadas  cuando  ninguna  o
+       ambas  de  las opciones  -a y -m sean dadas. Solo la fecha
+       de acceso o modificación es cambiada  cuando  una  de  las
+       opciones  -a  y  -m  es dada. Si el archivo no existía, es
+       creado (como un archivo vacio con  modo  0666,  modificado
+       por umask), a menos que la opción -c sea dada.
+
+OPCIONES POSIX
+       -a     Cambia la fecha de acceso de archivo.
+
+       -c     No crea archivo.
+
+       -m     Cambia la fecha de modificación de archivo.
+
+       -r archivo_referencia
+              Utiliza la fecha correspondiente a archivo_referen­
+              cia como el nuevo valor para la(s) fecha(s) modifi­
+              cada(s).
+
+       -t time
+              Utiliza  la  fecha especificada como el nuevo valor
+              para la(s) fecha(s) modificada(s). Dicho  argumento
+              debe ser un número decimal de la forma
+                  [[SS]AA]MMDDhhmm[.ss]
+              con su significado obvio. Si SS no es especificado,
+              el año SSAA es tomado como perteneciente al  inter­
+              valo  1969-2068.  Si  ss  no se especifica, se toma
+              como valor 0. Es posible  especificarlo  dentro  de
+              los  valores 0-61 así que es posible dar valores de
+              cambio ("salto") de minuto. La fecha resultante  se
+              toma como una fecha de la zona horaria especificada
+              por la variable de entorno TZ. Se produce un  error
+              si la fecha dada es anterior al 1 de Enero de 1970.
+
+DETALLES POSIX
+       La segunda manera de ejecución tiene la desventaja de  que
+       puede  haber  cierta ambiguedad en el termino ugly_time es
+       una fecha o un argumento de  fichero.  Se  considera  como
+       fecha cuando no estan presentes las opciones  -r o -t, hay
+       al menos dos argumentos, y el primer argumento es un 8 - o
+       un  10  -  como  dígito  decimal  entero.   El  formato de
+       ugly_time es MMDDhhmm[aa],  donde  aa  esta  en  el  rango
+       69-99  entendiendose  como  un  año  en  el  intervalo  de
+       1969-1999. Un argumento aa  no  especificado  se  entiende
+       como  el año actual. Esta forma de utilizacion de touch se
+       encuentra obsoleta.
+
+DETALLES GNU
+       Si el primer archivo fuese un  argumento  valido  para  la
+       opción -t y no se da fecha con ninguna de las opciones -d,
+       -r o -t y el argumento `--' no se da,  este  argumento  se
+       interpreta  como la fecha para otros archivos en vez de el
+       nombre de un archivo.
+
+       Si tanto la fecha de acceso  como  de  modificación  a  la
+       fecha  actual, touch puede cambiar la fecha de los arhivos
+       que el usuario que los ejecuta tenga permisos de escritura
+       en  ellos, aunque no sean suyos. De cualquier otra manera,
+       el usuario ha de ser el dueño de los archivos.
+
+OPCIONES GNU
+       -a, --time=atime, --time=access, --time=use
+              Cambia solamente el tiempo de acceso.
+
+       -c, --no-create
+              No crea archivos que no existian antes.
+
+       -d, --date=fecha
+              Use fecha en lugar de la fecha actual.  Puede  con­
+              tener  nombres  de  meses,  zonas  horarias, `am' y
+              `pm', etc.
+
+       -f     Ignorado; para compatibilidad con versiones BSD  de
+              touch(1).
+
+       -m, --time=mtime, --time=modify
+              Cambia solamente la fecha de modificacion.
+
+       -r archivo, --reference=archivo
+              Utiliza  como  referencia  las fechas de archivo en
+              lugar de la fecha actual.
+
+       -t decimtime
+              Aqui  decimtime  tiene  el  formato    [[SS]AA]MMD­
+              Dhhmm[.ss]   Utilice  el  argumento  (meses,  días,
+              horas, minutos,  opcionalmente  el  siglo  y  años,
+              opcionalmente   segundos)  en  lugar  de  la  fecha
+              actual.  Tenga en cuenta que este formato viola  la
+              especificacion POSIX.
+
+OPCIONES GNU NORMALES
+       --help Muestra  un mensaje de ayuda en la salida starndard
+              y sale con exito.
+
+       --version
+              Muestra informacion acerca de la version en la sal­
+              ida standard y sale con exito.
+
+       --     Termina la lista de opciones.
+
+ENTORNO
+       La  variable TZ se usa para interpretar fechas específicas
+       dadas.  Las variables LANG, LC_ALL, LC_CTYPE y LC_MESSAGES
+       tienen el habitual significado.
+
+CONFORME A
+       POSIX  1003.2 describe la sintaxis para el argumento de la
+       opción -t que difiere de la usada  por  la  implementacion
+       GNU.
+
+EJEMPLO DE UTILIZACIÓN
+       El  comando  `touch  foo' creará el archivo foo si este no
+       existia, y cambiando la fecha de la ultima modificación  a
+       la  actual. Habitualmente es usada para guiar las acciones
+       de make.
+
+NOTAS
+       Esta página describe touch como se encuentra en el paquete
+       fileutils-3.16  ;  otras  versiones  pueden  tener ligeras
+       diferencias. Correcciones y  contribuciones  a  aeb@cwi.nl
+       and   aw@mail1.bet1.puv.fi   y  ragnar@lightside.ddns.org.
+       Informes  de  fallos   en   el   programa   a   fileutils-
+       bugs@gnu.ai.mit.edu.
+
+
+
+GNU fileutils 3.16         Agosto 1998                   TOUCH(1)

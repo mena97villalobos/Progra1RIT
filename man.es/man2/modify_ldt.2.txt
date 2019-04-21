@@ -1,0 +1,56 @@
+MODIFY_LDT(2)    Manual del Programador de Linux    MODIFY_LDT(2)
+
+
+
+NOMBRE
+       modify_ldt - obtiene o pone ldt
+
+SINOPSIS
+       #include <linux/ldt.h>
+       #include <linux/unistd.h>
+
+       _syscall3(int, modify_ldt, int, func, void *, ptr, unsigned long, bytecount )
+
+       int modify_ldt(int func, void *ptr, unsigned long bytecount);
+
+DESCRIPCIÓN
+       modify_ldt  lee  o  escribe la tabla local de descriptores
+       (ldt) para un proceso.  La ldt es una tabla de gestión  de
+       memoria  por proceso empleada por el procesador i386. Para
+       más información sobre esta tabla, consulte un  manual  del
+       procesador 386 de Intel.
+
+       Cuando  func  es  0,  modify_ldt  lee la ldt de la zona de
+       memoria apuntada por ptr.  El número de bytes leídos es el
+       menor de bytecount y el tamaño actual de la ldt.
+
+       Cuando  func es 1, modify_ldt modifica una entrada de ldt.
+       ptr apunta a una estructura modify_ldt_ldt_s  y  bytecount
+       debe igualar el tamaño de esta estructura.
+
+VALOR DEVUELTO
+       En  caso de éxito, modify_ldt devuelve o el número real de
+       bytes leídos (cuando lee) ó 0 (cuando escribe).  Si falla,
+       modify_ldt devuelve -1 y da un valor apropiado a errno.
+
+ERRORES
+       ENOSYS func no es ni 0 ni 1.
+
+       EINVAL ptr  es  0,  o func es 1 y bytecount no es igual al
+              tamaño de la estructura modify_ldt_ldt_s, o func es
+              1  y la nueva entrada de ldt tiene valores no váli­
+              dos.
+
+       EFAULT ptr apunta afuera del espacio de direcciones.
+
+CONFORME A
+       Esta llamada es específica de Linux y no debería emplearse
+       en programas que pretendan ser transportables.
+
+VÉASE TAMBIÉN
+       vm86(2)
+
+
+
+
+Linux                     22 Julio 1995             MODIFY_LDT(2)

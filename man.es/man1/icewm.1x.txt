@@ -1,0 +1,61 @@
+ICEWM(1)                                                 ICEWM(1)
+
+
+
+NAME
+       icewm - un gestor de ventanas pequeño y rápido
+
+SINÓPSIS
+       icewm [-display DISPLAY] [-c CONFIG] [-n] [-debug]
+
+DESCRIPCION
+       Esta  página  de  manual  describe brevemente el gestor de
+       ventanas IceWM.  Esta página ha sido escrita para la  dis­
+       tribución  GNU/Linux  Debian  (pero  puede  ser  usada por
+       otros), porque el programa original no tenía ninguna.   En
+       cambio  sí hay documentación en formato HTML; ver más ade­
+       lante.
+
+       La finalidad de IceWM es tener un pequeño, rápido y famil­
+       iar gestor de ventanas para el sistema de ventanas X11. Se
+       desea la compatibilidad con el  gestor  de  ventanas  mwm,
+       para lo cual se implementará aquello que sea necesario.
+
+       El IceWM está diseñado para emular la apariencia de Motif,
+       OS/2 Warp 4, OS/2 Warp 3 y Windows 95. Puede que se añadan
+       otros en el futuro.
+
+       También  intenta  combinar  el entorno de esos sistemas en
+       los casos en que esto sea posible.
+
+       Generalmente intenta tener todas sus funciones disponibles
+       tanto  por teclado como por ratón ( por el momento esto no
+       es posible cuando se usa la activación mediante ratón).
+
+       IceWM NO persigue llegar a la extrema configurabilidad que
+       tienen gestores de ventanas como fvwm y otros muchos.
+
+
+OPCIONES
+       -display DISPLAY
+              Fijar DISPLAY como display.
+
+       -c CONFIG
+              Usar CONFIG como archivo de configuración.
+
+       -n     No usar archivo de configuración.
+
+       -debug Escribir varia información de debug en stderr.
+
+VÉASE TAMBIÉN
+       La    documentación    original   puede   encontrarse   en
+       /usr/doc/icewm/ en formatos HTML y SGML, o puede obtenerse
+       mediante el sistema dwww si está instalado.
+
+AUTOR
+       Esta página de manual ha sido escrita por Gergely Madarasz
+       <gorgo@caesar.elte.hu> para el sistema GNU/Linux Debian.
+
+
+
+                                                         ICEWM(1)

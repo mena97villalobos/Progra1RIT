@@ -1,0 +1,63 @@
+PREAD(2)         Manual del Programador de Linux         PREAD(2)
+
+
+
+NOMBRE
+       pread,  pwrite - leen de o escriben en un fichero a partir
+       de una posición dada
+
+SINOPSIS
+       #define _XOPEN_SOURCE 500
+
+       #include <unistd.h>
+
+       ssize_t pread(int fd, void *buf, size_t count, off_t  off­
+       set);
+
+       ssize_t  pwrite(int  fd,  const  void  *buf, size_t count,
+       off_t offset);
+
+DESCRIPCIÓN
+       pread() lee hasta count bytes del descriptor de fichero fd
+       a  partir  de  la  posición offset (desde el principio del
+       fichero) en el área temporal que empieza en buf.  La posi­
+       ción del puntero de L/E del fichero no cambia.
+
+       pwrite()  escribe  hasta  count  bytes desde el buffer que
+       empieza en buf al descriptor de fichero fd a partir de  la
+       posición  offset.   La posición del puntero del fichero no
+       cambia.
+
+       Debe ser posible realizar búsquedas sobre el fichero  ref­
+       erenciado por fd.
+
+VALOR DEVUELTO
+       En  caso  de éxito se devuelve el número de bytes leídos o
+       escritos (un cero indica que no se ha escrito nada, en  el
+       caso de pwrite, o un fin de fichero, en el caso de pread),
+       o -1 en caso de error, en cuyo caso se asigna a  errno  un
+       valor que indica el error.
+
+ERRORES
+       pread  puede  fallar  y  asignar  a  errno cualquier error
+       especificado por read(2) o lseek(2).  pwrite puede  fallar
+       y   asignar  a  errno  cualquier  error  especificado  por
+       write(2) o lseek(2).
+
+CONFORME A
+       Unix98
+
+HISTORIA
+       Las llamadas al sistema pread  y  pwrite  se  añadieron  a
+       Linux  en  la  versión 2.1.60. Las entradas en la tabla de
+       llamadas al sistema de la arquitectura i386  se  añadieron
+       en  la  versión  2.1.69. El soporte de libc (incluyendo la
+       emulación en los núcleos anteriores que carecen  de  estas
+       llamadas al sistema) se añadió en glibc 2.1.
+
+VÉASE TAMBIÉN
+       read(2), write(2), lseek(2).
+
+
+
+Linux 2.2.0-pre9          21 enero 1999                  PREAD(2)

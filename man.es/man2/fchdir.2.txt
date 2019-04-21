@@ -1,0 +1,74 @@
+CHDIR(2)         Manual del Programador de Linux         CHDIR(2)
+
+
+
+NOMBRE
+       chdir, fchdir - cambia el directorio de trabajo
+
+SINOPSIS
+       #include <unistd.h>
+
+       int chdir(const char *path);
+       int fchdir(int fd);
+
+DESCRIPCIÓN
+       chdir  cambia  el directorio presente a aquel especificado
+       en path.
+
+       fchdir es lo mismo que chdir, solo que el directorio  está
+       dado como un descriptor de fichero abierto.
+
+VALOR DEVUELTO
+       En  caso  de  éxito,  cero.  Si  hay algún error, -1, y se
+       asigna a errno un valor apropiado.
+
+ERRORES
+       Depediendo del sistema de  ficheros,  se  pueden  devolver
+       otros  errores.   Los errores más comunes se listan a con­
+       tinuación:
+
+       EFAULT  path apunta fuera de  su  espacio  de  direcciones
+               accesible.
+
+       ENAMETOOLONG
+               path es demasiado largo.
+
+       ENOENT  El fichero no existe.
+
+       ENOMEM  No hay suficiente memoria disponible en el kernel.
+
+       ENOTDIR Un componente del camino path no es un directorio.
+
+       EACCES  Ha  sido denegado el permiso de búsqueda en uno de
+               los componentes del camino path.
+
+       ELOOP   Se han encontrado demasiados enlaces simbólicos al
+               resolver path.
+
+       EIO     Ha ocurrido un error de E/S.
+
+       Los  errores más comunes para fchdir se muestran a contin­
+       uación:
+
+       EBADF   fd no es un descriptor válido de fichero.
+
+       EACCES  Se ha denegado el permiso  de  búsqueda  sobre  el
+               directorio abierto en fd.
+
+CONFORME A
+       La  llamada  chdir  es  compatible  con SVr4, SVID, POSIX,
+       X/OPEN, 4.4BSD.  SVr4 documenta las condiciones  de  error
+       adicionales  EINTR,  ENOLINK  y  EMULTIHOP  pero  no tiene
+       ENOMEM.  POSIX.1 no tiene las condiciones de error  ENOMEM
+       o ELOOP.  X/OPEN no tiene las condiciones de error EFAULT,
+       ENOMEM ni EIO.  La llamada fchdir es compatible con  SVr4,
+       4.4BSD  y X/OPEN.  SVr4 documenta las condiciones de error
+       adicionales EIO, EINTR y ENOLINK.   X/OPEN  documenta  las
+       condiciones de error adicionales EINTR y EIO.
+
+VÉASE TAMIBIÉN
+       getcwd(3), chroot(2)
+
+
+
+Linux 2.0.30              21 Agosto 1997                 CHDIR(2)

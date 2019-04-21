@@ -1,0 +1,34 @@
+FMOD(3)          Manual del Programador de Linux          FMOD(3)
+
+
+
+NOMBRE
+       fmod - función resto en coma flotante
+
+SINOPSIS
+       #include <math.h>
+
+       double fmod(double x, double y);
+
+DESCRIPCIÓN
+       La  función  fmod()  computa  el resto de la división de x
+       entre y. El valor devuelto es x - n * y,  donde  n  es  el
+       cociente de x / y, redondeado a un entero hacia cero.
+
+VALOR DEVUELTO
+       La  función  fmod()  devuelve  el resto, a menos que y sea
+       cero, en cuyo caso la función falla y errno toma un  valor
+       apropiado.
+
+ERRORES
+       EDOM   El denominador y es cero.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       drem(3)
+
+
+
+Linux             Miércoles 14 de Enero de 1998           FMOD(3)

@@ -1,0 +1,39 @@
+STRCMP(3)        Manual del Programador de Linux        STRCMP(3)
+
+
+
+NOMBRE
+       strcmp, strncmp - comparar dos cadenas de caracteres
+
+SINOPSIS
+       #include <string.h>
+
+       int strcmp(const char *s1, const char *s2);
+
+       int strncmp(const char *s1, const char *s2, size_t n);
+
+DESCRIPCIÓN
+       La  función strcmp() compara las dos cadenas de caracteres
+       s1 y s2.  Devuelve un entero menor, igual o mayor que cero
+       si  se  encuentra  que  s1 es, respectivamente, menor que,
+       igual a (concordante), o mayor que s2.
+
+       La función strncmp() es similar, salvo que solamente  com­
+       para los primeros n caracteres de s1.
+
+VALOR DEVUELTO
+       Las  funciones  strcmp()  y  strncmp() devuelven un entero
+       menor que, igual a, o mayor que cero si s1 (o los primeros
+       n bytes en el segundo caso) se encuentra que es, respecti­
+       vamente, menor que, igual a, o mayor que s2.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       bcmp(3), memcmp(3),  strcasecmp(3),  strncasecmp(3),  str­
+       coll(3)
+
+
+
+Linux                     11 Abril 1993                 STRCMP(3)

@@ -1,0 +1,23 @@
+SECURETTY(5)     Manual del Programador de Linux     SECURETTY(5)
+
+
+
+NOMBRE
+       securetty  - fichero que lista aquellas ttys desde las que
+       root puede entrar
+
+DESCRIPCIÓN
+       /etc/securetty lo utiliza el programa login(1); el fichero
+       contiene  los nombres de dispositivo de líneas de tty (sin
+       el prefijo /dev/) que root puede usar para  entrar  en  el
+       sistema.
+
+FICHEROS
+       /etc/securetty
+
+VÉASE TAMBIÉN
+       login(1)
+
+
+
+Linux                   29 Diciembre 1992            SECURETTY(5)

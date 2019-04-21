@@ -1,0 +1,25 @@
+ISATTY(3)        Manual del Programador de Linux        ISATTY(3)
+
+
+
+NOMBRE
+       isatty - si se refiere este descriptor a una terminal
+
+SINOPSIS
+       #include <unistd.h>
+
+       int isatty ( int desc );
+
+DESCRIPCIÓN
+       Devuelve  1  si  desc es un descriptor abierto conectado a
+       una terminal y 0 en otro caso.
+
+CONFORME A
+       SVID, AT&T, X/OPEN, BSD 4.3
+
+VÉASE TAMBIÉN
+       fstat(2), ttyname(3)
+
+
+
+Linux                      2 Marzo 1998                 ISATTY(3)

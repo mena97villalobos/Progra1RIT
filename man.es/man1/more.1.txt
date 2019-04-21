@@ -1,0 +1,198 @@
+
+
+NOMBRE
+     more - filtro de ficheros para visualización en terminales
+
+SINOPSIS
+     more [-dlfpcsu] [-num] [+/ patrón] [+ numlínea] [file ...]
+
+DESCRIPCIÓN
+     More es un filtro para paginar texto, mostrando una pantalla cada vez.
+     Esta versión es especialmente primitiva. Los usarios deben tener en
+     cuenta que less(1) ("menos") provee more(1) ("más") emulación y muchas
+     más mejoras.
+
+OPCIONES
+     Las opciones de la línea de comandos se describen a continuación.  Estas,
+     también se toman de la variable de entorno MORE (asegúrate de precederla
+     con un guión (``-'')). Ten en cuenta que las opciones de la línea de
+     comandos toman precedencia sobre esta variable.
+
+     -num  Esta opción especifica un entero que indica el tamaño de la pan­
+           talla (en líneas).
+
+     -d    more mostrará el mensaje "[Press space to continue, 'q' to quit.]"
+           (pulsa espacio para continuar, 'q' para salir) y en vez de emitir
+           un pitido cada vez que se pulse una tecla ilegal mostrará "[Press
+           'h' for instructions.]"  ((Pulsa 'h' para obtener instrucciones).
+
+     -l    more normalmente trata ^L (avance de página) como un caracter espe­
+           cial y parará después de cualquier línea que contenga un avance de
+           página. La opción -l deshabilita este comportamiento.
+
+     -f    Hace que more cuente líneas lógicas, en vez de líneas de pantalla
+           (i.e., las líneas largas no se pliegan).
+
+     -p    No realizar desplazamiento. En vez del desplazamiento, limpiar toda
+           la pantalla y después mostrar todo el texto.
+
+     -c    No realizar desplazamiento. En vez del mismo, dibujar cada pantalla
+           desde arriba, limpiando el resto de la línea según se van
+           mostrando.
+
+     -s    Reducir múltiples líneas en blanco a una.
+
+     -u    Suprimir el subrayado.
+
+     +/    La opción +/ especifica una cadena de caracteres que se buscará
+           antes que se muestre cada fichero.
+
+     +num  Empezar en el número de línea especificado.  num.
+
+ÓRDENES
+     Las órdenes interactivas para more están basadas en las respectivas de
+     vi(1).  Algunos de ellos se pueden preceder por un número decimal, que
+     llamaremos "k" en las descripciones siguientes.  En lo que sigue, ^X sig­
+     nifica control-X.
+
+     h ó ?       Ayuda: muestra un resumen para estos comandos.  Si olvidas
+                 todos los otros, recuerda éste.
+
+     ESPACIO     Muestra las próximas k líneas de texto. Por defecto, el
+                 tamaño (en líneas) de la pantalla actual.
+
+     z           Muestra las próximas k líneas de texto. Por defecto el tamaño
+                 (en líneas) de la pantalla actual. El argumento se transforma
+                 en el nuevo valor por defecto.
+
+     RETURN      Muestra las próximas k líneas de texto. Por defecto una. El
+                 argumento se transforma en el nuevo valor por defecto.
+
+     d ó ^D      Avanzar k líneas. Por defecto es el tamaño actual de
+                 desplazamiento, inicialmente 11. El argumento se convierte en
+                 el nuevo valor por defecto.
+
+     q ó Q ó INTERRUPCIÓN
+                 Salir.
+
+     s           Avanzar k líneas de texto. Por defecto 1.
+
+     f           Avanzar k pantallas de texto. Por defecto 1.
+
+     b ó ^B      Retroceder k pantallas de texto. Por defecto 1.
+
+     '           Ir al punto dónde empezó la búsqueda anterior.
+
+     =           Mostrar el número de línea actual.
+
+     /patrón     Buscar la ocurrencia k-ésima de una expresión regular. Por
+                 defecto una.
+
+     n           Buscar la k-ésima ocurrencia de la última expresión regular.
+                 Por defecto una.
+
+     !<cmd> ó :!<cmd>
+                 Ejecutar <cmd> en una instancia del intérprete de comandos.
+
+     v           Iniciar /usr/bin/vi en la línea actual.
+
+     ^L          Redibujar la pantalla.
+
+     :n          Saltar siguiente k-ésimo fichero. Por defecto 1 (el sigu­
+                 iente).
+
+     :p          Saltar al k-ésimo fichero anterior. Por defecto 1 (el sigu­
+                 iente).
+
+     :f          Mostrar el nombre de fichero y la línea actual.
+
+     .           Repetir el comando anterior.
+
+ENTORNO
+     Si existen, More usa las siguientes variables de entorno:
+
+     MORE        A ésta variable se le pueden asignar las opciones favoritas
+                 para more.
+
+     SHELL       El intérprete de comandos en uso (normalmente está asignada
+                 por el propio intérprete al entrar en el sistema).
+
+     TERM        Especifica el tipo de terminal, usada por more para obtener
+                 las características del terminal necesarias para manejar la
+                 pantalla.
+
+VÉASE TAMBIÉN
+     vi(1) less(1)
+
+AUTORES
+     Eric Shienbrood, UC Berkeley
+     Modificado por Geoff Peck, UCB para añadir subrayado, espaciado simple
+     Modificado por John Foderaro, UCB para añadir -c y la variable de entorno
+     MORE
+
+HISTORIA
+     El comando more apareció en 3.0BSD.  Esta página del manual documenta la
+     versión 5.19 (Berkeyley 6/26/88) de more , que es la que se usa corrien­
+     temente en la comunidad Linux. La documentación fue creada usando difer­
+     entes versiones de la página del manual, y una inspección exhaustiva del
+     código fuente.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

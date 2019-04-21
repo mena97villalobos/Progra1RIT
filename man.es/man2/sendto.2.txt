@@ -1,0 +1,145 @@
+SEND(2)          Manual del Programador de Linux          SEND(2)
+
+
+
+NOMBRE
+       send,  sendto,  sendmsg  - envía un mensaje de un conector
+       (socket)
+
+SINTAXIS
+       #include <sys/types.h>
+       #include <sys/socket.h>
+
+       int send(int s, const void *msg, size_t len, int flags);
+       int sendto(int s, const void *msg, size_t len, int  flags,
+       const struct sockaddr *to, socklen_t tolen);
+       int sendmsg(int s, const struct msghdr *msg, int flags);
+
+DESCRIPCIÓN
+       Send,  sendto  y sendmsg son utilizados para transmitir un
+       mensaje a otro conector.  Send solo puede ser usado cuando
+       un  conector está en un estado connected mientras sendto y
+       sendmsg pueden ser utilizados en cualquier momento.
+
+       La dirección de  destino  viene  dada  por  to  con  tolen
+       especificando  su  tamaño.  La  longitud del mensaje viene
+       dada por len.  Si el mensaje es demasiado largo para pasar
+       automáticamente   a  través  del  protocolo  inferior,  se
+       devuelve el error EMSGSIZE y el mensaje no es transmitido.
+
+       La  llamada send lleva implícita el que no se indiquen los
+       posibles errores en la entrega.   Los  errores  detectados
+       localmente se indican devolviendo un valor -1.
+
+       Cuando el mensaje no cabe en el buffer de envío del conec­
+       tor, send se bloquea, a no ser que  el  conector  se  haya
+       colocado  en  el  modo de E/S no bloqueante. En el modo no
+       bloqueante devolvería EAGAIN en este caso. Se  puede  uti­
+       lizar la llamada select(2) para determinar cuando es posi­
+       ble enviar más información.
+
+       El parámetro flags puede contener uno o más de  los  sigu­
+       ientes valores:
+
+              #define MSG_OOB           0x1     /* procesar datos fuera de
+                                                orden (out-of-band data) */
+              #define MSG_DONTROUTE     0x4     /* omitir el enrutamiento, usar
+                                                la interfaz directa */
+              #define MSG_DONTWAIT      0x40    /* no bloquearse */
+              #define MSG_NOSIGNAL      0x2000  /* no producir SIGPIPE */
+
+       MSG_OOB
+              Enviar  datos fuera de orden(out-of-band) en conec­
+              tores   que    soportan    esta    noción    (p.ej.
+              SOCK_STREAM);  el protocolo subyacente también debe
+              soportar datos fuera de orden.
+
+       MSG_DONTROUTE
+              Omitir  la  búsqueda  habitual  en  la   tabla   de
+              enrutamiento  y enviar el paquete directamente a la
+              interfaz descrita por la dirección de destino. Esto
+              lo  utilizan  normalmente los programas de diagnós­
+              tico y enrutamiento.
+
+       MSG_DONTWAIT
+              Habilitar el funcionamiento no  bloqueante.  Si  la
+              operación se bloqueara, se devolvería EAGAIN.
+
+       MSG_NOSIGNAL
+              Solicitar  el no enviar SIGPIPE en caso de error en
+              conectores orientados a  conexión  cuando  el  otro
+              extremo  rompa  la conexión. Todavía se devuelve el
+              error EPIPE.
+
+       Vea recv(2) para una descripción de la estructura  msghdr.
+       Puede  enviar  información  de control usando los miembros
+       msg_control y  msg_controllen.   La  longitud  máxima  del
+       buffer  de control que el núcleo puede procesar está limi­
+       tada por conector por la sysctl net.core.optmem_max.   Vea
+       socket(7).
+
+VALOR DEVUELTO
+       Las llamadas devuelven el numero de caracteres enviados, o
+       -1 si ha ocurrido un error.
+
+ERRORES
+       Estos son algunos errores estándares generados por la capa
+       de  conectores.  Los módulos de los protocolos subyacentes
+       pueden generar y devolver  errores  adicionales.  Vea  sus
+       páginas de manual respectivas.
+
+       EBADF   Se ha especificado un descriptor no válido.
+
+       ENOTSOCK
+               El argumento s no es un conector.
+
+       EFAULT  Se  ha  especificado  como parámetro una dirección
+               incorrecta del espacio de usuario.  tro.
+
+       EMSGSIZE
+               El conector requiere que este mensaje sea  enviado
+               automáticamente,  y  el  tamaño  del mensaje a ser
+               enviado lo hace imposible.
+
+       EAGAIN o EWOULDBLOCK
+               El conector está marcado como no bloqueante  y  la
+               operación solicitada lo bloquearía.
+
+       ENOBUFS La cola de salida del interface de red está llena.
+               Esto generalmente indica que el interfaz ha parado
+               de  enviar,  pero  puede  ser causado por una con­
+               gestión  temporal.   (Esto  no  puede  ocurrir  en
+               Linux, los paquetes simplemente se suprimen silen­
+               ciosamente cuando la cola  de  un  dispositivo  se
+               desborda.(
+
+       EINTR   Se ha producido una señal.
+
+       ENOMEM  No hay memoria disponible.
+
+       EINVAL  Se ha pasado un argumento inválido.
+
+       EPIPE   Se ha desconectado el extremo local en un conector
+               orientado a conexión.  En  este  caso  el  proceso
+               tambíen  recibirá una señal SIGPIPE a menos que se
+               active la opción MSG_NOSIGNAL.
+
+CONFORME A
+       4.4BSD, SVr4, borrador POSIX  1003.1g  (estas  llamadas  a
+       función aparecieron en 4.2BSD).
+
+NOTA
+       Los  prototipos  indicados  más  arriba siguen `the Single
+       Unix Specification', ya que glibc2  también  lo  hace;  el
+       argumento  flags  era `int' en BSD 4.* pero `unsigned int'
+       en libc4 y libc5; el argumento len era `int' en BSD 4.*  y
+       libc4 pero `size_t' en libc5; el argumento tolen era `int'
+       en BSD 4.*, libc4 y libc5.  Vea también accept(2).
+
+VÉASE TAMBIÉN
+       fcntl(2), recv(2), select(2), getsockopt(2),  sendfile(2),
+       socket(2), write(2), socket(7), ip(7), tcp(7), udp(7)
+
+
+
+Pagina man de Linux         Julio 1999                    SEND(2)

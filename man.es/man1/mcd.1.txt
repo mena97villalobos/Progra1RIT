@@ -1,0 +1,83 @@
+MCD(1)                                                     MCD(1)
+
+
+
+NOMBRE
+       mcd - cambio de directorio MSDOS
+
+
+
+NOTA
+       Esta  página  de manual ha sido generada automáticamente a
+       partir de la documentación texinfo de mtools. Sin embargo,
+       el  proceso  es sólo aproximado, y algunos elementos tales
+       como referencias cruzadas, notas  al  pie  e  índices,  se
+       pierden  en  este  proceso de traducción.  De hecho, estos
+       elementos no tienen una representación adecuada en el for­
+       mato  de  las  páginas del manual. Por otra parte, sólo se
+       han traducido los elemntos específicos de cada comando,  y
+       se  ha  desechado de la versión de la página del manual la
+       información general de mtools. Por este motivo,  le  aviso
+       encarecidamente que use el documento texinfo original.
+
+       *      Para generar un copia imprimible del documento tex­
+       info use los siguientes comandos:
+
+                     ./configure; make dvi; dvips mtools.dvi
+
+
+
+       *      Para generar una copia html, ejecute:
+
+                     ./configure; make html
+
+              Puede   encontrar   un  html  preconfeccionado  en:
+              `http://linux.wauug.org/pub/knaff/mtools'
+
+       *      Para generar un copia info (visualizable usando  el
+              modo info de emacs), ejecute:
+
+                     ./configure; make info
+
+
+
+       El documento texinfo parece más bonito en html o cuando se
+       imprime. De hecho, la versión info contiene ciertos ejemp­
+       los que son difíciles de leer debido a las convenciones de
+       notación usadas en info.
+
+
+DESCRIPCIÓN
+       El comando mcd se utiliza para cambiar  el  directorio  de
+       trabajo de las mtools en el disco MSDOS. La sintaxis es la
+       siguiente:
+
+          mcd [directorio_msdos]
+
+
+
+       Sin argumentos, mcd informa de la unidad activa  y  de  su
+       directorio  de trabajo. En otro caso, mcd cambia la unidad
+       activa y el directorio de trabajo relativo a un sistema de
+       ficheros MS-DOS.
+
+       La variable de entorno MCWD se puede utilizar para indicar
+       el fichero que almacenará la información de unidad  activa
+       y   directorio   de   trabajo.  Por  defecto,  se  utiliza
+       `$HOME/.mcwd'.  La información de este fichero se  consid­
+       era  obsoleta  y,  por  tanto, se ignora, si el fichero se
+       modificó hace más de 6 horas.
+
+       mcd devuelve 0 si no hay error, y 1 en caso de error.
+
+       Al contrario que las versiones  para  MS-DOS  de  CD,  mcd
+       puede  utilizarse  para  cambiar a otro dispositivo. Puede
+       ser conveniente borrar los ficheros `.mcwd' antiguos en el
+       momento de finalizar la sesión (logout).
+
+VÉASE TAMBIÉN
+       La documentación TeXinfo de las Mtools.
+
+
+
+mtools-3.7                29 Junio 1997                    MCD(1)

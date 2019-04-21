@@ -1,0 +1,49 @@
+BSTRING(3)       Manual del Programador de Linux       BSTRING(3)
+
+
+
+NOMBRE
+       bcmp,  bcopy, bzero, memccpy, memchr, memcmp, memcpy, mem­
+       frob, memmem, memmove, memset - operaciones sobre  cadenas
+       de bytes
+
+SINOPSIS
+       #include <string.h>
+
+       int bcmp(const void *s1, const void *s2, int n);
+
+       void bcopy(const void *src, void *dest, int n);
+
+       void bzero(void *s, int n);
+
+       void *memccpy(void *dest, const void *src, int c, size_t n);
+
+       void *memchr(const void *s, int c, size_t n);
+
+       int memcmp(const void *s1, const void *s2, size_t n);
+
+       void *memcpy(void *dest, const void *src, size_t n);
+
+       void *memfrob(void *s, size_t n);
+
+       void *memmem(const void *needle, size_t needlelen,
+              const void *haystack, size_t haystacklen);
+
+       void *memmove(void *dest, const void *src, size_t n);
+
+       void *memset(void *s, int c, size_t n);
+
+DESCRIPCIÓN
+       Las  funciones  de  cadenas  de bytes ejecutan operaciones
+       sobre cadenas que no terminan en NULL. Vea las páginas  de
+       manual  individuales para las descripciones de cada una de
+       las funciones.
+
+VÉASE TAMBIÉN
+       bcmp(3), bcopy(3), bzero(3), memccpy(3),  memchr(3),  mem­
+       cmp(3), memcpy(3), memfrob(3), memmem(3), memmove(3), mem­
+       set(3)
+
+
+
+GNU                     23 Diciembre 1995              BSTRING(3)

@@ -1,0 +1,47 @@
+BYTEORDER(3)     Manual del Programador de Linux     BYTEORDER(3)
+
+
+
+NOMBRE
+       htonl,  htons,  ntohl,  ntohs  -  convierten valores cuyos
+       bytes se encuentran en orden de host a valores cuyos bytes
+       se encuentran en orden de red y viceversa
+
+SINOPSIS
+       #include <netinet/in.h>
+
+       unsigned long int htonl(unsigned long int hostlong);
+
+       unsigned short int htons(unsigned short int hostshort);
+
+       unsigned long int ntohl(unsigned long int netlong);
+
+       unsigned short int ntohs(unsigned short int netshort);
+
+DESCRIPCIÓN
+       La  función  htonl()  convierte  el  entero largo hostlong
+       desde el orden de bytes del host al de la red.
+
+       La función htons() convierte  el  entero  corto  hostshort
+       desde el orden de bytes del host al de la red.
+
+       La función ntohl() convierte el entero largo netlong desde
+       el orden de bytes de la red al del host.
+
+       La función ntohs()  convierte  el  entero  corto  netshort
+       desde el orden de bytes de la red al del host.
+
+       En  los  i80x86 en el orden de bytes del host está primero
+       el byte menos significativo (LSB), mientras que  el  orden
+       de  bytes  de  la  red, tal como se usa en Internet, tiene
+       primero el byte más significativo (MSB).
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       gethostbyname(3), getservent(3)
+
+
+
+BSD                       15 Abril 1993              BYTEORDER(3)

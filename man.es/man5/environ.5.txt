@@ -1,0 +1,123 @@
+ENVIRON(5)         Manual del Programador Linux        ENVIRON(5)
+
+
+
+NOMBRE
+       environ - Entorno del usuario
+
+SINOPSIS
+       extern char **environ;
+
+DESCRIPCIÓN
+       La  variable environ apunta a un vector de cadenas llamado
+       `el entorno'.  (Esta variable se debe declarar en el  pro­
+       grama de usuario, aunque se declara en el fichero cabecera
+       unistd.h en el caso de que los ficheros cabecera  procedan
+       de  libc4  o libc5 y en el caso de que procedan de glibc y
+       se  haya  definido  _GNU_SOURCE.)    Cuando   un   proceso
+       comienza,  exec(3)  le proporciona este vector de cadenas.
+       Por  convenio,  estas  cadenas  son  de  la  forma   `nom­
+       bre=valor'.  Algunos ejemplos comunes son:
+
+       USER   El  nombre del usuario que ha entrado en el sistema
+              (usado por algunos programas derivados de BSD).
+
+       LOGNAME
+              El nombre del usuario que ha entrado en el  sistema
+              (usado  por  algunos programas derivados de System-
+              V).
+
+       HOME   El directorio de entrada del  usuario,  puesto  por
+              login a partir del fichero de cuentas passwd(5).
+
+       LANG   El  nombre  de una localización para su empleo como
+              categoría de localizaciones cuando no se suministra
+              la  variable  de  ambiente LC_ALL o alguna otra más
+              específica.
+
+       PATH   Lista de nombres de directorios que sh(1) y  muchos
+              otros  programas  emplean  cuando buscan un fichero
+              cuyo nombre de camino es incompleto.   Los  nombres
+              se  separaran  por  `:'.  (De forma análoga tenemos
+              CDPATH que utilizan algunas shells para  buscar  el
+              argumento  de  una orden de cambio de directorio de
+              trabajo, MANPATH empleado por  man(1)  para  buscar
+              páginas del Manual, etc.)
+
+       PWD    El  directorio  de  trabajo  en  curso.  Puesto por
+              varias shells.
+
+       SHELL  El nombre del intérprete de órdenes  usado  por  el
+              usuario cuando entra en su cuenta.
+
+       TERM   El  tipo de terminal para la cual se va a formatear
+              la salida.
+
+       PAGER  La utilidad preferida por el usuario  para  mostrar
+              el contenido de ficheros de texto.
+
+       EDITOR/VISUAL
+              La  utilidad  preferida  por el usuario para editar
+              ficheros de texto.
+
+       Se pueden poner otros nombres en el  entorno  mediante  la
+       orden  export  y  `nombre=valor'  en  sh(1), o mediante la
+       orden setenv en csh(1).  También se pueden poner  argumen­
+       tos  en el entorno cuando se llama a exec(2).  Un programa
+       en C puede manipular su  entorno  mediante  las  funciones
+       getenv(), putenv(), setenv() y unsetenv().
+
+       Observe  que  el comportamiento de muchos programas y fun­
+       ciones de biblioteca se ve influenciado por la presencia o
+       valor  de  ciertas variables de entorno.  Una colección al
+       azar:
+
+       Las variables LANG, LANGUAGE,  NLSPATH,  LOCPATH,  LC_ALL,
+       LC_MESSAGES,
+        etc., tienen influencia en el manejo de localizaciones.
+
+       TMPDIR  tiene  influencia  sobre  el prefijo de nombres de
+       ficheros creados por tempnam() y otras rutinas, el  direc­
+       torio  temporal  utilizado  por sort(1) y otros programas,
+       etc.
+
+       LD_LIBRARY_PATH, LD_PRELOAD y otras variables que  comien­
+       zan  por LD_ tienen influencia sobre el comportamiento del
+       enlazador/cargador dinámico.
+
+       POSIXLY_CORRECT hace que ciertos programas y funciones  de
+       biblioteca sigan las prescripciones de POSIX.
+
+       El  comportamiento de malloc() viene determinado por vari­
+       ables cuyos nombres comienzan por MALLOC_.
+
+       La variable HOSTALIAS da el nombre de un fichero que  con­
+       tiene alias que utilizará la función gethostbyname().
+
+       TZ y TZDIR proporcionan información sobre el huso horario.
+
+       TERMCAP da información sobre  cómo  manejar  una  terminal
+       dada (o da el nombre de un fichero que contiene esa infor­
+       mación).
+
+       Etc., etc., etc.
+
+       Claramente aquí hay un riesgo en cuanto  a  la  seguridad.
+       Muchas  veces  una  orden  del  sistema  ha sido forzada a
+       actuar de forma  malintencionadamente  incorrecta  por  un
+       usuario  que  ha especificado valores inusuales para IFS o
+       LD_LIBRARY_PATH.
+
+       Antes de usar una nueva variable, hay que asegurarse de no
+       emplear un nombre utilizado por el intérprete, como: MAIL,
+       PS1, PS2, IFS etc.
+
+
+VÉASE TAMBIÉN
+       login(1),  sh(1),  bash(1),   csh(1),   tcsh(1),   zsh(1),
+       execve(2),   exec(3),   getenv(3),  putenv(3),  setenv(3),
+       unsetenv(3).  system(3).
+
+
+
+Linux                    21 Octubre 1996               ENVIRON(5)

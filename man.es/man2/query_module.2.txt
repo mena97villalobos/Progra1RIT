@@ -1,0 +1,104 @@
+QUERY_MODULE(2)    Soporte de Módulos de Linux    QUERY_MODULE(2)
+
+
+
+NOMBRE
+       query_module  -  interroga  al  núcleo  sobre varias cosas
+       relacionadas con los módulos
+
+SINOPSIS
+       #include <linux/module.h>
+
+       int query_module(const char *nombre, int que,
+       void *buf, size_t tambuf, size_t *ret);
+
+DESCRIPCIÓN
+       query_module pide información al núcleo relativa a módulos
+       cargables.  La  naturaleza  precisa de la información y su
+       formato depende de la subfunción  que.  Algunas  funciones
+       requieren  que  nombre  se  refiera  a  un  módulo cargado
+       actualmente, otras permiten que nombre sea NULL, indicando
+       el propio núcleo.
+
+
+   VALORES DE `QUE'
+       0      Siempre  devuelve `éxito'. Se emplea para probar la
+              llamada al sistema.
+
+       QM_MODULES
+              Devuelve los nombres de todos los módulos cargados.
+              El  formato del búfer de salida consiste en cadenas
+              de caracteres adyacentes terminadas  en  cero;  ret
+              contendrá el número de módulos.
+
+       QM_DEPS
+              Devuelve  los nombres de todos los módulos utiliza­
+              dos por el módulo indicado. El formato del búfer de
+              salida consiste en cadenas de caracteres adyacentes
+              terminadas en cero;  ret  contendrá  el  número  de
+              módulos.
+
+       QM_REFS
+              Devuelve  los nombres de todos los módulos que uti­
+              lizan al indicado. Esto es lo inverso  de  QM_DEPS.
+              El  formato del búfer de salida consiste en cadenas
+              de caracteres adyacentes terminadas  en  cero;  ret
+              contendrá el número de módulos.
+
+       QM_SYMBOLS
+              Devuelve  los  símbolos y valores exportados por el
+              núcleo o el módulo indicado. El formato  del  búfer
+              consiste en un vector de:
+
+              struct module_symbol
+              {
+                unsigned long value;
+                unsigned long name;
+              };
+
+              seguido  por  cadenas  de  caracteres terminadas en
+              cero. El valor de nombre es el desplazamiento de la
+              cadena  relativo  al comienzo de buf; ret contendrá
+              el número de símbolos.
+
+       QM_INFO
+              Devuelve información variada sobre el módulo  indi­
+              cado. El formato del búfer de salida es:
+
+              struct module_info
+              {
+                unsigned long address;
+                unsigned long size;
+                unsigned long flags;
+              };
+
+              donde  address es la dirección del núcleo en la que
+              reside el módulo, size es el tamaño del  modulo  en
+              bytes,  y  flags  es  una  máscara  de MOD_RUNNING,
+              MOD_AUTOCLEAN,  etcétera,  que  indica  el   estado
+              actual  del  módulo.  ret contendrá el tamaño de la
+              struct module_info.
+
+VALOR DEVUELTO
+       En caso de éxito, se devuelve cero. En caso de  error,  se
+       devuelve -1 y se pone un valor apropiado en errno.
+
+ERRORES
+       ENOENT No existe ningún módulo con ese nombre.
+
+       EINVAL Inválido que, o nombre le indica al núcleo una sub­
+              función inapropiada.
+
+       ENOSPC El tamaño del  búfer  proporcionado  era  demasiado
+              pequeño.  ret  contendrá  el  mínimo  tamaño que se
+              necesita.
+
+       EFAULT Al menos uno de nombre, buf o  ret  estaban  afuera
+              del espacio de direcciones accesible al programa.
+
+VÉASE TAMBIÉN
+       create_module(2), init_module(2), delete_module(2).
+
+
+
+Linux 2.1.17            26 Diciembre 1996         QUERY_MODULE(2)

@@ -1,0 +1,71 @@
+CATOPEN(3)       Manual del Programador de Linux       CATOPEN(3)
+
+
+
+NOMBRE
+       catopen, catclose - abre/cierra un catálogo de mensajes
+
+SINOPSIS
+       #include <features.h>
+       #include <nl_types.h>
+
+       nl_catd catopen(char *name, int flag)
+
+       void catclose(nl_catd catalog)
+
+DESCRIPCIÓN
+       catopen()  abre  un  catálogo  de  mensajes  y devuelve un
+       descriptor de catálogo.  name  espeficica  el  nombre  del
+       catálogo de mensajes a ser abierto.  Si name especifica un
+       camino absoluto, (i.e. contiene  una  `/')  entonces  name
+       especifica  un  nombre  de camino para el catálogo de men­
+       sajes.  Si no, se usa  la  variable  de  ambiente  NLSPATH
+       donde  %N  se  sustituirá  por  name  (vea locale(5)).  Si
+       NLSPATH no existe en el ambiente, o si un catálogo de men­
+       sajes  no se puede abrir en ninguno de los caminos especi­
+       ficados por NLSPATH, los siguiente caminos  se  buscan  en
+       orden
+
+              /etc/locale/LC_MESSAGES
+              /usr/lib/locale/LC_MESSAGES
+              /usr/lib/locale/name/LC_MESSAGES
+
+       En  todos  los  casos  LC_MESSAGES  se refiere a la actual
+       asignación de la categoría de localicación LC_MESSAGES  de
+       una  llamada previa a setlocale() y toma como valor prede­
+       terminado "C". En el último camino  de  búsqueda  name  se
+       refiere al nombre del catálogo.
+
+       El  argumento  flag  de  catopen se emplea para indicar el
+       tipo de carga deseada. Ésta debe ser  bien  MCLoadBySet  o
+       bien  MCLoadAll.   El primer valor indica que solamente el
+       conjunto requerido desde el catálogo se carga en la  memo­
+       ria al ser necesitado, mientras que el segundo hace que en
+       la llamada inicial  a  catopen()  se  cargue  el  catálogo
+       entero en la memoria.
+
+       catclose() cierra el catálogo de mensajes identificado por
+       catalog.  Esto invalida cualquier referencia posterior  al
+       catálogo de mensajes definido por catalog.
+
+
+VALOR DEVUELTO
+       catopen() devuelve un descritor de catálogo de mensajes de
+       tipo nl_catd en caso de éxito.  Si falla,  devuelve  -1  y
+       pone un valor apropiado en errno para indicar el error.
+
+       catclose() devuelve 0 si es exitosa, ó -1 si falla.
+
+NOTAS
+       Estas funciones están sólo disponibles en libc.so.4.4.4c o
+       superior.  En el caso de Linux, el descriptor de  catálogo
+       nl_catd es actualmente un área mmap()'eada de memoria y no
+       un descriptor de fichero; así se permite que los catálogos
+       se puedan compartir.
+
+VÉASE TAMBIÉN
+       catgets(3), setlocale(3)
+
+
+
+Linux                   30 Noviembre 1993              CATOPEN(3)

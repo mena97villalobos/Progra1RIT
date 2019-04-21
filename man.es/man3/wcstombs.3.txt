@@ -1,0 +1,32 @@
+WCSTOMBS(3)      Manual del Programador de Linux      WCSTOMBS(3)
+
+
+
+NOMBRE
+       wcstombs - convierte una cadena de caracteres anchos a una
+       cadena de caracteres multibyte.
+
+SINOPSIS
+       #include <stdlib.h>
+
+       size_t wcstombs(char *s, const wchar_t *pwcs, size_t n);
+
+DESCRIPCIÓN
+       La función wcstombs() convierte una  secuencia  de  carac­
+       teres anchos  desde el vector pwcs a una secuencia de car­
+       acteres multibyte y guarda hasta  n  bytes  de  caracteres
+       multibyte en el vector s.
+
+VALOR DEVUELTO
+       wcstombs() devuelve el número de bytes guardados en s ó -1
+       si pwcs contiene un carácter ancho inválido.
+
+CONFORME A
+       SVID 3, ISO 9899
+
+VÉASE TAMBIÉN
+       mblen(3), mbtowc(3), mbstowcs(3), wctomb(3)
+
+
+
+GNU                       29 Marzo 1993               WCSTOMBS(3)

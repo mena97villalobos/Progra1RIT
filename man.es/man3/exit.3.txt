@@ -1,0 +1,31 @@
+EXIT(3)          Manual del Programador de Linux          EXIT(3)
+
+
+
+NOMBRE
+       exit - produce la terminación normal del programa
+
+SINOPSIS
+       #include <stdlib.h>
+
+       void exit(int status);
+
+DESCRIPCIÓN
+       La función exit produce la terminación normal del programa
+       y la devolución de status  al  proceso  padre.  Antes,  se
+       llama  a  todas  las  funciones registradas con atexit() y
+       on_exit() en orden inverso a su registro, y todos los flu­
+       jos abiertos se vuelcan y cierran.
+
+VALOR DEVUELTO
+       La función exit() no devuelve nada ni regresa.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       _exit(2), atexit(3), on_exit(3)
+
+
+
+GNU                     9 de Enero de 1998                EXIT(3)

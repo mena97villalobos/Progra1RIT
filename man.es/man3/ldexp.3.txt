@@ -1,0 +1,26 @@
+LDEXP(3)         Manual del Programador de Linux         LDEXP(3)
+
+
+
+NOMBRE
+       ldexp  -  multiplica  un  número  en coma flotante por una
+       potencia entera de 2
+
+SINOPSIS
+       #include <math.h>
+
+       double ldexp(double x, int exp);
+
+DESCRIPCIÓN
+       La función ldexp() devuelve el resultado de multiplicar el
+       número en coma flotante x por 2 elevado a exp.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       frexp(3), modf(3)
+
+
+
+BSD                        2 Marzo 1998                  LDEXP(3)

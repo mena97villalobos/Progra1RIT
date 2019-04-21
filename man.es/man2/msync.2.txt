@@ -1,0 +1,59 @@
+MSYNC(2)         Manual del Programador de Linux         MSYNC(2)
+
+
+
+NOMBRE
+       msync - sincroniza un fichero con un mapa de memoria
+
+SINOPSIS
+       #include <unistd.h>
+       #include <sys/mman.h>
+
+       #ifdef _POSIX_MAPPED_FILES
+       #ifdef _POSIX_SYNCHRONIZED_IO
+
+       int  msync(const  void  *comienzo,  size_t  longitud,  int
+       flags);
+
+       #endif
+       #endif
+
+DESCRIPCIÓN
+       msync vuelca a disco los cambios hechos  en  la  copia  en
+       memoria  de  un  fichero  que  ha  sido mapeado en memoria
+       empleando mmap (2).  Sin la utilización de esta llamada no
+       está  garantizado  que  los  cambios se escriban de vuelta
+       antes de que se llame a munmap (2).   Para  ser  más  pre­
+       cisos,  se  actualiza la parte del fichero que corresponde
+       al área de memoria que empieza  en  comienzo  y  tiene  de
+       tamaño  longitud.   El argumento flags puede tener a 1 los
+       bits MS_ASYNC, MS_SYNC y MS_INVALIDATE, pero no a  la  vez
+       MS_ASYNC  y MS_SYNC.  MS_ASYNC planifica una actualización
+       para más adelante, pero la llamada regresa inmediatamente.
+       MS_SYNC  pide  una actualización y espera que se complete.
+       MS_INVALIDATE pide invalidar cualesquiera otros mapeos del
+       mismo  fichero  (de  forma que puedan actualizarse con los
+       valores frescos recién escritos).
+
+VALOR DEVUELTO
+       En caso de éxito se  devuelve  0.  En  caso  de  error  se
+       devuelve -1 y se pone un valor apropiado en errno.
+
+ERRORES
+       EINVAL comienzo  no  es  múltiplo de PAGESIZE, o cualquier
+              bit distinto de MS_ASYNC | MS_INVALIDATE |  MS_SYNC
+              está a 1 en flags.
+
+       EFAULT La  memoria  indicada  (o parte de ella) no ha sido
+              mapeada.
+
+CONFORME A
+       POSIX.1b (anteriormente POSIX.4)
+
+VÉASE TAMBIÉN
+       mmap(2), B.O. Gallmeister, POSIX.4, O'Reilly, pp.  128-129
+       y 389-391.
+
+
+
+Linux 2.0.32              12 Abril 1996                  MSYNC(2)

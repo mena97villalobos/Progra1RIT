@@ -1,0 +1,330 @@
+objdump(1)      Herramientas de Desarrollo de GNU      objdump(1)
+
+
+
+NOMBRE
+       objdump - muestra información de ficheros objeto
+
+
+SINOPSIS
+       objdump
+              [-a|--archive-headers] [-b nombrebfd |
+              --target=nombrebfd] [-C|--demangle] [--debugging]
+              [-d|--disassemble] [-D|--disassemble-all]
+              [--disassemble-zeroes]
+              [-EB|-EL|--endian={big|little}] [-f|--file-headers]
+              [-h|--section-headers | --headers] [-i|--info]
+              [-j sección | --section=sección]
+              [-l|--line-numbers] [-m máquina |
+              --architecture=máquina] [--prefix-addresses]
+              [-r|--reloc] [-R|--dynamic-reloc]
+              [-s|--full-contents] [-S|--source]
+              [--[no-]show-raw-insn] [--stabs] [-t|--syms]
+              [-T|--dynamic-syms] [-x|--all-headers]
+              [--start-address=dirección]
+              [--stop-address=dirección]
+              [--adjust-vma=desplazamiento] [--version] [--help]
+              fichobj...
+
+DESCRIPCIÓN
+       objdump despliega información sobre uno o más ficheros ob­
+       jeto.  Las opciones controlan qué información  mostrar  en
+       particular.  Esta información es útil mayormente para pro­
+       gramadores que estén trabajando  en  las  herramientas  de
+       compilación,  en  vez  de para los que simplemente quieren
+       que sus programas compilen y funcionen.
+
+       fichobj...  son los ficheros objeto a examinar. Cuando uno
+       especifica archivos, objdump muestra información para cada
+       uno de los ficheros objeto miembros del archivo.
+
+
+OPCIONES
+       Donde se muestren juntas las formas larga y corta  de  una
+       opción,  son  equivalentes. Debe darse al menos una opción
+       (aparte de -l --line-numbers).
+
+
+       -a
+
+       --archive-headers
+              Si cualesquiera ficheros de fichobj  son  archivos,
+              muestra  la información de cabecera del archivo (en
+              un formato similar al de `ls -l').   Aparte  de  la
+              información que uno podría listar con `ar tv', `ob­
+              jdump -a' muestra el formato del fichero objeto  de
+              cada miembro del archivo.
+
+
+       --adjust-vma=desplazamiento
+              Cuando  vuelca  la  información,  primero añade de­
+              splazamiento a todas las  direcciones  de  sección.
+              Esto  es útil si las direcciones de sección no cor­
+              responden a la tabla de símbolos, que puede suceder
+              cuando  se  ponen secciones en direcciones particu­
+              lares cuando se emplea un formato que no puede rep­
+              resentar direcciones de sección, como a.out.
+
+
+       -b nombrebfd
+
+       --target=nombrebfd
+              Especifica que el formato de código objeto para los
+              ficheros objeto es nombrebfd.  Esto  puede  no  ser
+              necesario;  objdump puede reconocer automáticamente
+              muchos formatos. Por ejemplo,
+
+              objdump -b oasys -m vax -h fu.o
+
+              muestra información sumaria  de  las  cabeceras  de
+              sección  (`-h')  de  `fu.o',  que se identifica ex­
+              plícitamente (`-m') como un fichero  objeto  de  un
+              VAX en el formato producido por los compiladores de
+              Oasys. Se pueden listar  los  formatos  disponibles
+              mediante la opción `-i'.
+
+
+       -C
+
+       --demangle
+              Descodifica  (demangle) nombres de símbolos de bajo
+              nivel a nombres de usuario. Aparte  de  quitar  los
+              subrayados  iniciales añadidos por el sistema, esto
+              hace legibles los nombres de funciones de C++.
+
+
+       --debugging
+              Muestra información  de  depuración.  Esto  intenta
+              anailzar información de depuración almacenada en el
+              fichero y mostrarla usando una sintaxis como la  de
+              C. Sólo se han implementado ciertos tipos de infor­
+              mación de depuración.
+
+
+       -d
+
+       --disassemble
+              Muestra los mnemónicos de ensamblador para las  in­
+              strucciones  máquina  de fichobj.  Esta opción sólo
+              desensambla aquellas secciones para las que se  es­
+              pera que contengan instrucciones.
+
+
+       -D
+
+       --disassemble-all
+              Como  -d,  pero desensambla los contenidos de todas
+              las secciones, no sólo aquéllas donde se espera que
+              contengan instrucciones.
+
+
+       --prefix-addresses
+              Cuando  desensambla,  muestra la dirección completa
+              en cada línea. Éste es el formato de  desensamblado
+              antiguo.
+
+
+       --disassemble-zeroes
+              Normalmente la salida del desensamblado no incluirá
+              bloques de ceros. Esta opción le dice al  desensam­
+              blador  que  desensamble  esos  bloques, justo como
+              otros datos cualesquiera.
+
+
+       -EB
+
+       -EL
+
+       --endian={big|little}
+              Especifica el orden de bits de los ficheros objeto.
+              Esto  sólo  afecta al desensamblado. Esto puede ser
+              de utilidad cuando se desensamble un  fichero  cuyo
+              formato  no  describa  el  orden de bits, como reg­
+              istros-S.
+
+
+       -f
+
+       --file-headers
+              Muestra información sumaria de la cabecera total de
+              cada fichero en fichobj.
+
+
+       -h
+
+       --section-headers
+
+       --headers
+              Muestra  información  sumaria  de  las cabeceras de
+              sección del fichero objeto.
+
+
+       --help Muestra un sumario de las  opciones  de  objdump  y
+              acaba.
+
+
+       -i
+
+       --info Muestra una lista mostrando todas las arquitecturas
+              y formatos de objetos disponibles para las opciones
+              -b o -m.
+
+
+       -j nombre
+
+       --section=nombre
+              Muestra información sólo para la sección nombre.
+
+
+       -l
+
+       --line-numbers
+              Etiqueta  la salida (empleando información de depu­
+              ración) con el nombre de fichero y números de línea
+              del código fuente correspondientes al código objeto
+              mostrado. Sólo es útil con -d, -D o -r.
+
+
+       -m máquina
+
+       --architecture=máquina
+              Especifica la arquitectura a emplear cuando se  de­
+              sensamblen  ficheros  objeto.  Esto  puede ser útil
+              cuando se desensamblen ficheros objero que  no  de­
+              scriban   la  arquitectura,  como  registros-S.  Se
+              pueden listar las arquitecturas disponibles con  la
+              opción -i.
+
+
+       -r
+
+       --reloc
+              Muestra las entradas de reubicación del fichero. Si
+              se emplea con -d, las reubicaciones se muestran in­
+              tercaladas con el desensamblado.
+
+
+       -R
+
+       --dynamic-reloc
+              Muestra  las  entradas  de reubicación dinámica del
+              fichero.  Esto  sólo  tiene  sentido  para  objetos
+              dinámicos,  como  ciertos tipos de bibliotecas com­
+              partidas.
+
+
+       -s
+
+       --full-contents
+              Muestra los contenidos completos de  las  secciones
+              pedidas.
+
+
+       -S
+
+       --source
+              Muestra  el código fuente mezclado con el desensam­
+              blado, si es posible. Implica -d.
+
+
+       --show-raw-insn
+              Cuando desensambla instrucciones,  muestra  la  in­
+              strucción en hexadecimal así como en forma simbóli­
+              ca. Esto es lo predeterminado excepto cuando se em­
+              plea --prefix-addresses.
+
+
+       --no-show-raw-insn
+              Cuando  se  desensamblan  instrucciones, no muestra
+              los bytes de instrucción. Esto es lo predeterminado
+              cuando se emplea --prefix-addresses.
+
+
+       --stabs
+              Muestra  los  contenidos  de  las  secciones .stab,
+              .stab.index y .stab.excl de un  fichero  ELF.  Esto
+              sólo  es útil en sistemas (como Solaris 2.0) en los
+              cuales las entradas de  la  tabla  de  símbolos  de
+              depuración  .stab  se llevan en una sección de ELF.
+              En la mayoría de otros formatos  de  ficheros,  las
+              entradas  de  la tabla de símbolos de depuración se
+              intercalan con símbolos de enlazados, y  son  visi­
+              bles en la salida --syms.
+
+
+       --start-address=dirección
+              Empieza mostrando datos en la dirección especifica­
+              da. Esto afecta a la salida de las opciones -d,  -r
+              y -s.
+
+
+       --stop-address=dirección
+              Acaba  de mostrar datos en la dirección especifica­
+              da. Esto afecta a la salida de las opciones -d,  -r
+              y -s.
+
+
+       -t
+
+       --syms Tabla de símbolos. Muestra las entradas de la tabla
+              de símbolos del fichero. Esto es similar a  la  in­
+              formación suministrada por el programa `nm'.
+
+
+       -T
+
+       --dynamic-syms
+              Tabla  de  símbolos dinámicos. Muestra las entradas
+              de la tabla de símbolos dinámicos del fichero. Esto
+              sólo  tiene  sentido  para  objetos dinámicos, como
+              ciertos tipos de bibliotecas compartidas.  Esto  es
+              similar  a la información proporcionada por el pro­
+              grama `nm' cuando se le da la opción  -D  (--dynam­
+              ic).
+
+
+       --version
+              Muestra el número de versión de objdump y acaba.
+
+
+       -x
+
+       --all-headers
+              Muestra toda la información de cabecera disponible,
+              incluyendo la tabla de símbolos y las  entradas  de
+              reubicación.  Emplear `-x' es equivalente a especi­
+              ficar `-a -f -h -r -t'.
+
+
+VÉASE TAMBIÉN
+       La entrada de menú `binutils' en Info; Las  Utilidades  de
+       Binarios de GNU, Roland H. Pesch (Octubre de 1991); nm(1).
+
+
+DERECHOS DE COPIA
+       Copyright (c) 1991, 92, 93, 94,  95,  1996  Free  Software
+       Foundation, Inc.
+
+       Permission  is  granted  to  make  and distribute verbatim
+       copies of this manual provided the  copyright  notice  and
+       this permission notice are preserved on all copies.
+
+       Permission is granted to copy and distribute modified ver­
+       sions of this manual under  the  conditions  for  verbatim
+       copying,  provided  that the entire resulting derived work
+       is distributed under the  terms  of  a  permission  notice
+       identical to this one.
+
+       Permission  is granted to copy and distribute translations
+       of this manual into another language, under the above con­
+       ditions for modified versions, except that this permission
+       notice may be included in  translations  approved  by  the
+       Free  Software  Foundation  instead of in the original En­
+       glish.
+
+       N. del T.: Sólo tiene validez legal el aviso de  copyright
+       original.
+
+
+
+Cygnus support        5 de Noviembre de 1991           objdump(1)

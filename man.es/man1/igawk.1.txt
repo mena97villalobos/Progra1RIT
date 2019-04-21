@@ -1,0 +1,53 @@
+IGAWK(1)               Órdenes de Utilidad               IGAWK(1)
+
+
+
+NOMBRE
+       igawk - gawk con ficheros de inclusión
+
+SINOPSIS
+       igawk  [  opciones de gawk ] -f fichero-de-programa [ -- ]
+       fichero ...
+       igawk [ opciones  de  gawk  ]  [  --  ]  texto-de-programa
+       fichero ...
+
+DESCRIPCIÓN
+       Igawk  es un simple script de shell que añade la capacidad
+       de tener ``ficheros de inclusión'' con gawk(1).
+
+       Los programas AWK para igawk son los mismos que para gawk,
+       con la única excepción de que puede añadir líneas como
+
+              @include getopt.awk
+
+       en su programa para incluir el fichero getopt.awk desde el
+       directorio actual o cualquier otro del camino de búsqueda.
+
+OPCIONES
+       Vea  gawk(1)  para  obtener  una  completa descripción del
+       lenguaje AWK y de las opciones que soporta gawk .
+
+EJEMPLOS
+       cat << EOF > test.awk
+       @include getopt.awk
+
+       BEGIN {
+            while (getopt(ARGC, ARGV, "am:q") != -1)
+                 ...
+       }
+       EOF
+
+       igawk -f test.awk
+
+VÉASE TAMBIÉN
+       gawk(1)
+
+       AWK Language Programming, Edition 1.0,  publicado  por  la
+       Free Software Foundation, 1995.
+
+AUTOR
+       Arnold Robbins (arnold@gnu.ai.mit.edu).
+
+
+
+Free Software Foundation   13 Oct 1995                   IGAWK(1)

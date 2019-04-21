@@ -1,0 +1,69 @@
+BDFLUSH(2)       Manual del Programador de Linux       BDFLUSH(2)
+
+
+
+NOMBRE
+       bdflush  -  inicia,  vuelca,  o  ajusta  el duende para la
+       limpieza de búferes sucios o modificados
+
+SINOPSIS
+       int bdflush(int func, long *address);
+       int bdflush(int func, long data);
+
+DESCRIPCIÓN
+       bdflush inicia,  limpia  o  ajusta  el  duende  "bdflush".
+       Solamente el superusuario puede llamar a bdflush.
+
+       Si  func  es  negativo  ó  0,  y  no se ha iniciado duende
+       alguno, entonces bdflush entra en el código del  duende  y
+       nunca regresa.
+
+       Si  func  es  1,  algunos  búferes sucios (modificados) se
+       escriben en el disco.
+
+       Si func es 2 ó más y es par (el bit menos significativo es
+       0),  entonces address es la dirección de una palabra larga
+       y  el  valor  del  parámetro  de  ajuste  cuyo  número  es
+       (func-2)/2 se devuelve en dicha dirección.
+
+       Si  func es 3 ó más e impar (el bit menos significativo es
+       1), entonces data es una palabra larga y el núcleo  asigna
+       dicho   valor  al  parámetro  de  ajuste  cuyo  número  es
+       (func-3)/2
+
+       El conjunto de parámetros, sus valores  y  sus  intervalos
+       válidos  están  especificados en el fichero fs/buffer.c de
+       los fuentes del núcleo.
+
+VALOR DEVUELTO
+       Si func es negativo ó 0 y el duende comienza satisfactori­
+       amente,  bdflush  nunca  regresa.   En  caso contrario, el
+       valor devuelto es 0 en caso de  éxito  y  -1  en  caso  de
+       error, y a errno se le asigna el tipo de error.
+
+ERRORES
+       EPERM   El  que llama a esta rutina no es el superusuario.
+
+       EFAULT  La dirección address apunta afuera de  su  espacio
+               de direcciones accesible.
+
+       EBUSY   Se  ha  intentado  entrar  en el código del duende
+               después de que otro proceso ya lo haya hecho.
+
+       EINVAL  Se ha intentado  leer  o  escribir  un  número  de
+               parámetro  inválido, o asignar un valor inválido a
+               un parámetro.
+
+CONFORME A
+       bdflush es una función específica de Linux y  no  se  debe
+       usar  en  aquellos programas que pretendan ser transporta­
+       bles.
+
+VÉASE TAMBIÉN
+       fsync(2), sync(2), update(8), sync(8).
+
+
+
+
+
+Linux 1.2.4               30 Junio 1996                BDFLUSH(2)

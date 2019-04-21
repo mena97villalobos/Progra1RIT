@@ -1,0 +1,277 @@
+PROCMAILSC(5)                                       PROCMAILSC(5)
+
+
+
+NOMBRE
+       procmailsc - técnica puntuación de peso de procmail
+
+SINOPSIS
+       [*] w^x condición
+
+DESCRIPCIÓN
+       Además  de las condiciones tradicionales verdadero o falso
+       que puede especificar en una receta, puede  usar  técnicas
+       de  puntuación  de  peso para decidir si una cierta receta
+       concuerda o no. Cuando se usa la puntuación de peso en una
+       receta,  la  puntuación final de esa receta debe ser posi­
+       tiva para que concuerde.
+
+       Una cierta condición puede contribuir a la  puntuación  si
+       le sitúa un `peso' (w) y un `exponente' (x).  Esto lo hace
+       precediendo la condición (en la misma línea) con:
+              w^x
+       Considerando  que  w  y  x  son   números   reales   entre
+       -2147483647.0 y 2147483647.0.
+
+
+Condiciones de expresión regular sopesadas
+       La  primera  vez que se encuentra la expresión regular, se
+       añadirá w a la puntuación. La segunda vez que la encuentre
+       añadirá  w*x La tercera vez que la encuentre añadirá w*x*x
+       La cuarta vez añadirá w*x*x*x y así sucesivamente.
+
+       Esto se puede describir con la siguiente fórmula concisa:
+
+                                   n
+                   n   k-1        x - 1
+              w * Sum x    = w * -------
+                  k=1             x - 1
+
+       Representa la puntuación total añadida para esta condición
+       si se encuentran n concordancias.
+
+       Observe que se pueden hacer las siguientes distinciones de
+       casos:
+
+       x=0     Sólo la primera concordancia contribuirá  w  a  la
+               puntuación. Se ignoran cualquier concordancia pos­
+               terior.
+
+       x=1     Cada concordancia contribuirá el mismo w a la pun­
+               tuación.  La  puntuación  crece linealmente con el
+               número de concordancias encontradas.
+
+       0<x<1   Cada concordancia contribuye menos a la puntuación
+               que la previa. La puntuación se aproxima asintóti­
+               camente a cierto valor  (véase  la  sección  notas
+               NOTAS abajo).
+
+       1<x     Cada  concordancia contribuirá más a la puntuación
+               que la previa. La  puntuación  crece  exponencial­
+               mente.
+
+
+
+
+
+
+       x<0     Se  puede  utilizar para favorecer números pares o
+               impares de concordancias.
+
+       Si la expresión regular está negada (i.e. concuerda si  no
+       se encuentra), entonces n obviamente puede ser cero o uno.
+
+Condiciones de programa sopesadas
+       Si el programa devuelve un código de  salida  EXIT_SUCCESS
+       (=0),  entonces  la  puntuación  total añadida será w.  Si
+       devuelve  cualquier  otro  código  de  salida   (indicando
+       fallo), la puntuación total añadida será x.
+
+       Si el código de salida del programa está negado, el código
+       de salida se considerará como si fuera un  número  virtual
+       de  concordancias.   El  cálculo  de la puntuación añadida
+       prosigue como si tuviera una expresión regular normal  con
+       n=`exitcode' concordancias.
+
+Condiciones de longitud sopesadas
+       Si la longitud del correo actual es M entonces:
+
+              * w^x  > L
+
+       generará una puntuación adicional de:
+
+                         x
+                  /  M  \
+              w * | --- |
+                  \  L  /
+
+       Y:
+
+              * w^x  < L
+
+       generará una puntuación adicional de:
+
+                         x
+                  /  L  \
+              w * | --- |
+                  \  M  /
+
+
+       En ambos casos, si L=M, esto añadirá w a la puntuación. En
+       el primer caso, sin  embargo,  se  favorecen  los  correos
+       grandes,  en el último se favorecen los pequeños. Aunque x
+       se puede variar para un mejor ajuste el  decrecimiento  de
+       la función, el uso típico fija x=1.
+
+MISCELÁNEA
+       Puede  consultar  la  puntuación total de todas las condi­
+       ciones de una receta de la variable de entorno  $=.   Esta
+       variable  se  fija  cada  vez cuando procmail ha analizado
+       todas las condiciones de una receta (incluso si la  receta
+       no está siendo ejecutada).
+
+EJEMPLOS
+       La siguiente receta separa tdos los correos que tienen más
+       de 150 líneas en el cuerpo.  La primera condición contiene
+       una  expresión  regular vacía que, debido a que siempre se
+       verifica,  se  usa  para  dar  a  nuestra  puntuación   un
+       desplazamiento  negativo.  La  segunda condición concuerda
+       con cada línea del correo y consume el desplazamiento neg­
+       ativo  previo que le dimos (un punto por línea). Al final,
+       la puntuación será sólo positiva si el correo contiene más
+       de 150 líneas.
+
+              :0 Bh
+              * -150^0
+              *    1^1  ^.*$
+              /dev/null
+
+       Supongamos  que  tiene una carpeta prioritaria que siempre
+       lee primero. La siguiente receta  toma  la  prioridad  del
+       correo  y  lo  almacena en carpetas especiales. La primera
+       condición es regular, i.e. no contribuye a la  puntuación,
+       simplemente  tiene que satisfacerse. Las otras condiciones
+       describen cosas como: john and claire  normalmente  tienen
+       cosas importantes que decir, las reuniones son normalmente
+       importantes, las respuestas se favorecen un poco, los mail
+       respecto  a Elvis (esto es sólo un ejemplo :- se favorecen
+       (cuando más se mencione, más se favorece el correo ,  pero
+       la  máxima  puntuación  extra debida a Elvis será 4000, no
+       importa con qué frecuencia sea mencionado), muchas  líneas
+       marcadas como de respuesta no no gustan, los "smileys" son
+       apreciados (la puntuación de ellos alcanza  un  máximo  de
+       3500,  esas  tres  personas  normalmente no envían correos
+       interesantes, lo correos serían  preferentemente  pequeños
+       (v.g.  mails  con  2000  octetos de largos puntuarán -100,
+       4000 bytes de largos -800).  Como puede ver, si alguien de
+       esas  personas  poco  interesantes  envía correo, el coreo
+       todavía tiene una oportunidad de aterrizar en  la  carpeta
+       prioritaria,  v.g. si es sobre una reunión (meeting), o si
+       contiene al menos dos "smileys".
+
+              :0 HB
+              *         !^Precedence:.*(junk|bulk)
+              * 2000^0   ^From:.*(john@home|claire@work)
+              * 2000^0   ^Subject:.*meeting
+              *  300^0   ^Subject:.*Re:
+              * 1000^.75 elvis|presley
+              * -100^1   ^>
+              *  350^.9  :-\)
+              * -500^0   ^From:.*(boss|jane|henry)@work
+              * -100^3   > 2000
+              carpeta_prioritaria
+
+       Si está suscrito a una lista de correo y le gustaría  leer
+       los  mensajes  de calidad, entonces las siguientes recetas
+       podrían
+        realizar el truco. Primero estamos seguros que el  correo
+       proviene de la lista de correo, Entonces comprobamos si es
+       de ciertas personas de las que  valoramos  su  opinión,  o
+       sobre  un motivo sobre el que queremos saber absolutamente
+       todo. Si es así, lo guardamos. En otro caso verificamos si
+       la  razón  de líneas citadas del original es al menos 1:2.
+       Si lo excede separamos el correo. Todo lo que sobreviva  a
+       la verificación previa se almacena.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              :0
+              ^From mailinglist-request@some.where
+              {
+                :0:
+                * ^(From:.*(paula|bill)|Subject:.*skiing)
+                mailinglist
+
+                :0 Bh
+                *  20^1 ^>
+                * -10^1 ^[^>]
+                /dev/null
+
+                :0:
+                mailinglist
+              }
+
+       Para  más  ejemplos  debería  mirar en la página de manual
+       procmailex(5).
+
+ADVERTENCIAS
+       Debido a que esto incrementa la búsqueda por un  orden  de
+       magnitud,  el egrep interno de procmail siempre buscará la
+       concordancia más corta por la  izquierda  salvo  que  esté
+       determinado  qué  asignar  a  MATCH, en cuyo caso busca la
+       concordancia más larga por la izquierda.  V.g. la  concor­
+       dancia más corta por la izquierda, por él mismo, la expre­
+       sión regular:
+
+       .*     siempre concuerda con una cadena de  longitud  cero
+              en el mismo sitio.
+
+       .+     siempre  concordará  con  un  carácter (salvo nueva
+              línea, por supuesto).
+
+VÉASE TAMBIÉN
+       procmail(1), procmailrc(5), procmailex(5), sh(1), csh(1),
+       egrep(1), grep(1),
+
+FALLOS (BUGS)
+       Si, en una condición de longitud especifica un x que causa
+       un desbordamiento, procmail está a la meced de la  función
+       pow(3) de su librería matemática.
+
+       No  se aceptan número en coma flotante en formato exponen­
+       cial (v.g. 12e5).
+
+MISCELÁNEA
+       Tan pronto como se alcanza  `mas  infinito'  (2147483647),
+       cualquier condición de peso simplemente se salta.
+
+       Tan pronto como se alcanza `menos infinito' (-2147483647),
+       la condición se considerará como `sin concordancia'  y  la
+       receta termina antes.
+
+NOTAS
+       Si  en  una  expresión  regular fórmula sopesada 0<x<1, la
+       puntuación total añadida para esta condición se aproximará
+       asintóticamente:
+
+                 w
+              -------
+               1 - x
+
+       Para alcanzar la mitad del valor máximo necesita
+
+
+                   - ln 2
+              n = --------
+                     ln x
+
+       concordancias.
+
+AUTOR
+       Stephen R. van den Berg
+              <srb@cuci.nl>
+
+
+
+BuGless                     1994/10/07              PROCMAILSC(5)

@@ -1,0 +1,52 @@
+KILLPG(2)        Manual del Programador de Linux        KILLPG(2)
+
+
+
+NOMBRE
+       killpg - enviar una señal a un grupo de procesos
+
+SINOPSIS
+       #include <signal.h>
+
+       int killpg(int pgrp, int sig);
+
+DESCRIPCIÓN
+       Killpg  envía  la  señal  sig  al  grupo de procesos pgrp.
+       Véase sigaction(2) para una lista de señales. Si  pgrp  es
+       0,  killpg envía la señal al grupo de procesos del proceso
+       que envía la señal.
+
+       El proceso que envía, y los miembros del grupo de procesos
+       deben  tener  todos  el mismo ID de usuario efectivo, o el
+       que envía debe ser superusuario.  Como excepción, la señal
+       de  continuar  SIGCONT  puede enviarse a cualquier proceso
+       que sea descendiente del proceso actual.
+
+VALOR DEVUELTO
+       Si hay éxito, se devuelve cero. Si hubo error, se devuelve
+       -1, y errno se actualiza apropiadamente.
+
+ERRORES
+       EINVAL Sig no es un número de señal válido.
+
+       ESRCH  No  se  encuentran procesos en el grupo de procesos
+              especificado por pgrp.
+
+       ESRCH  El grupo de procesos se dió como 0, pero el proceso
+              que envía no tiene grupo de procesos.
+
+       EPERM  El  proceso  que  envía no es superusuario, y uno o
+              más de los procesos objetivo tiene  ID  de  usuario
+              efectivo diferente del ID del proceso que envía.
+
+CONFORME A
+       SVr4,  4.4BSD  (La llamada killpg apareció por primera vez
+       en BSD 4.0).
+
+VÉASE TAMBIÉN
+       kill(2), getpgrp(2), signal(2)
+
+
+
+
+Página de manual de BSD   23 Julio 1993                 KILLPG(2)

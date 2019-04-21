@@ -1,0 +1,131 @@
+STATFS(2)        Manual del Programador de Linux        STATFS(2)
+
+
+
+NOMBRE
+       statfs,  fstatfs  -  consigue  estadísticas del sistema de
+       ficheros
+
+SINOPSIS
+       #include <sys/vfs.h>
+
+       int statfs(const char *path, struct statfs *buf);
+       int fstatfs(int fd, struct statfs *buf);
+
+DESCRIPCIÓN
+       statfs devuelve información de un sistema de ficheros mon­
+       tado.   path  el el camino de cualquier fichero en el sis­
+       tema de ficheros montado.  buf es un puntero a una estruc­
+       tura statfs definida como sigue:
+
+              struct statfs {
+                 long    f_type;     /* tipo sistema ficheros (ver bajo) */
+                 long    f_bsize;    /* tamaño óptimo de bloque
+                                        de transferencia */
+                 long    f_blocks;   /* total de bloques de datos en el sistema
+                                        de ficheros */
+                 long    f_bfree;    /* bloques libres en el sf */
+                 long    f_bavail;   /* bloques libres disponibles para
+                                        no-superusuarios */
+                 long    f_files;    /* total de nodos de ficheros en el sf */
+                 long    f_ffree;    /* nodos de ficheros libres en el sf */
+                 fsid_t  f_fsid;     /* id del sistema de ficheros */
+                 long    f_namelen;  /* longitud máxima de nombre de ficheros */
+                 long    f_spare[6]; /* de sobra, para más tarde */
+              };
+
+       Tipos de sistema de ficheros:
+              linux/affs_fs.h:
+                 AFFS_SUPER_MAGIC      0xADFF
+              linux/ext_fs.h:
+                 EXT_SUPER_MAGIC       0x137D
+              linux/ext2_fs.h:
+                 EXT2_OLD_SUPER_MAGIC  0xEF51
+                 EXT2_SUPER_MAGIC      0xEF53
+              linux/hpfs_fs.h:
+                 HPFS_SUPER_MAGIC      0xF995E849
+              linux/iso_fs.h:
+                 ISOFS_SUPER_MAGIC     0x9660
+              linux/minix_fs.h:
+                 MINIX_SUPER_MAGIC     0x137F /* minix orig.*/
+                 MINIX_SUPER_MAGIC2    0x138F /* minix 30 carac.*/
+                 MINIX2_SUPER_MAGIC    0x2468 /* minix V2 */
+                 MINIX2_SUPER_MAGIC2   0x2478 /* minix V2, nombres 30 carac. */
+              linux/msdos_fs.h:
+                 MSDOS_SUPER_MAGIC     0x4d44
+              linux/ncp_fs.h:
+                 NCP_SUPER_MAGIC       0x564c
+              linux/nfs_fs.h:
+                 NFS_SUPER_MAGIC       0x6969
+              linux/proc_fs.h:
+                 PROC_SUPER_MAGIC      0x9fa0
+              linux/smb_fs.h:
+                 SMB_SUPER_MAGIC       0x517B
+              linux/sysv_fs.h:
+                 XENIX_SUPER_MAGIC     0x012FF7B4
+                 SYSV4_SUPER_MAGIC     0x012FF7B5
+                 SYSV2_SUPER_MAGIC     0x012FF7B6
+                 COH_SUPER_MAGIC       0x012FF7B7
+              linux/ufs_fs.h:
+                 UFS_MAGIC             0x00011954
+              linux/xia_fs.h:
+                 _XIAFS_SUPER_MAGIC    0x012FD16D
+
+
+       Los  campos  no definidos para un sistema de ficheros par­
+       ticular se ponen a -1.  fstatfs devuelve la misma informa­
+       ción sobre un fichero abierto referenciado por el descrip­
+       tor fd.
+
+VALOR DEVUELTO
+       Si hubo éxito se devuelve cero. Si hubo error, se devuelve
+       -1, y errno es actualizado apropiadamente.
+
+ERRORES
+       Para statfs:
+
+       ENOTDIR Un componente del camino path no es un directorio.
+
+       ENAMETOOLONG
+               path es demasiado largo.
+
+       ENOENT  El fichero al que se refiere path no existe.
+
+       EACCES  El permiso de búsqueda se deniega para  un  compo­
+               nente del camino path.
+
+       ELOOP   Se  encontraron  demasiados  enlaces simbólicos al
+               traducir path.
+
+       EFAULT  buf o path apuntan a una dirección inválida.
+
+       EIO     Ocurrió  un  error  de  E/S  mientras  se  leía  o
+               escribía en el sistema de ficheros.
+
+       ENOMEM  No  había  suficiente  memoria  disponible  en  el
+               núcleo.
+
+       ENOSYS  El sistema de ficheros sobre el que  se  encuentra
+               path no soporta statfs.
+
+       Para fstatfs:
+
+       EBADF   fd no es un descriptor de fichero válido.
+
+       EFAULT  buf apunta a una dirección inválida.
+
+       EIO     Ocurrió  un  error  de  E/S  mientras  se  leía  o
+               escribía en el sistema de ficheros.
+
+       ENOSYS  El sistema de ficheros sobre el que  está  abierto
+               fd no soporta statfs.
+
+CONFORME A
+       4.4BSD.
+
+VÉASE TAMBIÉN
+       stat(2)
+
+
+
+Linux 2.0.30              21 Agosto 1997                STATFS(2)

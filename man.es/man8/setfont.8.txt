@@ -1,0 +1,84 @@
+SETFONT(8)            Soporte Internacional            SETFONT(8)
+
+
+
+NOMBRE
+       setfont  -  carga  el tipo de letra de pantalla de consola
+       EGA/VGA
+
+SINOPSIS
+       setfont [-o tipo.orig] [-fontsize] [tipo.nuevo] [-m  mapa-
+       c]  [-om  mapa-c.orig]  [-u mapa-u] [-ou mapa-u.orig] [-v]
+       [-V]
+
+DESCRIPCIÓN
+       La orden setfont carga un tipo de letra en el generador de
+       caracteres  EGA/VGA,  y opcionalmente muestra en la salida
+       el tipo anterior.  Esta orden lee un  tipo  8×H  desde  el
+       fichero  y  lo carga en la memoria del generador de carac­
+       teres. Usualmente el tamaño de tipo H se podrá obtener del
+       tamaño del fichero, pero si el fichero de entrada tiene el
+       formato de página de código, conteniendo  los  tres  tipos
+       8×8,  8×14  y 8×16, debe emplearse la opción -8, -14 ó -16
+       para seleccionar uno.  Si no se dan argumentos (o sólo  la
+       opción  -fontsize),  entonces se carga un tipo predetermi­
+       nado.  Con la opción -v, setfont será prolijo en sus  men­
+       sajes.  Con la opción -V, muestra su versión.
+
+       Como  actualmente  no  hay soporte de cambio de modo en el
+       núcleo Linux, setfont no tiene nada que hacer con el  modo
+       EGA/VGA  actual.  Es  total  responsabilidad  del  usuario
+       escoger un tipo que concuerde con  el  modo  de  vídeo  en
+       curso.
+
+       Los  ficheros  de  tipos  son  ficheros binarios de tamaño
+       256×H bytes, que contienen imágenes de bits para cada  uno
+       de  los  256 caracteres, un byte por cada línea, y H bytes
+       por carácter (0 <  H  <=  32).   También  se  aceptan  los
+       ficheros .psf; estos ficheros tienen el mismo formato pero
+       además una cabecera adicional de 4 bytes.
+
+       El ordenamiento de los símbolos en  el  tipo  se  describe
+       mediante  una tabla asociativa. Algunos tipos tienen dicha
+       tabla incluida en el fichero de tipos, y setfont  la  car­
+       gará.  Si  no  se  incluye esta tabla explícitamente en el
+       tipo, y tampoco se da ninguna con la opción -m, se  supone
+       una  asociación `trivial'. En cualquier caso la tabla aso­
+       ciativa recién cargada se activa sacando la cadena  ESC  (
+       K.   Dar un argumento -m none inhibe la carga y activación
+       de una tabla asociativa.  La tabla asociativa previa puede
+       salvarse  en  un  fichero  mediante  la opción om fichero.
+       Estas opciones  de  setfont  hacen  que  mapscrn(8)  quede
+       anticuado.
+
+       La  correspondencia entre los signos gráficos en el tipo y
+       los valores Unicode se describe en  una  tabla  asociativa
+       Unicode.   Algunos  tipos tienen una tabla asociativa Uni­
+       code incluida en el fichero de tipos, y se  puede  indicar
+       una  tabla  explícita  mediante la opción -u.  El programa
+       setfont cargará tal tabla asociativa Unicode, a menos  que
+       se  dé  un argumento -u none.  La tabla asociativa Unicode
+       previa puede guardarse en un fichero  mediante  la  opción
+       -ou fichero.
+
+       Uno  puede  añadir  una tabla asociativa Unicode a un tipo
+       psf usando psfaddtable(1).
+
+
+FICHEROS
+       /usr/share/consolefonts es  el  directorio  predeterminado
+       para tipos.
+
+       /usr/share/consoletrans   es  el directorio predeterminado
+       para asociaciones.
+
+VÉASE TAMBIÉN
+       mapscrn(8)
+
+AUTORES
+       Eugène G. Crosser (crosser@pccross.msk.su)
+       Andries E. Brouwer (aeb@cwi.nl)
+
+
+
+Local                  1 de Febrero de 1994            SETFONT(8)

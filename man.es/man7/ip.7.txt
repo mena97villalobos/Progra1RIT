@@ -1,0 +1,652 @@
+IP(7)            Manual del Programador de Linux            IP(7)
+
+
+
+NOMBRE
+       ip - Implementación Linux del protocolo IPv4
+
+SINOPSIS
+       #include <sys/socket.h>
+       #include <net/netinet.h>
+
+       tcp_socket = socket(PF_INET, SOCK_STREAM, 0);
+       raw_socket = socket(PF_INET, SOCK_RAW, protocol);
+       udp_socket = socket(PF_INET, SOCK_DGRAM, protocol);
+
+DESCRIPCIÓN
+       Linux implementa el Protocolo de Internet (Internet Proto­
+       col, IP), version 4, descrito en  RFC791  y  RFC1122.   ip
+       contiene  una  implementación  de multidestino del Nivel 2
+       según  el  RFC1112.   También  contiene  un  enrutador  IP
+       incluyendo un filtro de paquetes.
+
+       La  interfaz  del  programador es compatible con la de los
+       conectores BSD. Para más información sobre conectores, vea
+       socket(7).
+
+       Un  conector IP se crea llamando a la función socket(2) de
+       la  forma  socket(PF_INET,  socket_type,  protocol).   Los
+       tipos  de conectores válidos son SOCK_STREAM para abrir un
+       conector tcp(7), SOCK_DGRAM para abrir un conector  udp(7)
+       o  SOCK_RAW  para  abrir  un  conector  directo (raw) para
+       acceder al protocolo IP directamente.  protocol es el pro­
+       tocolo IP en la cabecera IP a enviar o recibir. Los únicos
+       valores válidos para protocol son  0  y  IPPROTO_TCP  para
+       conectores  TCP,  y  0  y IPPROTO_UDP para conectores UDP.
+       Para SOCK_RAW debe especificar un protocolo IP válido  del
+       IANA  definido  por  uno  de  los  números asignados en el
+       RFC1700.
+
+       Los conectores directos sólo pueden ser  abiertos  por  un
+       proceso  con  un identificador de usuario efectivo 0 o con
+       la capacidad CAP_NET_RAW.
+
+       Cuando  un  proceso  quiere  recibir  nuevos  paquetes  de
+       entrada  o  conexiones,  debe  enlazar  un  conector a una
+       dirección de la interfaz local usando  bind(2).   Sólo  se
+       puede  ligar  un  conector IP a un par (dirección, puerto)
+       dado.   Cuando  en  la  llamada  a  bind   se   especifica
+       INADDR_ANY, el conector será ligado a todas las interfaces
+       locales. Cuando se llama a listen(2) o connect(2)  con  un
+       conector  no  enlazado,  el  conector será automáticamente
+       ligado a un puerto aleatorio libre  cuya  dirección  local
+       sea  INADDR_ANY.   Una dirección local de conector TCP que
+       haya sido enlazada, no estará disponible durante un cierto
+       tiempo después de que se cierre, a menos que se haya acti­
+       vado la opción SO_REUSEADDR.  Se  debe  tener  cuidado  al
+       usar esta opción ya que hace que TCP sea menos fiable.
+
+
+FORMATO DE LAS DIRECCIONES
+       Una  dirección  de  conector  IP se define como una combi­
+       nación de una dirección de interfaz  IP  y  un  número  de
+       puerto.  El  protocolo IP básico no proporciona números de
+       puerto. Estos son implementados por protocolos de un nivel
+       más  alto  como  udp(7) y tcp(7).  Los conectores directos
+       ignoran los puertos.
+
+
+              struct sockaddr_in {
+                  sa_family_t    sin_family; /* familia de direcciones:
+                                                AF_INET */
+                  u_int16_t      sin_port;   /* puerto con los bytes en el
+                                                orden de red */
+                  struct in_addr  sin_addr;  /* dirección de Internet */
+              };
+
+              /* Dirección de Internet. */
+              struct in_addr {
+                  u_int32_t      s_addr;     /* dirección con los bytes en
+                                                el orden de red */
+              };
+
+       A sin_family siempre se le asigna el valor AF_INET.   Este
+       valor  es  necesario. En Linux 2.2, la mayoría de las fun­
+       ciones de red devuelven EINVAL cuando se ha  omitido  este
+       valor.  sin_port contiene el puerto con los bytes en orden
+       de red. Los números de puerto por debajo de 1024 se llaman
+       puertos  reservados.   Sólo los procesos con identificador
+       de usuario efectivo 0 o la capacidad  CAP_NET_BIND_SERVICE
+       pueden  realizar  enlaces  mediante bind(2) a estos conec­
+       tores. Dese cuenta que el protocolo  IPv4  puro  no  posee
+       como  tal  el  concepto de puerto. Estos son implementados
+       por protocolos superiores como tcp(7) y udp(7).
+
+       sin_addr es la dirección  IP  del  anfitrión  (host).   El
+       miembro  s_addr de struct in_addr contiene la dirección de
+       la interfaz del anfitrión con los bytes en orden  de  red.
+       Sólo  se debería acceder a in_addr usando las funciones de
+       biblioteca inet_aton(3), inet_addr(3) y  inet_makeaddr(3),
+       o directamente mediante el mecanismo de resolución de nom­
+       bres (vea gethostbyname(3)).  Las direcciones IPv4 se div­
+       iden  en  direcciones  unidestino, de difusión y multides­
+       tino. Las direcciones  unidestino  especifican  una  única
+       interfaz  de  un  anfitrión,  las  direcciones de difusión
+       especifican todos los anfitriones de una red y las  direc­
+       ciones multidestino identifican a todos los anfitriones de
+       un grupo multidestino. Sólo se pueden enviar datagramas  a
+       o  recibir  datagramas  de  direcciones de difusión cuando
+       está activa la opción de  conector  SO_BROADCAST.   En  la
+       implementación  actual, los conectores orientados a conex­
+       ión sólo pueden usar direcciones unidestino.
+
+       Dese cuenta que la dirección  y  el  puerto  se  almacenan
+       siempre en orden de red. En particular, esto significa que
+       necesita llamar a htons(3) con el número que se  ha  asig­
+       nado  al  puerto.  Todas  las funciones de manipulación de
+       dirección/puerto en la  biblioteca  estándar  trabajan  en
+       orden de red.
+
+
+OPCIONES DE LOS CONECTORES
+       IP  soporta  algunas  opciones de conector específicas del
+       protocolo que se pueden  configurar  con  setsockopt(2)  y
+       leer  con getsockopt(2).  El nivel de opciones de conector
+       para IP es SOL_IP.  Una opción  entera  booleana  es  cero
+       cuando es falsa y cualquier otra cosa cuando es cierta.
+
+
+       IP_OPTIONS
+              Establece  u  obtiene  las opciones IP a enviar con
+              cada paquete desde este  conector.  Los  argumentos
+              son  punteros  a  un buffer de memoria que contiene
+              las opciones y la longitud  de  las  opciones.   La
+              llamada  setsockopt(2)  establece  las  opciones IP
+              asociadas a un conector. El tamaño máximo de opción
+              para  IPv4  es  de  40  bytes.  Vea RFC791 para las
+              opciones permitidas.  Cuando el paquete inicial  de
+              petición  de  conexión para un conector SOCK_STREAM
+              contiene opciones IP, las opciones IP  se  configu­
+              rarán  automáticamente al valor de las opciónes del
+              paquete inicial con las cabeceras  de  enrutamiento
+              invertidas.  No  se  permite  que  los  paquetes de
+              entrada cambien las  opciones  después  de  que  la
+              conexión  se haya establecido.  El procesamiento de
+              todas las opciones de enrutamiento de la fuente  de
+              entrada  está  desactivado  por  defecto y se puede
+              activar  usando  la   sysctl   accept_source_route.
+              Otras  opciones, como las marcas de tiempo, todavía
+              se siguen manejando. Para los conectores  de  data­
+              gramas,  las  opciones  IP sólo pueden ser configu­
+              radas por el usuario local.  Llamar a getsockopt(2)
+              con  IP_OPTIONS  coloca  en el buffer proporcionado
+              las opciones IP actuales usadas para enviar.
+
+
+       IP_PKTINFO
+              Pasa un mensaje auxiliar  IP_PKTINFO  que  contiene
+              una   estructura  pktinfo  que  proporciona  alguna
+              información sobre los  paquetes  de  entrada.  Esto
+              sólo funciona para conectores orientados a datagra­
+              mas.
+
+              struct in_pktinfo
+              {
+                  unsigned int   ipi_ifindex;  /* Índice de la interfaz */
+                  struct in_addr ipi_spec_dst; /* Dirección de destino del
+                                                  enrutamiento */
+                  struct in_addr ipi_addr;     /* Dirección de destino en la
+                                                  cabecera */
+              };
+
+              ipi_ifindex es el índice de la interfaz en  la  que
+              se  recibió  el paquete.  ipi_spec_dst es la direc­
+              ción de destino  de  la  entrada  de  la  tabla  de
+              enrutamiento  y ipi_addr es la dirección de destino
+              en la cabecera del paquete.  Si se pasa  IP_PKTINFO
+              a  sendmsg(2),  el  paquete  de salida se enviará a
+              través de la interfaz especificada  en  ipi_ifindex
+              con   la   dirección   de   destino   indicada   en
+              ipi_spec_dst.
+
+
+       IP_RECVTOS
+              Cuando está activa, se  pasa  el  mensaje  auxiliar
+              IP_TOS  con  los  paquetes  de entrada. Contiene un
+              byte  que  especifica  el  campo  Tipo  de   Servi­
+              cio/Precedencia de la cabecera del paquete.  Espera
+              una opción entera booleana.
+
+
+       IP_RECVTTL
+              Cuando esta opción está activa, pasa un mensaje  de
+              control  IP_RECVTTL  con  el campo "tiempo de vida"
+              (time to live) del paquete  recibido  dado  por  un
+              byte. No soportada por conectores SOCK_STREAM.
+
+
+       IP_RECVOPTS
+              Pasa todas las opciones IP de entrada al usuario en
+              un mensaje de control IP_OPTIONS.  La  cabecera  de
+              enrutamiento  y  otras  opciones ya las completa el
+              anfitrión  local.  No  soportada  para   conectores
+              SOCK_STREAM.
+
+
+       IP_RETOPTS
+              Identica   a  IP_RECVOPTS  pero  devuelve  opciones
+              directas sin procesar  cuyas  marcas  de  tiempo  y
+              opciones  del  registro  de ruta no son completadas
+              por este anfitrión.
+
+
+       IP_TOS Establece o devuelve  el  campo  Tipo  de  Servicio
+              (Type-Of-Service, TOS) a enviar con cada paquete IP
+              creado desde este conector. Se usa  para  priorizar
+              los  paquetes  en  la  red. TOS es un byte. Existen
+              algunas   opciones   TOS   estándares    definidas:
+              IPTOS_LOWDELAY para minizar los retrasos en el caso
+              de tráfico interactivo, IPTOS_THROUGHPUT para opti­
+              mizar  el rendimiento, IPTOS_RELIABILITY para opti­
+              mizar la fiabilidad e IPTOS_MINCOST, que se debería
+              usar para "datos de relleno" donde no tenga sentido
+              una transmisión lenta. Como mucho, se puede especi­
+              ficar  uno de estos valores TOS. Los otros bits son
+              inválidos y se limpiarán.  Por defecto, Linux envía
+              primero  datagramas  IPTOS_LOWDELAY pero el compor­
+              tamiento exacto depende de la disciplina  de  enco­
+              lamiento configurada.  Algunos niveles de prioridad
+              alta pueden necesitar un identificador  de  usuario
+              efectivo 0 o la capacidad CAP_NET_ADMIN.  La prior­
+              idad también se  puede  configurar  de  una  manera
+              independiente  del  protocolo mediante la opción de
+              conector (SOL_SOCKET, SO_PRIORITY) (vea socket(7)).
+
+
+       IP_TTL Establece  u  obtiene  el  campo  "tiempo  de vida"
+              actual que se envía en cada paquete  enviado  desde
+              este conector.
+
+
+       IP_HDRINCL
+              Cuando  está  activa,  el  usuario  proporciona una
+              cabecera IP delante de los datos de  usuario.  Sólo
+              válida  para  conectores SOCK_RAW.  Vea raw(7) para
+              más información. Cuando esta opción está activa los
+              valores  configurados mediante IP_OPTIONS, IP_TTL y
+              IP_TOS se ignoran.
+
+
+       IP_RECVERR
+              Habilita el paso adicional fiable  de  mensajes  de
+              error.  Cuando se activa en un conector de datagra­
+              mas todos los errores generados se encolarán en una
+              cola  de  errores  por  conector. Cuando el usuario
+              recibe un errore procedente de una operación con un
+              conector,  se  pueden  recibir el errore llamando a
+              recvmsg(2) con la opción  MSG_ERRQUEUE  activa.  La
+              estructura  sock_extended_err que describe el error
+              se pasará  en  un  mensaje  auxiliar  con  el  tipo
+              IP_RECVERR y el nivel SOL_IP.  Esto es útil para el
+              manejo fiable de errores en conectores no  conecta­
+              dos.   La  parte  de  datos  recibida de la cola de
+              errores contiene el paquete de error.
+
+              IP usa la estructura sock_extended_err como  sigue:
+              a ee_origin se le asigna el valor SO_EE_ORIGIN_ICMP
+              para  errores  recibidos  en  un  paquete  ICMP   o
+              SO_EE_ORIGIN_LOCAL  para  errores  generados local­
+              mente.  A ee_type y ee_code se les asignan los cam­
+              pos  tipo  y  código  de la cabecera ICMP.  ee_info
+              contiene la MTU descubierta para errores  EMSGSIZE.
+              ee_data  no  se  usa  actualmente. En el caso de un
+              error originado en la red, todas  las  opciones  IP
+              (IP_OPTIONS, IP_TTL, etc.) activas en el conector y
+              contenidas en el paquete de error,  se  pasan  como
+              mensajes  de control. El contenido útil del paquete
+              que ha provocado el error se  devuelve  como  datos
+              normales.
+
+              En  el  caso  de conectores SOCK_STREAM, IP_RECVERR
+              tiene un semántica ligeramente diferente. En  lugar
+              de  guardar los errores para cuando expire el sigu­
+              iente plazo de tiempo, pasa todos  los  errores  de
+              entrada  inmediatamente al usuario. Esto podría ser
+              útil para conexiones TCP breves  que  necesitan  un
+              manejo  rápido  de  errores.  Use  esta  opción con
+              cuidado: hace que TCP no sea fiable  al  no  permi­
+              tirle  recuperarse  adecuadamente de los cambios de
+              enrutamiento y de  otras  condiciones  normales,  y
+              rompe  la especificación del protocolo. Dese cuenta
+              que TCP no posee una cola de errores.  MSG_ERRQUEUE
+              es  inválida  en conectores SOCK_STREAM.  Todos los
+              errores son devueltos sólo por funciones de  conec­
+              tor.
+
+              Para  conectores  directos (raw), IP_RECVERR activa
+              el paso de todos los errores ICMP  recibidos  a  la
+              aplicación.  En  otro  caso, sólo se informa de los
+              errores que se producen en conectores conectados.
+
+              Esta opción establece u obtiene un  valor  booleano
+              entero.   Por defecto, IP_RECVERR está desactivada.
+
+
+       IP_PMTU_DISCOVER
+              Establece o recibe la configuración del "descubrim­
+              iento  de  la  MTU  de  la  ruta" para el conector.
+              Cuando se activa, Linux realizará el descubrimiento
+              de la MTU de la ruta en este conector tal y como se
+              define en RFC1191. La opción de "no fragmentar"  se
+              activa  en todos los datagramas de salida. El valor
+              global por defecto del sistema se controla mediante
+              la   sysctl  ip_no_pmtu_disc  para  los  conectores
+              SOCK_STREAM y para todos los  demás  está  desacti­
+              vado.  El  usuario  puede obtener la MTU de la ruta
+              usando la opción IP_MTU o IP_RECVERR.
+
+              +-----------------------+--------------------------------+
+              |Opciones   del    des­ | Significado                    |
+              |cubrimiento  de la MTU |                                |
+              |de la ruta             |                                |
+              +-----------------------+--------------------------------+
+              |IP_PMTUDISC_WANT       | Usar configuraciones por ruta. |
+              +-----------------------+--------------------------------+
+              |IP_PMTUDISC_DONT       | Nunca realizar  el  descubrim­ |
+              |                       | iento de la MTU de la ruta.    |
+              +-----------------------+--------------------------------+
+              |IP_PMTUDISC_DO         | Realizar siempre el descubrim­ |
+              |                       | iento de la MTU de la ruta.    |
+              +-----------------------+--------------------------------+
+              Cuando se activa el descubrimiento de la MTU de  la
+              ruta,  el núcleo automáticamente memoriza la MTU de
+              la ruta por  anfitrión  de  destino.  Los  paquetes
+              enviados desde conectores de datagramas (incluyendo
+              los conectores directos) que son mayores que la MTU
+              son  rechazados  con  un error EMSGSIZE.  Cuando se
+              está conectado a  un  extremo  específico  mediante
+              connect(2),  se  puede  obtener convenientemente la
+              MTU de  la  ruta  conocida  actualmente  usando  la
+              opción  de conector IP_MTU (por ejemplo, después de
+              que haya ocurrido un error EMSGSIZE).  La MTU puede
+              cambiar  con el tiempo. Para conectores no orienta­
+              dos  a  conexión  con  muchos  destinos,  se  puede
+              acceder  a  la  MTU nueva usando la cola de errores
+              (vea IP_RECVERR).  Mientras se está  realizando  el
+              descubrimiento de la MTU, se pueden perder paquetes
+              iniciales de  los  conectores  de  datagramas.  Las
+              aplicaciones  que  usan UDP deben se conscientes de
+              esto y no tenerlo en cuenta para sus estrategias de
+              retransmisión de paquetes.
+
+              Para iniciar el proceso de descubrimiento de la MTU
+              de la ruta en conectores no orientados a  conexión,
+              es  posible  comenzar con un tamaño grande de data­
+              gramas (con logitudes de bytes de hasta 64KB en las
+              cabeceras)  y dejar que se reduzca mediante actual­
+              izaciones de la MTU de la ruta.
+
+              Para obtener una estimación inicial de la MTU de la
+              ruta,  conecte  un  conector  de  datagramas  a una
+              dirección de destino usando connect(2) y obtenga la
+              MTU  llamando a getsockopt(2) con la opción IP_MTU.
+
+
+       IP_MTU Obtiene la MTU de la ruta conocida actualmente para
+              el  conector actual. Sólo válida cuando el conector
+              ha sido conectado. Devuelve un entero.  Sólo válida
+              para getsockopt(2).
+
+       IP_ROUTER_ALERT
+              Pasar  a  este conector todos los paquetes "a reen­
+              viar" que  tengan  activa  la  opción  "alarma  del
+              enrutador  IP" (IP Router Alert).  Sólo válida para
+              conectores directos. Esto  es  útil,  por  ejemplo,
+              para  demonios  RSVP  en el espacio de usuario. Los
+              paquetes interceptados no  son  reenviados  por  el
+              núcleo, es responsabilidad de los usuarios envilar­
+              los de nuevo. Se ignora  el  enlace  del  conector,
+              tales paquetes sólo son filtrados por el protocolo.
+              Espera una opción entera.
+
+       IP_MULTICAST_TTL
+              Establece o lee el valor "tiempo de vida" (time-to-
+              live,  TTL)  de los paquetes multidestino de salida
+              para este conector.  Es  muy  importante  para  los
+              paquetes  multidestino  utilizar el TTL más pequeño
+              posible. El valor por defecto es 1 lo que significa
+              que los paquetes multidestino no abandonarán la red
+              local  a  menos  que  el  programa  de  usuario  lo
+              solicite explícitamente. El argumento es un entero.
+
+       IP_MULTICAST_LOOP
+              Establece o lee un argumento  entero  booleano  que
+              indica  si los paquetes multidestino enviados deben
+              o no ser devueltos a los conectores locales.
+
+       IP_ADD_MEMBERSHIP
+              Unirse a un grupo multidestino. El argumento es una
+              estructura struct ip_mreqn.
+
+              struct ip_mreqn
+              {
+                  struct in_addr imr_multiaddr; /* Dirección IP del grupo
+                                                   multidestino */
+                  struct in_addr imr_address;   /* Dirección IP de la
+                                                   interfaz local */
+                  int            imr_ifindex;   /* Índice de la interfaz */
+              };
+
+              imr_multiaddr  contiene la dirección del grupo mul­
+              tidestino al que la aplicación  se  quiere  unir  o
+              quiere  dejar.  Debe ser una dirección multidestino
+              válida.  imr_address es la dirección de la interfaz
+              local  con  la  que el sistema debe unirse al grupo
+              multidestino. Si es igual a INADDR_ANY  el  sistema
+              elige  una  interfaz  adecuada.   imr_ifindex es el
+              índice de la interfaz que debe unirse a o dejar  el
+              grupo  imr_multiaddr,  o  0  para indicar cualquier
+              interfaz.
+
+              Por compatibilidad, todavía se soporta  la  antigua
+              estructura  ip_mreq.   Difiere  de ip_mreqn sólo en
+              que no incluye el campo imr_ifindex.   Ésta  opción
+              sólo es válida para setsockopt(2).
+
+       IP_DROP_MEMBERSHIP
+              Dejar  un  grupo  multidestino. El argumento es una
+              estructura ip_mreqn  o  ip_mreq  similar  a  la  de
+              IP_ADD_MEMBERSHIP.
+
+       IP_MULTICAST_IF
+              Establece  el  dispositivo  local  para un conector
+              multidestino.  El  argumento  es   una   estructura
+              ip_mreqn  o  ip_mreq similar a la de IP_ADD_MEMBER­
+              SHIP.
+
+              Cuando se pasa una opción de conector inválida,  se
+              devuelve el error ENOPROTOOPT.
+
+
+SYSCTLS
+       El protocolo IP soporta la interfaz sysctl para configurar
+       algunas opciones globales. Se puede acceder a las  sysctls
+       leyendo  o escribiendo los ficheros /proc/sys/net/ipv4/* o
+       usando la interfaz sysctl(2).
+
+       ip_default_ttl
+              Establece el  valor  "tiempo  de  vida"  (TTL)  por
+              defecto  de  los  paquetes de salida. Éste se puede
+              cambiar para cada conector con la opción IP_TTL.
+
+       ip_forward
+              Activa el reenvío IP con una opción booleana.  Tam­
+              bién  se  puede configurar el reenvío IP interfaz a
+              interfaz.
+
+       ip_dynaddr
+              Activa la reescritura dinámica de la dirección  del
+              conector y de las entradas de enmascaramiento (mas­
+              querading) para cuando cambie la  dirección  de  la
+              interfaz. Esto es útil para interfaces dialup (como
+              las telefónicas) con direcciones IP  cambiantes.  0
+              significa no reescritura, 1 la activa y 2 activa el
+              modo verboso.
+
+       ip_autoconfig
+              No documentado.
+
+       ip_local_port_range
+              Contiene dos enteros que definen  el  intervalo  de
+              puertos  locales  por  defecto  reservados para los
+              conectores.  La  reserva  comienza  con  el  primer
+              número  y  termina  con el segundo. Dése cuenta que
+              estos no deben entrar en conflicto con los  puertos
+              usados  por  el enmascaramiento (aunque se trate el
+              caso).  También, las elecciones arbitrarias  pueden
+              producir  problemas con algunos filtros de paquetes
+              del cortafuegos que realizan suposiciones sobre los
+              puertos  locales  en uso. El primer número debe ser
+              al menos >1024, mejor >4096 para evitar  conflictos
+              con  puertos  bien  conocidos  y para minimizar los
+              problemas con el cortafuegos.
+
+       ip_no_pmtu_disc
+              Si está activa, por  defecto  no  realiza  el  des­
+              cubrimiento  de  la  MTU de la ruta para los conec­
+              tores TCP. El descubrimiento de la MTU de  la  ruta
+              puede  fallar si se encuentran en la ruta cortafue­
+              gos mal configurados (como los  que  pierden  todos
+              los  paquetes  ICMP)  o interfaces mal configuradas
+              (por ejemplo, un enlace  punto  a  punto  en  donde
+              ambos  extremos  no se ponen de acuerdo en la MTU).
+              Es mejor arreglar los enrutadores defectuosos de la
+              ruta  que  desactivar globalmente el descubrimiento
+              de la MTU de  la  ruta  ya  que  el  no  realizarlo
+              incurre en un alto coste para la red.
+
+       ipfrag_high_thresh, ipfrag_low_thresh
+              Si  el número de fragmentos IP encolados alcanza el
+              valor ipfrag_high_thresh, la  cola  se  recorta  al
+              valor ipfrag_low_thresh.  Contiene un entero con el
+              número de bytes.
+
+       neigh/*
+              Vea arp(7).
+
+IOCTLS
+       Todas las ioctls descritas en socket(7) se aplican a IP.
+
+       Las ioctls para configurar el cortafuegos se documentan en
+       la página ipfw(7) del paquete ipchains.
+
+       Las  ioctls para configurar los parámetros de los disposi­
+       tivos genéricos se describen en netdevice(7).
+
+NOTAS
+       Tenga mucho cuidado con  la  opción  SO_BROADCAST  (no  es
+       privilegiada  en Linux). Es fácil sobrecargar la red real­
+       izando difusiones sin tomar precauciones. Para los  nuevos
+       protocolos  de aplicación es mejor usar un grupo multides­
+       tino que usar la difusión. La difusión  no  está  recomen­
+       dada.
+
+       Otras  implementaciones de conectores BSD proporcionan las
+       opciones  de  conector  IP_RCVDSTADDR  y  IP_RECVIF   para
+       obtener la dirección de destino y la interfaz de los data­
+       gramas  recibidos.  Linux  posee  la  opción  más  general
+       IP_PKTINFO para la misma tarea.
+
+
+ERRORES
+       ENOTCONN
+               La  operación  sólo  está  definida  en conectores
+               conectados, pero el conector no lo está.
+
+       EINVAL  Se ha  pasado  un  argumento  inválido.  Para  las
+               operaciones  de  envío,  éste se puede producir al
+               enviar a una ruta blackhole.
+
+       EMSGSIZE
+               El datagrama es mayor que una MTU de la ruta y  no
+               puede ser fragmentado.
+
+       EACCES  El usuario ha intentado ejecutar una operación sin
+               los permisos necesarios.  Estos  incluyen:  enviar
+               un  paquete  a una dirección de difusión sin haber
+               activado la opción SO_BROADCAST, enviar un paquete
+               a  través de una ruta prohibida, modificar la con­
+               figuración del cortafuegos sin tener la  capacidad
+               CAP_NET_ADMIN ni un identificador de usuario efec­
+               tivo 0, y realizar un enlace a un puerto reservado
+               sin  la capacidad CAP_NET_BIND_SERVICE ni un iden­
+               tificador de usuario efectivo 0.
+
+
+       EADDRINUSE
+               Se ha intentado el enlace a una  dirección  ya  en
+               uso.
+
+       ENOMEM y ENOBUFS
+               No hay suficiente memoria disponible.
+
+       ENOPROTOOPT y EOPNOTSUPP
+               Se han pasado una opción de conector inválida.
+
+       EPERM   El  usuario  no  tiene permiso para establecer una
+               prioridad alta, cambiar la configuración o  enviar
+               señales al proceso o grupo solicitado.
+
+       EADDRNOTAVAIL
+               Se  ha  solicitado  una  interfaz inexistente o la
+               dirección fuente solicitada no es local.
+
+       EAGAIN  La operación se bloquearía  en  un  conector  blo­
+               queante.
+
+       ESOCKTNOSUPPORT
+               El conector no está configurado o se ha solicitado
+               un tipo de conector desconocido.
+
+       EISCONN Se ha llamado a  connect(2)  con  un  conector  ya
+               conectado.
+
+       EALREADY
+               Ya  se  está  realizando una operación de conexión
+               sobre un conector no bloqueante.
+
+       ECONNABORTED
+               Se ha cerrado la conexión durante un accept(2).
+
+       EPIPE   La conexión se ha  cerrado  inesperadamente  o  el
+               otro extremo la ha cancelado.
+
+       ENOENT  Se  ha  llamado  a  SIOCGSTAMP  con un conector en
+               donde no ha llegado ningún paquete.
+
+       EHOSTUNREACH
+               Ninguna entrada válida de la tabla de enrutamiento
+               coincide  con  la dirección de destino. Este error
+               puede ser provocado por un mensaje ICMP procedente
+               de  un  enrutador  remoto  o por la tabla local de
+               enrutamiento.
+
+       ENODEV  Dispositivo de red  no  disponible  o  incapaz  de
+               enviar paquetes IP.
+
+       ENOPKG  No se ha configurado un subsistema del núcleo.
+
+       Los  protocolos superpuestos pueden generar otros errores.
+       Vea tcp(7), raw(7), udp(7) y socket(7).
+
+VERSIONES
+       IP_PKTINFO,    IP_MTU,    IP_PMTU_DISCOVER,    IP_PKTINFO,
+       IP_RECVERR  y  IP_ROUTER_ALERT  son  opciones  nuevas  del
+       núcleo 2.2 de Linux.
+
+       struct ip_mreqn es nueva en Linux  2.2.   Linux  2.0  sólo
+       soportaba ip_mreq.
+
+       Las sysctls se introdujeron en la versión 2.2 de Linux.
+
+COMPATIBILIDAD
+       Por  compatibilidad  con  Linux 2.0, todavía se soporta la
+       sintáxis obsoleta socket(PF_INET, SOCK_RAW, protocol) para
+       abrir  un conector de paquetes (packet(7)).  Se recomienda
+       no  usar  esta  sintaxis  y   debería   reemplazarse   por
+       socket(PF_PACKET,   SOCK_RAW,   protocol).   La  principal
+       diferencia es la nueva  estructura  de  direcciones  sock­
+       addr_ll  para la información genérica de la capa de enlace
+       en lugar de la antigua sockaddr_pkt.
+
+FALLOS
+       Existen demasiados valores de error inconsistentes.
+
+       No se han descrito las ioctls para configurar las opciones
+       de interfaz específicas de IP y las tablas ARP.
+
+AUTORES
+       Esta página de manual fue escrita por Andi Kleen.
+
+VÉASE TAMBIÉN
+       sendmsg(2),  recvmsg(2),  socket(7),  netlink(7),  tcp(7),
+       udp(7), raw(7), ipfw(7)
+
+       RFC791 para la especificación IP original.
+       RFC1122 para los requerimientos IPv4 para lo  anfitriones.
+       RFC1812 para los requeremientos IPv4 para los enrutadores.
+
+
+
+
+Página man de Linux        11 mayo 1999                     IP(7)

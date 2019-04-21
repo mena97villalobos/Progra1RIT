@@ -1,0 +1,31 @@
+REWINDDIR(3)     Manual del Programador de Linux     REWINDDIR(3)
+
+
+
+NOMBRE
+       rewinddir - reinicia el flujo de directorio
+
+SINOPSIS
+       #include <sys/types.h>
+
+       #include <dirent.h>
+
+       void rewinddir(DIR *dir);
+
+DESCRIPCIÓN
+       La  función  rewinddir() reinicia la posición del flujo de
+       directorio dir, poniéndola al principio del directorio.
+
+VALOR REGRESADO
+       La función rewinddir() no devuelve ningún valor.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3
+
+VÉASE TAMBIÉN
+       opendir(3),    readdir(3),    closedir(3),     seekdir(3),
+       telldir(3), scandir(3)
+
+
+
+                           11 Jun 1995               REWINDDIR(3)

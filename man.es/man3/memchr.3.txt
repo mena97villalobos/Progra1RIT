@@ -1,0 +1,33 @@
+MEMCHR(3)        Manual del Programador de Linux        MEMCHR(3)
+
+
+
+NOMBRE
+       memchr - busca en memoria un carácter
+
+SINOPSIS
+       #include <string.h>
+
+       void *memchr(const void *s, int c, size_t n);
+
+DESCRIPCIÓN
+       La  función memchr() rastrea los primeros n bytes del área
+       de memoria apuntada por s  buscando  el  carácter  c.   La
+       operación  acaba  al llegarse al primer byte que concuerde
+       con c (interpretado como un carácter sin signo).
+
+VALOR DEVUELTO
+       La función memchr() devuelve un puntero al byte  que  con­
+       cuerda,  o NULL si el carácter no está en el área de memo­
+       ria especificada.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       index(3), rindex(3),  strchr(3),  strpbrk(3),  strrchr(3),
+       strsep(3), strspn(3), strstr(3)
+
+
+
+GNU                        3 Marzo 1998                 MEMCHR(3)

@@ -1,0 +1,54 @@
+PATHCHK(1)                                             PATHCHK(1)
+
+
+
+NOMBRE
+       pathchk  - verifica si los nombres de ficheros son válidos
+       o portables
+
+SINOPSIS
+       pathchk   [-p]   [--portability]   [--help]    [--version]
+       fichero...
+
+DESCRIPCIÓN
+       Esta  documentación no será mantenida y puede ser inexacta
+       o incompleta.  La documentación Texinfo es ahora la fuente
+       autorizada.
+
+       Esta página de manual documenta la versión GNU de pathchk.
+       Para cada fichero, pathchk imprime un mensaje si alguna de
+       estas condiciones es falsa:
+       ·  todos los directorios existentes en fichero tienen per­
+       miso de búsqueda (ejecución)
+       · la longitud de fichero no es más grande que la  longitud
+       máxima de nombre de fichero de su sistema de ficheros
+       ·  la  longitud de cada componente de fichero correspondi­
+       ente a un nombre de directorio existente no es más  grande
+       que  la  longitud máxima de su sistema de ficheros para un
+       componente nombre de fichero
+
+       El estado de la salida es:
+       0 si todos los nombres de ficheros pasan todos las comprobaciones,
+       1 en otro caso.
+
+   OPCIONES
+       --help Imprime un mensaje de uso en la salida  estándar  y
+              termina correctamente.
+
+       -p, --portability
+              En lugar de realizar las comprobaciones de longitud
+              en el sistema de ficheros subyacente,  verifica  la
+              longitud  de  cada  nombre  de fichero y sus compo­
+              nentes con los límites mínimos de  portabilidad  de
+              POSIX.1.   También  comprueba  que  los  nombres de
+              ficheros no contengan caracteres que no están en el
+              conjunto  de  caracteres  portables para nombres de
+              fichero.
+
+       --version
+              Imprime información sobre la versión en  la  salida
+              estándar y termina correctamente.
+
+
+
+FSF                    Utilidades Shell GNU            PATHCHK(1)

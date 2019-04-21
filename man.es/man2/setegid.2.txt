@@ -1,0 +1,62 @@
+SETREGID(2)      Manual del Programador de Linux      SETREGID(2)
+
+
+
+NOMBRE
+       setregid, setegid - establecen el GID efectivo o real
+
+SINOPSIS
+       #include <unistd.h>
+
+       int setregid(gid_t rgid, gid_t egid);
+       int setegid(gid_t egid);
+
+DESCRIPCIÓN
+       setregid establece los GIDs real y efectivo del proceso en
+       curso.  Los usuarios no privilegiados  pueden  cambiar  el
+       GID real al GID efectivo y viceversa.
+
+       Antes  de Linux 1.1.38, lo del ID salvado, cuando se usaba
+       con setregid  o  setegid  no  funcionaba.   A  partir  del
+       1.1.38,  es  posible  también establecer el GID efectivo a
+       partir del GID salvado.
+
+       Sólo el súper-usuario puede hacer otros cambios.
+
+       Un valor de -1 para el GID efectivo o para el real, fuerza
+       al sistema a dejar ese ID intacto.
+
+       Actualmente  (libc-4.x.x), setegid(egid) es funcionalmente
+       equivalente a setregid(-1, egid).
+
+       Si el GID real se cambia o el GID efectivo se  pone  a  un
+       valor  distinto  del  GID  real  anterior,  el GID salvado
+       tomará el valor del nuevo GID efectivo.
+
+VALOR DEVUELTO
+       En caso de éxito se devuelve cero. En caso  de  error,  se
+       devuelve -1 y se pone en errno un valor adecuado.
+
+ERRORES
+       EPERM   El proceso en curso no es del súper-usuario
+               y se ha especificado un cambio distinto a
+
+               (i) cambiar el GID efectivo con el real, o
+
+               (ii) poner uno al valor del otro, o
+
+               (iii) poner el GID efectivo  al  valor  del
+               GID salvado.
+
+
+
+CONFORME A
+       BSD  4.3  (la función setregid apareció por primera
+       vez en 4.2BSD).
+
+VÉASE TAMBIÉN
+       getgid(2), setgid(2)
+
+
+
+Linux 1.1.38              26 Enero 1998               SETREGID(2)

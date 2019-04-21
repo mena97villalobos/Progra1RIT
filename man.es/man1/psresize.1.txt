@@ -1,0 +1,63 @@
+PSRESIZE(1)                                           PSRESIZE(1)
+
+
+
+NOMBRE
+       psresize - múltiples páginas por hoja
+
+SYNOPSIS
+       psresize  [ -wwidth ] [ -hheight ] [ -ppaper ] [ -Wwidth ]
+       [ -Hheight ] [ -Ppaper ] [ -q ] [ infile [ outfile ] ]
+
+DESCRIPCIÓN
+       Psresize reescala y centra un documento en  un  tamaño  de
+       papel  diferente.  El  fichero  PostScript de entrada debe
+       seguir los Convenios de  Estucturación  de  Documentos  de
+       Adobe (Document Structuring Conventions).
+
+       La  opción -w especifica la anchura del papel, y la opción
+       -h especifica la altura del papel,  normalmente  especifi­
+       cada  en cm o in para convertir puntos PostScript (1/72 de
+       una pulgada) a centímetros o pulgadas.  La opción -p puede
+       utilizarse  como  alternativa  para  indicar el tamaño del
+       papel de salida  como  a3,  a4,  a5,  b5,  letter,  legal,
+       tabloid,  statement, executive, folio, quarto o 10x14.  El
+       tamaño por defecto del papel de salida es a4.
+
+       La opción -W indica la anchura del papel de entrada, y  la
+       opción  -H  indica  la  altura  del  papel de entrada.  La
+       opción -P se puede usar como alternativa para  especificar
+       el  tamaño  del  papel de entrada.  El tamaño del papel de
+       entrada por defecto es a4.
+
+       Psresize normalmente imprime los números de página de  las
+       páginas que resultan.  La opción -q suprime esto.
+
+EJEMPLOS
+       El  siguiente comando puede usarse para convertir un docu­
+       mento de tamaño de papel A4 a papel de tamaño carta  (let­
+       ter):
+
+       psresize -PA4 -pletter in.ps out.ps
+
+
+AUTOR
+       Copyright (C) Angus J. C. Duggan 1991-1995
+
+VÉASE TAMBIÉN
+       psbook(1),  psselect(1),  pstops(1), epsffit(1), psnup(1),
+       psresize(1), psmerge(1), fixscribeps(1), getafm(1), fixdl­
+       srps(1),  fixfmps(1),  fixmacps(1),  fixpsditps(1),  fixp­
+       spps(1), fixtpps(1), fixwfwps(1), fixwpps(1),  fixwwps(1),
+       extractres(1), includeres(1)
+
+MARCAS REGISTRADAS
+       PostScript es una marca registrada de Adobe Systems Incor­
+       porated.
+
+FALLOS
+       Psresize no acepta todos los comentarios de las DSC.
+
+
+
+                 PSUtils Release 1 Patchlevel 17      PSRESIZE(1)

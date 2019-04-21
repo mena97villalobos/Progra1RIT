@@ -1,0 +1,84 @@
+GET-NEWS.CONF(5)                                 GET-NEWS.CONF(5)
+
+
+
+NOMBRE
+       get-news.conf - archivo de configuración de get-news(1)
+
+DESCRIPCIÓN
+       El archivo /etc/suck/get-news.conf contiene los parámetros
+       por defecto que empleará get-news(1).
+
+       Los parámetros se especifican según el formato:
+
+              nombre:[espacios opcionales]valor
+
+       donde por nombre se entiende uno de los sigientes valores:
+
+       server
+       remoteserver
+       remoteport
+       outgoingfile
+       userid
+       password
+       sedcmd
+
+       En la versión actual resto de campos de la forma nombre: valor serán
+       ignorados.
+
+       Nótese que los nombres deben ir en minúsculas y que no se permite
+       espacios entre el nombre y los dos puntos, es decir que funcionarán
+       correctamente tanto
+
+       server: noticias.nodo.es
+
+       como
+
+       server:noticias.nodo.es
+
+       En cambio posiblemente no funcione:
+
+       server : noticias.servidor.es
+
+
+OPCIONES
+       Los posibles parámetros a usar son:
+
+       server:
+              Indica cual es el nombre del servidor local al  que
+              get-newsenviará los artículos que reciba del servi­
+              dor remoto.
+
+       remoteserver:
+              Indica el nombre del servidor remoto  al  que  get-
+              news se conectarápara recibir mensajes.
+
+       remoteport:
+              Indica  el número de puerto del servidor remoto, en
+              el caso de que esteno sea el puerto por defecto del
+              protocolo NNTP.
+
+       outgoingfile:
+              Indica  el  nombre  del  archivo  que  contiene los
+              artículos quese desean enviar al  servidor  remoto.
+              userid:
+
+       password:
+              Indican  un nombre de usuario y una clave para aut­
+              entificarse anteel servidor remoto.
+
+       sedcmd Indica el comando que empleará put-news  para  fil­
+              trar  los mensajes antesde ser enviados al servidor
+              remoto. Todo el artículo pasará a travésdel  editor
+              de  flujo "sed" con este argumento. Por ejemplo, si
+              se deseaeliminar  los  campos  NNTP-Posting-Host  y
+              Xref  de  la cabecera del artículodebería usarse el
+              valor sedcmd: /^NNTP-Posting-Host:^Xref:/d
+
+
+VÉASE TAMBIÉN
+       get-news(1), suck(1).
+
+
+
+Linux                      20 Mar 1999           GET-NEWS.CONF(5)

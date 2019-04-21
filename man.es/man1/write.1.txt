@@ -1,0 +1,67 @@
+WRITE(1)         Manual del Programador de Linux         WRITE(1)
+
+
+
+NOMBRE
+       write - envía un mensaje a otro usuario
+
+SINOPSIS
+       write usuario [nombre-tty]
+
+DESCRIPCIÓN
+       Write  le  permite  comunicarse con otro usuario, copiando
+       líneas de su terminal a la de él.
+
+       Cuando Ud. llama a la orden write, el usuario al  que  Ud.
+       vaya a escribir recibe un mensaje de la forma:
+
+              Message  from  su-nombre@su-computador on su-tty at
+              hh:mm ...
+
+       O sea, en español:
+
+              Mensaje de su-nombre@su-computador en su-tty a  las
+              hh:mm ...
+
+       Cualesquiera  líneas  posteriores que Ud. escriba se copi­
+       arán a la  terminal  del  usuario  especificado.  Si  éste
+       quiere responder, debe ejecutar también write.
+
+       Cuando  haya acabado, teclee un carácter de Fin-De-Fichero
+       o de interrupción. El otro usuario  verá  el  mensaje  EOF
+       indicando  (End  Of File) que la conversación se ha termi­
+       nado.
+
+       Ud. puede evitar que la gente (distinta del súper-usuario)
+       le  escriba  en  la  terminal  mediante  la orden mesg(1).
+       Algunas órdenes, por  ejemplo  nroff(1)  y  pr(1),  pueden
+       automáticamente  evitar  esta  escritura,  de forma que su
+       salida no se mezcle con ella y así no se vea  sobrescrita.
+
+       Si  el  usuario al que Ud. quiere escribir está en el sis­
+       tema en más de una terminal, puede especificar en qué ter­
+       minal escribir especificando el nombre de la terminal como
+       el segundo argumento de la orden write.  Alternativamente,
+       puede  dejar  que  write seleccione una de las terminales;
+       cogerá la que tenga un tiempo de  inactividad  más  corto.
+       Esto  es  así para que si el usuario, por ejemplo, está en
+       el sistema desde una terminal  en  el  trabajo  y  también
+       conectado desde casa, el mensaje vaya al sitio correcto.
+
+       El protocolo tradicional para escribir a alguien es que la
+       cadena `-o', bien al final de una línea  o  en  una  línea
+       sola,  significa que es el turno de hablar de la otra per­
+       sona. La `o' es por `over'; o  sea,  `cambio'.  La  cadena
+       `oo'  (por  `over  and out'; o sea, `cambio y corto') sig­
+       nifica que la persona cree que la conversación  ha  termi­
+       nado.
+
+VÉASE TAMBIÉN
+       mesg(1), talk(1), who(1), wall(1).
+
+HISTORIA
+       Una orden write apareció en la Versión 6 del UNIX de AT&T.
+
+
+
+Linux                     12 Marzo 1995                  WRITE(1)

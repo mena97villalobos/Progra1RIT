@@ -1,0 +1,399 @@
+locale(5)               Manual del Usuario              locale(5)
+
+
+
+NOMBRE
+       locale - Describe un fichero de definición de localización
+
+DESCRIPCIÓN
+       Los ficheros de definición de localización o  locale  con­
+       tienen toda la información que la orden localedef(1) nece­
+       sita para convertirlos a  la  base  de  datos  binaria  de
+       localización.
+
+       Los  ficheros de definición constan de secciones, cada una
+       de las cuales describe en detalle una categoría de  local­
+       ización.
+
+SINTAXIS
+       El  fichero de definición de localización comienza con una
+       cabecera, que puede constar  de  las  siguientes  palabras
+       reservadas:
+
+       <escape_char>
+              seguido  por un carácter que debe emplearse como el
+              carácter de escape para el resto del  fichero  para
+              señalar  caracteres  que  deban interpretarse de un
+              modo especial. Si no se dice otra cosa, es la barra
+              invertida ( \ ).
+
+       <comment_char>
+              seguido  por un carácter que se empleará como el de
+              comentario en el resto del fichero. Por omisión  es
+              el sostenido ( # ).
+
+
+       Las  definiciones  de localización se dividen en una parte
+       para cada categoría  de  localización.  Cada  parte  puede
+       copiarse de otra localización existente, o puede definirse
+       desde cero. Si la categoría ha de copiarse, la única  pal­
+       abra  reservada permitida en la definición es copy seguida
+       por el nombre de la localización que debe ser copiada.
+
+
+   LC_CTYPE
+       La definición para la categoría LC_CTYPE copienza  por  la
+       cadena LC_CTYPE en la primera columna.
+
+       Se permiten las siguientes palabras reservadas:
+
+
+       upper  seguido  por  una  lista  de letras mayúsculas. Las
+              letras desde la A hasta la Z se incluyen  automáti­
+              camente.  Los caracteres también especificados como
+              cntrl, digit, punct o space no se permiten.
+
+
+       lower  seguido por una lista  de  letras  minúsculas.  Las
+              letras  desde la a hasta la z se incluyen automáti­
+              camente. Los caracteres también especificados  como
+              cntrl, digit, punct o space no se permiten.
+
+
+       alpha  seguido  por  una lista de letras. Todos los carac­
+              teres especificados como upper o lower se  incluyen
+              automáticamente. Los caracteres también especifica­
+              dos  como  cntrl,  digit,  punct  o  space  no   se
+              permiten.
+
+
+       digit  seguidos por los caracteres clasificados como dígi­
+              tos numéricos. Solamente se permiten los  guarismos
+              desde  el 0 hasta el 9 .  Se incluyen de forma pre­
+              determinada en esta clase.
+
+
+       space  seguido por una lista de caracteres definidos  como
+              blancos.  Los caractares también especificados como
+              upper, lower, alpha, digit, graph o  xdigit  no  se
+              permiten.   Los  caracteres  <space>,  <form-feed>,
+              <newline>, <carriage-return>, <tab>,  y  <vertical-
+              tab> se incluyen automáticamente.
+
+
+       cntrl  seguido  por  una  lista  de caracteres de control.
+              Los caracteres también  especificados  como  upper,
+              lower,  alpha,  digit, punct, graph, print o xdigit
+              no se permiten.
+
+       punct  seguido por una lista de caracteres de  puntuación.
+              Los  caracteres  también  especificados como upper,
+              lower, alpha, digit, cntrl, xdigit o el carácter de
+              espacio <space> no son permitidos.
+
+
+       graph  seguido  por  una  lista de caracteres imprimibles,
+              sin incluir el carácter  <space>.   Los  caracteres
+              definidos como upper, lower, alpha, digit, xdigit y
+              punct se incluyen automáticamente.  Los  caracteres
+              también especificados como cntrl no se permiten.
+
+
+       print  seguido  por  una  lista de caracteres imprimibles,
+              incluyendo el <space>.   Los  caracteres  definidos
+              como upper, lower, alpha, digit, xdigit, punct y el
+              <space> se incluyen automáticamente. Los caracteres
+              también especificados como cntrl no se permiten.
+
+
+       xdigit seguido  por  una  lista de caracteres clasificados
+              como dígitos hexadecimales.  Los  dígitos  en  base
+              diez deben incluirse seguidos por uno o más conjun­
+              tos de seis caracteres  en  orden  ascendente.  Por
+              omisión  se incluyen los siguientes caracteres: del
+              0 al 9, de la a a la f, de la A a la F.
+
+
+       blank  seguido por una lista  de  caracteres  clasificados
+              como  blancos.   Los  caracteres <space> y <tab> se
+              incluyen automáticamente.
+
+
+       toupper
+              seguido por una lista de correspondencias de letras
+              minúsculas  a  mayúsculas.  Cada correspondencia es
+              una pareja de letra minúscula y su  correspondiente
+              mayúscula  separadas  por  una  coma , y encerradas
+              entre paréntesis. Los miembros de la lista se sepa­
+              ran por punto y coma.
+
+       tolower
+              seguido por una lista de correspondencias de letras
+              mayúsculas a minúsculas. Si esta palabra  reservada
+              está  ausente,  se  emplea  el  inverso de la lista
+              toupper.
+
+
+       La definición LC_CTYPE acaba con la cadena END LC_CTYPE.
+
+
+   LC_COLLATE
+       La categoría LC_COLLATE define las reglas para  clasificar
+       caracteres.  Debido  a  limitaciones de la biblioteca de C
+       (libc) no todas las opciones POSIX están implementadas.
+
+       La definición empieza  con  la  cadeda  LC_COLLATE  en  la
+       primera columna.
+
+       Se permiten las siguientes palabras reservadas:
+
+
+       collating-element
+
+
+       collating-symbol
+
+
+       La definición de orden empieza con una línea:
+
+       order_start
+
+       seguido por una lista de palabras reservadas de entre for­
+       ward, backward o position.  La definición  de  orden  con­
+       siste en líneas que describen el orden y acaba con la pal­
+       abra reservada
+
+       order_end.
+
+
+       Para más detalles consulte los fuentes en /usr/lib/nls/src
+       sobre todo los ejemplos POSIX, Example y Example2
+
+
+       La  definición  LC_COLLATE acaba con la cadena END LC_COL­
+       LATE.
+
+
+   LC_MONETARY
+       La definición empieza con  la  cadena  LC_MONETARY  en  la
+       primera columna.
+
+       Se permiten las siguientes palabras reservadas:
+
+
+       int_curr_symbol
+              seguido  por  el  símbolo  monetario internacional.
+              Éste debe ser una cadena de cuatro  caracteres  que
+              contenga el símbolo monetario internacional como lo
+              define  el  estándar  ISO  4217  (tres  caracteres)
+              seguido por un separador.
+
+       currency_symbol
+              seguido por el símbolo monetario local.
+
+       mon_decimal_point
+              seguido  por la cadena que se empleará como delimi­
+              tador de decimales cuando se  formateen  cantidades
+              monetarias.
+
+       mon_thousands_sep
+              seguido  por  la  cadena que se empleará como sepa­
+              rador de grupo cuando se formateen cantidades mone­
+              tarias.
+
+       mon_grouping
+              seguido  por una cadena que describa el formateo de
+              cantidades numéricas.
+
+       positive_sign
+              seguido por una cadena que se emplee  para  indicar
+              un signo positivo en cantidades monetarias.
+
+       negative_sign
+              seguido  por  una cadena que se emplee para indicar
+              un signo negativo en cantidades monetarias.
+
+       int_frac_digits
+              seguido  por  el  número  de  decimales  que  deben
+              emplearse  cuando  se fromatee con el int_curr_sym­
+              bol.
+
+       frac_digits
+              seguido  por  el  número  de  decimales  que  deben
+              emplearse  cuando  se formatee con el currency_sym­
+              bol.
+
+       p_cs_precedes
+              seguido por  un  entero  puesto  a  1  si  el  cur­
+              rency_symbol  o el int_curr_symbol deben preceder a
+              la cantidad monetaria formateada, o puesto a  0  si
+              el símbolo debe estar tras el valor.
+
+       p_sep_by_space
+              seguido por un entero
+
+              0      significa que no debe mostrarse ningún espa­
+                     cio entre el símbolo y el valor.
+
+              1      significa  que  debe  mostrarse  un  espacio
+                     entre el símbolo y el valor.
+
+              2      significa  que  debe  mostrarse  un  espacio
+                     entre el símbolo y la cadena del  signo,  si
+                     es adyacente.
+
+       n_cs_precedes
+
+              0      - el símbolo va tras el valor
+
+              1      - el símbolo va antes del valor
+
+       n_sep_by_space
+              Un  entero  que  vale  0 si no se separa con ningún
+              espacio currency_symbol o int_curr_symbol del valor
+              para una cantidad monetaria negativa; que vale 1 si
+              un espacio separa el símbolo del valor, y que  vale
+              2  si  un espacio separa el símbolo de la cadena de
+              signo, si fueran adyacentes.
+
+       p_sign_posn
+
+              0      La    cantidad    y    currency_symbol     o
+                     int_curr_symbol van entre paréntesis.
+
+              1      La  cadena del signo va antes de la cantidad
+                     y de currency_symbol o de int_curr_symbol.
+
+              2      La cadena del signo va tras  la  cantidad  y
+                     tras currency_symbol o tras int_curr_symbol.
+
+              3      La  cadena  del  signo  va  antes  de   cur­
+                     rency_symbol o de int_curr_symbol.
+
+              4      La cadena de signo va tras currency_symbol o
+                     tras int_curr_symbol.
+
+       n_sign_posn
+
+              0      La    cantidad    y    currency_symbol     o
+                     int_curr_symbol van entre paréntesis.
+
+              1      La cadena de signo va antes de la cantidad y
+                     de currency_symbol o de int_curr_symbol.
+
+              2      La cadena de signo va  tras  la  cantidad  y
+                     tras currency_symbol o tras int_curr_symbol.
+
+              3      La cadena de signo va antes de currency_sym­
+                     bol o de int_curr_symbol.
+
+              4      La cadena de signo va tras currency_symbol o
+                     tras int_curr_symbol.
+
+       La definición LC_MONETARY acaba con la cadena END LC_MONE­
+       TARY.
+
+
+   LC_NUMERIC
+       La  definición  empieza  con la cadena LC_NUMERIC en la 1ª
+       columna.
+
+       Se permiten las siguientes palabras reservadas:
+
+
+       decimal_point
+              seguido por la  cadena  que  se  empleará  como  el
+              delimitador de decimales cuando se formateen canti­
+              dades numéricas.
+
+       thousands_sep
+              seguido por la cadena que se  empleará  como  sepa­
+              rador  de  grupo  cuando  se  formateen  cantidades
+              numéricas.
+
+       grouping
+              seguido por una cadena que describa el formateo  de
+              cantidades numéricas.
+
+       La   definición   LC_NUMERIC   acaba  con  la  cadena  END
+       LC_NUMERIC.
+
+
+   LC_TIME
+       La definición empieza con  la  cadena  LC_TIME  en  la  1ª
+       columna.
+
+       Se permiten las siguientes palabras reservadas:
+
+
+       abday  seguido por una lista de nombres de días de la sem­
+              ana  abreviados.  La  lista  comienza  con   Sunday
+              (domingo) o su traducción.
+
+       day    seguido por una lista de nombres de días de la sem­
+              ana; esta lista comienza en el domingo, como antes.
+
+       abmon  seguido  por  una  lista  de  nombres abreviados de
+              meses.
+
+       mon    seguido por una lista de nombres de meses.
+
+       am_pm  La representación apropiada de las cadenas A.M.   y
+              P.M.
+
+       d_t_fmt
+              El formato apropiado de fecha y hora.
+
+       d_fmt  El formato apropiado de fecha.
+
+       t_fmt  El formato apropiado de hora.
+
+       t_fmt_ampm
+              El  formato  apropiado de hora empleando el formato
+              de 12 h.
+
+       La definición LC_TIME acaba con la cadena END LC_TIME.
+
+
+   LC_MESSAGES
+       La definición empieza con la cadena LC_MESSAGES en  la  1ª
+       columna.
+
+       Se permiten las siguientes palabras reservadas:
+
+
+       yesexpr
+              seguido  por  una  expresión  regular  que describa
+              posibles respuestas afirmativas.
+
+       noexpr seguido por  una  expresión  regular  que  describa
+              posibles respuestas negativas.
+
+
+       La  definición LC_MESSAGES acaba con la cadena END LC_MES­
+       SAGES.
+
+       Consulte el estándar POSIX.2 para más detalles.
+
+FICHEROS
+       /usr/lib/locale/ - base de datos para la configuración  de
+       localización       actual       de      una      categoría
+       /usr/lib/nls/charmap/* - archivos mapcar (mapas de  carac­
+       teres)
+
+FALLOS
+       La página de Manual no está completa.
+
+AUTOR
+       Jochen Hein (Hein@Student.TU-Clausthal.de)
+
+CONFORME A
+       POSIX.2
+
+VÉASE TAMBIÉN
+       setlocale(3),    localeconv(3),   charmap(5),   locale(1),
+       localedef(1)
+
+
+
+Soporte de Lengua Nacional 17 Dic 1997                  locale(5)

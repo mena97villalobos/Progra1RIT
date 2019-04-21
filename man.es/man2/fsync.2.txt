@@ -1,0 +1,43 @@
+FSYNC(2)         Manual del Programador de Linux         FSYNC(2)
+
+
+
+NOMBRE
+       fsync  -  sincroniza  el  estado completo en memoria de un
+       fichero con el del disco
+
+SINOPSIS
+       #include <unistd.h>
+
+       int fsync(int fd);
+
+DESCRIPCIÓN
+       fsync copia todas las partes que estén en  memoria  de  un
+       fichero al disco.
+
+       En  algunas aplicaciones, fdatasync es una alternativa más
+       eficiente a fsync.
+
+VALOR DEVUELTO
+       En caso de éxito, devuelve 0. En caso de error, -1,  y  la
+       variable errno toma un valor apropiado.
+
+ERRORES
+       EBADF   fd  no  es  un  descriptor  de fichero válido para
+               escribir.
+
+       EROFS ,  EINVAL
+               fd está enlazado a  un  fichero  especial  que  no
+               admite sincronización.
+
+       EIO     Ha ocurrido un error durante la sincronización.
+
+CONFORME A
+       POSIX.1b (anteriormente POSIX.4)
+
+VÉASE TAMBIÉN
+       bdflush(2), fdatasync(2), sync(2), update(8), sync(8).
+
+
+
+Linux 1.3.85                1 Jul 1996                   FSYNC(2)

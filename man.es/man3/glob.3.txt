@@ -1,0 +1,174 @@
+GLOB(3)          Manual del Programador de Linux          GLOB(3)
+
+
+
+NOMBRE
+       glob, globfree - encuentra nombres de caminos que concuer­
+       dan con un patrón, libera la memoria ocupada por glob()
+
+SINOPSIS
+       #include <glob.h>
+
+       int glob(const char *patron, int flags,
+                int funcerr(const char * epath, int eerrno),
+                glob_t *pglob);
+       void globfree(glob_t *pglob);
+
+DESCRIPCIÓN
+       La función glob() busca todos los nombres de camino de los
+       ficheros que concuerden con patron según las reglas usadas
+       por el interprete de comandos o shell.  No se  realiza  ni
+       expansión de la tilde (~) ni sustitución de parámetros; si
+       quiere esto, use wordexp(3).
+
+       La función globfree()  libera  el  almacenamiento  alojado
+       dinámicamente en una llamada anterior a glob().
+
+       Los  resultados  de  una llamada a glob() se guardan en la
+       estructura a la que apunte pglob, que es un glob_t que  se
+       declara  en  <glob.h>  e  incluye los siguientes elementos
+       definidos por POSIX.2 (se pueden presentar más como exten­
+       siones GNU):
+
+          typedef struct
+          {
+                  int gl_pathc;    /* Nº de caminos concordantes hasta ahora  */
+                  char **gl_pathv; /* Lista de los caminos concordantes.  */
+                  int gl_offs;     /* Sitios a reservar en `gl_pathv'.  */
+          } glob_t;
+
+       Los  resultados se almacenan en memoria obtenida dinámica­
+       mente.
+
+       El parámetro flags se construye mediante  un  O-lógico  de
+       cero  o  más  de las constantes simbólicas siguientes, que
+       modifican el comportamiento de glob():
+
+       GLOB_ERR
+              que significa regresar en cuanto haya un  error  de
+              lectura  (porque  un  directorio  no haya concedido
+              permiso de lectura, por ejemplo),
+
+       GLOB_MARK
+              que quiere decir añadir una barra inclinada a  cada
+              camino que corresponda a un directorio,
+
+       GLOB_NOSORT
+              que  quiere decir no ordenar los nombres de caminos
+              devueltos (se ordenan si no se dice nada),
+
+       GLOB_DOOFS
+              que quiere decir que se  reservarán  pglob->gl_offs
+              sitios  al principio de la lista de cadenas de car­
+              acteres en pglob->pathv,
+
+       GLOB_NOCHECK
+              que quiere decir que, si ningún  patrón  concuerda,
+              hay que devolver el patrón original.
+
+       GLOB_APPEND
+              que  quiere  decir  añadir  a los resultados de una
+              llamada anterior. No active esta opción la  primera
+              vez que llame a glob().
+
+       GLOB_NOESCAPE
+              que  quiere decir que los meta-caracteres no pueden
+              ser protegidos por barras inclinadas invertidas.
+
+       Las opciones también pueden incluir algunas de  las  sigu­
+       ientes  constantes,  que  son extensiones GNU no definidar
+       por POSIX.2:
+
+       GLOB_PERIOD
+              que quiere decir que un punto inicial puede concor­
+              dar con meta-caracteres,
+
+       GLOB_ALTDIRFUNC
+              que quiere decir que se usen las funciones alterna­
+              tivas    pglob->gl_closedir,     pglob->gl_readdir,
+              pglob->gl_opendir, pglob->gl_lstat y pglob->gl_stat
+              para acceder al sistema de ficheros,  en  lugar  de
+              las funciones normales de biblioteca,
+
+       GLOB_BRACE
+              que quiere decir que se expandan las expresiones de
+              llaves {a,b} al estilo csh(1).
+
+       GLOB_NOMAGIC
+              que quiere decir que se devuelva el  patrón  si  no
+              contiene meta-caracteres,
+
+       GLOB_TILDE
+              que  indica  que se lleve a cabo la expansión de la
+              tilde (~), y
+
+       GLOB_ONLYDIR
+              que significa que sólo  se  tengan  en  cuenta  los
+              directorios.
+
+       Si funcerr no es NULL, se llamará en caso de error con los
+       argumentos epath, un puntero al camino que ha  fallado,  y
+       eerrno, el valor de errno según es devuelto por una de las
+       llamadas a opendir(), readdir(),  o  stat().   Si  funcerr
+       devuelve no cero, o si GLOB_ERR está activado, glob() ter­
+       minará justo tras la llamada a funcerr.
+
+       Tras un regreso con éxito de la  función,  pglob->gl_pathc
+       contiene  el  número de nombres de caminos que han concor­
+       dado y pglob->gl_pathv un puntero a la lista de nombres de
+       caminos  que  han  concordado.  El  primer puntero tras el
+       último nombre de camino es NULL.
+
+       Es posible el llamar a glob() varias veces. En  ese  caso,
+       la  opción  GLOB_APPEND tiene que estar activa en flags en
+       la segunda llamada y posteriores.
+
+       Como extensión GNU, a pglob->gl_flags se  le  asignan  las
+       opciones  especificadas, operadas mediante un O-lógico con
+       GLOB_MAGCHAR si se encontró cualquier meta-carácter.
+
+VALOR DEVUELTO
+       Tras una terminación  con  éxito,  glob()  devuelve  cero.
+       Otras posibles devoluciones son:
+
+       GLOB_NOSPACE
+              si no tenemos bastante memoria,
+
+       GLOB_ABORT
+              para un error de lectura, y
+
+       GLOB_NOMATCH
+              si no se ha encontrado nada.
+
+EJEMPLOS
+       Un  ejemplo del modo de empleo es el siguiente código, que
+       simula la orden ls -l *.c ../*.c en el shell.
+
+          glob_t globbuf;
+
+          globbuf.gl_offs = 2;
+          glob("*.c", GLOB_DOOFS, NULL, &globbuf);
+          glob("../*.c", GLOB_DOOFS | GLOB_APPEND, NULL, &globbuf);
+          globbuf.gl_pathv[0] = "ls";
+          globbuf.gl_pathv[1] = "-l";
+          execvp("ls", &globbuf.gl_pathv[0]);
+
+CONFORME A
+       POSIX.2
+
+FALLOS
+       La función glob() puede fallar debido a un  error  en  las
+       funciones  subyacentes,  como malloc() u opendir().  Éstas
+       guardarán su código de error en errno.
+
+       Los elementos de estructura gl_pathc y gl_offs se deberían
+       declarar  como  size_t,  de  acuerdo  a  POSIX.2,  pero se
+       declaran como int.
+
+VÉASE TAMBIÉN
+       ls(1), sh(1),  stat(2),  exec(3),  malloc(3),  opendir(3),
+       readdir(3), wordexp(3),
+
+
+
+GNU                        11 Mayo 1998                   GLOB(3)

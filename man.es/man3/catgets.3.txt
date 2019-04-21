@@ -1,0 +1,51 @@
+CATGETS(3)       Manual del Programador de Linux       CATGETS(3)
+
+
+
+NOMBRE
+       catgets - obtiene un mensaje de un catálogo
+
+SINOPSIS
+       #include <nl_types.h>
+
+       char  *catgets(nl_catd  catalog,  int set_number, int mes­
+       sage_number, const char *message);
+
+DESCRIPCIÓN
+       catgets() lee el mensaje message_number,  en  el  conjunto
+       set_number, del catálogo de mensajes identificado por cat­
+       alog, donde catalog es un descriptor de catálogo  devuelto
+       por  una  llamada  anterior a catopen(3).  El cuarto argu­
+       mento, message, apunta a  un  mensaje  predeterminado  que
+       será  devuelto  por  catgets()  si el catálogo de mensajes
+       identificado no está actualmente disponible.  El texto del
+       mensaje  está  contenido  en  un área de memoria interna y
+       debe ser copiado a la aplicación si se  quiere  guardar  o
+       modificar. La cadena devuelta siempre se hace terminar con
+       un byte NUL.
+
+VALOR DEVUELTO
+       Si tiene éxito, catgets() devuelve un puntero a un área de
+       memoria  interna  conteniendo la cadena del mensaje termi­
+       nada en NUL.  catgets() devuelve un puntero a message.
+
+NOTAS
+       Estas   funciones   están   disponibles    solamente    en
+       libc.so.4.4.4c  o  superior.  The X/Open Portability Guide
+       de enero de 1987 especifica un caso de error más sutil: se
+       devuelve message si no está disponible el catálogo de men­
+       sajes especificado por catalog, mientras que  se  devuelve
+       una  cada vacía cuando está disponible el catálogo de men­
+       sajes pero no contiene el mensaje  indicado.   Parece  ser
+       que estos dos casos posibles de error se van a eliminar de
+       XPG4.2 en favor de que siempre se devuelva message.
+
+CONFORME A
+       XPG4.2
+
+VÉASE TAMBIÉN
+       catopen(3), setlocale(3)
+
+
+
+Linux                     9 Agosto 1998                CATGETS(3)

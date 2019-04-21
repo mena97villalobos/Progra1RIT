@@ -1,0 +1,44 @@
+ECVT(3)          Manual del Programador de Linux          ECVT(3)
+
+
+
+NOMBRE
+       ecvt,  fcvt  -  convierte un número en coma flotante a una
+       cadena de caracteres.
+
+SINOPSIS
+       #include <stdlib.h>
+
+       char *ecvt(double number, size_t ndigits, int *decpt,  int
+       *sign);
+
+       char  *fcvt(double number, size_t ndigits, int *decpt, int
+       *sign);
+
+DESCRIPCIÓN
+       La función ecvt() convierte number a una cadena  terminada
+       en  NUL  de  ndigits  dígitos,  y devuelve un puntero a la
+       cadena.  La cadena en si no contiene un punto decimal; sin
+       embargo,   la  posición  del  punto  decimal  relativa  al
+       comienzo de la cadena se guarda en decpt.  Un valor  nega­
+       tivo  para  decpt significa que el punto decimal está a la
+       izquierda del comienzo de la cadena. Si el signo de number
+       es  negativo, se coloca en sign un valor distinto de cero;
+       si no, se coloca un 0.
+
+       La función fcvt() es idéntica a  ecvt(),  excepto  en  que
+       ndigits especifica el número de dígitos tras el punto dec­
+       imal.
+
+VALOR DEVUELTO
+       Ambas funciones, ecvt() y fcvt(), devuelven un  puntero  a
+       una cadena estática conteniendo la representación ASCII de
+       number.  La cadena estática se sobreescribe en  cada  lla­
+       mada a ecvt() o a fcvt().
+
+VÉASE TAMBIÉN
+       gcvt(3), sprintf(3)
+
+
+
+                          21 Enero 1995                   ECVT(3)

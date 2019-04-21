@@ -1,0 +1,32 @@
+ABS(3)           Manual del Programador de Linux           ABS(3)
+
+
+
+NOMBRE
+       abs - calcula el valor absoluto de un entero
+
+SINOPSIS
+       #include <stdlib.h>
+
+       int abs(int j);
+
+DESCRIPCIÓN
+       La  función  abs() calcula el valor absoluto del argumento
+       entero j.
+
+VALOR DEVUELTO
+       Devuelve el valor absoluto del argumento entero.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+NOTAS
+       Intentar tomar el valor absoluto del entero  más  negativo
+       no está definido.
+
+VÉASE TAMBIÉN
+       ceil(3), floor(3), fabs(3), labs(3), rint(3)
+
+
+
+GNU                        6 Junio 1993                    ABS(3)

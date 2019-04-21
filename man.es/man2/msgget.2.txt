@@ -1,0 +1,121 @@
+MSGGET(2)        Manual del Programador de Linux        MSGGET(2)
+
+
+
+NOMBRE
+       msgget  -  devuelve el identificador para una cola de men­
+       sajes
+
+SINOPSIS
+       # include <sys/types.h>
+       # include <sys/ipc.h>
+       # include <sys/msg.h>
+
+       int msgget ( key_t key, int msgflg )
+
+DESCRIPCIÓN
+       La función devuelve el identificador de la  cola  de  men­
+       sajes  asociada a key.  Se crea una nueva cola de mensajes
+       si key tiene el valor IPC_PRIVATE, o si key no es IPC_PRI­
+       VATE  pero  no  existe ninguna cola de mensajes asociada a
+       key,  y  IPC_CREAT  se  inserta  en   msgflg   (esto   es,
+       msgflg&IPC_CREAT  es  distinto  de cero).  La presencia en
+       msgflg de los campos IPC_CREAT y  IPC_EXCL  desempeñan  el
+       mismo  papel,  con  respecto a la existencia de la cola de
+       mensajes, que O_CREAT y O_EXCL en el argumento  "mode"  de
+       la llamada al sistema open(2), es decir, la función msgget
+       falla si msgflg inserta IPC_CREAT y IPC_EXCL y  ya  esiste
+       una cola de mensajes para key.
+
+       En  la creación, los 9 bits más bajos del argumento msgflg
+       definen los permisos de acceso  a  la  cola  de  mensajes.
+       Estos  bits  para  los  permisos  tienen  la misma forma y
+       semántica que los de los permisos de acceso  en  las  lla­
+       madas  al sistema open(2) o creat(2) (Los permisos de eje­
+       cución no son usados.)
+
+       Además, durante la creación, la llamada  al  sistema  ini­
+       cializa  la  estructura  de datos del sistema para la cola
+       msqid_ds como se muestra:
+
+              msg_perm.cuid y msg_perm.uid son fijados al identi­
+              ficador del usuario efectivo del proceso invocador.
+
+              msg_perm.cgid y msg_perm.gid son fijados al identi­
+              ficador de grupo efectivo del proveso invocador.
+
+              Los  9 bits más bajo de msg_perm.mode son fijados a
+              los 9 bits más bajos de msgflg.
+
+              msg_qnum,   msg_lspid,   msg_lrpid,   msg_stime   y
+              msg_rtime son puestos a 0.
+
+              msg_ctime contendrá la hora actual
+
+              msg_qbytes  será  igual  al  límite impuesto por el
+              sistema MSGMNB.
+
+       Si la cola de mensajes ya existe, se  verifican  los  per­
+       misos  de  acceso, y ser realiza una comprobación a fin de
+       verificar si está marcada para su destrucción.
+
+VALOR DEVUELTO
+       Si ha funcionado correctamente,  devuelve  el  idenficador
+       para  la cola de mensajes (un entero no negativo), en otro
+       caso -1 con errno indicando el error.
+
+ERRORES
+       Cuando se produzca un error, errno tendrá uno de los sigu­
+       ientes valores:
+
+       EACCES     Existe  una  cola de mensajes para key, pero el
+                  proceso no tiene permiso de acceso a la cola.
+
+       EEXIST     Existe una cola de mensajes para key  y  msgflg
+                  contiene IPC_CREAT y IPC_EXCL.
+
+       EIDRM      La cola está marcada para ser eliminada.
+
+       ENOENT     No  existe  una  cola  de  mensajes  para key y
+                  msgflg no contiene IPC_CREAT.
+
+       ENOMEM     Una cola de mensajes ha de ser creada  pero  el
+                  sistema  no contiene suficiente memoria para la
+                  nueva estructura de datos.
+
+       ENOSPC     Una cola de mensajes ha de ser creada  pero  el
+                  límite  del  sistema  para  el máximo número de
+                  colas de mensajes (MSGMNI) será superado.
+
+NOTAS
+       IPC_PRIVATE no es un campo de tipo bandera,  es  del  tipo
+       key_t Si este valor especial es utilizado por key, la lla­
+       mada al sistema ignorará todo excepto los 9 bits de  menor
+       orden  de  msgflg y crea una nueva cola de mensajes (si ha
+       funcionado).
+
+       Lo siguiente es una limitación en los recursos del sistema
+       que afecta a la llamada msgget
+
+       MSGMNI     Número  máximo  de colas de mensajes soportadas
+                  por el sistema: depende de la política  tomada.
+
+ERRORES
+       El  uso  de  IPC_PRIVATE no prohibe a otros procesos tener
+       acceso a la cola de mensajes creada.
+
+       Como en el caso de  los  ficheros,  no  existe  una  forma
+       intrínseca  de  asegurar  el acceso exclusivo a la cola de
+       mensajes.  Insertando IPC_CREAT y IPC_EXCL en msgflg  sólo
+       garantiza  que  la  nueva cola de mensajes será creada, no
+       implica acceso exclusivo a la cola de mensajes.
+
+CONFORME A
+       SVr4, SVID.  SVr4 no documenta el código de error EIDRM.
+
+VÉASE TAMBIÉN
+       ftok(3), ipc(5), msgctl(2), msgsnd(2), msgrcv(2).
+
+
+
+Linux 0.99.13            1 Noviembre 1993               MSGGET(2)

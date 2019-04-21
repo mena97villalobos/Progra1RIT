@@ -1,0 +1,20 @@
+ckraid(8)                                               ckraid(8)
+
+
+
+NOMBRE
+       ckraid - obsoleto
+
+SINOPSIS
+DESCRIPCIÓN
+       En  las  primeras  versiones de RAID, ckraid comprobaba la
+       consistencia de un array de dispositivos RAID. Ahora, todo
+       este trabajo lo realiza el núcleo.
+
+
+VÉASE TAMBIÉN
+       raidtab(5), mkraid(8), raidstart(8)
+
+
+
+raidtools-0.90                                          ckraid(8)

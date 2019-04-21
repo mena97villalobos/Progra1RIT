@@ -1,0 +1,197 @@
+SEMOP(2)         Manual del Programador de Linux         SEMOP(2)
+
+
+
+NOMBRE
+       semop - operaciones con semáforos
+
+SINTAXIS
+       # include <sys/types.h>
+       # include <sys/ipc.h>
+       # include <sys/sem.h>
+
+       int semop ( int semid, struct sembuf *sops, unsigned nsops
+       )
+
+DESCRIPCIÓN
+       Esta función ejecuta operaciones en  los  miembros  selec­
+       cionados  del  semaforo  indi cado por semid.  Cada uno de
+       los nsops elementos en el array apuntado por sops  especi­
+       fica  una  operación  a  ser  realizada en un semaforo por
+       struct sembuf incluyendo los siguientes miembros:
+
+            short sem_num;  /* numero de semaforo: 0 = primero */
+            short sem_op;   /* operacion sobre el semaforo */
+            short  sem_flg;  /* banderas (indicadores/parametros)
+       de la operacion */
+
+       Banderas reconocidas en sem_flg son IPC_NOWAIT y SEM_UNDO.
+       Si una operacion ejecuta SEM_UNDO, sera deshecha cuando el
+       proceso finalice.
+
+       La semántica de la  llamada  al  sistema  asegura  que  la
+       operacion  sera  ejecutada si y solo si todas ellas pueden
+       ser  ejecutadas.   Cada  operacion  es  ejecutada  en   el
+       semaforo  numero sem_num donde el primer semaforo del con­
+       junto es el semaforo 0 - y es  uno  entre  los  siguientes
+       tres.
+
+
+       Si  sem_op  es un entero positivo, la operacion añade este
+       valor a semval.  Sin embargo, si SEM_UNDO es invocado para
+       esta  operacion, el sistema actualiza el contador del pro­
+       ceso (para operaciones "undo")  para  este  semaforo.   La
+       operacion  siempre  se  ejecuta, por lo que no puede haber
+       ningún proceso durmie ndo.  El  proceso  que  invoca  debe
+       tener  los  permisos  modificados  en  el conjunto de sema
+       foros.
+
+       Si sem_op es cero, el proceso debe tener permiso  de  lec­
+       tura  en  el semaforo.  Si semval es cero, la operacion se
+       ejecuta.  Por otra parte, si  IPC_NOWAIT  es  invocado  en
+       sem_flg,  la  llamada  al sistema falla (deshaciendo todas
+       las acciones anteriores ejecutadas) con la variable  errno
+       fijada  a  EAGAIN.  En otro caso semzcnt es incremetada en
+       uno y el proceso duerme hasta que  algo  de  lo  siguiente
+       ocurra:
+
+
+              ·      semval  es 0, instante en el que el valor de
+                     semzcnt es decrementeado.
+
+              ·      El semaforo es eliminado: la llamada al sis­
+                     tema falla con errno fijada a EIDRM.
+
+              ·      El  proceso  que  lo invoca recibe una señal
+                     que debe ser atendida: el valor  de  semzcnt
+                     es  decrementado  y  la  llamada  al sistema
+                     falla con errno fijada a EINTR.
+
+       Si sem_op es menor que cero, el  proceso  debe  tener  los
+       permisos  de modificación sobre el semaforo.  Si semval es
+       mayor que o igual que el  valor  absoluto  de  sem_op,  el
+       valor  absoluto  de  sem_op es restado a semval.  Por otra
+       parte, si SEM_UNDO es invocado  para  esta  operación,  el
+       sistema  actualiza  el  contador  "undo" del pro ceso para
+       este semaforo.  Entonces la operacion se ejecuta.  En otro
+       caso,  si IPC_NOWAIT es invocado en sem_flg, la llamada al
+       sistema falla (deshaciendo todas las  acciones  anteriores
+       ejecutadas)  con errno fijado a EAGAIN.  En otro caso sem­
+       ncnt es incrementado en uno y el proceso duerme hasta  que
+       ocurra:
+
+
+              ·      semval  sea mayor o igual que el valor abso­
+                     luto de sem_op, en cuyo instante el valor de
+                     semncnt  es  decrementado, el valor absoluto
+                     de  sem_op  es  restado  de  semval  y,   si
+                     SEM_UNDO es invocado para esta operacion, el
+                     sistema actualiza el contador "undo" del pro
+                     ceso para este semaforo.
+
+              ·      El  semaforo es es eliminado del sistema: la
+                     llamada al sistema falla con errno fijado  a
+                     EIDRM.
+
+              ·      El  proceso  invocador  recibe una señal que
+                     tiene que capturar: el valor de  semncnt  es
+                     decrementado  y  la llamada al sistema falla
+                     con errno fijado a EINTR.
+
+       En caso de que haya funcionado, el miembro  sempid  de  la
+       estructura sem para cada semaforo especificado en el array
+       apuntado por sops es fijado al identificador  del  proceso
+       del  proceso  que  la  invoca.   De otra forma sem_otime y
+       sem_ctime son fijados a la hora actual.
+
+VALOR DEVUELTO
+       Si todo ha sido correcto la llamada al sistema devuelve 0,
+       en otro caso devuelve -1 con errno indicando el error.
+
+ERRORES
+       Para  un  retorno  erroneo  errno sera fijado a uno de los
+       siguientes valores:
+
+       E2BIG      El argumento nsops  es  mayor  que  SEMOPM,  el
+                  numero  máximo  de  operaciones  permitidas por
+                  llamada del sistema.
+
+       EACCES     El  proceso  invocador  no  tiene  permisos  de
+                  acceso  al semaforo como se requiere por una de
+                  las operaciones especificadas.
+
+       EAGAIN     Una  operacion  no  puede   ser   ejecutada   y
+                  IPC_NOWAIT ha sido invocada en su sem_flg.
+
+       EFAULT     La direccion apuntada por sops no es accesible.
+
+       EFBIG      Para algunas operaciones el valor de sem_num es
+                  menor  que  0  o mayor o igual que el numero de
+                  semaforos en el conjunto.
+
+       EIDRM      El conjunto de semaforos ha sido eliminado.
+
+       EINTR      Durmiento en una cola  de  espera,  el  proceso
+                  recibio una señal que debe ser capturada.
+
+       EINVAL     Este  conjunto  de semaforos no existe, o semid
+                  es menor que cero, o nsops tiene un  valor  no-
+                  positivo.
+
+       ENOMEM     El  sem_flg de alguna operacion invoco SEM_UNDO
+                  y el sistema no tiene suficiente  memoria  para
+                  alojar la estructura "undo".
+
+       ERANGE     Para alguna operacion semop+semval es mayor que
+                  SEMVMX,  el  valor  máximo  dependiente  de  la
+                  implementación para semval.
+
+ANUNCIA
+       La  estructura  sem_undo  de un proceso no es heredada por
+       sus hijos en la  ejecución  de  fork(2)  Son,  en  cambio,
+       heredadas por el proceso sustituto resultante de la ejecu­
+       ción de execve(2)
+
+       Los siguientes valores  son  limites  en  el  conjunto  de
+       recursos de los semaforos q ue afecta a semop
+
+       SEMOPM     Numero  máximo  de  operaciones permitidas para
+                  una llamada semop  ,dependiente  de  la  imple­
+                  mentación.
+
+       SEMVMX     Valor máximo permitido para semval: dependiente
+                  de la implementación (32767).
+
+       La implementación no  contiene  límites  intrínsecos  para
+       ajustar  el  valor máximo de la salida (SEMAEM), el numero
+       máximo  de  estructuras  "undo"  que  el  sistema  permite
+       (SEMMNU)  y  máximo  numero de entradas "undo" por proceso
+       para los parametros del sistema.
+
+FALLOS
+       El sistema mantiene una estructura  sem_undo  por  proceso
+       para cada semaforo modificado por el proceso con parametro
+       "undo".  Estas estructuras están vacías a  la  terminación
+       de  un proceso.  Una causa de insatisfaccion con el mecan­
+       ismo "undo" es que no es compatible con la noción de tener
+       un  conjunto  atomico  de  operacionnes  en  un  vector de
+       semaforos.  La  llamada  "undo"  para  un  vector  y  cada
+       semaforo  en  este deben ser acumuladas en varias llamadas
+       semopt Debe pasar un proceso al estado dormido  cuando  ha
+       finalizado,  o  debe  deshacer todas las operaciones real­
+       izadas con el parametro ?   IPC_NOWAIT  Actualmente  estas
+       operaciones  "undo"  que se invocan son ejecutadas inmedi­
+       atament e, y aquellas que requieren una espera  son  igno­
+       radas  en silencio.  Luego el uso correcto del "undo" esta
+       garantizado solo con semaforos de tipo pri vado.
+
+COMPATIBLE CON
+       SVr4, SVID.  SVr4 documenta las condiciones de error  adi­
+       cionales EINVAL, EFBIG, ENOSPC.
+
+VÉASE TAMBIÉN
+       ipc(5), semctl(2), semget(2).
+
+
+
+Linux 0.99.13         1 de Noviembre de 1993             SEMOP(2)

@@ -1,0 +1,37 @@
+ZDUMP(8)                                                 ZDUMP(8)
+
+
+
+NOMBRE
+       zdump - visualizador de información de huso horario
+
+SINOPSIS
+       zdump [ -v ] [ -c añodecorte ] [ nombrezona ... ]
+
+DESCRIPCIÓN
+       Zdump  muestra  la hora actual en cada nombrezona indicada
+       en la línea de órdenes.
+
+       Están disponibles estas opciones:
+
+       -v     Para cada nombrezona de la línea de órdenes,  mues­
+              tra la hora en el valor de tiempo más bajo posible,
+              la hora un día después del valor de tiempo más bajo
+              posible,  las  horas tanto un segundo antes de como
+              exactamente en cada discontinuidad de tiempo detec­
+              tada,  la hora un día menos del valor de tiempo más
+              alto posible y la hora en el valor  de  tiempo  más
+              alto posible.  Cada línea termina con isdst=1 si la
+              hora dada está en el horario de verano (horario  de
+              ahorro de energía) o isdst=0 en caso contrario.
+
+       -c añodecorte
+              Corta  la  salida  verbosa cerca del inicio del año
+              dado.
+
+VÉASE TAMBIÉN
+       newctime(3), tzfile(5), zic(8)
+
+
+
+                                                         ZDUMP(8)

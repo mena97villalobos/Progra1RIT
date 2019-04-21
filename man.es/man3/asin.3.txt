@@ -1,0 +1,34 @@
+ASIN(3)          Manual del Programador de Linux          ASIN(3)
+
+
+
+NOMBRE
+       asin - función arco seno
+
+SINOPSIS
+       #include <math.h>
+
+       double asin(double x);
+
+DESCRIPCIÓN
+       La  función  asin() calcula el arco seno de x; esto es, el
+       valor cuyo seno es x.  Si x cae fuera del rango  -1  a  1,
+       asin() falla y errno toma un valor apropiado.
+
+VALOR DEVUELTO
+       La  función  asin() devuelve el arco seno en radianes y el
+       valor se define matemáticamente para estar entre  -PI/2  y
+       PI/2 (incluidos).
+
+ERRORES
+       EDOM   x esta fuera de rango.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       acos(3), atan(3), atan2(3), cos(3), sin(3), tan(3)
+
+
+
+GNU                     15 Diciembre 1995                 ASIN(3)

@@ -1,0 +1,36 @@
+PUTENV(3)        Manual del Programador de Linux        PUTENV(3)
+
+
+
+NOMBRE
+       putenv - cambia o añade una variable de ambiente
+
+SINOPSIS
+       #include <stdlib.h>
+
+       int putenv(const char *cadena);
+
+DESCRIPCIÓN
+       La  función  putenv() añade o cambia el valor de variables
+       de entorno o ambiente. El argumento cadena es de la  forma
+       nombre=valor.   Si  nombre  no  existe  ya en el ambiente,
+       entonces cadena se añade al entorno. Si nombre sí  existe,
+       entonces  el  valor  de  nombre en el ambiente se cambia a
+       valor.
+
+VALOR DEVUELTO
+       La función putenv() devuelve cero si acaba bien, ó  -1  en
+       caso de error.
+
+ERRORES
+       ENOMEM Espacio insuficiente para alojar el nuevo ambiente.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3
+
+VÉASE TAMBIÉN
+       getenv(3), setenv(3), unsetenv(3), environ(5)
+
+
+
+GNU                        5 Marzo 1998                 PUTENV(3)

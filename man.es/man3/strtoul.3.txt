@@ -1,0 +1,65 @@
+STRTOUL(3)       Manual del Programador de Linux       STRTOUL(3)
+
+
+
+NOMBRE
+       strtoul  -  convierte  una  cadena  en un entero largo sin
+       signo.
+
+SINOPSIS
+       #include <stdlib.h>
+
+       unsigned long int strtoul(const char *nptr, char **endptr,
+       int base)
+
+DESCRIPCIÓN
+       La función strtoul() convierte la cadena nptr en un  valor
+       entero  largo  sin  signo  de acuerdo con la base dada, la
+       cual debe estar entre 2 y 36 inclusive,  o  ser  el  valor
+       especial 0.
+
+       La  cadena  debe  comenzar  con una cantidad arbitraria de
+       espacios en blanco (determinado por isspace(3)) y  seguida
+       por  un opcional y único signo `+' o `-'.  Si base es cero
+       o 16, la cadena puede entonces incluir un prefijo `0x' , y
+       el número se leerá en base 16; en caso contrario, una base
+       cero se toma como 10 (decimal) a menos  que  el  siguiente
+       caracter sea `0', en cuyo caso se toma como 8 (octal).
+
+       El  resto  de  la  cadena  se convierte en un valor entero
+       largo sin signo de la manera  obvia,  deteniéndose  en  el
+       primer  caracter  que  no  sea un dígito válido en la base
+       dadd. (En bases por encima de 10, la letra `A' mayúscula o
+       minúscula  representa 10, `B' representa 11, y así en ade­
+       lante, con `Z' representando 35).
+
+       Si endptr no es NULL, strtoul() almacena la dirección  del
+       primer  caracter no válido en *endptr. Si no hubiera dígi­
+       tos en absoluto strtoul() almacena el  valor  original  de
+       nptr  en  *endptr.   (Por  tanto, si *nptr no es `\0' pero
+       **endptr es `\0' al retornar, toda la cadena es válida).
+
+VALOR DEVUELTO
+       La función strtoul() devuelve o el resultado de la conver­
+       sión o, si hubiera un signo menos delante, la negación del
+       resultado de la conversión, a menos que el valor  original
+       (no-negado) se hubiera sobrepasado; en tal caso, strtoul()
+       devuelve ULONG_MAX y asigna ERANGE a  la  variable  global
+       errno.
+
+ERRORES
+       ERANGE La cadena dada estaba fuera de rango; el valor con­
+              vertido se ha restringido.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       atof(3), atoi(3), atol(3), strtod(3), strtol(3)
+
+FALLOS
+       Ignora la localización actual.
+
+
+
+GNU                    29 de Marzo de 1993             STRTOUL(3)

@@ -1,0 +1,51 @@
+SETSID(2)        Manual del Programador de Linux        SETSID(2)
+
+
+
+NOMBRE
+       setsid  - crea una sesión y define el ID de grupo del pro­
+       ceso
+
+SINOPSIS
+       #include <unistd.h>
+
+       pid_t setsid(void);
+
+DESCRIPCIÓN
+       setsid() crea una nueva sesión si el proceso  que  realiza
+       la  llamada  no  es lider de grupo de procesos. El proceso
+       que realiza la llamada es lider de la nueva sesión,  lider
+       de  grupo  de  procesos  del nuevo grupo de procesos, y no
+       tiene terminal controladora.  El ID del grupo de  procesos
+       y el ID de la sesión del proceso que realiza la llamada se
+       ponen al PID del proceso que  realiza  la  llamada.  Dicho
+       proceso  será el único proceso en este nuevo grupo de pro­
+       cesos y en esta nueva sesión.
+
+VALOR REGRESADO
+       El ID de la sesión del proceso que realiza la llamada.
+
+ERRORES
+       Si hubo error, se devuleve -1. El único  error  que  puede
+       suceder  es  EPERM.  Se devuelve cuando el ID del grupo de
+       procesos de cualquier proceso es igual al PID del  proceso
+       que  realiza la llamada. De este modo, en particular, set­
+       sid falla si el proceso que realiza la llamada ya es lider
+       de grupo de procesos.
+
+NOTAS
+       El  lider  de grupo de procesos es un proceso con el ID de
+       grupo igual a su PID. Para asegurarse de que setsid  tenga
+       éxito, cree un proceso hijo con fork y termine, y deje que
+       el hijo ejecute setsid().
+
+CONFORME A
+       POSIX, SVr4.
+
+VÉASE TAMBIÉN
+       setpgid(2), setpgrp(2)
+
+
+
+
+Linux 1.0.0               27 Agosto 1994                SETSID(2)

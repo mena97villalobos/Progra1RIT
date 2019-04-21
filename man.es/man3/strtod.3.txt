@@ -1,0 +1,55 @@
+STRTOD(3)            Funciones de Biblioteca            STRTOD(3)
+
+
+
+NOMBRE
+       strtod - convierte una cadena ASCII a doble precisión
+
+SINOPSIS
+       #include <stdlib.h>
+
+       double strtod(const char *nptr, char **endptr);
+
+DESCRIPCIÓN
+       La  función  strtod()  convierte  la porción inicial de la
+       cadena a la que apunta nptr a representación double.
+
+       El formato esperado para la cadena es un  espacio  inicial
+       opcional,  comprobado por isspace(3), un signo opcional de
+       más (``+'') o menos (``-'') seguido por una  secuencia  de
+       dígitos  que  opcionalmente pueden contener un caracter de
+       punto decimal, opcionalmente seguido por un exponente.  Un
+       exponente  consiste  en  una ``E'' o ``e'', seguida por un
+       signo opcional de más o menos, seguido por  una  secuencia
+       no  vacía de dígitos. Si el locale no es "C" o "POSIX", se
+       pueden usar diferentes formatos.
+
+VALOR DEVUELTO
+       La función strtod devuelve el valor convertido, si lo hay.
+
+       Si  endptr  no  es  NULL,  un  puntero al caracter tras el
+       último caracter utilizado en la conversión  es  almacenado
+       en la posición referenciada por endptr.
+
+       Si  no  se realizó conversión, se devuelve cero y el valor
+       de nptr es almacenado  en  la  posición  referenciada  por
+       endptr.
+
+       Si  el  valor  correcto  puede  causar  desbordamiento, se
+       devuelve HUGE_VAL positivo o negativo (de acuerdo al signo
+       del  valor),  y ERANGE se pone en errno.  Si el valor cor­
+       recto puede causar desbordamiento por abajo,  se  devuelve
+       cero y ERANGE se pone en errno.
+
+ERRORES
+       ERANGE Hubo desbordamiento por arriba o por abajo.
+
+CONFORME A
+       ANSI C
+
+VÉASE TAMBIÉN
+       atof(3), atoi(3), atol(3), strtol(3), strtoul(3)
+
+
+
+Página Manual BSD           4 Mar 1996                  STRTOD(3)

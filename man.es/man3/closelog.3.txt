@@ -1,0 +1,151 @@
+SYSLOG(3)        Manual del Programador de Linux        SYSLOG(3)
+
+
+
+NOMBRE
+       closelog, openlog, syslog - envían mensajes al registrador
+       del sistema
+
+SINOPSIS
+       #include <syslog.h>
+
+       void openlog( char *ident, int opcion, int  facilidad)
+
+       void syslog( int prioridad, char *format, ...)
+
+       void closelog( void )
+
+
+DESCRIPCIÓN
+       closelog() cierra el descriptor que se  esté  usando  para
+       escribir  en  el  registrador  del  sistema.  El empleo de
+       closelog() es opcional.
+
+       openlog() abre, para un programa, una conexión con el reg­
+       istrador  del  sistema.  La  cadena de caracteres a la que
+       apunte ident se añade a cada  mensaje,  y  normalmente  se
+       hace  que  contenga el nombre del programa. Los valores de
+       opcion y facilidad se dan  en  la  sección  siguiente.  El
+       empleo  de  openlog()  es  opcional;  syslog() la llamaría
+       automáticamente si fuera  menester,  en  cuyo  caso  ident
+       tomaría el valor NULL.
+
+       syslog()  genera  un mensaje en el registro, que será dis­
+       tribuido por syslogd(8).  prioridad es una combinación  de
+       facilidad  y  de nivel, cuyos valores se dan en la sección
+       siguiente. Los restantes argumentos son un  formato,  for­
+       mat, como en printf(3), y cualesquiera argumentos requeri­
+       dos por format, salvo que  los  dos  caracteres  %m  serán
+       reemplazados  por  la cadena con el mensaje de error (str­
+       error) correspondiente al valor actual de errno.
+
+
+PARÁMETROS
+       Esta sección enumera los parámetros empleados  para  poner
+       los valores de opcion, facilidad, y prioridad.
+
+   opcion
+       El  argumento  opcion  de  openlog() es el resultado de la
+       combinación  con  el  operador  de  bits  O  inclusivo  de
+       cualquiera de estos valoes:
+
+       LOG_CONS
+              escribe  directamente  en la consola del sistema si
+              hay un error mientras se está enviando algo al reg­
+              istrador del sistema
+
+       LOG_NDELAY
+              abre  la  conexión  inmediatamente (normalmente, la
+              conexión se abre cuando se registra el primer  men­
+              saje)
+
+       LOG_PERROR
+              imprime también en stderr
+
+       LOG_PID
+              incluye el PID con cada mensaje
+
+   facilidad
+       El argumento facilidad se emplea para especificar qué tipo
+       de programa está registrando el mensaje. Esto permite  que
+       en el fichero de configuración se especifique que mensajes
+       de diferentes programas se manejen de forma distinta.
+
+       LOG_AUTH
+              mensajes de seguridad o autorización  (DESAPROBADO;
+              emplee en su lugar LOG_AUTHPRIV)
+
+       LOG_AUTHPRIV
+              mensajes de seguridad o autorización (privado)
+
+       LOG_CRON
+              el duende del reloj (cron y at)
+
+       LOG_DAEMON
+              otros duendes del sistema
+
+       LOG_KERN
+              mensajes del núcleo
+
+       LOG_LOCAL0 a LOG_LOCAL7
+              reservados para uso local
+
+       LOG_LPR
+              subsistema de impresora de línea (de impresión)
+
+       LOG_MAIL
+              subsistema de correo
+
+       LOG_NEWS
+              subsistema de tablón de anuncios USENET News
+
+       LOG_SYSLOG
+              mensajes generados internamente por syslogd
+
+       LOG_USER
+              (predeterminado)  mensajes  genéricos  del nivel de
+              usuario
+
+       LOG_UUCP
+              subsistema de UUCP
+
+
+   nivel
+       Esto determina la importancia  del  mensaje.  Los  niveles
+       son, en orden de importancia decreciente:
+
+       LOG_EMERG
+              el sistema está inutilizable
+
+       LOG_ALERT
+              debe tomarse una acción correctora inmediatamente
+
+       LOG_CRIT
+              condiciones críticas
+
+       LOG_ERR
+              condiciones de error
+
+       LOG_WARNING
+              condiciones de advertencia
+
+       LOG_NOTICE
+              condición normal, pero significativa
+
+       LOG_INFO
+              mensaje informativo
+
+       LOG_DEBUG
+              mensaje del nivel de depuración
+
+
+
+HISTORIA
+       Una llamada a función syslog apareció en BSD 4.2.
+
+VÉASE TAMBIÉN
+       logger(1), syslog.conf(5), syslogd(8)
+
+
+
+Linux                     12 Marzo 1998                 SYSLOG(3)

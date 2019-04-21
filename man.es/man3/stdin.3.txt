@@ -1,0 +1,74 @@
+STDIN(3)                System Library Functions Manual               STDIN(3)
+
+NAME
+     stdin, stdout, stderr - flujos de la E/S estándar
+
+SYNOPSIS
+     #include <stdio.h>
+     extern FILE *stdin;
+     extern FILE *stdout;
+     extern FILE *stderr;
+
+DESCRIPCIÓN
+     Bajo condiciones normales cualquier programa Unix tiene tres flujos de
+     E/S abiertos cuando arranca: uno para la entrada, otro para la salida y
+     otro para imprimir los diagnósticos o mensajes de error. Estos flujos
+     están típicamente ligados al terminal de usuario (ver tty(4)) pero
+     podrían referirse a ficheros o a otros dispositivos, según lo que decida
+     el proceso padre. (Ver también la sección "Redirección" de sh(1) .)
+
+     El flujo de entrada se conoce como "entrada estándar"; el flujo de salida
+     como "salida estándar"; y el flujo de error como "error estándar". Estos
+     términos se abrevian para formar los símbolos utilizados para referirse a
+     esos ficheros, esto es, stdin, stdout y stderr.
+
+     Cada uno de estos símbolos es una macro de stdio(3) del tipo "puntero a
+     FILE" y pueden ser utilizados por funciones como fprintf(3) o fread(3).
+
+     Ya que los FILEs son un envoltorio con búffer sobre los descriptores de
+     fichero de Unix, los mismos ficheros subyacentes pueden ser accedidos
+     también utilizando el interface crudo (raw) de ficheros de Unix, es
+     decir, las funciones como read(2) y lseek(2).  Los descriptores de
+     fichero asociados con los flujos stdin, stdout y stderr son 0, 1 y 2,
+     respectivamente. Los símbolos del preprocesador STDIN_FILENO, STD­
+     OUT_FILENO y STDERR_FILENO son definidos con esos valores en <unistd.h>.
+
+     Es necesario tener en cuenta que la mezcla de FILEs y descriptores de
+     fichero crudos puede producir resultados inesperados y se debería evitar.
+     (Para los masoquistas: POSIX.1, section 8.2.3, describe en detalle cómo
+     se supone que funciona esta interacción).  Una regla general es que los
+     descriptores de fichero son gestionados por el núcleo, mientras que stdio
+     es una simple librería. Esto significa, por ejemplo, que tras un exec, el
+     hijo hereda todos los descriptores de ficheros abiertos, pero los flujos
+     antiguos se hacen inaccesibles.
+
+     Ya que los símbolos stdin, stdout y stderr son especificados como macros,
+     las asignaciones a ellos no son portables.  Se puede hacer que los flujos
+     estándares referencien a otros ficheros con ayuda de la función de libr­
+     ería freopen(3), introducida especialmente para hacer posible reasignar
+     stdin, stdout y stderr.  Los flujos estándares se cierran llamando a
+     exit(3) y por la terminación normal del programa.
+
+VÉASE TAMBIÉN
+     sh(1), csh(1), open(2), fopen(3), stdio(3)
+
+CONSIDERACIONES
+     El flujo stderr no utiliza búffers. El flujo stdout tiene un búffer de
+     líneas cuando apunta a un terminar. Las líneas no aparecen hasta que se
+     llama a fflush(3) o a exit(3) , o se imprime una nueva línea ("\n"). Esto
+     puede producir resultados inesperados, especialmente en depuración.  El
+     modo "buffer" de los flujos estándares (o de cualquier otro flujo) se
+     puede cambiar con llamadas a setbuf(3) o setvbuf(3) Es necesario tener en
+     cuenta que en caso de que stdin esté asociado con un terminal, podría
+     haber también entrada vía buffer en el driver del terminal, sin relación
+     alguna con el búffer de stdio.  (De hecho, las entradas normales de ter­
+     minal utilizan un búffer de líneas en el núcleo).  Esta gestión de
+     entradas del núcleo puede ser modificada utilizando llamadas como
+     tcsetattr(3); ver también stty(1), y termios(3).
+
+ESTÁNDARES
+     Las macros stdin, stdout, y stderr cumplen el ANSI X3.159-1989
+     (``ANSI C''), y este estándar también estipula que esos tres flujos se
+     deberían abrir al comienzo del programa.
+
+Linux 2.0                        24 Marzo 1998                       Linux 2.0

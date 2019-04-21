@@ -1,0 +1,57 @@
+MUNLOCK(2)       Manual del Programador de Linux       MUNLOCK(2)
+
+
+
+NOMBRE
+       munlock  -  vuelve  a habilitar la paginación para algunas
+       partes de la memoria
+
+SINOPSIS
+       #include <sys/mman.h>
+
+       int munlock(const void *addr, size_t len);
+
+DESCRIPCIÓN
+       munlock vuelve a activar la paginación  para  la  zona  de
+       memoria  que  cae en el rango que comienza en la dirección
+       addr con longitud len bytes. Todas las  páginas  que  con­
+       tienen  una parte del rango de memoria especificado pueden
+       ser movidas de nuevo por el núcleo al espacio de intercam­
+       bio (swap) externo tras llamar a munlock.
+
+       Los bloqueos de memoria no se apilan; esto es, las páginas
+       que han sido bloqueadas algunas veces mediante llamadas  a
+       mlock  o  a mlockall serán desbloqueadas por una sola lla­
+       mada a  munlock  para  el  rango  correspondiente,  o  por
+       munlockall.   Las  páginas  que  están  asociadas a varios
+       lugares o por varios procesos permanecen bloqueadas en RAM
+       mientras  estén  bloqueadas por lo menos en un lugar o por
+       al menos un proceso.
+
+       En sistemas  POSIX  en  los  que  mlock  y  munlock  estén
+       disponibles,   se   define   en  <unistd.h>  la  constante
+       _POSIX_MEMLOCK_RANGE, y PAGESIZE, en <limits.h>, indica el
+       número de bytes por cada página.
+
+VALOR DEVUELTO
+       En caso de éxito, munlock devuelve cero. En caso de error,
+       devuelve -1 y se pone en errno un valor  apropiado,  y  no
+       tiene  lugar  ningún cambio a ningún bloqueo en el espacio
+       de direcciones del proceso.
+
+ERRORES
+       ENOMEM  Parte del rango  de  direcciones  especificado  no
+               corresponde  a  páginas asociadas en el espacio de
+               direcciones del proceso.
+
+       EINVAL  len no era un número positivo.
+
+CONFORME A
+       POSIX.1b, SVr4
+
+VÉASE TAMBIÉN
+       mlock(2), mlockall(2), y munlockall(2).
+
+
+
+Linux 1.3.43            26 Noviembre 1995              MUNLOCK(2)

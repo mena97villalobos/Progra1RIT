@@ -1,0 +1,86 @@
+READV(2)           Manual del Programador Linux          READV(2)
+
+
+
+NOMBRE
+       readv, writev - lee o escribe un vector
+
+SINOPSIS
+       #include <sys/uio.h>
+
+       int readv(int fd, const struct iovec * vector, int count);
+
+       int writev(int  fd,  const  struct  iovec  *  vector,  int
+       count);
+
+       struct iovec {
+         __ptr_t iov_base; /* Comienzo de Direcciones.  */
+         size_t iov_len; /* Longitud en bytes.  */
+       };
+
+DESCRIPCIÓN
+       readv  lee  datos desde el descriptor de fichero fd y pone
+       los resultados en la zona de memoria descrita por  vector.
+       El  número  de  bloques de memoria se especifica en count.
+       Los bloques se llenan en el orden indicado. Funciona igual
+       que  read  salvo  que  los  datos son puestos en vector en
+       lugar de en una zona contigua de memoria.
+
+       writev escribe datos al descriptor de fichero fd  y  desde
+       la  zona de memoria descrita por vector. El número de blo­
+       ques de memoria se especifica en count.  Los  bloques  son
+       usados  en  el  orden  indicado.  Funciona igual que write
+       excepto que los datos son tomados desde vector en lugar de
+       una zona contigua de memoria.
+
+
+VALOR DEVUELTO
+       En caso de éxito readv devuelve el número de bytes leídos.
+       En caso de  éxito  writev  devuelve  el  número  de  bytes
+       escritos.   En caso de error, se devuelve -1 y se asigna a
+       errno un valor adecuado.
+
+
+ERRORES
+       EINVAL  Se ha dado  un  argumento  inválido.  Por  ejemplo
+               count  podría  ser mayor que MAX_IOVEC o cero.  fd
+               podría estar unido a  un  objeto  inadecuado  para
+               lectura (para readv) o escritura (para writev).
+
+       EFAULT  "Fallo  de  segmentación."  Probablemente vector o
+               alguno de los punteros iov_base apuntan a una zona
+               de memoria que no está correctamente reservada.
+
+       EBADF   El descriptor de fichero fd no es válido.
+
+       EINTR   La  llamada  ha  sido  interrumpida  por una señal
+               antes de que algún dato fuese leído/escrito.
+
+       EAGAIN  Se ha seleccionado E/S no bloqueante usando O_NON­
+               BLOCK  y no había datos disponibles inmediatamente
+               para ser leídos.  (O el descriptor de  fichero  fd
+               apunta a un objeto que está bloqueado.)
+
+       EISDIR  fd hace referencia a un directorio.
+
+       EOPNOTSUP
+               fd  hace  referencia a un socket o dispositivo que
+               no soporta lectura/escritura.
+
+       ENOMEM  No hay suficiente memoria del núcleo disponible.
+
+       Podrían ocurrir  otros  errores,  dependiendo  del  objeto
+       conectado a fd.
+
+CONFORME A
+       4.4BSD  (las  funciones  readv  y  writev  aparecieron por
+       primeras vez en BSD 4.2) y Unix98. La libc5 de  Linux  usa
+       size_t como el tipo del parámetro count, lo cual es lógico
+       pero no estándar.
+
+VÉASE TAMBIÉN
+       read(2), write(2), fprintf(3), fscanf(3)
+
+
+
+Linux 2.2.0-pre8          20 enero 1999                  READV(2)

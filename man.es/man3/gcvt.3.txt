@@ -1,0 +1,29 @@
+GCVT(3)          Manual del Programador de Linux          GCVT(3)
+
+
+
+NOMBRE
+       gcvt  -  convierte un número en coma flotante a una cadena
+       de caracteres.
+
+SINOPSIS
+       #include <stdlib.h>
+
+       char *gcvt(double numero, size_t ndigit, char *buf);
+
+DESCRIPCIÓN
+       La función gcvt() convierte numero a una cadena de  carac­
+       teres  ASCII con la mínima longitud posible, acabada en el
+       carácter NUL, y  guarda  el  resultado  en  buf.   Produce
+       ndigit dígitos significativos en el formato G de printf().
+
+VALOR DEVUELTO
+       La función gcvt() devuelve la dirección de la cadena apun­
+       tada por buf.
+
+VÉASE TAMBIÉN
+       ecvt(3), fcvt(3), sprintf(3)
+
+
+
+                          22 Enero 1998                   GCVT(3)

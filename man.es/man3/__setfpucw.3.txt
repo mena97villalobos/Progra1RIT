@@ -1,0 +1,36 @@
+__SETFPUCW(3)    Manual del Programador de Linux    __SETFPUCW(3)
+
+
+
+NOMBRE
+       __setfpucw - asigna un valor a la palabra de control de la
+       fpu en la arquitectura i386
+
+SINOPSIS
+       #include <i386/fpu_control.h>
+
+       void __setfpucw((unsigned short) control_word);
+
+DESCRIPCIÓN
+       __setfpucw transfiere control_word a los registros  de  la
+       fpu  (floating  point unit, unidad de coma flotante) en la
+       arquitectura i386. Esto se puede utilizar  para  controlar
+       la  precisión  de punto flotante, redondeado y excepciones
+       de punto flotante.
+
+EJEMPLO
+       __setfpucw(0x1372)
+
+       Asigna a la palabra de control de la fpu en  la  arquitec­
+       tura i386
+            - precisión extendida
+            - redondeo al más cercano
+            -  excepciones en desbordamiento, división por cero e
+       infinito (NaN)
+
+VÉASE TAMBIÉN"
+       /usr/include/i386/fpu_control.h
+
+
+
+Página Man de Linux i386   8 Marzo 1997             __SETFPUCW(3)

@@ -1,0 +1,214 @@
+as(1)           Herramientas de desarrollo de GNU           as(1)
+
+
+
+NOMBRE
+       GNU as - el ensamblador transportable de GNU
+
+
+SINOPSIS
+       as [-a[dhlns]=fichero]] [-D] [--defsym SÍM=VAL] [-f]
+       [--gstabs] [-I camino] [-K] [-L] [-M | --mri] [-o fichobj]
+       [-R] [--traditional-format] [-v] [-w] [-- | ficheros...]
+
+       opciones solamente para i960:
+       [-ACA|-ACA_A|-ACB|-ACC|-AKA|-AKB|-AKC|-AMC] [-b] [-no-
+       relax]
+
+       opciones solamente para m680x0:
+       [-l] [-mc68000|-mc68010|-mc68020]
+
+
+DESCRIPCIÓN
+       GNU as es realmente una familia de ensambladores.  Si  Ud.
+       emplea (o ha empleado) el ensamblador de GNU en una arqui­
+       tectura, debería encontrar  un  entorno  bastante  similar
+       cuando  lo  emplee  en  otra.  Cada versión tiene mucho en
+       común con  las  otras,  incluyendo  los  formatos  de  los
+       ficheros  objeto,  la mayoría de las directivas del ensam­
+       blador (a menudo llamadas pseudo-ops) y  la  sintaxis  del
+       ensamblador.
+
+       Para  información  sobre  la  sintaxis  y  las  pseudo-ops
+       empleadas por GNU as, consulte la entrada de menú `as'  en
+       Info (o el manual Empleando as: El Ensamblador de GNU).
+
+       as  está concebido principalmente para ensamblar la salida
+       del compilador de  C  de  GNU  gcc  para  el  uso  por  el
+       enlazador  ld.  De todas formas, hemos intentado hacer que
+       as ensamble  correctamente  todo  lo  que  el  ensamblador
+       nativo  haga.   Esto no significa que as siempre emplee la
+       misma sintaxis que otro ensamblador para la  misma  arqui­
+       tectura;  por  ejemplo, sabemos de varias versiones incom­
+       patibles de la sintaxis del  lenguaje  ensamblador  de  la
+       familia 680x0.
+
+       Cada  vez  que Ud. ejecuta as ensambla exactamente un pro­
+       grama fuente. El programa fuente está constituido por  uno
+       o  más  ficheros.  (La  entrada  estándar  es  también  un
+       fichero.)
+
+
+       Si se llama a as sin dar nombres de ficheros, intenta leer
+       un  fichero  de  entrada desde la entrada estándar de as,
+       que  es  normalmente  su  terminal.   Ud.  ha  de  teclear
+       entonces  Ctrl-D para decirle a as que no hay más programa
+       que ensamblar.  Use `--' si  Ud.  necesita  explícitamente
+       nombrar  el  fichero  de  entrada  estándar en su línea de
+       órdenes.
+
+       as puede escribir avisos y mensajes de error en el fichero
+       de  errores  estándar  (usualmente  su  terminal). Esto no
+       debería ocurrir cuando as se ejecutara  automáticamente  a
+       través  de  un  compilador.  Los  avisos  informan  de que
+       supuestamente as  podría  estar  ensamblando  un  programa
+       defectuoso;  los errores informan de un grave problema que
+       para el ensamblado.
+
+
+OPCIONES
+       -a     Activa los listados del ensamblado. Hay varias sub­
+              opciones.  d omite las directivas de depuración.  h
+              incluye el código fuente de alto nivel;  esto  sólo
+              está  disponible  si el fichero fuente puede encon­
+              trarse, y si  el  código  se  compiló  con  -g.   l
+              incluye un listado del ensamblador.  n omite proce­
+              samiento de formas.  s incluye un listado de símbo­
+              los.   = fichero establece el nombre del fichero de
+              listado; ésta debe ser la  última  subopción.   Las
+              subopciones predeterminadas son hls.
+
+       -D     Esta  opción se acepta solamente por compatibilidad
+              con guiones que llamen a  otros  ensambladores;  no
+              tiene ningún efecto en as.
+
+       --defsym SÍM=VALOR
+              Define  el símbolo SÍM con el valor VALOR antes del
+              ensamblado del fichero de entrada. VALOR  debe  ser
+              una  constante  entera.  Como  en  C, un 0x inicial
+              indica un valor hexadecimal, y un 0 inicial  indica
+              un valor octal.
+
+       -f     rápido (``fast''): omite el preprocesado (se supone
+              que la fuente es la salida de un compilador).
+
+       -I camino
+              Añade camino a la lista de búsqueda de las directi­
+              vas .include.
+
+       --gstabs
+              Genera  información  de  depuración stabs para cada
+              línea de ensamblador. Esto puede ayudar  a  depurar
+              código  ensamblador,  si el depurador puede manejar
+              esta información.
+
+       -K     Lanza mensajes  de  advertencia  cuando  tablas  de
+              diferencias  se alteraron para largos desplazamien­
+              tos.
+
+       -L     Mantiene  (en  la  tabla  de   símbolos)   símbolos
+              locales, empezando por `L'
+
+       -M, --mri
+              Ensambla en modo de compatibilidad MRI.
+
+       -o fichobj
+              Nombra al fichero objeto de salida de as.
+
+       -R     Despliega  la  sección  de  datos  en la sección de
+              texto.
+
+       --traditional-format
+              Emplea el mismo formato que el ensamblador  nativo,
+              cuando es posible.
+
+       -v     Anuncia la versión de as.
+
+       -W     Suprime mensajes de advertencia.
+
+       -- | ficheros...
+              Ficheros  fuente  a  ensamblar,  o entrada estándar
+              (--)
+
+       -Avar  (Cuando se ha configurado para Intel 960.)  Especi­
+              fica  qué  variante  de  la  arquitectura 960 es el
+              objetivo.
+
+       -b     (Cuando se ha configurado para Intel  960.)   Añade
+              código  para  recolectar  datos  sobre las bifurca­
+              ciones tomadas.
+
+       -no-relax
+              (Cuando se ha  configurado  para  Intel  960.)   No
+              altera  las  instrucciones  comparar-y-saltar  para
+              desplazamientos largos;  produce  un  error  si  es
+              necesario.
+
+       -l     (Cuando se ha configurado para Motorola 68000).
+              Acorta  las  referencias  a símbolos sin definir, a
+              una palabra en vez de a dos.
+
+       -mc68000|-mc68010|-mc68020
+              (Cuando se ha configurado para Motorola 68000).
+              Especifica qué procesador de la familia 68000 es el
+              objetivo (por omisión el 68020).
+
+
+       Las  opciones pueden ir en cualquier orden, y pueden estar
+       antes, después o entre los nombres de ficheros.  El  orden
+       de los nombres de fichero es significativo.
+
+       `--'  (dos guiones) por sí mismos nombran al fichero de la
+       entrada estándar explícitamente, como uno de los  ficheros
+       para que as los ensamble.
+
+       Excepto  para  `--',  cualquier  argumento  de la línea de
+       órdenes que comience con un guión  (`-')  es  una  opción.
+       Cada  opción  cambia  el  comportamiento  de  as.  Ninguna
+       opción cambia la forma en que  trabaje  otra  opción.  Una
+       opción  es un `-' seguido por una o más letras; importa si
+       son mayúsculas o minúsculas. Todas las opciones se  pueden
+       omitir.
+
+       La  opción  `-o'  espera  exactamente un nombre de fichero
+       tras ella. El nombre de fichero  puede  ir  inmediatamente
+       tras  la letra de la opción (por compatibilidad con ensam­
+       bladores más antiguos) o puede ser el siguiente  argumento
+       de la orden (siguiendo el estándar de GNU).
+
+       Éstas dos líneas de órdenes son equivalentes:
+       as  -o  mi-fichero-objeto.o  grrr.s
+       as  -omi-fichero-objeto.o  grrr.s
+
+
+VÉASE TAMBIÉN
+       `as' en Info; Empleando as: El Ensamblador de GNU; gcc(1),
+       ld(1).
+
+
+DERECHOS DE COPIA
+       Copyright (c) 1991, 1992 Free Software Foundation, Inc.
+
+       Permission is granted  to  make  and  distribute  verbatim
+       copies  of  this  manual provided the copyright notice and
+       this permission notice are preserved on all copies.
+
+       Permission is granted to copy and distribute modified ver­
+       sions  of  this  manual  under the conditions for verbatim
+       copying, provided that the entire resulting  derived  work
+       is  distributed  under  the  terms  of a permission notice
+       identical to this one.
+
+       Permission is granted to copy and distribute  translations
+       of this manual into another language, under the above con­
+       ditions for modified versions, except that this permission
+       notice  may  be  included  in translations approved by the
+       Free  Software  Foundation  instead  of  in  the  original
+       English.
+
+       N.  del T.: Sólo tiene validez legal el aviso de copyright
+       original.
+
+
+
+Cygnus support         29 de Marzo de 1996                  as(1)

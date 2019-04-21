@@ -1,0 +1,52 @@
+IPCS(8)          Manual del Programador de Linux          IPCS(8)
+
+
+
+NOMBRE
+       ipcs - proporciona información sobre los recursos ipc
+
+SINOPSIS
+       ipcs [ -asmq ] [ -tclup ]
+       ipcs [ -smq ] -i id
+       ipcs -h
+
+DESCRIPCIÓN
+       ipcs  proporciona  información  sobre los recursos del ipc
+       para los cuales el proceso que llama tiene acceso de  lec­
+       tura.
+
+       La  opción  -i  permite  que  se  especifique  un id de un
+       recurso determinado. Sólo se mostrará la información sobre
+       el  id que se indique.  Los recursos se pueden especificar
+       tal y como sigue:
+
+       -m     segmentos de memoria compartida
+
+       -q     colas de mensajes
+
+       -s     matrices de semáforos
+
+       -a     todos (esta es la opción por defecto)
+
+       El formato de salida se puede  especificar  de  las  sigu­
+       ientes maneras:
+
+       -t     tiempo
+
+       -p     pid (identificador de proceso)
+
+       -c     creador
+
+       -l     límites
+
+       -u     sumario
+
+VÉASE TAMBIÉN
+       ipcrm(8)
+
+AUTOR
+       krishna balasubramanian (balasub@cis.ohio-state.edu)
+
+
+
+Linux 0.99                9 Octubre 1993                  IPCS(8)

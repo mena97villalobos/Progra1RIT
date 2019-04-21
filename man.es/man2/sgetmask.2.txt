@@ -1,0 +1,92 @@
+SIGNAL(2)        Manual del Programador de Linux        SIGNAL(2)
+
+
+
+NOMBRE
+       signal - manejo de señales según C ANSI
+
+
+SINOPSIS
+       #include <signal.h>
+
+
+       void (*signal(int signum, void (*manejador)(int)))(int);
+
+
+DESCRIPCIÓN
+       La llamada al sistema signal instala un nuevo manejador de
+       señal para la señal cuyo número es signum.   El  manejador
+       de  señal  se  establece como manejador, que puede ser una
+       función especificada por el usuario, o una  de  las  sigu­
+       ientes macros:
+
+              SIG_IGN
+                     No tener en cuenta la señal.
+
+              SIG_DFL
+                     Dejar  la  señal  con su comportamiento pre­
+                     definido.
+
+       El argumento entero que se pasa a la rutina de  manejo  de
+       señal  es el número de la señal. Esto hace posible emplear
+       un mismo manejador de señal para varias de ellas.
+
+       Los manejadores de señales son rutinas que  se  llaman  en
+       cualquier  momento  en  el  que el proceso recibe la señal
+       correspondiente. Usando la función alarm(2), que envia una
+       señal  SIGALRM  al  proceso, es posible manejar fácilmente
+       trabajos regulares.  A un  proceso  también  se  le  puede
+       decir  que  relea  sus ficheros de configuración usando un
+       manejador de señal (normalmente, la señal es SIGHUP).
+
+
+VALOR DEVUELTO
+       signal devuelve el valor anterior del manejador de  señal,
+       o SIG_ERR si ocurre un error.
+
+
+OBSERVACIONES
+       No se pueden instalar manejadores para las señales SIGKILL
+       ni SIGSTOP.
+
+       Desde libc6, signal usa la  semántica  BSD  y  el  compor­
+       tamiento  por  defecto es no reasignar una señal a su com­
+       portamiento  por  defecto.  Puede  usar  sysv_signal  para
+       obtener la semántica SysV.
+
+       Ambas,  signal  and  sysv_signal son rutinas de biblioteca
+       construidas sobre sigaction(2).
+
+       Si usted no entiende bien el prototipo  del  principio  de
+       esta página, puede ayudar el verlo separado así:
+
+       typedef void (*sighandler_t)(int);
+       sighandler_t signal(int signum, sighandler_t manejador);
+
+       De  acuerdo  con POSIX, el comportamiento de un proceso es
+       indefinido después de no hacer caso a  una  señal  SIGFPE,
+       SIGILL o SIGSEGV que no ha sido generada por las funciones
+       kill(2) ni raise(2).  La división entera por cero tiene un
+       resultado  indefinido.   En algunas arquitecturas generará
+       una señal SIGFPE.  (También, el dividir el entero más neg­
+       ativo  por -1 puede generar SIGFPE.)  No hacer caso a esta
+       señal puede conducir a un bucle infinito.
+
+       De acuerdo con POSIX (B.3.3.1.3) no debe  asignar  SIG_IGN
+       como acción para SIGCHLD. Aquí los comportamiento de BSD y
+       SYSV difieren, provocando el fallo en  Linux  de  aquellos
+       programas   BSD  que  asignan  SIG_IGN  como  acción  para
+       SIGCHLD.
+
+
+CONFORME A
+       C ANSI
+
+
+VÉASE TAMBIÉN
+       kill(1), kill(2), killpg(2),  pause(2),  raise(3),  sigac­
+       tion(2), signal(7), sigsetops(3), sigvec(2), alarm(2).
+
+
+
+Linux 2.0                 21 Agosto 1997                SIGNAL(2)

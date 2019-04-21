@@ -1,0 +1,35 @@
+EXPM1(3)         Manual del Programador de Linux         EXPM1(3)
+
+
+
+NOMBRE
+       expm1,  log1p - exponencial menos 1, logaritmo de 1 más el
+       argumento
+
+SINOPSIS
+       #include <math.h>
+
+       double expm1 ( double x );
+
+       double log1p ( double x );
+
+DESCRIPCIÓN
+       expm1(x) devuelve un valor equivalente a `exp (x) - 1'. Se
+       computa de tal manera que es exacto incluso si el valor de
+       x es cercano a cero: un caso donde `exp  (x)  -  1'  sería
+       inexacto  debido  a  la sustracción de dos números que son
+       casi iguales.
+
+       log1p(x) devuelve un valor equivalente a `log (1 + x)'. Se
+       computa de tal manera que es exacto incluso si el valor de
+       x es casi cero.
+
+CONFORME A
+       BSD
+
+VÉASE TAMBIÉN
+       exp(3), log(3)
+
+
+
+GNU                     8 de Enero de 1998               EXPM1(3)

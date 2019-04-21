@@ -1,0 +1,66 @@
+
+NOMBRE
+     tsort - clasificación topológica de un grafo dirigido
+
+SINOPSIS
+     tsort [fichero]
+
+DESCRIPCIÓN
+     Tsort toma una lista de pares de nombres de nodos que representan arcos
+     dirigidos en un grafo e imprime los nodos en orden topológico en la sal­
+     ida estándar. La entrada se toma del fichero dado, fichero, o de la
+     entrada estándar si no se da ningún fichero.
+
+     Los nombres de nodos en la entrada se separan por espacios en blanco y
+     debe haber un número par de nodos.
+
+     La presencia de un nodo en un grafo puede representarse por un arco desde
+     el nodo a sí mismo.  Esto es útil cuando un nodo no está conectado a
+     ningún otro.
+
+     Si el grafo contiene un ciclo (y por lo tanto no puede clasificarse cor­
+     rectamente), uno de los arcos del ciclo no es tenido en cuenta y la
+     clasificación continúa.  Se informa de los ciclos en la salida estándar
+     de errores.
+
+VÉASE TAMBIÉN
+     ar(1)
+
+HISTORIA
+     Una orden tsort apareció en Version 7 AT&T UNIX.  Este programa tsort y
+     la página del Manual se derivan de las fuentes contribuidas a Berkeley
+     por Michael Rendell de la universidad Memorial University of Newfound­
+     land.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

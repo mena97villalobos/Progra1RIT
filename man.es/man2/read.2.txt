@@ -1,0 +1,96 @@
+READ(2)          Manual del Programador de Linux          READ(2)
+
+
+
+NOMBRE
+       read - lee de un descriptor de fichero
+
+SINOPSIS
+       #include <unistd.h>
+
+       ssize_t read(int fd, void *buf, size_t nbytes);
+
+DESCRIPCIÓN
+       read()  intenta  leer  hasta nbytes bytes del fichero cuyo
+       descriptor de fichero es fd y guardarlos  en  la  zona  de
+       memoria que empieza en buf.
+
+       Si  nbytes  es  cero, read() devuelve cero y no tiene otro
+       efecto.  Si nbytes es mayor que SSIZE_MAX, el resultado es
+       indefinido.
+
+
+VALOR DEVUELTO
+       En  caso  de  éxito, se devuelve el número de bytes leídos
+       (cero indica fin de fichero), y el indicador  de  posición
+       del  fichero  avanza este número de bytes.  No es un error
+       si este número es menor que el número  de  bytes  pedidos;
+       esto  puede  suceder  por  ejemplo porque ahora mismo haya
+       disponible un número menor de bytes (quizás porque estamos
+       cerca  del fin-de-fichero, o porque estamos leyendo de una
+       interconexión, o de una terminal), o porque read() ha sido
+       interrumpido por una señal.  En caso de error, se devuelve
+       -1, y se pone un valor apropiado en errno. En este caso se
+       deja indeterminado si el indicador de posición del fichero
+       (si lo hay) cambia o no.
+
+ERRORES
+       EINTR   La llamada ha  sido  interrumpida  por  una  señal
+               antes de que se haya leído ningún dato.
+
+       EAGAIN  Se  ha  seleccionado  E/S  no bloqueante empleando
+               O_NONBLOCK y no había ningún  dato  inmediatamente
+               disponible para la lectura.
+
+       EIO     Error  de  E/S.  Esto  puede  ocurrir  por ejemplo
+               cuando el proceso está en un grupo de procesos  en
+               segundo  plano,  intenta  leer  de  su tty contro­
+               ladora, y o  está  bloqueando  o  no  teniendo  en
+               cuenta a SIGTTIN o su grupo de procesos está huér­
+               fano. También puede ocurrir cuando hay un error de
+               E/S  de  bajo  nivel mientras se lee de un disco o
+               cinta.
+
+       EISDIR  fd se refiere a un directorio.
+
+       EBADF   fd no es un descriptor de fichero válido o no está
+               abierto para lectura.
+
+       EINVAL  fd  está  asociado a un objeto que no es apropiado
+               para su lectura.
+
+       EFAULT  buf está fuera del espacio de direcciones  accesi­
+               ble del usuario.
+
+       Pueden  ocurrir  otros  errores,  dependiendo  del  objeto
+       conectado  a  fd.   POSIX  permite  que  un  read  que  se
+       interrumpa  tras  leer  algunos  datos devuelva -1 (con el
+       valor EINTR en errno) o que devuelva el número de bytes ya
+       leídos.
+
+CONFORME A
+       SVr4, SVID, AT&T, POSIX, X/OPEN, BSD 4.3
+
+RESTRICCIONES
+       En  sistemas  de ficheros NFS, leer cantidades pequeñas de
+       datos sólo actualizará la fecha de acceso  al  fichero  la
+       primera  vez,  las  demás  llamadas pueden no hacerlo más.
+       Esto está producido por el mecanismo de caché en la  parte
+       cliente, porque la mayoría si no todos los clientes NFS le
+       dejan las actualizaciones de la fecha/hora  de  acceso  al
+       servidor  y  las  lecturas  en la parte del cliente satis­
+       fechas por el caché del cliente no  provocarán  actualiza­
+       ciones  del  atime  (fecha/hora  de acceso) en el servidor
+       puesto que no hay lecturas en la parte  del  servidor.  La
+       semántica de UNIX puede obtenerse deshabilitando el atrib­
+       uto de caché en la parte cliente, pero en  la  mayoría  de
+       las  situaciones  esto  aumentará sustancialmente la carga
+       del servidor y disminuirá el rendimiento.
+
+VÉASE TAMBIÉN
+       readdir(2),  write(2),   write(2),   fcntl(2),   close(2),
+       lseek(2), select(2), readlink(2), ioctl(2), fread(3).
+
+
+
+Linux 2.0.32              12 Julio 1997                   READ(2)

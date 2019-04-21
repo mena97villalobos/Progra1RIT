@@ -1,0 +1,90 @@
+MKFS(8)                  Manual de Linux                  MKFS(8)
+
+
+
+NOMBRE
+       mkfs - construye un sistema de ficheros de Linux
+
+SINOPSIS
+       mkfs  [  -V  ]  [ -t tipo-sf ] [ opciones-sf ] sistema-de-
+       ficheros [ bloques ]
+
+DESCRIPCIÓN
+       mkfs se emplea para construir un sistema  de  ficheros  de
+       Linux sobre un dispositivo, usualmente una partición de un
+       disco duro.  sistema-de-ficheros es o el nombre  del  dis­
+       positivo  (como  por  ejemplo  /dev/hda1 o /dev/sdb2) o el
+       punto de montaje (como /, /usr o /home) para el sistema de
+       ficheros.   bloques es el número de bloques que el sistema
+       de ficheros irá a emplear.
+
+       El código de salida devuelto por mkfs es 0  si  acaba  con
+       éxito y 1 si acaba en fallo.
+
+       En  realidad,  mkfs  es  simplemente  un  frontal para los
+       diversos constructores de sistemas de  ficheros  concretos
+       (mkfs.tipo-sf)  disponibles  bajo  Linux.   El constructor
+       específico del sistema de ficheros  se  busca  en  ciertos
+       directorios  como  /sbin,  /sbin/fs,  /sbin/fs.d, /etc/fs,
+       /etc (la lista concreta se define  cuando  se  compila  el
+       programa,  pero  al  menos  contiene  /sbin y /sbin/fs), y
+       finalmente en los directorios listados en la  variable  de
+       entorno  PATH.   Por favor, consulte para más detalles las
+       páginas del Manual de cada constructor específico  de  los
+       diversos sistemas de ficheros.
+
+OPCIONES
+       -V     Produce  una  salida  más prolija, incluyendo todas
+              las órdenes específicas  del  sistema  de  ficheros
+              concreto  que se ejecutan.  Especificar esta opción
+              más de una vez inhibe  la  ejecución  de  cualquier
+              orden  de  un sistema de ficheros específico.  Esto
+              es realmente sólo útil para comprobaciones.
+
+       -t tipo-sf
+              Especifica el tipo del sistema de ficheros  a  con­
+              struir.   Si  no  se  especifica, el tipo se deduce
+              mediante  la  búsqueda  de  sistema-de-ficheros  en
+              /etc/fstab y se usa la entrada correspondiente.  Si
+              el tipo no puede deducirse, se emplea  el  tipo  de
+              sistema  de  ficheros  predeterminado (actualmente,
+              minix).
+
+       opciones-sf
+              Opciones del sistema de ficheros específico, que se
+              pasarán   al   constructor   real  del  sistema  de
+              ficheros.  Aunque no se garantiza,  las  siguientes
+              opciones  se admiten en la mayoría de constructores
+              de sistemas de ficheros.
+
+       -c     Antes de construir el sistema de ficheros comprueba
+              los bloques malos del dispositivo.
+
+       -l nombre-fichero
+              Lee la lista de bloques malos desde nombre-fichero.
+
+       -v     Produce una salida prolija.
+
+FALLOS
+       Todas las opciones genéricas deben ir antes  y  no  combi­
+       nadas   con  las  específicas  del  sistema  de  ficheros.
+       Algunos programas específicos de un sistema de ficheros no
+       admiten  la  opción  -v (prolija), ni devuelven códigos de
+       salida  significativos.   Asimismo,  algunos  no  detectan
+       automáticamente  el tamaño del dispositivo y requieren que
+       se dé el parámetro bloques.
+
+AUTORES
+       David Engel (david@ods.com)
+       Fred N. van Kempen (waltje@uwalt.nl.mugnet.org)
+       Ron Sommeling (sommel@sci.kun.nl)
+       La página del Manual fue adaptada sin ningún rubor  de  la
+       versión de Remy Card para el sistema de ficheros ext2.
+
+VÉASE TAMBIÉN
+       fsck(8),    mkfs.minix(8),    mkfs.ext(8),   mkfs.ext2(8),
+       mkfs.xiafs(8).
+
+
+
+Versión 1.9                 Junio 1995                    MKFS(8)

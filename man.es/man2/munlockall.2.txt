@@ -1,0 +1,45 @@
+MUNLOCKALL(2)    Manual del Programador de Linux    MUNLOCKALL(2)
+
+
+
+NOMBRE
+       munlockall  -  vuelve a activar la paginación para el pro­
+       ceso invocador
+
+SINOPSIS
+       #include <sys/mman.h>
+
+       int munlockall(void);
+
+DESCRIPCIÓN
+       munlockall vuelve a habilitar la paginación para todas las
+       páginas  asociadas  al  espacio de direcciones del proceso
+       que hace esta llamada.
+
+       Los bloqueos de memoria no se apilan; esto es, las páginas
+       que  han sido bloqueadas algunas veces mediante llamadas a
+       mlock o a mlockall serán desbloqueadas por una  sola  lla­
+       mada  a  munlock  para  el  rango  correspondiente,  o por
+       munlockall.  Las páginas  que  están  asociadas  a  varios
+       lugares o por varios procesos permanecen bloqueadas en RAM
+       mientras estén bloqueadas por lo menos en un lugar  o  por
+       al menos un proceso.
+
+       En  sistemas  POSIX  en  los  que  mlock  y  munlock estén
+       disponibles,  se  define  en   <unistd.h>   la   constante
+       _POSIX_MEMLOCK.
+
+
+VALOR DEVUELTO
+       En  caso  de  éxito,  munlockall devuelve cero. En caso de
+       error devuelve -1 y pone en errno un valor apropiado.
+
+CONFORME A
+       POSIX.1b, SVr4
+
+VÉASE TAMBIÉN
+       mlockall(2), mlock(2), y munlock(2).
+
+
+
+Linux 1.3.43            26 Noviembre 1995           MUNLOCKALL(2)

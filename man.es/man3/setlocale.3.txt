@@ -1,0 +1,89 @@
+SETLOCALE(3)     Manual del Programador de Linux     SETLOCALE(3)
+
+
+
+NOMBRE
+       setlocale - establece la localización en curso
+
+SINOPSIS
+       #include <locale.h>
+
+       char *setlocale(int categoria, const char * localizacion);
+
+DESCRIPCIÓN
+       La  función  setlocale() se emplea para establecer o saber
+       la localización en curso en el programa.  Si  localizacion
+       es  "C"  o  "POSIX", la localización en curso se establece
+       como la localización transportable estándar.
+
+       Si localizacion es "", la localización se  establece  como
+       la  predeterminada, que se selecciona según el valor de la
+       variable de ambiente LANG.
+
+       Cuando arranca el programa principal,  se  selecciona  por
+       omisión la localización "C" estándar y transportable.
+
+       El  argumento  categoria  determina  qué  funciones se ven
+       influenciadas por la nueva localización:
+
+       LC_ALL para todas las partes de la localización.
+
+       LC_COLLATE
+              para las funciones strcoll() y strxfrm().
+
+       LC_CTYPE
+              para las rutinas de clasificación y  conversión  de
+              caracteres.
+
+       LC_MONETARY
+              para localeconv().
+
+       LC_NUMERIC
+              para el carácter de separador de decimales.
+
+       LC_TIME
+              para strftime().
+
+       Un  programa  puede  hacerse  transportable para todas las
+       localizaciones llamando a setlocale(LC_ALL, "" )  tras  el
+       inicio  del  programa, empleando los valores devueltos por
+       una llamada a localeconv() para la información dependiente
+       de  la  localización,  y  utilizando strcoll() o strxfrm()
+       para comparar cadenas de caracteres.
+
+VALOR DEVUELTO
+       Una llamada con éxito a setlocale() devuelve una cadena de
+       caracteres  que corresponde a la localización establecida.
+       Esta cadena puede ser alojada en almacenamiento  estático.
+       La cadena devuelta es tal que una llamada subsiguiente con
+       esta cadena y su categoría asociada, restaurará esa  parte
+       de  la  localización del proceso. La función devuelve NULL
+       si la petición no puede ser satisfecha.
+
+
+CONFORME A
+       C ANSI, POSIX.1
+
+       Linux (esto es, libc)  admite  las  localizaciones  trans­
+       portables estándares "C" y "POSIX".  En los viejos tiempos
+       solía haber soporte para el código  europeo  ISO  Latin-1,
+       localización   "ISO-8859-1"   (e.g.   en   libc-4.5.21   y
+       libc-4.6.27), y la localización  cirílica  (rusa)  "KOI-8"
+       (más  precisamente,  "koi-8r")  (e.g.  en libc-4.6.27), de
+       forma    que    tener    una    variable    de    ambiente
+       LC_CTYPE=ISO-8859-1  ya  era suficiente para que isprint()
+       devolviera la respuesta correcta.  Hoy día los europeos (y
+       americanos)  no  angloparlantes  tienen  que  trabajar  un
+       poquito más y  debe  instalarse  los  ficheros  reales  de
+       localizaciones para su idioma.
+
+       La  familia de funciones printf() puede o no hacer caso de
+       la localización en curso.
+
+VÉASE TAMBIÉN
+       locale(1), localedef(1), strcoll(3),  isalpha(3),  locale­
+       conv(3), strftime(3), locale(7)
+
+
+
+GNU                        8 Marzo 1998              SETLOCALE(3)

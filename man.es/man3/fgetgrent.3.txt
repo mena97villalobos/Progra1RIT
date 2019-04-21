@@ -1,0 +1,50 @@
+FGETGRENT(3)     Manual del Programador de Linux     FGETGRENT(3)
+
+
+
+NOMBRE
+       fgetgrent - obtiene una entrada del fichero de grupos
+
+SINOPSIS
+       #include <grp.h>
+       #include <stdio.h>
+       #include <sys/types.h>
+
+       struct group *fgetgrent(FILE *flujo);
+
+DESCRIPCIÓN
+       La  función  fgetgrent() devuelve un puntero a una estruc­
+       tura que contiene la información de grupos que está en  el
+       fichero  correspondiente a flujo. La primera vez que se la
+       llama devuelve  la  primera  entrada;  a  partir  de  ahí,
+       devuelve  las  entradas sucesivas. El fichero correspondi­
+       ente a flujo debe tener el mismo formato que /etc/group.
+
+       La estructura group se define en <grp.h> como sigue:
+
+              struct group {
+                      char    *gr_name;        /* nombre del grupo */
+                      char    *gr_passwd;      /* contraseña del grupo */
+                      gid_t   gr_gid;          /* identificador del grupo */
+                      char    **gr_mem;        /* miembros del grupo */
+              };
+
+VALOR DEVUELTO
+       La función fgetgrent() devuelve la dirección de la estruc­
+       tura  con  información  sobre los grupos, o NULL si no hay
+       más entradas o ha ocurrido un error.
+
+ERRORES
+       ENOMEM No hay bastante memoria para alojar  la  estructura
+              de información de grupos.
+
+CONFORME A
+       SVID 3
+
+VÉASE TAMBIÉN
+       getgrnam(3),  getgrgid(3),  getgrent(3), setgrent(3), end­
+       grent(3)
+
+
+
+GNU                    12 de Enero de 1998           FGETGRENT(3)

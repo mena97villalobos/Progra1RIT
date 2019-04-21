@@ -1,0 +1,55 @@
+ACCT(2)          Manual del Programador de Linux          ACCT(2)
+
+
+
+NOMBRE
+       acct - activa/desactiva la contabilidad de procesos
+
+SINOPSIS
+       #include <unistd.h>
+
+       int acct(const char *filename);
+
+DESCRIPCIÓN
+       Cuando  se  usa con el nombre de un fichero existente como
+       argumento, se activa la contabilidad y se añade a filename
+       un  registro  de información para cada proceso finalizado.
+       Usando NULL como argumento desactiva la contabilidad.
+
+VALOR DEVUELTO
+       En caso de éxito el valor devuelto es cero. Si  hay  algún
+       error, el resultado es  -1 y a errno se le asigna un valor
+       apropiado.
+
+ERRORES
+       ENOSYS  No se  activó  la  contabilidad  BSD  de  procesos
+               cuando se compiló el núcleo.  EL parámetro de con­
+               figuración del núcleo  que  controla  esta  carac­
+               terística es CONFIG_BSD_PROCESS_ACCT.
+
+       ENOMEM  No hay memoria suficiente.
+
+       EPERM   El proceso invocador no tiene permiso para activar
+               la contabilidad de procesos.
+
+       EACCESS El argumento filename no es un fichero regular.
+
+       EIO     Error al escribir en el fichero filename.
+
+       EUSERS  No hay más estructuras de fichero disponibles o no
+               hay memoria suficiente.
+
+CONFORME A
+       SVr4 (pero no a POSIX).  SVr4 documenta las condiciones de
+       error EACCES, EBUSY, EFAULT, ELOOP, ENAMETOOLONG, ENOTDIR,
+       ENOENT, EPERM y EROFS pero no ENOSYS.
+
+NOTAS
+       No  se  genera contabilidad alguna para aquellos programas
+       que se estén ejecutando cuado ocurre una  caída  del  sis­
+       tema.  En  particular, los procesos que nunca finalizan no
+       se tienen en cuenta en la contabilidad.
+
+
+
+Linux 2.1.126            4 Noviembre 1998                 ACCT(2)

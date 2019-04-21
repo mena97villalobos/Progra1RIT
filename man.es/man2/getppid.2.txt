@@ -1,0 +1,29 @@
+GETPID(2)        Manual del Programador de Linux        GETPID(2)
+
+
+
+NOMBRE
+       getpid, getppid - obtiene el identificador de proceso
+
+SINOPSIS
+       #include <unistd.h>
+
+       pid_t getpid(void);
+       pid_t getppid(void);
+
+DESCRIPCIÓN
+       getpid  devuelve  el  identificador de proceso del proceso
+       actual. (Esto es usado normalmente por rutinas que generan
+       nombres  únicos de ficheros temporales.)  getppid devuelve
+       el identificador de proceso del padre del proceso  actual.
+
+CONFORME A
+       POSIX, BSD 4.3, SVID
+
+VÉASE TAMBIÉN
+       exec(3),  fork(2),  kill(2),  mkstemp(3), tmpnam(3), temp­
+       nam(3), tmpfile(3)
+
+
+
+Linux 0.99.11             23 Julio 1993                 GETPID(2)

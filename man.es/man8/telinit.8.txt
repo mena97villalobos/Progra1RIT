@@ -1,0 +1,278 @@
+INIT(8)        Manual del Administrador de Sistemas       INIT(8)
+
+
+
+NOMBRE
+       init, telinit - control de inicialización de procesos
+
+SINOPSIS
+       /sbin/init [ 0123456Ss ]
+       /sbin/telinit [ -t sec ] [ 0123456sSQqabcUu ]
+
+DESCRIPCIÓN
+   Init
+       Init  es el padre de todos los procesos. Su papel primario
+       es crear procesos a partir de  un  guión  guardado  en  el
+       fichero  /etc/inittab  (véase  inittab(5)).   Este fichero
+       normalmente tiene entradas que harán que se levante gettys
+       en  cada línea en que los usuarios puedan conectarse. Tam­
+       bién controla procesos autónomos requeridos por un sistema
+       particular.
+
+
+NIVELES DE EJECUCIÓN (RUNLEVELS)
+       Un nivel de ejecución es una configuración de software del
+       sistema que permite existir sólo a un  grupo  de  procesos
+       seleccionado.  Los  procesos levantados por init para cada
+       uno de estos niveles de ejecución se definen en el fichero
+       /etc/inittab.  Init puede estar en uno de los ocho niveles
+       de ejecución: 0-6 y S o s.  El cambio de nivel  de  ejecu­
+       ción  se  hace mediante un usuario con privilegio que eje­
+       cute telinit, que envía las  señales  apropiadas  a  init,
+       diciéndole a qué nivel de ejecuación tiene  que cambiar.
+
+       Los  Niveles  de  Ejecución 0, 1, y 6 están reservados. El
+       Nivel de Ejecución 0 es usa para detener  el  sistema,  el
+       Nivel  de Ejecución 6 se utiliza para reiniciar el sistema
+       y el Nivel de Ejecución 1 se usa para llevar al sistema al
+       modo  monousuario.El Nivel de Ejecución S no significa que
+       se use directamente, pero la mayoría  de  los  guiones  se
+       ejecutan  cuando  se  entra al Nivel de Ejecución 1. Paraa
+       más información sobre esto, vea las páginas del manual  de
+       shutdown(8) y inittab(5).
+
+       Los  niveles  7-9 también son válidos, aunque realmente no
+       están documantados. Esto  es  porque  las  variantes  Unix
+       tradicionales  no  los  usan. En caso de  que sea curioso,
+       los niveles de ejecución S y s ason  de  hecho  el  mismo.
+       Internamente se les renombra para el mismo nivel de ejecu­
+       ción. re in fact the same.  Internally  they  are  aliases
+       for  the  same runlevel - this is just a leftover from the
+       systems the author used to use when writing sysvinit.
+
+
+CARGA
+       Tras llamar a init como el último paso de la secuencia  de
+       carga  del  núcleo, busca el fichero /etc/inittab para ver
+       si hay una  entrada  del  tipo  initdefault  (véase  init­
+       tab(5)). La entrada initdefault determina el nivel de eje­
+       cución inicial del sistema.  Si no está esa entrada (o  no
+       existe /etc/inittab ), se debe introducir un nivel de eje­
+       cución en la consola del sistema
+
+       El nivel de ejecución S o  s  lleva  al  sistema  al  modo
+       monousuario  y  no  requiere un fichero /etc/initttab . En
+       modo monousuario, se llama a  /sbin/sulogin  en  /dev/con­
+       sole.
+
+       Cuando  se  entra  en  modo monusuario, init lee el estado
+       ioctl(2) de /etc/ioctl.save. Si no  existe  este  fichero,
+       init inicializa la línea a 9600 baud y con valores CLOCAL.
+       Cuando init deja el modo monousuario, guarda  los  valores
+       ioctl de la consola en este fichero para que se pueda usar
+       en la siguiente sesión monousuario.
+
+       Cuando se entra por primera vez en un  modo  multiusuario,
+       init  realiza  las  entradas boot y bootwait para permitir
+       que se monten los sistemas de ficheros antes  de  que  los
+       usuarios  se  presenten  al  sistema. Entonces se procesan
+       todas las entradas para este nivel.
+
+       Cuando inicia un nuevo proceso, init primero  verifica  si
+       existe  el  fichero  /etc/initscript.  Si existe, usa este
+       script para iniciar el proceso.
+
+       Cada vez que un hijo termina, init registra el hecho y  la
+       razón de su muerte en
+        /var/run/utmp  y  /var/log/wtmp,  suponiendo   que  estos
+       ficheros existen.
+
+
+CAMBIO DE NIVEL DE EJECUCIÓN
+       Tras haber lanzado todos los procesos especificados,  init
+       espera  a  que alguno de sus procesos descendientes muera,
+       una señal de fallo de  alimentación  o  hsata  que  se  le
+       indique  por  telinit que cambie el nivel de ejecución del
+       sisema. Cuando alguna de las tres  condiciones  anteriores
+       ocurre,  re-examina  el  fichero   /etc/inittab. Se pueden
+       añadir  nuevas  entradas  a  este  fichero  en   cualquier
+       momento.  Sin embargo, init aun espera a que alguna de las
+       tres condiciones anteriores suceda. Para  proporcionar  un
+       respuesta inmediata, telinit Q o el mandato q puede levan­
+       tar init para que re-examine el fichero /etc/inittab.
+
+       Si init no está en modo monousuario una señal de fallo  de
+       alimentación, se llaman las entradas especiales powerfail.
+
+       Cuando se lesolicita a init que cambie el nivel, envía  la
+       señal  de  aviso SIGTERM a todos los procesos que no están
+       definidos en el nuevo nivel de ejecución. Espera 5  segun­
+       dos antes de forzar la terminación de estos procesos medi­
+       ante la señal  SIGKILL. Observe que init supone que  todos
+       estos  procesos  (y  sus  descendientes)  permanecen en el
+       mismo grupo de procesos que init creó  originalmente  para
+       ellos.  Si cualquier proceso cambia la afiliación de grupo
+       de proceso no recibirá estas señales. Tales procesos nece­
+       sitan ser terminados de forma separada.
+
+TELINIT
+       /sbin/telinit  está  enlazado  con   /sbin/init.   Toma un
+       argumento de  un  solo  carácter  y  señala  a  init  para
+       realizar  la  acción  apropiada.  Los siguientes argumetos
+       sirven como directivas para telinit:
+
+       0,1,2,3,4,5 o 6
+              indica a init que  cambie  al  nivel  de  ejecución
+              especificado.
+
+       a,b,c  indica  a  init  que  procese sólo las entradas del
+              fichero  /etc/inittab que tengan nivel de ejecución
+              a,b o c.
+
+       Q o q  indica   a   init   que   re-examine   el   fichero
+              /etc/inittab.
+
+       S o s  indica a init que cambie a modo monousuario.
+
+       U or u indica a init que reejecute él mismo (guardando  el
+              estado).  No  re-examining el fichero /etc/inittab.
+              El nivel de ejecución debería ser uno de   Ss12345,
+              en  otro  caso  la  solicitud sería ignorada silen­
+              ciosamente.
+
+       telinit ptambién puede decir a init cuanto esperará  entre
+       los  envíos  a  los  procesos  de  las  señales  SIGTERM y
+       SIGKILL.  El valor por defecto es is 5 segundos,  pero  se
+       puede cambiar con la opción  -t sec.
+
+       telinit sólo se puede llamar por usuarios con los privile­
+       gios apropiados.
+
+       El binario  init comprueba si es init o telinit mirando  a
+       su  id  de proceso; el id del proceso init real es siempre
+       1.  De esto podemos concluir que  en  lugar  de  llamar  a
+       telinit se puede usar init en su lugar como abreviatura.
+
+ENTORNO
+       Init  fija  las siguientes variables de entorno para todos
+       sus hijos:
+
+       PATH   /usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin
+
+       INIT_VERSION
+              Como el nombre dice. Útil  para  determinar  si  un
+              guión corre directamente de init.
+
+       RUNLEVEL
+              El nivel actual de ejecución del sistema.
+
+       PREVLEVEL
+              El  nivel  de ejecución previo (útil tras un cambio
+              de nivel).
+
+       CONSOLE
+              La consola del sistema. Esto realmente es  heredado
+              del  núcleo;  sin embargo si no está fijado init lo
+              pondrá como /dev/console por defecto.
+
+BANDERAS DE CARGA
+       Es posible pasar un número de banderas  a  init  desde  el
+       monitor  de  arranque  (v.g.  LILO). Init acepta las sigu­
+       ientes banderas:
+
+       S, single
+            Arranque en modo monousuario. En este modo /etc/init­
+            tab  se examina y los guiones de carga rc normalmente
+            se  ejecutan  antes  de  que  la   shell   del   modo
+            monousuario se inicie.
+
+
+       1-5  Nivel de ejecución en el que arrancar.
+
+
+       -b, emergency
+            Carga  directamente en una shell monousuario sin eje­
+            cutar cualquier otro guion de inicio.
+
+
+INTERFAZ
+       Init escucha en un fifo en /dev,  /dev/initctl,  los  men­
+       sajes.   Telinit  usa  esto  para  comunicar  con init. La
+       interfaz no está muy bien documentada o  acabada.  Quienes
+       estén  interesados  debería  estudiar el fichero initreq.h
+       del subdirectorio src/ del código fuente de
+        init .
+
+SEÑALES
+       Init reacciona ante diversas señales:
+
+       SIGHUP
+            Init busca /etc/initrunlvl y /var/log/initrunlvl.  Si
+            uno  de  estos ficheros existe y contiene un nivel de
+            ejecución ASCII, init cambia al nuevo nivel de ejecu­
+            ción.  ¡Esto  es  por compatibilidad anterior sólo! .
+            En el cso normal (el fichero no existe) init se  com­
+            porta como cuando se ejecuta  telinit q.
+
+
+       SIGUSR1
+            Al  recibir  esta señal, init cierra y reabre su fifo
+            de  de  control  /dev/initctl.   Ess  útil  para  los
+            guiones de arranque cuando se vuelve a montar /dev.
+
+       SIGINT
+            Normalmente  el núcleo envía esta señal a init cuando
+            se pulsa CTRL-ALT-SUPR. Esto activa la  acción   ctr­
+            laltdel.
+
+       SIGWINCH
+            El  núcleo  envía  esta señal cuado se pulsa la tecla
+            KeyboardSignal.  Activa la acción kbrequest.
+
+
+CONFORME A
+       Init es compatible con el init  System  V  init.  Funciona
+       junto  a  los  guiones  de  lso  directorios /etc/init.d y
+       /etc/rc{runlevel}.d.  Si su sistema usa  esta  convención,
+       debería   haber   un   fichero  README  en  el  directorio
+       /etc/init.d que explica como funcionan estos guiones.
+
+FICHEROS
+       /etc/inittab
+       /etc/initscript
+       /dev/console
+       /etc/ioctl.save
+       /var/run/utmp
+       /var/log/wtmp
+       /dev/initctl
+
+ADVERTENCIAS
+       Init supone que procesos y descendientes de procesos  per­
+       manecen  en  el mismo grupo de procesos que se creó origi­
+       nalmente para ellos. Si los procesos cambian su grupo init
+       no  puede  matarlos  y  v.d. puede acabar con dos procesos
+       leyendo de una línea del terminal.
+
+DIAGNÓSTICOS
+       Si init encuantra que está  levantando  continuamente  una
+       entrada,  más  de 10 veces en dos minutos, supondrá que es
+       un error en la cedena del mandato, genera  un  mensaje  de
+       error  en  la  consola  del sistema y rehusa levantar esta
+       entrada hasta que hayan pasado 5  minutos  o  recibas  una
+       señal.  Esto  no  previene de que se coma los recursos del
+       sistema cuando alguien comete un error tipográfico  en  el
+       fichero  /etc/inittab  o  en  el  programa  para el que se
+       elimina la entrada.
+
+AUTOR
+       Miquel van  Smoorenburg  (miquels@cistron.nl),  página  de
+       manual  inicial  por   Michael Haardt (u31b3hs@pool.infor­
+       matik.rwth-aachen.de).
+
+VÉASE TAMBIÉN
+       getty(1), login(1), sh(1), who(1),  shutdown(8),  kill(1),
+       inittab(5), initscript(5), utmp(5)
+
+
+
+Linux                      9 Marzo 1998                   INIT(8)

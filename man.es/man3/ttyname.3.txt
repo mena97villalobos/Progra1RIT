@@ -1,0 +1,27 @@
+TTYNAME(3)          Linux Programmer's Manual          TTYNAME(3)
+
+
+
+NOMBRE
+       ttyname - devuelve el nombre de un terminal
+
+SINOPSIS
+       #include <unistd.h>
+
+       char *ttyname ( int desc );
+
+DESCRIPCIÓN
+       Devuelve  un puntero al nombre del camino del terminal que
+       se abre con el descriptor de fichero desc, o NULL  si  hay
+       algún  error  (p.e.: si desc no está conectado a un termi­
+       nal).
+
+CONFORME A
+       POSIX.1
+
+VÉASE TAMBIÉN
+       fstat(2), isatty(3)
+
+
+
+Linux                  20 de Abril de 1995             TTYNAME(3)

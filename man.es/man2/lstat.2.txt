@@ -1,0 +1,195 @@
+STAT(2)                Llamadas al Sistema                STAT(2)
+
+
+
+NOMBRE
+       stat, fstat, lstat - obtiene el estado de un fichero
+
+SINOPSIS
+       #include <sys/stat.h>
+       #include <unistd.h>
+
+       int stat(const char *file_name, struct stat *buf);
+       int fstat(int filedes, struct stat *buf);
+       int lstat(const char *file_name, struct stat *buf);
+
+DESCRIPCIÓN
+       Estas  funciones devuelven información del fichero especi­
+       ficado. No se necesitan derechos de acceso al fichero para
+       conseguir  la información pero sí se necesitan derechos de
+       búsqueda para todos los directorios del camino al fichero.
+
+       stat  examina  el  fichero al que apunta file_name y llena
+       buf.
+
+       lstat es idéntico a stat, solo que examina  únicamente  el
+       enlace,  no  el  fichero  que  se  obtiene  al  seguir los
+       enlaces.
+
+       fstat es idéntico a stat, pero  sólo  el  fichero  abierto
+       apuntado  por  filedes (tal y como lo devuelve open(2)) es
+       examinado en lugar de file_name.
+
+
+       Todos devuelven una estructura stat, que contien los sigu­
+       ientes campos:
+
+              struct stat
+              {
+                  dev_t         st_dev;      /* dispositivo */
+                  ino_t         st_ino;      /* inodo */
+                  mode_t        st_mode;     /* protección */
+                  nlink_t       st_nlink;    /* número de enlaces físicos */
+                  uid_t         st_uid;      /* ID del usuario propietario */
+                  gid_t         st_gid;      /* ID del grupo propietario */
+                  dev_t         st_rdev;     /* tipo dispositivo (si es
+                                                dispositivo inodo) */
+                  off_t         st_size;     /* tamaño total, en bytes */
+                  unsigned long st_blksize;  /* tamaño de bloque para el
+                                                sistema de ficheros de E/S */
+                  unsigned long st_blocks;   /* número de bloques asignados */
+                  time_t        st_atime;    /* hora último acceso */
+                  time_t        st_mtime;    /* hora última modificación */
+                  time_t        st_ctime;    /* hora último cambio */
+              };
+
+       El  valor st_blocks da el tamaño del fichero en bloques de
+       512 bytes. El valor st_blksize  da  el  tamaño  de  bloque
+       "preferido"  para  operaciones  de E/S eficientes sobre el
+       sistema de ficheros.  (Escribir en un fichero en porciones
+       más  pequeñas puede producir una secuencia leer-modificar-
+       reescribir ineficiente).
+
+       No todos los sistemas de  ficheros  en  Linux  implementan
+       todos los campos de hora. Por lo general, st_atime es cam­
+       biado por mknod(2), utime(2), read(2),  write(2)  y  trun­
+       cate(2).
+
+       Por   lo  general,  st_mtime  es  cambiado  por  mknod(2),
+       utime(2) y write(2).  st_mtime no se cambia por  modifica­
+       ciones en el propietario, grupo, cuenta de enlaces físicos
+       o modo.
+
+       Por lo general, st_ctime es  cambiado  al  escribir  o  al
+       poner  información  del  inodo (p.ej., propietario, grupo,
+       cuenta de enlaces, modo, etc.).
+
+       Se definen las siguientes macros POSIX para  comprobar  el
+       tipo de fichero:
+
+              S_ISLNK(m)  es un enlace simbólico?
+
+              S_ISREG(m)  un fichero regular?
+
+              S_ISDIR(m)  un directorio?
+
+              S_ISCHR(m)  un dispositivo de caracteres?
+
+              S_ISBLK(m)  un dispositivo de bloques?
+
+              S_ISFIFO(m) una tubería nombrada (fifo)?
+
+              S_ISSOCK(m) un enchufe (socket)?
+
+       Se definen las siguientes banderas para el campo st_mode:
+
+              S_IFMT   máscara  de  bits 00170000 para los campos
+                       de bit del tipo de fichero (no POSIX)
+
+              S_IFSOCK 0140000 enchufe (no POSIX)
+
+              S_IFLNK  0120000 enlace simbólico (no POSIX)
+
+              S_IFREG  0100000 fichero regular (no POSIX)
+
+              S_IFBLK  0060000 dispositivo de bloques (no POSIX)
+
+              S_IFDIR  0040000 directorio (no POSIX)
+
+              S_IFCHR  0020000  dispositivo  de  caracteres   (no
+                       POSIX)
+
+              S_IFIFO  0010000 fifo o tubería nombrada (no POSIX)
+
+              S_ISUID  0004000 poner bit UID
+
+              S_ISGID  0002000 poner bit GID
+
+              S_ISVTX  0001000 sticky bit (no POSIX)
+
+              S_IRWXU  00700 usuario  (propietario  del  fichero)
+                       tiene  permisos  de  lectura,  escritura y
+                       ejecución
+
+              S_IRUSR  00400 usuario  tiene  premiso  de  lectura
+                       (igual que S_IREAD, que no es POSIX)
+
+              S_IWUSR  00200  usuario  tiene premiso de escritura
+                       (igual que S_IWRITE, que no es POSIX)
+
+              S_IXUSR  00100 usuario tiene premiso  de  ejecución
+                       (igual que S_IEXEC, que no es POSIX)
+
+              S_IRWXG  00070  grupo  tiene  permisos  de lectura,
+                       escritura y ejecución
+
+              S_IRGRP  00040 grupo tiene permiso de lectura
+
+              S_IWGRP  00020 grupo tiene permiso de escritura
+
+              S_IXGRP  00010 grupo tiene permiso de ejecución
+
+              S_IRWXO  00007 otros tienen  permisos  de  lectura,
+                       escritura y ejecución
+
+              S_IROTH  00004 otros tienen permiso de lectura
+
+              S_IWOTH  00002 otros tienen permiso de escritura
+
+              S_IXOTH  00001 otros tienen permiso de ejecución
+
+VALOR DEVUELTO
+       Se devuelve cero si hubo éxito. Si hubo error, se devuelve
+       -1, y errno es actualizado apropiadamente.
+
+ERRORES
+       EBADF  filedes incorrecto.
+
+       ENOENT No existe un componente del camino file_name  o  el
+              camino es una cadena vacía.
+
+       ENOTDIR
+              Un componente del camino no es un directorio.
+
+       ELOOP  Se  han encontrado demasiados enlaces simbólicos al
+              recorrer el camino.
+
+       EFAULT Dirección errónea.
+
+       EACCES Permiso denegado.
+
+       ENOMEM Fuera de memoria (es decir, memoria del núcleo).
+
+       ENAMETOOLONG
+              Nombre de fichero demasiado largo.
+
+CONFORME A
+       Las llamadas stat y fstat conforman con SVr4, SVID, POSIX,
+       X/OPEN  y  BSD 4.3. La llamada lstat conforma con 4.3BSD y
+       SVr4.  SVr4 documenta condiciones de error adicionales  de
+       fstat:  EINTR, ENOLINK y EOVERFLOW.  SVr4 documenta condi­
+       ciones de error  adicionales  de  stat  y  lstat:  EACCES,
+       EINTR, EMULTIHOP, ENOLINK y EOVERFLOW.  El uso de los cam­
+       pos  st_blocks  y  st_blksize  puede  ser  poco  portable.
+       (Fueron  introducidos  en  BSD. No están especificados por
+       POSIX. La interpretación difiere entre sistemas y posible­
+       mente en un mismo sistema cuando están involucrados monta­
+       jes NFS).
+
+VÉASE TAMBIÉN
+       chmod(2), chown(2), readlink(2), utime(2)
+
+
+
+
+Linux                      13 Mayo 1998                   STAT(2)

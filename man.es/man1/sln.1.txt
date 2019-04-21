@@ -1,0 +1,27 @@
+SLN(8)           Manual del Programador de Linux           SLN(8)
+
+
+
+NOMBRE
+       sln - ln estático
+
+SINOPSIS
+       sln fuente dest
+
+DESCRIPCIÓN
+       sln  hace  una  liga  o enlace simbólico de dest a fuente.
+       Está enlazado estáticamente, por lo  que  no  necesita  en
+       absoluto  enlace dinámico. De esta forma, sln es útil para
+       realizar ligas simbólicas a bibliotecas  dinámicas  si  el
+       sistema de enlace dinámico, por alguna razón, ha dejado de
+       funcionar.
+
+VÉASE TAMBIÉN
+       ln(1) ldconfig(8) ld.so(8)
+
+AUTORES
+       Mike Parker & David MacKenzie.
+
+
+
+Linux 2.0                 20 Junio 1997                    SLN(8)

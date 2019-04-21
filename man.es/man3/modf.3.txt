@@ -1,0 +1,31 @@
+MODF(3)          Manual del Programador de Linux          MODF(3)
+
+
+
+NOMBRE
+       modf  - extrae las partes entera y fraccional con signo de
+       un número en coma flotante
+
+SINOPSIS
+       #include <math.h>
+
+       double modf(double x, double *iptr);
+
+DESCRIPCIÓN
+       La función modf() divide  el  argumento  x  en  una  parte
+       entera  y  una  parte  fraccional,  cada una de las cuales
+       tiene el mismo signo que x.  La parte entera se guarda  en
+       el sitio apuntado por iptr.
+
+VALOR DEVUELTO
+       La función modf() devuelve la parte fraccional de x.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       frexp(3), ldexp(3)
+
+
+
+                           4 Marzo 1998                   MODF(3)

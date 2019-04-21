@@ -1,0 +1,50 @@
+OPENDIR(3)       Manual del programador de Linux       OPENDIR(3)
+
+
+
+NOMBRE
+       opendir - abre un directorio
+
+SINOPSIS
+       #include <sys/types.h>
+
+       #include <dirent.h>
+
+       DIR *opendir(const char *nombre);
+
+DESCRIPCIÓN
+       La  función  opendir()  abre un flujo de directorio corre­
+       spondiente al directorio nombre, y devuelve un puntero  al
+       flujo  de  directorio.  El  flujo  se  sitúa en la primera
+       entrada del directorio.
+
+VALOR DEVUELTO
+       La función opendir()  devuelve  un  puntero  al  flujo  de
+       directorio o NULL si ocurre un error.
+
+ERRORES
+       EACCES Permiso denegado.
+
+       EMFILE El  proceso  está usando demasiados descriptores de
+              fichero.
+
+       ENFILE Hay demasiados ficheros abiertos en el sistema.
+
+       ENOENT El directorio no existe  o  nombre  es  una  cadena
+              vacía.
+
+       ENOMEM Memoria insuficiente para completar la operación.
+
+       ENOTDIR
+              nombre no es un directorio.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3
+
+VÉASE TAMBIÉN
+       open(2),     readdir(3),     closedir(3),    rewinddir(3),
+       seekdir(3), telldir(3), scandir(3)
+
+
+
+                          11 Junio 1995                OPENDIR(3)

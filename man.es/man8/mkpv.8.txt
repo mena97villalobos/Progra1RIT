@@ -1,0 +1,64 @@
+mkpv(8)                                                   mkpv(8)
+
+
+
+NONMBRE
+       mkpv - crea PV's
+
+SINOPSIS
+       mkpv    [--configfile]    [--version]    [--force]
+       [--upgrade] [-acvfuv] </dev/md?>+
+
+
+
+DESCRIPCIÓN
+       mkpv configura varios dispositivo de bloques en  un  único
+       PV.
+
+       Dése  cuenta  que  la  inicialización  de  dispositivos PV
+       destruye todos  los  datos  de  los  dispositivos  consti­
+       tuyentes.
+
+
+OPCIONS
+       -c, --configfile nombrefichero
+              Usa  nombrefichero  como  fichero  de configuración
+              (por defecto se usa /etc/raidtab).
+
+
+       -f, --force
+              Inicializa los dispositivos constituyentes, incluso
+              aunque ya parezcan tener datos.
+
+
+       -h, --help
+              Muestra  un  breve  mensaje de uso y a continuación
+              termina.
+
+
+       -V, --version
+              Muestra un breve mensaje de  versión  y  a  contin­
+              uación termina.
+
+
+NOTAS
+       El  paquete  raidtools  deriva  de los paquetes md-tools y
+       raidtools, que originalmente fueron escritos por Marc Zyn­
+       gier,  Miguel  de  Icaza, Gadi Oxman, Bradley Ward Allen e
+       Ingo Molnar.
+
+
+AUTOR
+       Ingo Molnar
+
+
+FALLOS (BUGS)
+       Probablemente muchos.
+
+
+VÉASE TAMBIÉN
+       raidtab(5), ckraid(8), raidadd(8)
+
+
+
+raidtools-0.90                                            mkpv(8)

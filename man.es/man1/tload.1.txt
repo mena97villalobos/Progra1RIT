@@ -1,0 +1,51 @@
+TLOAD(1)           Manual del Programador Linux          TLOAD(1)
+
+
+
+NAME
+       tload  -  representación  gráfica de la carga promedio del
+       sistema
+
+SINOPSIS
+       tload [-V] [-s scala] [ -d retardo ] [tty]
+
+DESCRIPCIÓN
+       tload imprime un gráfico del promedio de carga del sistema
+       actual  en la tty especificada (o la tty del proceso tload
+       si no se especifica ninguna).
+
+   Opciones
+       La opción -s scala permite especificar una escala vertical
+       para la salida (en caracteres entre marcas gráficas); así,
+       un valor más pequeño representa una escala más  grande,  y
+       viceversa.
+
+       El -d retardo fija el retardo entre actualizaciones gráfi­
+       cas en segundos.
+
+
+FICHEROS
+       /proc/loadavg información de la carga promedio
+
+
+VÉASE TAMBIÉN
+       ps(1), top(1), uptime(1), w(1)
+
+
+FALLOS(BUGS)
+       La  opción  -d  retardo  fija  el  argumento  tiempo  para
+       alarm(2);  si  se  especifica -d 0, la alarma se pone a 0,
+       con lo cual nunca se enviará la SIGALRM ni se  actualizará
+       el gráfico.
+
+
+AUTORES
+       Branko  Lankester,  David Engel <david@ods.com>, y Michael
+       K. Johnson <johnsonm@redhat.com>.
+
+       Por favor envíe los informes de  bug  a  <procps-bugs@red­
+       hat.com>
+
+
+
+Cohesive Systems          20 Marzo 1993                  TLOAD(1)

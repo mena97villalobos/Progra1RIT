@@ -1,0 +1,42 @@
+DELETE_MODULE(2)   Soporte de Módulos en Linux   DELETE_MODULE(2)
+
+
+
+NOMBRE
+       delete_module - borra una entrada de módulo cargable
+
+SINOPSIS
+       #include <linux/module.h>
+
+       int delete_module(const char *nombre);
+
+DESCRIPCIÓN
+       delete_module  intenta  quitar  una entrada de módulo car­
+       gable que no está en uso. Si nombre  es  NULL,  se  quitan
+       todos  los  módulos marcados como auto-descargables que no
+       estén en uso.  Esta llamada al sistema sólo  está  abierta
+       al súper-usuario.
+
+VALOR DEVUELTO
+       En  caso  de éxito, devuelve la dirección del núcleo en la
+       que residirá el módulo. En caso de error se devuelve -1  y
+       errno toma un valor apropiado.
+
+ERRORES
+       EPERM  El usuario no es el súper-usuario.
+
+       ENOENT No existe ningún módulo con ese nombre.
+
+       EINVAL nombre era una cadena vacía.
+
+       EBUSY  El módulo está en uso.
+
+       EFAULT nombre está afuera del espacio de direcciones acce­
+              sible del programa.
+
+VÉASE TAMBIÉN
+       create_module(2), init_module(2), query_module(2).
+
+
+
+Linux                   26 Diciembre 1996        DELETE_MODULE(2)

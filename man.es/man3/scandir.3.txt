@@ -1,0 +1,68 @@
+SCANDIR(3)       Manual del Programador de Linux       SCANDIR(3)
+
+
+
+NOMBRE
+       scandir, alphasort - busca en un directorio entradas coin­
+       cidentes
+
+SINOPSIS
+       #include <dirent.h>
+
+       int scandir(const char *dir, struct dirent ***namelist,
+              int (*select)(const struct dirent *),
+              int (*compar)(const struct dirent **, const struct dirent **));
+
+       int alphasort(const struct dirent **a, const struct dirent **b);
+
+DESCRIPCIÓN
+       La función scandir() rastrea el directorio  dir,  llamando
+       select()  en cada entrada de directorio. Las entradas para
+       las que select() devuelve un valor  distinto  de  cero  se
+       almacenan  en  cadenas  (strings) reservadas vía malloc(),
+       ordenadas usando qsort() con  la  función  de  comparación
+       compar(),  y puestas en la matriz namelist que está reser­
+       vada vía malloc().  Si  select  es  NULL,  se  seleccionan
+       todas las entradas.
+
+       La  función  alphasort()  puede  ser usada como función de
+       comparación  para  que  la  función  scandir()  ponga  las
+       entradas de directorio en orden alfabético. Sus parámetros
+       son las dos entradas de directorio, a y b, a comparar.
+
+VALOR REGRESADO
+       La función scandir() devuelve el  número  de  entradas  de
+       directorio seleccionadas, o -1 si hubo algún error.
+
+       La función alphasort() devuelve un entero menor que, igual
+       a, o mayor que cero si el primer  argumento  se  considera
+       respectivamente menor que, igual a, o mayor que el segundo
+       argumento.
+
+ERRORES
+       ENOMEM Memoria insuficiente para completar la operación.
+
+CONFORME A
+       BSD 4.3
+
+EJEMPLO
+       /* imprimir ficheros en el directorio actual en orden inverso */
+       #include <dirent.h>
+       main(){
+           struct dirent **namelist;
+           int n;
+
+           n = scandir(".", &namelist, 0, alphasort);
+           if (n < 0)
+               perror("scandir");
+           else
+               while(n--) printf("%s\n", namelist[n]->d_name);
+       }
+
+VÉASE TAMBIÉN
+       opendir(3),   readdir(3),    closedir(3),    rewinddir(3),
+       telldir(3), seekdir(3).
+
+
+
+GNU                        11 Abr 1996                 SCANDIR(3)

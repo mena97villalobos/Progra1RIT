@@ -1,0 +1,121 @@
+HSEARCH(3)       Manual del Programador de Linux       HSEARCH(3)
+
+
+
+NOMBRE
+       hcreate,  hdestroy,  hsearch  - funciones para manejar una
+       tabla dispersa (hash)
+
+SINOPSIS
+       #include <search.h>
+
+       ENTRY *hsearch(ENTRY item, ACTION action);
+
+       int hcreate(unsigned nel);
+
+       void hdestroy(void);
+
+DESCRIPCIÓN
+       Estas tres funciones permiten al usuario crear  una  tabla
+       dispersa que asocia una clave con cualquier dato.
+
+       En  primer  lugar,  se  debe crear la tabla con la función
+       hcreate().  nel es una estimación del número  de  entradas
+       de  la tabla.  hcreate() puede incrementar este valor para
+       mejorar el rendimiento de la tabla dispersa resultante. La
+       implementación GNU de hsearch() también agrandará la tabla
+       si ésta está casi llena.  Para asignar espacio a la  tabla
+       se utiliza malloc(3).
+
+       La  función  correspondiente  hdestroy() libera la memoria
+       ocupada por la tabla dispersa de tal forma  que  se  pueda
+       construir una nueva tabla.
+
+       El  parámetro  item es del tipo ENTRY, que se define medi­
+       ante typedef en <search.h> e incluye estos elementos:
+
+            typedef struct entry
+              {
+                char *key;
+                char *data;
+              } ENTRY;
+
+       key apunta a una cadena ASCII terminada en '\0' que es  la
+       clave  de  búsqueda. data apunta a los datos asociados con
+       esa clave.  (Un puntero a cualquier otro tipo distinto  de
+       carácter  se  debe convertir al tipo "puntero a carácter).
+       hsearch() busca en la tabla dispersa un  elemento  con  la
+       misma  clave  que item y, si tiene éxito, devuelve un pun­
+       tero al mismo.  action determina qué debe hacer  hsearch()
+       tras  una búsqueda sin éxito. El valor ENTER le indica que
+       debe insertar un nuevo elemento mientras que un valor FIND
+       significa que debe devolver NULL.
+
+VALOR DEVUELTO
+       hcreate()  devuelve  NULL si la tabla dispersa no se puede
+       crear con éxito.
+
+       hsearch() devuelve NULL si action es ENTER y no hay  sufi­
+       ciente memoria para expandir la tabla dispersa o si action
+       es FIND y item no se puede encontrar en la tabla dispersa.
+
+CONFORME A
+       SVID, excepto que en SysV, la tabla dispersa no puede cre­
+       cer.
+
+FALLOS
+       La implementación sólo puede manejar una tabla dispersa  a
+       la  vez.  Se  pueden  añadir  a la tabla dispersa entradas
+       individuales pero no se pueden eliminar.
+
+EJEMPLO
+       El siguiente programa inserta 24 elementos  en  una  tabla
+       dispersa y a continuación imprime algunos de ellos.
+
+           #include <stdio.h>
+           #include <search.h>
+
+           char *data[]={ "alpha", "bravo", "charley", "delta",
+                "echo", "foxtrot", "golf", "hotel", "india", "juliette",
+                "kilo", "lima", "mike", "november", "oscar", "papa",
+                "quebec", "romeo", "sierra", "tango", "uniform",
+                "victor", "whiskey", "x-ray", "yankee", "zulu"
+            };
+
+           int main()
+           {
+             ENTRY e, *ep;
+             int i;
+
+             /* Comencemos con una pequeña tabla y dejémosla que crezca */
+             hcreate(3);
+             for (i = 0; i < 24; i++)
+               {
+                 e.key = data[i];
+                 /* Los datos son enteros, en lugar de punteros a alguna cosa */
+                 e.data = (char *)i;
+                 ep = hsearch(e, ENTER);
+                 /* No debe haber fallos */
+                 if(ep == NULL) {
+                    fprintf(stderr, "Fallo en la entrada\n");
+                    exit(1);}
+               }
+             for (i = 22; i < 26; i++)
+               /* Imprime dos entradas de la tabla y demuestra que otras dos no
+                  están en la tabla */
+               {
+                 e.key = data[i];
+                 ep = hsearch(e, FIND);
+                 printf("%9.9s -> %9.9s:%d\n", e.key, ep?ep->key:"NULL",
+                        ep?(int)(ep->data):0);
+               }
+             return 0;
+           }
+
+
+VÉASE TAMBIÉN
+       bsearch(3), tsearch(3), malloc(3).
+
+
+
+GNU                     30 Septiembre 1995             HSEARCH(3)

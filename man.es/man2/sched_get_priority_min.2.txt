@@ -1,0 +1,78 @@
+GET_PRIORITY_MAX(2M)anual del Programador de LinuGxET_PRIORITY_MAX(2)
+
+
+
+NOMBRE
+       sched_get_priority_max, sched_get_priority_min  - obtienen
+       rango de prioridad estática
+
+SINOPSIS
+       #include <sched.h>
+
+       int sched_get_priority_max(int politica);
+
+       int sched_get_priority_min(int politica);
+
+DESCRIPCIÓN
+       sched_get_priority_max devuelve el valor de máxima priori­
+       dad  que puede emplearse con el algoritmo de planificación
+       identificado   por    politica.     sched_get_priority_min
+       devuelve  el valor de mínima prioridad que puede emplearse
+       con el algoritmo de planificación identificado por  polit­
+       ica.   Los valores admitidos para politica son SCHED_FIFO,
+       SCHED_RR, y SCHED_OTHER.
+
+       Los procesos con valores de  prioridad  numéricamente  más
+       altos  se  planifican para antes que los procesos con val­
+       ores de prioridad numéricamente más bajos. Así,  el  valor
+       devuelto  por  sched_get_priority_max  será  mayor  que el
+       devuelto por sched_get_priority_min.
+
+       Linux permite un rango para el valor de prioridad estática
+       entre  1 y 99 para SCHED_FIFO y SCHED_RR, y la prioridad 0
+       para SCHED_OTHER. Los rangos de prioridad de planificación
+       para los distintos algoritmos no son alterables.
+
+       El  rango  de prioridades de planificación puede variar en
+       otros sistemas POSIX, así que es una buena idea para apli­
+       caciones  transportables  el  emplear  un rango virtual de
+       prioridad  y  asociarlo  luego  al  intervalo   dado   por
+       sched_get_priority_max y sched_get_priority_min.  POSIX.1b
+       requiere un rango de al menos 32 entre los valores  máximo
+       y mínimo para SCHED_FIFO y SCHED_RR.
+
+       Los   sistemas  POSIX  en  los  cuales  están  disponibles
+       sched_get_priority_max  y  sched_get_priority_min  definen
+       _POSIX_PRIORITY_SCHEDULING en <unistd.h>.
+
+
+VALOR DEVUELTO
+       En  caso de éxito, sched_get_priority_max y sched_get_pri­
+       ority_min devuelven el valor  de  prioridad  máximo/mínimo
+       para  la  política de planificación especificada.  En caso
+       de error, se devuelve -1 y  se  pone  en  errno  un  valor
+       apropiado.
+
+ERRORES
+       EINVAL  El  parámetro  politica no identifica una política
+               de planificación definida.
+
+CONFORME A
+       POSIX.1b (antiguamente POSIX.4)
+
+VÉASE TAMBIÉN
+       sched_setscheduler(2),  sched_getscheduler(2),  sched_set­
+       param(2), sched_getparam(2).
+
+       sched_setscheduler(2) contiene una descripción del esquema
+       de planificación de Linux.
+
+       Programming for the real  world  -  POSIX.4  por  Bill  O.
+       Gallmeister,    O'Reilly    &   Associates,   Inc.,   ISBN
+       1-56592-074-0
+       IEEE Std 1003.1b-1993 (estándar POSIX.1b)
+       ISO/IEC 9945-1:1996
+
+
+
+Linux 1.3.81              2 Febrero 1998      GET_PRIORITY_MAX(2)

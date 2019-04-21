@@ -1,0 +1,33 @@
+BCMP(3)          Manual del Programador de Linux          BCMP(3)
+
+
+
+NOMBRE
+       bcmp - compara cadenas de bytes
+
+SINOPSIS
+       #include <string.h>
+
+       int bcmp(const void *s1, const void *s2, int n);
+
+DESCRIPCIÓN
+       La  función  bcmp()  compara  los  primeros n bytes de las
+       cadenas s1 y s2. Si las dos cadenas  son  iguales,  bcmp()
+       devuelve 0, en otro caso devuelve un resultado distinto de
+       cero.  Si n es cero, se asume  que  las  dos  cadenas  son
+       iguales.
+
+VALOR DEVUELTO
+       La función bcmp() devuelve 0 si las cadenas son iguales, y
+       distinto de cero si no lo son.
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       memcmp(3),    strcasecmp(3),    strcmp(3),     strcoll(3),
+       strncmp(3), strncasecmp(3)
+
+
+
+GNU                     23 Diciembre 1995                 BCMP(3)

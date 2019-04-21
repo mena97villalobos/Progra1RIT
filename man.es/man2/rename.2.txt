@@ -1,0 +1,141 @@
+RENAME(2)        Manual del Programador de Linux        RENAME(2)
+
+
+
+NOMBRE
+       rename - cambia el nombre y/o posición de un fichero
+
+SINOPSIS
+       #include <stdio.h>
+
+       int rename(const char *oldpath, const char *newpath);
+
+DESCRIPCIÓN
+       rename  renombre  un fichero, moviéndolo entre directorios
+       si así se requiere.
+
+       Cualquier otro enlace físico al fichero (como los  creados
+       usando link) no se ve afectado.
+
+       Si  newpath  ya  existe  será  automáticamente reemplazado
+       (sujeto a unas pocas condiciones - ver  ERRORES  más  ade­
+       lante)  de  tal manera que no haya posibilidad de que otro
+       proceso intente acceder a newpath y no lo encuentre.
+
+       Si newpath existe  pero  la  operación  falla  por  alguna
+       razón,  rename  garantiza dejar una instacia de newpath en
+       el lugar.
+
+       Sin embargo, durante una  sobreescritura  habrá  probable­
+       mente  un  intervalo  en  que  tanto  oldpath y newpath se
+       refieran al fichero que se está renombrando.
+
+       Si oldpath se refiere a un  enlace  simbólico,  el  enlace
+       será  renombrado;  si  newpath se refiere a un enlace sim­
+       bólico, el enlace será sobreescrito.
+
+
+VALOR DEVUELTO
+       En caso de éxito se  devuelve  0.  En  caso  de  error  se
+       devuelve -1 y se asigna a errno un valor apropiado.
+
+ERRORES
+       EISDIR newpath es un directorio que ya existe pero oldpath
+              no es un directorio.
+
+       EXDEV  oldpath y newpath no están en el mismo  sistema  de
+              ficheros.
+
+       ENOTEMPTY  o  EEXIST
+              newpath  es  un directorio no vacío, es decir, con­
+              tiene entradas distintas a "." y "..".
+
+       EBUSY  rename falla porque oldpath o newpath es un  direc­
+              torio  que está siendo usado por algún proceso (tal
+              vez como directorio de trabajo actual, como  direc­
+              torio  raíz  o porque lo ha abierto para lectura) o
+              está siendo usado por el sistema (por ejemplo, como
+              punto  de  montaje),  si  bien el sistema considera
+              esto un error.  (Dése cuenta que  no  es  necesario
+              devolver  EBUSY en tales casos - de todos modos, no
+              hay nada incorrecto en cambiar de nombre - pero  se
+              permite devolver EBUSY si el sistema no puede mane­
+              jar tales situaciones).
+
+       EINVAL La nueva ruta contiene un prefijo  de  ruta  de  la
+              antigua  o,  de  forma más general, se ha intentado
+              convertir un  directorio  en  subdirectorio  de  si
+              mismo.
+
+       EMLINK El  número  de enlaces a oldpath ya ha alcanzado el
+              máximo permitido, o es un directorio y el  directo­
+              rio  que  contiene a newpath ha alcanzado el número
+              máximo de enlaces.
+
+       ENOTDIR
+              Un componente usado como directorio  en  oldpath  o
+              newpath  no es, de hecho, un directorio.  O oldpath
+              es un directorio y newpath existe  pero  no  es  un
+              directorio.
+
+       EFAULT oldpath  o newpath apunta fuera de su espacio acce­
+              sible de direcciones.
+
+       EACCES No se permite el acceso de escritura al  directorio
+              que  contiene  oldpath  o newpath para el identifi­
+              cador de usuario efectivo del proceso, o uno de los
+              directorios  en  oldpath o newpath no posee permiso
+              de búsqueda (ejecución) para el proceso, o  oldpath
+              es  un  directorio  y no posee permiso de escritura
+              (necesario para actualizar la entrada ..).
+
+       EPERM o EACCES
+              El directorio que contiene oldpath tiene activo  el
+              bit  pegajoso  (sticky  bit)  y el identificador de
+              usuario efectivo del proceso no es ni el del  root,
+              ni el identificador de usuario del fichero a borrar
+              ni del directorio que lo contiene, o newpath es  un
+              fichero  existente  y el directorio que lo contiene
+              tiene activo el bit  pegajoso  (sticky  bit)  y  el
+              idenficador  de  usuario efectivo del proceso no es
+              ni el del root, ni el identificador de usuario  del
+              fichero a borrar ni del directorio que lo contiene,
+              o el sistema de ficheros que contiene  pathname  no
+              soporta el tipo de renombramiento solicitado.
+
+       ENAMETOOLONG
+              oldpath o newpath son demasiado largos.
+
+       ENOENT Un  directorio componente de oldpath  o  newpath no
+              existe o es un enlace simbólico colgante.
+
+       ENOMEM No  había  suficiente  memoria  disponible  en   el
+              núcleo.
+
+       EROFS  El  fichero  se encuentra en un sistema de ficheros
+              de sólo lectura.
+
+       ELOOP  Se han encontrado demasiados enlaces simbólicos  al
+              resolver oldpath o newpath.
+
+       ENOSPC El  dispositivo  que  contiene  el fichero no tiene
+              espacio para la nueva entrada de directorio.
+
+CONFORME A
+       POSIX, 4.3BSD, ANSI C
+
+FALLOS
+       En los sistemas de ficheros NFS no  puede  asumir  que  el
+       fichero  no ha sido renombrado si la operación ha fallado.
+       Si el servidor renombra el fichero y después cae,  la  RPC
+       retransmitida,  que  será  procesada cuando el servidor se
+       levante de nuevo, provocará un fallo.  Se  supone  que  la
+       aplicación  tratará  este  problema.  Vea  link(2) para un
+       problema similar.
+
+VÉASE TAMBIÉN
+       link(2), unlink(2), symlink(2), mv(1)
+
+
+
+Linux 2.0                  4 Junio 1998                 RENAME(2)

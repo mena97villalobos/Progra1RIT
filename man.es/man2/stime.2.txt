@@ -1,0 +1,35 @@
+STIME(2)         Manual del Programador de Linux         STIME(2)
+
+
+
+NOMBRE
+       stime - pone la hora y fecha
+
+SINOPSIS
+       #include <time.h>
+
+       int stime(time_t *t);
+
+DESCRIPCIÓN
+       stime  pone  la  hora y fecha según la idea que el sistema
+       tiene de ello. La hora/fecha, a la que apunta t,  se  mide
+       en  segundos  transcurridos desde "La Época", las 00:00:00
+       GMT del 1 de Enero de 1970.  stime() sólo puede  ser  lla­
+       mado por el súper-usuario.
+
+VALOR DEVUELTO
+       En  caso  de éxito, se devuelve cero. En caso de error, se
+       devuelve -1 y se pone en errno un valor apropiado.
+
+ERRORES
+       EPERM   El que llama a la función no es el  súper-usuario.
+
+CONFORME A
+       SVr4, SVID, X/OPEN
+
+VÉASE TAMBIÉN
+       date(1)
+
+
+
+Linux 0.99.11             3 Febrero 1998                 STIME(2)

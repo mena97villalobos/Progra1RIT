@@ -1,0 +1,33 @@
+LOGNAME(1)                                             LOGNAME(1)
+
+
+
+NOMBRE
+       logname - imprime el nombre de ingreso del usuario
+
+SINOPSIS
+       logname [--help] [--version]
+
+DESCRIPCIÓN
+       Esta documentación no va a ser mantenida a partir de ahora
+       y puede ser inexacta o incompleta. La  documentación  Tex­
+       info es ahora la fuente autorizada.
+
+       Esta  página de manual documenta la versión de GNU de log­
+       name.  logname imprime el nombre de ingreso  del  usuario,
+       tal y como se encuentra en el fichero /etc/utmp, y termina
+       con valor de retorno 0. Si no existe una entrada  para  el
+       proceso  llamador en /etc/utmp, logname imprime un mensaje
+       de error y termina con valor 1.
+
+   OPCIONES
+       --help Imprime un mensaje de explicación  del  uso  en  la
+              salida estándar y termina satisfactoriamente.
+
+       --version
+              Imprime  información  sobre la versión en la salida
+              estándar y termina satisfactoriamente.
+
+
+
+FSF                  Utilidades Shell de GNU           LOGNAME(1)

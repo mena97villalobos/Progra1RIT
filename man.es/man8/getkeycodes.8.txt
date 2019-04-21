@@ -1,0 +1,26 @@
+GETKEYCODES(8)          Soporte de Teclado         GETKEYCODES(8)
+
+
+
+NOMBRE
+       getkeycodes - muestra el cuadro de asociaciones de códigos
+       de rastreo del núcleo a códigos de tecla
+
+SINOPSIS
+       getkeycodes
+
+DESCRIPCIÓN
+       La orden getkeycodes muestra la tabla del núcleo  de  aso­
+       ciaciones de códigos de rastreos a códigoso de teclas.
+
+OPCIONES
+       Ninguna.
+
+VÉASE TAMBIÉN
+       setkeycodes (8)
+
+
+
+
+
+Local                 8 de Noviembre de 1994       GETKEYCODES(8)

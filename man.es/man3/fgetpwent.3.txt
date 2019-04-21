@@ -1,0 +1,59 @@
+FGETPWENT(3)     Manual del Programador de Linux     FGETPWENT(3)
+
+
+
+NOMBRE
+       fgetpwent  -  obtiene  una  entrada  de un fichero de con­
+       traseñas
+
+SINOPSIS
+       #include <pwd.h>
+       #include <stdio.h>
+       #include <sys/types.h>
+
+       struct passwd *fgetpwent(FILE *flujo);
+
+DESCRIPCIÓN
+       La función fgetpwent() devuelve un puntero a  una  estruc­
+       tura  que  contiene  los campos descompuestos de una línea
+       del fichero correspondiente a flujo. La primera vez que se
+       la  llama  devuelve  la  primera entrada; a partir de ahí,
+       devuelve las entradas sucesivas.  El  fichero  que  corre­
+       sponde   a   flujo   debe   tener  el  mismo  formato  que
+       /etc/passwd.
+
+       La estructura passwd está definida en <pwd.h> como sigue:
+
+              struct passwd {
+                      char    *pw_name;       /* nombre de usuario */
+                      char    *pw_passwd;     /* contraseña del usuario */
+                      uid_t   pw_uid;         /* identificación del usuario */
+                      gid_t   pw_gid;         /* identificación del grupo */
+                      char    *pw_gecos;      /* nombre real */
+                      char    *pw_dir;        /* directorio inicial */
+                      char    *pw_shell;      /* programa `shell' */
+              };
+
+VALOR DEVUELTO
+       La  función  fgetpwent()  devuelve  la  dirección  de  una
+       estructura  passwd,  o NULL si no hay más entradas o si ha
+       ocurrido un error.
+
+ERRORES
+       ENOMEM Memoria  insuficiente  para  alojar  la  estructura
+              passwd.
+
+FICHEROS
+       /etc/passwd
+              fichero con los datos de los usuarios
+
+CONFORME A
+       SVID 3
+
+VÉASE TAMBIÉN
+       getpwnam(3),  getpwuid(3), getpwent(3), setpwent(3), endp­
+       went(3), getpw(3), putpwent(3), passwd(5).
+
+
+
+GNU                Martes y 13 de Enero de 1998      FGETPWENT(3)

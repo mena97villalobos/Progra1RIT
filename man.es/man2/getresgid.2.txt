@@ -1,0 +1,40 @@
+GETRESUID(2)     Manual de Programacion de Linux     GETRESUID(2)
+
+
+
+NOMBRE
+       getresuid,  getresgid  -  devuelve  el ID real, efectivo o
+       salvado del usuario o grupo
+
+SINOPSIS
+       #include <unistd.h>
+
+       int getresuid(uid_t *ruid, uid_t *euid, uid_t *suid);
+       int getresgid(gid_t *rgid, gid_t *egid, gid_t *sgid);
+
+DESCRIPCIÓN
+       getresuid  and  getresgid  (ambos  introducidos  en  Linux
+       2.1.44)  devuelven  en  ID  real,  efectivo  y salvado del
+       usuario (resp. ID de grupo) del proceso actual.
+
+
+VALOR DEVUELTO
+       Si es correcto,  devuelve  el  valor  0.  Caso  de  error,
+       devuelve  el  valor  -1  y la variable errno es modificada
+       apropiadamente.
+
+ERRORES
+       EFAULT Uno de  los  argumentos  especificó  una  dirección
+              fuera del rango del espacio de direcciones del pro­
+              grama.
+
+CONFORME A
+       Esta llamada es específica de Linux
+
+VÉASE TAMBIÉN
+       getuid(2),  setuid(2),  getreuid(2),  setreuid(2),  setre­
+       suid(2)
+
+
+
+Linux 2.1.44              16 Julio 1997              GETRESUID(2)

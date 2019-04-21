@@ -1,0 +1,27 @@
+PSFGETTABLE(1)                                     PSFGETTABLE(1)
+
+
+
+NOMBRE
+       psfgettable  - extrae la tabla de caracteres Unicode empo­
+       trada de un tipo de letra de consola
+
+SINOPSIS
+       psfgettable fichero-de-tipos [fichero-de-salida]
+
+
+DESCRIPCIÓN
+       psfgettable extrae la tabla de  caracteres  Unicode  empo­
+       trada  de un tipo de letra de consola en formato .psf a un
+       fichero ASCII legible por humanos en el  formato  empleado
+       por  psfaddtable(1).  Si el nombre del fichero de tipos es
+       un guión (-), el tipo se lee de la entrada estándar.
+
+VÉASE TAMBIÉN
+       setfont(8), psfaddtable(1), psfstriptable(1)
+
+
+
+
+
+                      25 de Octubre de 1994        PSFGETTABLE(1)

@@ -1,0 +1,120 @@
+MKNOD(2)         Manual del Programador de Linux         MKNOD(2)
+
+
+
+NOMBRE
+       mknod  -  crea  un  directorio,  un  fichero especial o un
+       fichero regular
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <sys/stat.h>
+       #include <fcntl.h>
+       #include <unistd.h>
+
+       int mknod(const char *pathname, mode_t mode, dev_t dev);
+
+DESCRIPCIÓN
+       mknod intenta crear en el sistema de  ficheros  un  nodo-i
+       (fichero,  fichero  especial de dispositivo o tubería nom­
+       brada (FIFO)) llamado pathname, especificado  por  mode  y
+       dev.   mode  especifica  tanto los permisos de uso como el
+       tipo de nodo-i a crear.  Debe ser una  combinación  (medi­
+       ante un O-lógico) de uno de los tipos de ficheros enumera­
+       dos a continuación y de los permisos para el nuevo nodo-i.
+       Los  permisos  son  modificados por la máscara umask en la
+       forma usual: los permisos del nodo-i creado  son  (mode  &
+       ~umask).
+
+       El  tipo  de  fichero  debe  ser  uno  de  los siguientes:
+       S_IFREG, S_IFCHR, S_IFBLK y S_IFIFO  para  especificar  un
+       fichero  normal  (que será creado vacío), un fichero espe­
+       cial de caracteres, un fichero especial de bloques o  FIFO
+       (tubería  con  nombre),  respectivamente,  o  cero, lo que
+       creará un fichero normal.
+
+       Si el tipo de fichero es S_IFCHR o  S_IFBLK  entonces  dev
+       especifica  los números mayor y menor del fichero especial
+       de dispositivo creado; en caso contrario, es ignorado.
+
+       El identificador efectivo de usuario del proceso indica el
+       propietario  del  nuevo nodo-i.  Si el directorio que con­
+       tiene al nodo-i tiene activo el bit de SETGID (fijar iden­
+       tifcador  de grupo) o si el sistema de ficheros es montado
+       con la semántica de grupos de BSD, el nuevo nodo  heredará
+       la  pertenencia  al  grupo al que pertenezca su directorio
+       padre; en caso contrario, pertenecerá  al  grupo  indicado
+       por el identificador efectivo de grupo del proceso.
+
+
+VALOR DEVUELTO
+       mknod  devuelve cero si ha funcionado correctamente, -1 si
+       ha ocurrido un error (en cuyo caso se asigna  a  errno  un
+       valor apropiado).
+
+ERRORES
+       EPERM  mode  solicita  la  creación de algo distinto a una
+              tubería con nombre (FIFO), y el invocador no es  el
+              superusuario;  este error también se devuelve si el
+              sistema  de  ficheros  que  contiene  pathname   no
+              soporta el tipo de nodo-i solicitado.
+
+       EINVAL mode  solicita  la  creación de algo diferente a un
+              fichero normal, un fichero especial de  dispositivo
+              o una FIFO.
+
+       EEXIST pathname ya existe.
+
+       EFAULT pathname  apunta fuera de su espacio de direcciones
+              permitido.
+
+       EACCES El proceso no tiene  permiso  de  escritura  en  el
+              directorio  padre  o  no  tiene permiso de búsqueda
+              (ejecución) en uno de los directorios incluidos  en
+              pathname.
+
+       ENAMETOOLONG
+              pathname es demasiado largo.
+
+       ENOENT Un directorio componente de pathname no existe o es
+              un enlace simbólico descolgado.
+
+       ENOTDIR
+              Un componente utilizado como directorio en pathname
+              no es, de hecho, un directorio.
+
+       ENOMEM No  hay suficiente memoria disponible en el núcleo.
+
+       EROFS  pathname  indica  un  fichero  en  un  sistema   de
+              ficheros de sólo-lectura.
+
+       ELOOP  Se  han encontrado demasiados enlaces simbólicos al
+              resolver pathname.
+
+       ENOSPC El dispositivo que contiene pathname no tiene espa­
+              cio para el nuevo nodo-i.
+
+CONFORME A
+       SVr4  (pero  la llamada requiere privilegios y por esto no
+       es POSIX), 4.4BSD. La versión Linux difiere de la SVr4  en
+       que  no  requiere  permisos  de  superusuario  para  crear
+       tuberías, y también en que los errores EMULTIHOP, ENOLINK,
+       o EINTR no están documentados.
+
+FALLOS
+       La  llamada mknod no puede ser utilizada para crear direc­
+       torios o ficheros de comunicaciones (sockets), y no  puede
+       ser  utilizada  para  crear ficheros normales por usuarios
+       que no sean el superusuario.
+
+       Existen numerosas pegas en el protocolo por debajo de NFS.
+       Algunas de estas afectan a mknod.
+
+VÉASE TAMBIÉN
+       read(2), write(2), fcntl(2), close(2), unlink(2), open(2),
+       mkdir(2),   stat(2),   umask(2),   mount(2),    socket(2),
+       fopen(3).
+
+
+
+Linux 1.0                 29 Marzo 1994                  MKNOD(2)

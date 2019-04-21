@@ -1,0 +1,58 @@
+MKTEMP(3)        Manual del Programador de Linux        MKTEMP(3)
+
+
+
+NOMBRE
+       mktemp  - compone un nombre único (no repetido) de fichero
+       temporal
+
+SINOPSIS
+       #include <stdlib.h>
+
+       char *mktemp(char *template);
+
+DESCRIPCIÓN
+       La función mktemp() genera un nombre de  fichero  temporal
+       único  a  partir de template.  Los últimos seis caracteres
+       de template deben ser XXXXXX y éstos son reemplazados  con
+       una cadena que hace que el nombre no esté repetido. Ya que
+       será modificada, template no debe ser una cadena constante
+       sino que debería declararse como un array de caracteres.
+
+VALOR DEVUELTO
+       La  función  mktemp() devuelve NULL en caso de error (tem­
+       plate no terminaba en XXXXXX) y template en otro caso.  Si
+       la  llamada tuvo éxito, los últimos seis bytes de template
+       habrán sido modificados de tal manera que el nombre resul­
+       tante es único (no existe ya). Si la llamada fracasó, tem­
+       plate se convierte en una cadena vacía.
+
+ERRORES
+       EINVAL Los últimos seis caracteres  de  template  no  eran
+              XXXXXX.
+
+CONFORME A
+       BSD 4.3. POSIX indica/recomienda/obliga tmpnam().
+
+NOTA
+       El  prototipo se encuentra en <unistd.h> para libc4, libc5
+       y glibc1; glibc2 sigue `the Single Unix  Specification'  y
+       tiene el prototipo en <stdlib.h>.
+
+FALLOS
+       Nunca  use mktemp(). Algunas implementaciones siguen a BSD
+       4.3 y reemplazan XXXXXX por el identificador  del  proceso
+       actual  y  una  única  letra,  por  lo que, como mucho, se
+       pueden devolver 26 nombres diferentes.   Ya  que,  por  un
+       lado,  los  nombres  son  fáciles  de adivinar y, por otro
+       lado, existe una condición de  carrera  entre  la  compro­
+       bación  de  si el nombre existe y la apertura del fichero,
+       cualquier uso de mktemp() es un riesgo para la  seguridad.
+       La condición de carrera es evitada por mkstemp(3).
+
+VÉASE TAMBIÉN
+       mkstemp(3), tmpnam(3), tempnam(3), tmpfile(3)
+
+
+
+GNU                        3 Abril 1993                 MKTEMP(3)

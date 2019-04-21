@@ -1,0 +1,220 @@
+FD(4)                   Fichero especiales                  FD(4)
+
+
+
+NOMBRE
+       fd - dispositivo de disco flexible (disquetera)
+
+CONFIGURACIÓN
+       Las  unidades  de disco flexible son dispositivos hardware
+       cuyo  número  mayor  es  2.  Tipicalmente,  pertenecen   a
+       root.floppy  (es  decir,  usuario  root,  grupo  floppy) y
+       tienen o bien el modo 0660 (la comprobación de  acceso  se
+       realiza  a  través  de  la pertenencia al grupo) o bien el
+       modo 0666 (cualquiera tiene acceso). Los  números  menorer
+       codifican  el  tipo de dispositivo, número de dispositivo,
+       número de controlador. Para cada tipo de  dispositivo  (es
+       decir,  combinación de densidad y número de pistas) hay un
+       numero base menor.  A este número base, suma el número  de
+       dispositivo  en  su  controladora  y 128 si el dispositivo
+       está en el  controlador  secundario.   En  las  siguientes
+       tablas de dispositivos, n representan el número de dispos­
+       itivo
+
+       Cuidado: Si usas formatos con más pistas  que  las  sopor­
+       tadas por tu dispositivo, puedes causarle daños mecánicos.
+       Probar una vez si se soportan más pistas  de  las  usuales
+       40/80  no  debería dañarlo, pero no se da ninguna garantía
+       por ello.  No crees entradas  de  dispositivos  para  esos
+       formatos para prevenir su uso si no estas seguro.
+
+       Ficheros   independientes  del  dispositivo  que  detectan
+       automáticamente el formato y la capacidad del medio:
+
+
+       Nombre   Nº base menor
+       -----------------------
+       fdn 0
+
+       Ficheros de dispositivos de doble densidad y 5.25":
+
+
+       Nombre       Capac.   Cil.   Sect.   Cabez.   Nº base menor
+       ------------------------------------------------------------
+       fdnd360      360K     40     9       2        4
+
+
+       Ficheros de dispositivos de alta densidad y 5.25":
+
+
+       Nombre       Capac.   Cil.   Sect.   Cabez.   Nº base menor
+       ------------------------------------------------------------
+       fdnh360      360K     40     9       2        20
+       fdnh410      410K     41     10      2        48
+       fdnh420      420K     42     10      2        64
+       fdnh720      720K     80     9       2        24
+       fdnh880      880K     80     11      2        80
+       fdnh1200     1200K    80     15      2        8
+       fdnh1440     1440K    80     18      2        40
+       fdnh1476     1476K    82     18      2        56
+       fdnh1494     1494K    83     18      2        72
+       fdnh1600     1600K    80     20      2        92
+
+       Ficheros de dispositivos de doble densidad y 3.5":
+
+
+
+       Nombre       Capac.   Cil.   Sect.   Cabez.   Nº base menor
+       ------------------------------------------------------------
+       fdnD360      360K     80     9       1        12
+       fdnD720      720K     80     9       2        16
+       fdnD800      800K     80     10      2        120
+       fdnD1040     1040K    80     13      2        84
+       fdnD1120     1120K    80     14      2        88
+
+
+       Ficheros de de dispositivos de alta densidad y 3.5":
+
+       Nombre       Capac.   Cil.   Sect.   Cabez.   Nº base menor
+       ------------------------------------------------------------
+       fdnH360      360K     40     9       2        12
+       fdnH720      720K     80     9       2        16
+       fdnH820      820K     82     10      2        52
+       fdnH830      830K     83     10      2        68
+       fdnH1440     1440K    80     18      2        28
+       fdnH1600     1600K    80     20      2        124
+       fdnH1680     1680K    80     21      2        44
+       fdnH1722     1722K    82     21      2        60
+       fdnH1743     1743K    83     21      2        76
+       fdnH1760     1760K    80     22      2        96
+       fdnH1840     1840K    80     23      2        116
+       fdnH1920     1920K    80     24      2        100
+
+       Ficheros de dispositivos de densidad extra y 3.5":
+
+       Nombre       Capac.   Cil.   Sect.   Cabez.   Nº base menor
+       ------------------------------------------------------------
+       fdnE2880     2880K    80     36      2        32
+       fdnCompaQ    2880K    80     36      2        36
+       fdnE3200     3200K    80     40      2        104
+       fdnE3520     3520K    80     44      2        108
+       fdnE3840     3840K    80     48      2        112
+
+DESCRIPCIÓN
+       Los ficheros especiales fd acceden a las unidades de  dis­
+       quete  en  modo  crudo.   Las siguientes llamadas ioctl(2)
+       están soportadas por dispositivos fd:
+
+       FDCLRPRM
+              borra  la  información  del  medio  de  una  unidad
+              (geometría del disco en la unidad).
+
+       FDSETPRM
+              Establece  la  información del medio de una unidad.
+              La información del medio se perderá cuando se  cam­
+              bie de medio.
+
+       FDDEFPRM
+              Establece  la  información  del medio de una unidad
+              (geometría del disco en la unidad). La  información
+              del  medio no se perderá cuando se cambie de medio.
+              Esto desactivará la autodetección. En orden a reac­
+              tivar la autodetección, tienes que emitir un FDCLR­
+              PRM .
+
+       FDGETDRVTYP
+              devuelve el tipo de una unidad (parametro  nombre).
+              Para  formatos  que  funcionan  en  varios tipos de
+              unidad, FDGETDRVTYP devuelve un nombre el  cuál  es
+              apropiado  para  el  tipo de unidad más antiguo que
+              soporta este formato.
+
+       FDFLUSH
+              invalida el cache de buffer para la unidad dada.
+
+       FDSETMAXERRS
+              ajusta el umbral de error para informar de errores,
+              abortar   la  operación,  recalibrar,  reinicar  la
+              unidad y leer sector a sector.
+
+       FDSETMAXERRS
+              obtiene el umbral actual de error.
+
+       FDGETDRVTYP
+              obtiene el nombre interno de la unidad.
+
+       FDWERRORCLR
+              borra la estadística de errores de escritura.
+
+       FDWERRORGET
+              lee la estadística de errores  de  escritura.  Esto
+              incluye el número total de errores de escritura, la
+              posición y disco del primer error de  escritura,  y
+              la  posición y disco del último error de escritura.
+              Los discos se identifican  mediante  un  número  de
+              generación el cuál se incrementa (al menos) en cada
+              cambio de disco.
+
+       FDTWADDLE
+              Apaga el motor de la unidad por unos pocos microse­
+              gundos. Esto podría ser necesario para acceder a un
+              disco cuyos sectores están muy juntos.
+
+       FDSETDRVPRM
+              ajusta varios parametros de unidad.
+
+       FDGETDRVPRM
+              devuelve los parámetros anteriores.
+
+       FDGETDRVSTAT
+              obtiene el estado de la cache de la unidad (cambios
+              de disco, protección de escritura)
+
+       FDPOLLDRVSTAT
+              consulta a la unidad y devuelve su estado.
+
+       FDGETFDCSTAT
+              obtiene el estado del controlador de la disquetera.
+
+       FDRESET
+              reinicia el controlador de la disquetera bajo cier­
+              tas condiciones.
+
+       FDRAWCMD
+              envía  un comando directo al controlador de la dis­
+              quetera.
+
+       Para una información más precisa,  consultar  también  los
+       ficheros  de  cabecera <linux/fd.h> y <linux/fdreg.h>, así
+       como la página de manual para floppycontrol.
+
+NOTAS
+       Los diversos formatos  permiten  leer  y  escribir  muchos
+       tipos  de  discos.   No obstante, si un disquete está for­
+       mateado con un espacio entre sectores  demasiado  pequeño,
+       el  rendimiento  puede  caer,  hasta el punto de necesitar
+       unos pocos segundos para acceder a una pista entera.  Para
+       prevenir  esto, usar formatos con entrelazado. No es posi­
+       ble leer discos que han sido formateados usando  GCR(group
+       code recording), la cuál se usa en computadores Apple II y
+       Macintosh (discos de 800K). No está soportada  la  lectura
+       de  disquetes con los sectores marcados físicamente, medi­
+       ante un agujero por sector.  Esto solía ser común  en  los
+       viejos disquetes de 8 pulgadas.
+
+FICHEROS
+       /dev/fd*
+
+AUTORES
+       Alain    Knaff    (Alain.Knaff@imag.fr),    David    Niemi
+       (niemidc@clark.net), Bill Broadhurst  (bbroad@netcom.com).
+
+VÉASE TAMBIÉN
+       floppycontrol(1),  mknod(1), chown(1), getfdprm(1), super­
+       format(1), mount(8), setfdprm(8)
+
+
+
+
+
+Linux                     29 Enero 1995                     FD(4)

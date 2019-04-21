@@ -1,0 +1,143 @@
+WAIT(2)          Manual del Programador de Linux          WAIT(2)
+
+
+
+NOMBRE
+       wait, waitpid - espera por el final de un proceso
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <sys/wait.h>
+
+       pid_t wait(int *status)
+       pid_t waitpid(pid_t pid, int *status, int options);
+
+DESCRIPCIÓN
+       La  función  wait suspende la ejecución del proceso actual
+       haste que un proceso hijo ha terminado,  o  hasta  que  se
+       produce  una  señal  cuya  acción  es  terminar el proceso
+       actual o llamar a la función manejadora de la señal. Si un
+       hijo  ha  salido  cuando  se produce la llamada (lo que se
+       entiende por proceso "zombie"), la función vuelve  inmedi­
+       atamente. Todos los recursos del sistema reservados por el
+       hijo son liberados.
+
+       La función waitpid suspende la ejecución  del  proceso  en
+       curso  hasta que un hijo especificado por el argumento pid
+       ha terminado, o hasta que se produce una señal cuya acción
+       es finalizar el proceso actual o llamar a la función mane­
+       jadora de la señal.
+
+       Si el hijo especificado por pid  ha  terminado  cuando  se
+       produce  la  llamada  (un  proceso  "zombie"),  la función
+       vuelve inmediatamente.  Todos  los  recursos  del  sistema
+       reservados por el hijo son liberados.
+
+       El valor de pid puede ser uno de los siguientes:
+
+       < -1   lo  que  significa  esperar a que cualquier proceso
+              hijo cuyo ID del proceso es igual al valor absoluto
+              de pid.
+
+       -1     lo  que  significa que espera por cualquier proceso
+              hijo; este es el  mismo  comportamiento  que  tiene
+              wait.
+
+       0      lo  que  significa que espera por cualquier proceso
+              hijo cuyo ID es igual al del proceso llamante.
+
+       > 0    lo que significa que espera  por  el  proceso  hijo
+              cuyo ID es igual al valor de pid.
+
+       El  valor  de  options es un OR de cero o más de las sigu­
+       ientes constantes:
+
+       WNOHANG que significa que vuelve inmediatamente si  ningún
+               hijo ha terminado.
+
+       WUNTRACED
+               que  significa  que  también  vuelve  si hay hijos
+               parados, y de cuyo estado no ha  recibido  notifi­
+               cación.
+
+       Si  status no es NULL, wait o waitpid almacena la informa­
+       ción de estado en la memoria apuntada por status.
+
+       Si el estado puede ser evaluado con las siguientes  macros
+       (dichas  macros  toman  el buffer stat (un int) como argu­
+       mento -- ¡no un puntero al buffer!):
+
+       WIFEXITED(status)
+               es distinto de cero si  el  hijo  terminó  normal­
+               mente.
+
+       WEXITSTATUS(status)
+               evalúa  los  ocho  bits  menos  significativos del
+               código  de  retorno  del  hijo  que  terminó,  que
+               podrían  estar  activados como el argumento de una
+               llamada a exit() o como el argumento de unñ return
+               en  el  programa  principal.  Esta macro solamente
+               puede ser tenida en cuenta si  WIFEXITED  devuelve
+               un valor distinto de cero.
+
+       WIFSIGNALED(status)
+               devuelve  true  si el proceso hijo terminó a causa
+               de una señal no capturada.
+
+       WTERMSIG(status)
+               devuelve el número de  la  señal  que  provocó  la
+               muerte del proceso hijo. Esta macro sólo puede ser
+               evaluada si WIFSIGNALED devolvió un valor distinto
+               de cero.
+
+       WIFSTOPPED(status)
+               devuelve  true  si  el proceso hijo que provocó el
+               retorno está actualmente pardo; esto solamente  es
+               posible si la llamada se hizo usando WUNTRACED.
+
+       WSTOPSIG(status)
+               devuelve  el  número  de  la  señal que provocó la
+               parada del hijo. Esta macro  solamente  puede  ser
+               evaluada  si WIFSTOPPED devolvió un valor distinto
+               de cero.
+
+VALOR DEVUELTO
+       El ID del proceso del hijo que  terminó,  -1  en  caso  de
+       error  o  cero  si  se  utilizó  WNOHANG  y  no  hay  hijo
+       disponible (en este caso, errno se pone a un valor apropi­
+       ado).
+
+ERRORES
+       ECHILD  si  el proceso especificado en pid no termina o no
+               es hijo del proceso llamante.  (Esto puede ocurrir
+               para  nuestros  propios hijos si se asigna SIG_IGN
+               como acción de SIGCHLD.)
+
+       EINVAL  si el argumento options no fue valido.
+
+       ERESTARTSYS
+               si no se activó WNOHANG y si no  se  ha  capturado
+               una señal no bloqueada o SIGCHLD El interfaz de la
+               biblioteca no tiene permitido  devolver  ERESTART­
+               SYS, pero devolverá EINTR.
+
+NOTAS
+       The Single Unix Specification (Especificación para un Unix
+       Único) describe un modificador SA_NOCLDWAIT  (no  presente
+       en  Linux) tal que si este modificador está activo, o bien
+       se ha asignado SIG_IGN como acción para SIGCHLD (que,  por
+       cierto,  no  está permitido por POSIX), entonces los hijos
+       que terminan no se convierten en zombies y una  llamada  a
+       wait()  o waitpid() se bloqueará hasta que todos los hijos
+       hayan terminado y, a  continuación,  fallará  asignando  a
+       errno el valor ECHILD.
+
+CONFORME A
+       SVr4, POSIX.1
+
+VÉASE TAMBIÉN
+       signal(2), wait4(2), signal(7)
+
+
+
+Linux                     23 Junio 1997                   WAIT(2)

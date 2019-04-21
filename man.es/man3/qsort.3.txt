@@ -1,0 +1,41 @@
+QSORT(3)         Manual del Programador de Linux         QSORT(3)
+
+
+
+NOMBRE
+       qsort - ordena un vector
+
+SINOPSIS
+       #include <stdlib.h>
+
+       void qsort(void *base, size_t nmiemb, size_t tam,
+              int (*compar)(const void *, const void *));
+
+DESCRIPCIÓN
+       La función qsort() ordena un vector de nmiemb elementos de
+       tamaño tam.  El argumento base apunta al comienzo del vec­
+       tor.
+
+       Los  contenidos  del  vector se clasifican en orden ascen­
+       dente de acuerdo a una función de  comparación  a  la  que
+       apunta compar, que se llama con dos argumentos que apuntan
+       a los objetos a comparar.
+
+       La función de comparación debe devolver  un  entero  menor
+       que,  igual  a, o mayor que cero si el primer argumento se
+       considera respectivamente menor,  igual  o  mayor  que  el
+       segundo.  Si  dos  miembros  se  comparan como iguales, su
+       orden en el vector clasificado queda indefinido.
+
+VALOR DEVUELTO
+       La función qsort() no devuelve nada.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       sort(1)
+
+
+
+GNU                        5 Marzo 1998                  QSORT(3)

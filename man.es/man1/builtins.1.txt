@@ -1,0 +1,21 @@
+BASH_BUILTINS(1)                                 BASH_BUILTINS(1)
+
+
+
+NOMBRE
+       bash,  :,  .,  alias,  bg, bind, break, builtin, case, cd,
+       command, continue, declare, dirs,  disown,  echo,  enable,
+       eval,  exec,  exit,  export,  fc,  fg, for, getopts, hash,
+       help, history, if, jobs, kill, let, local,  logout,  popd,
+       pushd,  pwd,  read,  readonly,  return, set, shift, shopt,
+       source, suspend, test, times, trap, type, typeset, ulimit,
+       umask, unalias, unset, until, wait, while - órdenes incor­
+       poradas en bash, vea bash(1)
+
+ÓRDENES INCORPORADAS EN BASH
+VÉASE TAMBIÉN
+       bash(1), sh(1)
+
+
+
+GNU                       20 Marzo 1996          BASH_BUILTINS(1)

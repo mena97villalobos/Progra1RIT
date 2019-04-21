@@ -1,0 +1,39 @@
+UMASK(2)         Manual del programador de Linux         UMASK(2)
+
+
+
+NOMBRE
+       umask - establece la máscara de creación de ficheros
+
+SYNOPSIS
+       #include <sys/types.h>
+       #include <sys/stat.h>
+
+       mode_t umask(mode_t mask);
+
+DESCRIPCIÓN
+       umask establece la máscara de usuario a mask & 0777.
+
+       La máscara de usuario es usada por open(2) para establecer
+       los permisos iniciales de un fichero recién creado.
+
+       Específicamente, los permisos presentes en la  máscara  se
+       desactivan  a  partir  del  argumento mode de open(2) (así
+       pues, por ejemplo, el valor común por  defecto  de  umask,
+       022, provoca que los nuevos ficheros se creen con permisos
+       0666 & ~022 = 0755 = rw-r--r-- cuando mode vale 0666,  que
+       es el caso más normal).
+
+VALOR DEVUELTO
+       Esta  llamada al sistema siempre tiene éxito y devuelve el
+       valor anterior de la máscara.
+
+CONFORME A
+       SVr4, SVID, POSIX, X/OPEN, BSD 4.3
+
+VÉASE TAMBIÉN
+       creat(2), open(2)
+
+
+
+Linux                     9 Agosto 1998                  UMASK(2)

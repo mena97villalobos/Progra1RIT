@@ -1,0 +1,42 @@
+TTYTYPE(5)       Manual del Programador de Linux       TTYTYPE(5)
+
+
+
+NOMBRE
+       ttytype  -  asociación de dispositivos de terminal a tipos
+       predeterminados de terminal
+
+DESCRIPCIÓN
+       El fichero de texto /etc/ttytype  asocia  los  nombres  de
+       tipo  de  terminal  según termcap/terminfo a las líneas de
+       tty. Cada línea consiste en un tipo de  terminal,  espacio
+       en  blanco,  y  un nombre de tty (un nombre de dispositivo
+       sin el prefijo /dev/).
+
+       Esta asociación es utilizada por el programa tset(1)  para
+       asignar  a la variable de entorno TERM el nombre de termi­
+       nal correcto para la tty actual del usuario.
+
+       Esta facilidad fue diseñada para un entorno tradicional de
+       tiempo  compartido  con  terminales  tontas  alfanuméricas
+       conectadas directamente a una minicomputadora Unix. Se usa
+       ya  muy  poco en estaciones de trabajo modernas o en orde­
+       nadores personales con Unix.
+
+EJEMPLO
+       Un típico fichero /etc/ttytype contiene lo siguiente:
+
+              con80x25 tty1
+              vt320 ttys0
+
+
+FICHEROS
+       /etc/ttytype
+              el fichero de definiciones de ttys.
+
+VÉASE TAMBIÉN
+       getty(1), terminfo(5), termcap(5), tset(1).
+
+
+
+Linux                     24 Julio 1993                TTYTYPE(5)

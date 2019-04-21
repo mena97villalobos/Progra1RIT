@@ -1,0 +1,80 @@
+MKFIFO(3)        Manual del Programador de Linux        MKFIFO(3)
+
+
+
+NOMBRE
+       mkfifo  -  construye un fichero especial FIFO (una tubería
+       con nombre)
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <sys/stat.h>
+
+       int mkfifo ( const char *camino, modo_t modo );
+
+DESCRIPCIÓN
+       mkfifo construye un fichero especial FIFO  con  el  nombre
+       camino.   modo especifica los permisos del FIFO. Son modi­
+       ficados por la máscara  umask  del  proceso  de  la  forma
+       habitual: los permisos del fichero recién creado son (modo
+       & ~umask).
+
+       Un fichero especial FIFO es similar a una interconexión  o
+       tubería,  excepto en que se crea de una forma distinta. En
+       vez de ser un canal de comunicaciones anónimo, un  fichero
+       especial  FIFO  se mete en el sistema de ficheros mediante
+       una llamada a mkfifo.
+
+       Una vez que Ud. ha creado un fichero especial FIFO de esta
+       forma,  cualquier  proceso  puede  abrirlo  para lectura o
+       escritura, de la misma manera que con un  fichero  normal.
+       Sin  embargo,  tiene  que  ser abierto en los dos extremos
+       simultáneamente antes de que se pueda proceder a cualquier
+       operación  de entrada o salida. Abrir un FIFO para lectura
+       normalmente produce un bloqueo hasta que algún  otro  pro­
+       ceso abre el mismo FIFO para escritura, y viceversa.
+
+VALOR DEVUELTO
+       El valor de retorno normal, si todo va bien, de mkfifo, es
+       0. En caso de error, se devuelve -1  (en este caso,  errno
+       toma un valor apropiado).
+
+ERRORES
+       EACCES Uno  de  los directorios en camino no tiene permiso
+              de paso (ejecución).
+
+       EEXIST camino ya existe.
+
+       ENAMETOOLONG
+              O  la  longitud  total  de  camino  es  mayor   que
+              PATH_MAX,  o  un componente nombre de fichero indi­
+              vidual tiene una longitud superior a NAME_MAX.   En
+              el sistema GNU, no hay un límite impuesto a la lon­
+              gitud total del nombre de un fichero, pero  algunos
+              sistemas  de  ficheros  pueden  poner límites en la
+              longitud de un componente.
+
+       ENOENT Un componente directorio en camino no existe  o  es
+              un enlace simbólico colgante.
+
+       ENOSPC El  directorio o sistema de ficheros no tiene sitio
+              para el nuevo fichero.
+
+       ENOTDIR
+              Un componente usado como directorio  en  camino  no
+              es, de hecho, un directorio.
+
+       EROFS  camino  se refiere a un sistema de ficheros de lec­
+              tura exclusiva.
+
+CONFORME A
+       POSIX.1
+
+VÉASE TAMBIÉN
+       mkfifo(1), read(2), write(2), open(2), close(2),  stat(2),
+       umask(2).
+
+
+
+
+Linux 1.2.13               4 Marzo 1998                 MKFIFO(3)

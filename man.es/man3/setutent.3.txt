@@ -1,0 +1,131 @@
+GETUTENT(3)          Funciones de biblioteca          GETUTENT(3)
+
+
+
+NOMBRE
+       getutent,  getutid,  getutline, pututline, setutent, endu­
+       tent, utmpname - acceden a las entradas del fichero utmp
+
+SINOPSIS
+       #include <utmp.h>
+
+       struct utmp *getutent(void);
+       struct utmp *getutid(struct utmp *ut);
+       struct utmp *getutline(struct utmp *ut);
+
+       void pututline(struct utmp *ut);
+
+       void setutent(void);
+       void endutent(void);
+
+       void utmpname(const char *fichero);
+
+DESCRIPCIÓN
+       utmpname() establece qué nombre tiene el fichero  en  for­
+       mato  utmp  al  que  van  a  acceder  las  otras funciones
+       descritas aquí. Si utmpname() no se llama para  establecer
+       el  nombre  de fichero antes de que se usen las otras fun­
+       ciones, se asume el nombre _PATH_UTMP, como se  define  en
+       <paths.h>.
+
+       setutent()  rebobina  el indicador de fichero al principio
+       del fichero utmp. Generalmente es una Buena Idea llamar  a
+       esta función antes que cualquiera de las siguientes.
+
+       endutent() cierra el fichero utmp. Debe llamarse cuando el
+       código de usuario ha terminado de acceder al  fichero  con
+       las otras funciones.
+
+       getutent()  lee  una línea desde donde está actualmente el
+       indicador de posición del fichero en el de  formato  utmp.
+       Devuelve un puntero a una estructura que contiene los cam­
+       pos correspondientes a la línea.
+
+       getutid() busca hacia adelante desde la posición actual en
+       el  fichero  utmp  según  ut.   Si ut->ut_type es RUN_LVL,
+       BOOT_TIME, NEW_TIME, u OLD_TIME, getutid()  encontrará  la
+       primera   entrada   cuyo   campo   ut_type  concuerde  con
+       ut->ut_type.   Si  ut->ut_type  es  uno  de  INIT_PROCESS,
+       LOGIN_PROCESS,  USER_PROCESS,  o  DEAD_PROCESS,  getutid()
+       encontrará la primera entrada cuyo  campo  ut_id  coincida
+       con ut->ut_id.
+
+       getutline()  busca hacia adelante desde la posición actual
+       en el fichero  utmp.   Rastrea  las  entradas  cuyo  campo
+       ut_type  sea  USER_PROCESS  o  LOGIN_PROCESS y devuelve la
+       primera cuyo campo ut_line coincida con ut->ut_line.
+
+       pututline() escribe la estructura utmp ut  en  el  fichero
+       utmp.  Utiliza  getutid() para buscar el sitio correcto en
+       el fichero donde insertar la nueva entrada.  Si  no  puede
+       encontrar  un sitio apropiado para ut, pututline() añadirá
+       la nueva entrada al final del fichero.
+
+VALOR DEVUELTO
+       getutent(), getutid() y getutline() devuelven un puntero a
+       una static struct utmp.
+
+ERRORES
+       En caso de error, se devuelve (struct utmp*)0.
+
+EJEMPLO
+       El  siguiente  ejemplo  añade  y  quita  un registro utmp,
+       suponiendo que se ejecuta desde una pseudo-terminal.  Para
+       un  uso  correcto  en  una  aplicación  más realística, se
+       deberían comprobar los valores devueltos por getpwuid()  y
+       ttyname().
+
+       #include <string.h>
+       #include <stdlib.h>
+       #include <pwd.h>
+       #include <unistd.h>
+       #include <time.h>
+       #include <utmp.h>
+
+       int main(int argc, char *argv[])
+       {
+         struct utmp entrada;
+
+         system("echo antes de añadir la entrada:;who");
+
+         entrada.ut_type = USER_PROCESS;
+         entrada.ut_pid = getpid();
+         strcpy(entrada.ut_line, ttyname(0) + strlen("/dev/"));
+         /* sólo correcto para ptys llamadas /dev/tty[pqr][0-9a-z] */
+         strcpy(entrada.ut_id, ttyname(0) + strlen("/dev/tty"));
+         time(&entrada.ut_time);
+         strcpy(entrada.ut_user, getpwuid(getuid())->pw_name);
+         memset(entrada.ut_host, 0, UT_HOSTSIZE);
+         entrada.ut_addr = 0;
+         setutent();
+         pututline(&entrada);
+
+         system("echo tras añadir la entrada:;who");
+
+         entrada.ut_type = DEAD_PROCESS;
+         memset(entrada.ut_line, 0, UT_LINESIZE);
+         entrada.ut_time = 0;
+         memset(entrada.ut_user, 0, UT_NAMESIZE);
+         setutent();
+         pututline(&entrada);
+
+         system("echo tras borrar la entrada:;who");
+
+         endutent();
+         return 0;
+       }
+
+FICHEROS
+       /var/run/utmp  datos  de los usuarios que están en el sis­
+       tema
+       /var/log/wtmp  datos de entradas de usuario anteriores
+
+CONFORME A
+       XPG 2, SVID 2, Linux FSSTND 1.2
+
+VÉASE TAMBIÉN
+       utmp(5)
+
+
+
+Linux                    25 Febrero 1998              GETUTENT(3)

@@ -1,0 +1,84 @@
+READV(3)          Manual del Progamador de Linux         READV(3)
+
+
+
+NOMBRE
+       readv, writev - lee o escribe datos en varios búferes
+
+SINOPSIS
+       #include <sys/uio.h>
+
+       int readv(int descfic, const struct iovec *vector,
+                 size_t num);
+
+       int writev(int descfic, const struct iovec *vector,
+                 size_t num);
+
+DESCRIPCIÓN
+       La  función  readv()  lee num bloques del fichero asociado
+       con el descriptor de  fichero  descfic  en  los  múltiples
+       búferes descritos por vector.
+
+       La   función  writev()  escribe  como  mucho  num  bloques
+       descritos por vector al fichero asociado con el descriptor
+       de fichero descfic.
+
+       El  puntero  vector  apunta a una struct iovec definida en
+       <sys/uio.h> como
+
+          struct iovect
+          {
+              void *iovbase; /* Dirección de comienzo  */
+              size_t iov_len;    /* Número de bytes */
+          } ;
+
+       Los búferes se procesan en el orden vector[0],  vector[1],
+       ... vector[num].
+
+       La  función  readv()  trabaja igual que read(2) excepto en
+       que se rellenan múltiples búferes.
+
+       La función writev() trabaja como write(2) excepto  en  que
+       se escriben múltiples búferes.
+
+
+VALOR DEVUELTO
+       La  función  readv()  devuelve  el número de bytes ó -1 en
+       caso de error; la función writev() devuelve el  número  de
+       bytes escritos.
+
+ERRORES
+       Las  funciones  readv()  y  writev() pueden fallar y poner
+       errno a los siguientes valores:
+
+       EBADF  descfic no es un descriptor de fichero válido.
+
+       EINVAL descfic no sirve para leer (para  readv())  o  para
+              escribir (para writev()).
+
+       EFAULT vector  está  afuera del espacio de direcciones del
+              proceso.
+
+       EAGAIN Se ha seleccionado E/S no bloqueante en la  llamada
+              a open() y la lectura o escritura no ha podido hac­
+              erse inmediatamente.
+
+       EINTR  La lectura o la escritura  han  sido  interrumpidas
+              antes de que se hayan transferido datos.
+
+CONFORMES CON
+       No se sabe.
+
+FALLOS
+       No  es  recomendable  mezclar  llamadas  a  funciones como
+       readv()  o  writev(),  que  operan  con  descriptores   de
+       ficheros,  con  las  funciones de la biblioteca stdio; los
+       resultados serán indefinidos y probablemente no los desea­
+       dos.
+
+VÉASE TAMBIÉN
+       read(2), write(2)
+
+
+
+GNU                        5 Marzo 1998                  READV(3)

@@ -1,0 +1,89 @@
+GETMNTENT(3)     Manual del Programador de Linux     GETMNTENT(3)
+
+
+
+NOMBRE
+       getmntent,  setmntent,  addmntent,  endmntent, hasmntopt -
+       obtienen una entrada del fichero que describe los sistemas
+       de ficheros
+
+SINOPSIS
+       #include <stdio.h>
+       #include <mntent.h>
+
+       FILE *setmntent(const char *nombrefich, const char *tipo);
+
+       struct mntent *getmntent(FILE *pf);
+
+       int addmntent(FILE *pf, const struct mntent *mnt);
+
+       int endmntent(FILE *pf);
+
+       char *hasmntopt(const struct mntent *mnt, const char *opc);
+
+DESCRIPCIÓN
+       Estas  rutinas  se  emplean  para  acceder  al fichero que
+       describe los sistemas de ficheros, /etc/fstab,  y  el  que
+       describe  los  sistemas  de  ficheros  que están montados,
+       /etc/mtab.
+
+       La función setmntent() abre el fichero de  descripción  de
+       sistemas  de ficheros, nombrefich, y devuelve un puntero a
+       FILE que puede ser usado por  getmntent().   El  argumento
+       tipo es el tipo de acceso requerido y puede tomar los mis­
+       mos valores que el argumento modo de fopen(3).
+
+       La función getmntent() lee la siguiente línea del  fichero
+       de  descripción de sistemas de ficheros, pf, y devuelve un
+       puntero a una estructura que contiene los  campos  descom­
+       puestos  de  una línea del fichero. El puntero apunta a un
+       área estática de memoria que  es  sobreescrita  en  subse­
+       cuentes llamadas a getmntent().
+
+       La  función  addmntent() añade la estructura mntent mnt al
+       final del fichero abierto pf.
+
+       La función endmntent() cierra el fichero de descripción de
+       sistemas de ficheros pf.
+
+       La  función  hasmntopt() escudriña el campo mnt_opts  (ver
+       más abajo) de la estructura mntent mnt buscando una subca­
+       dena  que concuerde con opc.  Vea <mntent.h> para opciones
+       de montaje válidas.
+
+       La estructura mntent se define en <mntent.h> como sigue:
+
+              struct mntent {
+                      char    *mnt_fsname;    /* nombre del s.f. montado */
+                      char    *mnt_dir;       /* prefijo del camino del s.f. */
+                      char    *mnt_type;      /* tipo de montaje (vea mntent.h) */
+                      char    *mnt_opts;      /* opciones de montaje (vea mntent.h) */
+                      int     mnt_freq;       /* frecuencia de volcado (días) */
+                      int     mnt_passno;     /* Nº de pasada en fsck paralelo */
+              };
+
+VALOR DEVUELTO
+       La función getmntent() devuelve un puntero a la estructura
+       mntent o NULL si falla.
+
+       La  función  addmntent()  devuelve  0 si acaba bien y 1 si
+       acaba mal.
+
+       La función endmntent() siempre devuelve 1.
+
+       La función hasmntopt() devuelve la dirección de la  cadena
+       si se encuentra, y NULL en otro caso.
+
+FICHEROS
+       /etc/fstab          descripción de sistemas de ficheros
+       /etc/mtab           descripción de sistemas de ficheros montados
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       fopen(3), fstab(5)
+
+
+
+                          27 Enero 1998              GETMNTENT(3)

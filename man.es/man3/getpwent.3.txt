@@ -1,0 +1,64 @@
+GETPWENT(3)      Manual del Programador de Linux      GETPWENT(3)
+
+
+
+NOMBRE
+       getpwent,  setpwent,  endpwent  -  obtiene una entrada del
+       fichero de cuentas de usuario
+
+SINOPSIS
+       #include <pwd.h>
+       #include <sys/types.h>
+
+       struct passwd *getpwent(void);
+
+       void setpwent(void);
+
+       void endpwent(void);
+
+DESCRIPCIÓN
+       La función getpwent() devuelve un puntero a una estructura
+       que  contiene  los  campos de una línea de /etc/passwd. La
+       primera vez que se la llama devuelve la primera entrada; a
+       partir de ahí, devuelve las entradas sucesivas.
+
+       La  función  setpwent()  rebobina el indicador de posición
+       del  fichero  para  ponerlo  apuntando  al  principìo   de
+       /etc/passwd.
+
+       La función endpwent() cierra el fichero /etc/passwd.
+
+       La estructura passwd se define en <pwd.h> como sigue:
+
+              struct passwd {
+                      char    *pw_name;       /* nombre de usuario */
+                      char    *pw_passwd;     /* contraseña cifrada */
+                      uid_t   pw_uid;         /* id. del usuario */
+                      gid_t   pw_gid;         /* id. del grupo primario */
+                      char    *pw_gecos;      /* nombre real */
+                      char    *pw_dir;        /* directorio de inicio */
+                      char    *pw_shell;      /* programa caparazón */
+              };
+
+VALOR DEVUELTO
+       La  función  getpwent()  devuelve  la estructura passwd, o
+       NULL si no hay más entradas u ocurre un error.
+
+ERRORES
+       ENOMEM Memoria  insuficiente  para  alojar  la  estructura
+              passwd.
+
+FICHEROS
+       /etc/passwd
+              fichero con los datos de las cuentas de usuario
+
+CONFORME A
+       SVID 3, BSD 4.3
+
+VÉASE TAMBIÉN
+       fgetpwent(3),  getpwnam(3),  getpwuid(3),  getpw(3), putp­
+       went(3), passwd(5).
+
+
+
+GNU                       30 Enero 1998               GETPWENT(3)

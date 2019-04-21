@@ -1,0 +1,51 @@
+SETFSUID(2)      Manual del programador de Linux      SETFSUID(2)
+
+
+
+NOMBRE
+       setfsuid  -  establece la identidad del usuario que accede
+       al sistema de ficheros
+
+SINOPSIS
+       int setfsuid(uid_t fsuid)
+
+DESCRIPCIÓN
+       setfsuid establece el identificativo  de  usuario  que  el
+       núcleo  de  Linux  usa para comprobar todos los accesos al
+       sistema de ficheros. Normalmente, el valor de  fsuid  cam­
+       biará  según el valor del usuario efectivo. De hecho, cada
+       vez que el usuario efectivo cambie, fsuid también cambiará
+       al nuevo valor del usuario efectivo.
+
+       Las  llamadas  explícitas  a  setfsuid normalmente sólo se
+       usan en programas como el servidor NFS de Linux, que nece­
+       sitan  cambiar el identificativo de usuario para acceder a
+       un fichero, pero sin cambiar los  identificativos  real  y
+       efectivo.  Un cambio en el identificativo real del usuario
+       para un programa como el servidor NFS supondría un agujero
+       de  seguridad,  al  quedar  expuesto  a  otras  señales no
+       deseadas desde otros identificativos de usuario.
+
+       setfsuid sólo tendrá éxito si quien lo invoca es el  supe­
+       rusuario  o  si fsuid coincide con el identificativo real,
+       efectivo o grabado, o con el valor actual de fsuid.
+
+VALOR REGRESADO
+       En caso de éxito, se devolverá el valor anterior de fsuid.
+       En caso de error, se devolverá el valor actual de fsuid.
+
+CONFORME A
+       setfsuid  es  específico  de  Linux y no debería usarse en
+       programas que se pretende sean portables.
+
+ERRORES
+       No se devuelve ningún mensaje de error a quien lo  invoca.
+       Al  menos,  debería devolverse EPERM cuando todas las lla­
+       madas fallen.
+
+VÉASE TAMBIÉN
+       setfsgid(2)
+
+
+
+Linux 1.3.15           6 de agosto de 1995            SETFSUID(2)

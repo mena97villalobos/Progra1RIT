@@ -1,0 +1,26 @@
+FLOOR(3)         Manual del Programador de Linux         FLOOR(3)
+
+
+
+NOMBRE
+       floor - valor entero más grande no mayor que x
+
+SINOPSIS
+       #include <math.h>
+
+       double floor(double x);
+
+DESCRIPCIÓN
+       La  función  floor()  redondea x hacia abajo al entero más
+       cercano, devolviendo ese valor  como  un  número  en  coma
+       flotante de doble precisión (double).
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       abs(3), fabs(3), ceil(3), rint(3)
+
+
+
+                   Martes y 13 de Enero de 1998          FLOOR(3)

@@ -1,0 +1,22 @@
+apropos(1)             Comandos utilisador             apropos(1)
+
+
+
+NOMBRE
+       apropos - busca `strings' en la base de datos "whatis"
+
+SINOPSIS
+       apropos palabra_clave ...
+
+DESCRIPCIÓN
+       apropos  busca  el contenido de palabra_clave, en una base
+       de datos que contiene breves descripciones de  los  coman­
+       dos,  mostrando todas las descripciones donde encontra una
+       referencia a la clave.
+
+VEA TAMBIÉN
+       whatis(1), man(1).
+
+
+
+Manual Linux               25 Mayo 1996                apropos(1)

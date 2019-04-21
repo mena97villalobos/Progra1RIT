@@ -1,0 +1,48 @@
+ZNEW(1)                                                   ZNEW(1)
+
+
+
+NOMBRE
+       znew -   recomprimir ficheros .Z a .gz
+
+SINOPSIS
+       znew [ -ftv9PK] [ name.Z ...  ]
+
+DESCRIPCIÓN
+       Znew  recomprime  ficheros de formato .Z (compress) a for­
+       mato .gz (gzip). Si se desea recomprimir un fichero que ya
+       está  en  formato  gzip,  renombrar  el fichero a forzar a
+       extensión .Z, y ejecutar znew.
+
+OPCIONES
+       -f     Forzar recompresión de formato .Z a .gz, incluso si
+              ya existe un fichero .gz.
+
+       -t     Comprueba  los  nuevos ficheros antes de borrar los
+              originales.
+
+       -v     "Verbose". Muestra el nombre y porcentaje de reduc­
+              ción para cada fichero comprimido.
+
+       -9     Utilizar el método de compresión más lento (compre­
+              sión óptima).
+
+       -P     Utilizar tuberías para la conversión, para  reducir
+              el uso de espacio de disco.
+
+       -K     Guardar  el fichero .Z cuando es más pequeño que el
+              fichero .gz.
+
+VÉASE TAMBIÉN
+       gzip(1),   zmore(1),   zdiff(1),   zgrep(1),    zforce(1),
+       gzexe(1), compress(1)
+
+FALLOS
+       Znew  no  mantiene  la  marca  de hora con la opción -P si
+       cpmod(1) no está  disponible  y  touch(1)  no  soporta  la
+       opción -r.
+
+
+
+
+                                                          ZNEW(1)

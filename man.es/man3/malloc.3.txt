@@ -1,0 +1,97 @@
+MALLOC(3)        Manual del Programador de Linux        MALLOC(3)
+
+
+
+NOMBRE
+       calloc,  malloc, free, realloc - Asignar y liberar memoria
+       dinámica
+
+SINOPSIS
+       #include <stdlib.h>
+
+       void *calloc(size_t nmemb, size_t size);
+       void *malloc(size_t size);
+       void free(void *ptr);
+       void *realloc(void *ptr, size_t size);
+
+DESCRIPCIÓN
+       calloc() asigna memoria para una matriz de nmemb elementos
+       de  size bytes cada uno y devuelve un puntero a la memoria
+       asignada. La memoria es puesta a cero.
+
+       malloc() asigna size bytes y  devuelve  un  puntero  a  la
+       memoria asignada. La memoria no es borrada.
+
+       free()  libera el espacio de memoria apuntado por ptr, que
+       debe haber sido devuelto por una  llamada  previa  a  mal­
+       loc(),  calloc()  o  realloc().   En  caso contrario, o si
+       free(ptr) ya se ha llamado antes, se  produce  un  compor­
+       tamiento  indefinido.   Si  ptr  es  NULL,  no  se realiza
+       ninguna operación.
+
+       realloc() cambia el tamaño del bloque de memoria  apuntado
+       por ptr a size bytes.  El contenido permanecerá inalterado
+       hasta el mínimo entre el tamaño viejo y el nuevo; la memo­
+       ria  recién  asignada  quedará sin inicializar.  Si ptr es
+       NULL, la llamada es equivalente a malloc(size); si size es
+       igual  a cero, la llamada es equivalente a free(ptr).  ptr
+       debe haber sido devuelto por una  llamada  previa  a  mal­
+       loc(), calloc() o realloc(), a menos que ptr sea NULL.
+
+VALOR DEVUELTO
+       Para  calloc() y malloc(), el valor devuelto es un puntero
+       a la memoria asignada, que está convenientemente  alineada
+       para  cualquier  tipo  de  variable, o NULL si la petición
+       falla.
+
+       free() no devuelve ningún valor.
+
+       realloc() devuelve un puntero a la  memoria  recién  asig­
+       nada,  que  está convenientemente preparada para cualquier
+       tipo de variable y podría ser diferente de ptr, o NULL  si
+       la  petición  falla  o si size era igual a 0. Si realloc()
+       falla el bloque original se queda como estaba - no es lib­
+       erado ni movido.
+
+CONFORME A
+       ANSI-C
+
+VÉASE TAMBIÉN
+       brk(2)
+
+NOTAS
+       El estándar Unix98 necesita que malloc(), calloc() y real­
+       loc() asignen a errno el valor ENOMEM en  caso  de  fallo.
+       Glibc  asume que esto se hace (y las versiones de glibc de
+       estas rutinas  hacen  esto);  si  usa  una  implementación
+       privada de malloc que no asinga un valor a errno, entonces
+       ciertas rutinas de biblioteca pueden  fallar  sin  que  en
+       errno aparezca el motivo del fallo.
+
+       Los  caídas  de  malloc(), free() o realloc() casi siempre
+       están relacionadas con la corrupción de la memoria  montón
+       (heap), tal como el desbordamiento de una porción de memo­
+       ria reservada o la liberación del mismo puntero dos veces.
+
+       Las versiones recientes de libc de Linux (posteriores a la
+       5.4.23) y de GNU libc (2.x) incluyen una implementación de
+       malloc que se puede ajustar mediante variables de entorno.
+       Cuando se define MALLOC_CHECK_, se usa una  implementación
+       especial  (menos eficiente) que está diseñada para tolerar
+       errores simples, tales como una llamada doble a free() con
+       el mismo argumento o sobrepasar un límite en un byte (fal­
+       los "fuera por poco" o de desbordamiento).   No  obstante,
+       no  es  posible  protegerse  contra todos los errores y se
+       pueden producir pérdidas de memoria.  Si se asigna a  MAL­
+       LOC_CHECK_  el  valor  0,  cualquier corrupción de memoria
+       montón detectada  se  ignora  silenciosamente;  si  se  le
+       asigna  el valor 1, se imprime un diagnóstico en la salida
+       estándar de error (stderr); si se le asigna el valor 2, se
+       llama  inmediatamente  a abort().  Esto es útil porque, en
+       caso contrario, se puede  producir  una  caída  mucho  más
+       tarde  y  entonces es mucho más difícil buscar y encontrar
+       la causa real del problema.
+
+
+
+GNU                        4 Abril 1993                 MALLOC(3)

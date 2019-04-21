@@ -1,0 +1,31 @@
+SWAB(3)          Manual del Programador de Linux          SWAB(3)
+
+
+
+NOMBRE
+       swab - intercambia bytes adyacentes
+
+SINOPSIS
+       #include <string.h>
+
+       void swab(const void *desde, void *hacia, size_t n);
+
+DESCRIPCIÓN
+       La  función  swab() copia n bytes desde el vector apuntado
+       por desde hacia el vector apuntado  por  hacia,  cambiando
+       los bytes adyacentes pares y nones. Esta función se emplea
+       para intercambiar datos entre máquinas que  tienen  difer­
+       entes ordenaciones de bytes bajos/altos.
+
+VALOR DEVUELTO
+       La función swab() no devuelve nada.
+
+CONFORME A
+       SVID 3, BSD 4.3
+
+VÉASE TAMBIÉN
+       bstring(3)
+
+
+
+GNU                       11 Marzo 1998                   SWAB(3)

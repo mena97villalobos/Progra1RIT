@@ -1,0 +1,120 @@
+SESSREG(1)                                             SESSREG(1)
+
+
+
+NOMBRE
+       sessreg  -  controla  entradas utmp/wtmp para clientes no-
+       init.
+
+SINOPSIS
+       sessreg [-w wtmp-file] [-u utmp-file] [-l  line-name]  [-h
+       host-name]  [-s  slot-number] [-x Xservers-file] [-t ttys-
+       file] [-a] [-d] user-name
+
+DESCRIPCIÓN
+       Sessreg es un simple programa para controlar las  entradas
+       utmp/wtmp en sesiones xdm.
+
+       El sistema V tiene un interfaz para /etc/utmp mejor que el
+       de BSD; coloca  las  entradas  de  forma  dinámica  en  el
+       archivo,  en vez de escribirlas en posiciones fijas index­
+       adas por posición en /etc/ttys.
+
+       Para controlar archivos utmp del estilo BSD, Sessreg tiene
+       dos  estrategias.  En  conjunción  con  xdm,  la opción -x
+       cuenta el número de líneas en /etc/tyys y luego  le  añade
+       el  número  de la línea en el archivo Xservers que especi­
+       fica el display. El nombre del display ha de especificarse
+       en "line-name" (nombre-de-línea) usando la opción -l. Esta
+       suma se usa como el "slot-number" (número de posición)  en
+       /etc/utmp  en el que se escribirá esta entrada. En el caso
+       más corriente, la opción -s especifica el número de  posi­
+       ción  directamente. Si por cualquier extraña razón su sis­
+       tema usa un archivo diferente a /etc/tyys  para  controlar
+       init, la opción -t puede dirigir a Sessreg para que busque
+       en otro lugar un cómputo de sesiones de terminal.
+
+       Por otra parte, los administradores del Sistema V no nece­
+       sitarán  usar estas opciones (-x, -s y -t). Para hacer que
+       el programa sea más fácil de documentar y explicar,  Sess­
+       reg acepta opciones específicas BSP en el entorno del Sis­
+       tema V y las ignora.
+
+       BSD tiene también un campo para nombre de servidor  (host-
+       name) en el archivo utmp que no existe en el Sistema V. La
+       versión para el Sistema V de Sessreg ignora  también  esta
+       opción.
+
+USO
+       En Xstartup, escriba un comando como:
+
+            sessreg -a -l $DISPLAY -x /usr/X11R6/lib/xdm/Xservers $USER
+
+       y en Xreset:
+
+            sessreg -d -l $DISPLAY -x /usr/X11R6/lib/xdm/Xservers $USER
+
+
+OPCIONES
+       -w wtmp-file
+              Especifica  un  archivo wtmp alternativo, en vez de
+              /usr/adm/wtmp para BSD o /etc/wtmp  para  SysV.  El
+              nombre especial "none" (ninguno) desactiva los reg­
+              istros de escritura en /usr/adm/wtmp.
+
+       -u utmp-file
+              Especifica un archivo utmp alternativo, en  vez  de
+              "/etc/utmp".  El  nombre  especial  "none" los reg­
+              istros de escritura en /etc/utmp.
+
+       -l line-name
+              Describe el  nombre  de  línea  (line-name)  de  la
+              entrada.  Para sesiones de terminal, supone el seg­
+              mento final del nombre de archivo  del  dispositivo
+              display  que  se  da  a la sesión de usuarios ( por
+              ejemplo, :0). Si no se  especifica  un  nombre,  el
+              nombre de terminal se especificará con ttyname(3) y
+              se le quitarán los componentes precedentes.
+
+       -h host-name
+              Esta opción se configura para  que  los  servidores
+              BSD  indiquen  que  la  sesión  se  inició desde un
+              servidor remoto. Esta opción no se  utiliza  en  el
+              uso típico de xdm.
+
+       -s slot-number
+              Cada  sesión  potencial  tiene  un  único nombre de
+              posición en los sistemas BSD, la mayoría  identifi­
+              cado  por  la  posición  del  line-name  (nombre de
+              línea) en el archivo /etc/ttys. Esta opción predom­
+              inará sobre la posición por defecto determinada con
+              ttyslot (3).  Esta opción resulta inapropiada  para
+              ser usada con xdm, la opción -x es más útil.
+
+       -x Xservers-file
+              Dado  que  sólo  puede  ejecutarse una sesión X por
+              display, y cada display se escribe en este archivo,
+              esta  opción  establece el slot-number para que sea
+              el número de líneas que aparece en ttys-file más el
+              número  de  índice  en el que se encuentra el line-
+              name en este archivo.
+
+       -t ttys-file
+              Especifica un  archivo  alternativo  que  usará  la
+              opción  -x para contar el número de sesiones termi­
+              nal en un servidor.
+
+       -a     Esta sesión debe añadirse a utmp/wtmp.
+
+       -d     Esta sesión debe ser eliminada de  utmp/wtmp.  Debe
+              especificarse una de las dos opciones -a/-d.
+
+VÉASE TAMBIÉN
+       xdm(1)
+
+AUTOR
+       Keith Packard, MIT X Consortium
+
+
+
+Versión X 11                6ª entrega                 SESSREG(1)

@@ -1,0 +1,158 @@
+INTRO(2)         Manual del programador de Linux         INTRO(2)
+
+
+
+NOMBRE
+       intro - Introducción a las llamadas al sistema
+
+DESCRIPCIÓN
+       Este  capítulo  describe las llamadas al sistema de Linux.
+       En syscalls(2) encontrará una lista de las 164 llamadas al
+       sistema presentes en Linux 2.0
+
+   Llamadas directas
+       En  la  mayoría  de  los casos no es necesario invocar una
+       llamada al sistema directamente, pero hay veces en que  la
+       biblioteca C estándar carece de una función adecuada.
+
+   Sinopsis
+       #include <linux/unistd.h>
+
+       Una macro de tipo _syscall
+
+   Configuración
+       Lo importante a conocer sobre una llamada al sistema es su
+       prototipo. Es necesario saber cuántos argumentos usa,  sus
+       tipos, y el tipo retornado por la función. Hay seis macros
+       que facilitan la llamada real al sistema. Tienen la  sigu­
+       iente forma:
+
+              _syscallX(tipo,nombre,tipo1,arg1,tipo2,arg2,...)
+
+                     donde  X  es  0-5,  el  número de argumentos
+                             usado por la llamada del sistema
+
+                     tipo es el tipo devuelto por la  llamada  al
+                             sistema
+
+                     nombre es el nombre de la llamada al sistema
+
+                     tipoN es el tipo del argumento nº N
+
+                     argN es el nombre del argumento nº N
+
+       Estas macros crean una  función  llamada  nombre  con  los
+       argumentos  especificados.  Una vez incluida _syscall() en
+       el fichero fuente, se invoca a la llamada al sistema medi­
+       ante nombre.
+
+EJEMPLO
+       #include <stdio.h>
+       #include <linux/unistd.h>     /* para macros _syscallX */
+       #include <linux/kernel.h>     /* para la estructura sysinfo */
+
+       _syscall1(int, sysinfo, struct sysinfo *, info);
+
+       /* Nota: si copia directamente de la fuente nroff, recuerde
+       BORRAR las barras invertidas extra en las sentencias printf */
+
+       int main(void)
+       {
+            struct sysinfo s_info;
+            int error;
+
+            error = sysinfo(&s_info);
+            printf("Código de error = %d\n", error);
+            printf("Uptime = %ds\nCarga: 1 min %d / 5 min %d / 15 min %d\n"
+                 "RAM: total %d / libre %d / compartida %d\n"
+                 "Memoria en bufers = %d\nSwap: total %d / libre %d\n"
+                 "Número de procesos = %d\n",
+                 s_info.uptime, s_info.loads[0],
+                 s_info.loads[1], s_info.loads[2],
+                 s_info.totalram, s_info.freeram,
+                 s_info.sharedram, s_info.bufferram,
+                 s_info.totalswap, s_info.freeswap,
+                 s_info.procs);
+            return(0);
+       }
+
+Ejemplo de salida
+       Código de error = 0
+       Uptime = 502034s
+       Carga: 1 min 13376 / 5 min 5504 / 15 min 1152
+       RAM: total 15343616 / libre 827392 / compartida 8237056
+       Memoria en bufers = 5066752
+       Swap: total 27881472 / libre 24698880
+       Número de procesos = 40
+
+NOTAS
+       Las macros _syscall() NO producen un prototipo. Es posible
+       que tenga que crear uno, especialmente  para  usuarios  de
+       C++.
+
+       Las  llamadas  al  sistema  no tienen porqué retornar sólo
+       códigos de error positivos o negativos. Es necesario exam­
+       inar  el  código fuente para estar seguro de cómo retornan
+       los errores. Generalmente, es el negativo de un código  de
+       error estándar, por ejemplo, -EPERM. Las macros _syscall()
+       devolverán el resultado r de la llamada al sistema  cuando
+       r  no  sea  negativo, pero devolverán -1 y establecerán la
+       variable errno a -r cuando r sea negativo.  Para los códi­
+       gos de error vea errno(3).
+
+       Algunas  llamadas  al sistema, como mmap, requieren más de
+       cinco argumentos.  Éstos se manejan colocándose en la pila
+       y pasando un puntero al bloque de argumentos.
+
+       Cuando  se  define  una  llamada  al sistema, los tipos de
+       argumento DEBEN pasarse por valor o mediante puntero (para
+       conjuntos de datos como estructuras).
+
+CONFORME A
+       Ciertos  códigos  se  usan para indicar variantes y están­
+       dares de Unix conforme a los cuales operan llamadas de  la
+       sección. Éstos són:
+
+       SVr4   System  V  Release  4 Unix, tal como se describe en
+              "Programmer's Reference  Manual:  Operating  System
+              API  (Intel  processors)" (Prentice-Hall 1992, ISBN
+              0-13-951294-2).
+
+       SVID   System V Interface Definition, tal como se describe
+              en  "The System V Interface Definition, Fourth Edi­
+              tion",     disponible     en     ftp://ftp.fpk.nov­
+              ell.com/pub/unix-standars/svid      en     ficheros
+              Postcript.
+
+       POSIX.1
+              IEEE 1003.1-1990 parte  1,  también  conocido  como
+              ISO/IEC  9945-1:1990s,  también conocido como "IEEE
+              Portable Operating System Interface  for  Computing
+              Environments", tal como se aclara en la "POSIX Pro­
+              grammer's  Guide"  de  Donald  Lewine  (O'Reilly  &
+              Associates, Inc., 1991, ISBN 0-937175-73-0).
+
+       POSIX.1b
+              IEEE   Std  1003.1b-1993  (estándar  POSIX.1b)  que
+              describe prestaciones en tiempo real  de  los  sis­
+              temas  operativos  portables, también conocido como
+              ISO/IEC 9945-1:1996, tal como se  aclara  en  "Pro­
+              gramming  for  the real world - POSIX.4" de Bill O.
+              Gallmeister  (O'Reilly  &  Associates,  Inc.   ISBN
+              1-56592-074-0).
+
+       4.3BSD/4.4BSD
+              Las  distribuciones  4.3  y  4.4  de Berkeley Unix.
+              4.4BSD tenía compatibilidad ascendente con 4.3.
+
+       V7     Version 7, el Unix ancestral de Bell Labs.
+
+FICHEROS
+       /usr/include/linux/unistd.h
+
+VÉASE TAMBIÉN
+       errno(3)
+
+
+
+Linux 1.2.13               22 Mayo 1996                  INTRO(2)

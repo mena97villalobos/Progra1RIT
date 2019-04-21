@@ -1,0 +1,21 @@
+INTRO(5)           Manual del Programador Linux          INTRO(5)
+
+
+
+NOMBRE
+       intro - Introducción a formatos de ficheros
+
+DESCRIPCIÓN
+       Este capítulo describe varios formatos de ficheros, proto­
+       colos, y las estructuras de datos usadas por los distintos
+       programas.
+
+AUTORES
+       Mire  la  cabecera  de  cada  página del manual para saber
+       el/los autor/es y las  condiciones  de  derechos  de  uso.
+       ¡Tenga  en  cuenta  que estas condiciones pueden variar de
+       página en página!
+
+
+
+Linux                     24 Julio 1993                  INTRO(5)

@@ -1,0 +1,133 @@
+PASSWD(1)          Manual del Programador Linux         PASSWD(1)
+
+
+
+NOMBRE
+       passwd - cambia contraseñas
+
+SINOPSIS
+       passwd [ -o ] [ -q ] [ -v ] [ usuario [ contraseña ]]
+       passwd  -f  [ parámetros para el cambio de nombre completo
+       del usuario ]
+       passwd -s [ parámetros para el cambio de shell ]
+
+
+DESCRIPCIÓN
+       Cuando se utiliza sin parámetros  passwd  cambia  la  con­
+       traseña  para el usuario que lo invoca. Primero le exigirá
+       la contraseña vigente, y a continuación pedirá  dos  veces
+       la nueva para prevenir errores de escritura.
+
+       La  invocación  del  programa con los parámetros usuario y
+       contraseña sólo puede realizarse desde la cuenta de  supe­
+       rusuario.
+
+       Utilizando  la  invocación sólo con el parámetro usuario ,
+       el superusuario  puede  cambiar  la  contraseña  para  ese
+       usuario.
+
+       En  este  caso  no  se exige al superusuario la contraseña
+       vigente para el usuario, pero las reglas para validar con­
+       traseñas  se  siguen  aplicando  a menos que se utilice la
+       opción -o .  El superusuario puede tener razones legítimas
+       para elegir una contraseña no conforme a las reglas.
+
+
+       El  uso  de  los  dos parámetros asigna al usuario la con­
+       traseña indicada en el segundo parámetro. Puede  ser  útil
+       cuando  se  debe dar a muchos usuarios una contraseña ini­
+       cial predefinida. Pero también  puede  ser  extremadamente
+       peligroso.  Un  simple fallo en un programa podría cambiar
+       la contraseña del superusuario  (root)  a  cualquier  cosa
+       desconocida.
+
+       Indicar  una  cadena vacía como el segundo parámetro borra
+       la contraseña para el usuario, pero sólo en combinación de
+       la opción -o .
+
+       Los cambios de contraseña pueden registrarse utilizando el
+       servicio syslog(3), dependiendo de las definiciones hechas
+       en tiempo de compilación del programa (estando esta carac­
+       terística activa por omisión).  Si es así, todos los  cam­
+       bios  se  registrarán  a  un  nivel bajo como auth.notice,
+       excepto  para  cambiar  la  contraseña  del   superusuario
+       (root);  en  este caso se registrarán con nivel auth.warn­
+       ing.
+
+
+OPCIONES
+       -f, --fullname
+              Cambia el nombre completo  del  usuario  (el  campo
+              GECOS  del registro de contraseñas). Invoca el pro­
+              grama /usr/bin/chfn utilizando los  parámetros  que
+              ha recibido que no son opciones.
+
+
+       -o, --force
+              Desactiva las verificaciones de validación sobre la
+              nueva contraseña . Sólo puede ser utilizada por  el
+              superusuario,  y está pensado para permitirle asig­
+              nar contraseñas iniciales simples.
+
+
+       -s, --shell
+              Cambia el shell del usuario mediante la  invocación
+              del   programa  /usr/bin/chsh  con  los  parámetros
+              recibidos que no son opciones.
+
+
+       -q, --quiet, --silent
+              En este modo de funcionamiento passwd no indica que
+              la contraseña se haya cambiado.
+
+
+       -v, -V, --version
+              Muestra  información  acerca de la versión del pro­
+              grama y finaliza.
+
+
+REGLAS DE CONTRASEÑAS
+       La nueva contraseña debe cumplir estas reglas:
+
+       o      tener como mínimo seis caracteres;
+
+
+       o      no ser igual a la contraseña anterior;
+
+
+       o      contener caracteres que pertenezcan, como mínimo, a
+              dos  de  las  siguientes  categorías:  mayúsculas y
+              minúsculas, dígitos y caracteres no alfanuméricos;
+
+
+       o      no debe coincidir ni con el nombre del usuario,  ni
+              con  ninguna  de  las palabras que forman su nombre
+              completo  (real),  tanto  en  orden   normal   como
+              inverso, ni al principio ni al final.
+
+
+FALLOS (BUGS)
+       Si cambia de opinión no hay escape del programa. Insistirá
+       en obtener una  contraseña  nueva  hasta  que  sea  muerto
+       (mediante  kill)  desde otro terminal.  (Esto es provocado
+       por un fallo en getpass(3): e ignora las señales.)
+
+
+FICHEROS
+       /etc/passwd
+              El archivo que contiene las contraseñas.
+
+VÉASE TAMBIÉN
+       chsh(1), chfn(1), syslog(3), syslog.conf(5), passwd(8).
+
+AUTOR
+       Peter Orbaek (poe@daimi.aau.dk).
+       Martin Schulze (joey@infodrom.north.de) con extensas mejo­
+       ras y reescrituras.
+
+MANTENIMIENTO
+       Nicolai Langfeldt (janl@math.uio.no)
+
+
+
+Util-linux 2.6          11 Noviembre 1996               PASSWD(1)

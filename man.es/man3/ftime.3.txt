@@ -1,0 +1,52 @@
+FTIME(3)         Manual del Programador de Linux         FTIME(3)
+
+
+
+NOMBRE
+       ftime - devuelve fecha y hora
+
+SINOPSIS
+       #include <sys/timeb.h>
+
+       int ftime(struct timeb *pt);
+
+DESCRIPCIÓN
+       Devuelve  la  hora  y fecha actuales en pt, que se declara
+       como sigue:
+
+                 struct timeb {
+                      time_t   time;
+                      unsigned short millitm;
+                      short    timezone;
+                      short    dstflag;
+                 };
+
+       La estructura contiene la fecha desde `la época' en segun­
+       dos, hasta 1000 milisegundos de precisión, la zona horaria
+       local (medida en minutos al oeste de Greenwich) y un modi­
+       ficador que, si es distinto de cero, indica que el periodo
+       de ahorro energético (horario verano/invierno)  se  aplica
+       localmente durante la parte apropiada del año.
+
+VALOR DEVUELTO
+       Esta función siempre devuelve 0.
+
+FALLOS
+       Bajo  libc4  y  libc5  el  campo millitm es significativo.
+       Bajo glibc2 es defectuoso y en él se devuelve 0.  En glibc
+       2.1.1 es correcto de nuevo.
+
+HISTORIA
+       La función ftime apareció en 4.2BSD.
+
+CONFORME A
+       BSD 4.2
+       En  BSD  4.3, esta llamada está anticuada desde que existe
+       gettimeofday(2).
+
+VÉASE TAMBIÉN
+       time(2)
+
+
+
+Linux                     24 Julio 1993                  FTIME(3)

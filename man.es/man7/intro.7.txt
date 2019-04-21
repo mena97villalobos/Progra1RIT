@@ -1,0 +1,22 @@
+INTRO(7)                    Miscelánea                   INTRO(7)
+
+
+
+NOMBRE
+       intro - Introducción a la sección miscelánea.
+
+DESCRIPCIÓN
+       Esta  sección  describe  diversos  tópicos  tales como los
+       paquetes  de  macros  para  nroff,  tablas,  ficheros   de
+       cabecera  en  C,  la jerarquía de ficheros, conceptos gen­
+       erales, y otras cosas que no encajan en nigún otro  sitio.
+
+AUTORES
+       En el encabezamiento de cada página se encuentran el ó los
+       autores así como las condiciones  del  derecho  de  autor.
+       Nótese  que  dichas condiciones pueden variar de página en
+       página.
+
+
+
+Linux                     24 Julio 1993                  INTRO(7)

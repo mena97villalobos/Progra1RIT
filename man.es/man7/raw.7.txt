@@ -1,0 +1,218 @@
+RAW(7)           Manual del Programador de Linux           RAW(7)
+
+
+
+NOMBRE
+       raw, SOCK_RAW - Conectores directos (raw) IPv4 de Linux
+
+SINOPSIS
+       #include <sys/socket.h>
+       #include <netinet/in.h>
+       raw_socket = socket(PF_INET, SOCK_RAW, int protocol);
+
+
+DESCRIPCIÓN
+       Los conectores directos permiten implementar nuevos proto­
+       colos IPv4 en el espacio de usuario. Un  conector  directo
+       recibe  o  envía  el datagrama crudo sin incluir cabeceras
+       del nivel de enlace.
+
+       La capa IPv4 genera una cabecera IP  cuando  se  envía  un
+       paquete,  a menos que se active la opción IP_HDRINCL en el
+       conector.  Cuando se activa, el paquete debe contener  una
+       cabecera  IP. En la recepción, la cabecera IP siempre está
+       incluida en el paquete.
+
+       Sólo los procesos con un identificador de usuario efectivo
+       de  0  o  la capacidad CAP_NET_RAW pueden abrir conectores
+       directos.
+
+       Todos los paquetes o errores cuyo protocolo coinciden  con
+       el  número  protocol especificado por el conector directo,
+       se pasan a este conector. Para una lista de los protocolos
+       permitidos  vea los números asignados en RFC1700 y getpro­
+       tobyname(3).
+
+       Un  protocolo  IPPROTO_RAW  implica  que  IP_HDRINCL  está
+       activa  y recibe todos los protocolos IP. El envío no está
+       permitido.
+
+       +-------------------------------------------------------------+
+       |Campos de cabecera IP modificados en el envío por IP_HDRINCL |
+       +-----------------------------+-------------------------------+
+       |Suma de comprobación IP      | Siempre se rellena.           |
+       +-----------------------------+-------------------------------+
+       |Dirección fuente             | Se rellena cuando es cero.    |
+       +-----------------------------+-------------------------------+
+       |Identificador del paquete    | Se rellena cuando es cero.    |
+       +-----------------------------+-------------------------------+
+       |Longitud total               | Siempre se rellena.           |
+       +-----------------------------+-------------------------------+
+
+       Si se especifica IP_HDRINCL y la  cabecera  IP  tiene  una
+       dirección  de  destino  distinta  de cero, la dirección de
+       destino del conector se utiliza para enrutar  el  paquete.
+       Cuando  se  especifica MSG_DONTROUTE, la dirección de des­
+       tino debe referirse a una interfaz local, de lo contrario,
+       se realiza una búsqueda en la tabla de enrutamiento.
+
+       Si  no  se  activa  IP_HDRINCL,  se  pueden configurar las
+       opciones de la cabecera IP de los conectores directos  con
+       setsockopt(2).  Vea ip(7) para más información.
+
+       En  Linux 2.2 todas las opciones y campos de las cabeceras
+       IP se pueden configurar usando las opciones de los  conec­
+       tores  IP. Esto significa que los conectores directos sólo
+       son necesarios para protocolos nuevos o protocolos que  no
+       tienen  una  interfaz de usuario (como ICMP). Normalmente,
+       no es necesario generar paquetes TCP o UDP  personalizados
+       usando conectores directos.
+
+       Cuando  se recibe un paquete, se pasa a cualquier conector
+       directo que haya sido asociado a su protocolo antes de que
+       sea  pasado  al manejador de cualquier otro protocolo (por
+       ejemplo, los módulos de protocolo del núcleo).
+
+
+FORMATO DE LAS DIRECCIONES
+       Los conectores directos usan la estructura de  direcciones
+       estándar sockaddr_in definida en ip(7).  El campo sin_port
+       se puede usar para especificar el número de protocolo  IP.
+       Cuando  es  0  se  usa el protocolo indicado en la llamada
+       inicial   a   socket(2).    Vea   el   fichero    cabecera
+       <netinet/in.h> para protocolos IP válidos.
+
+
+OPCIONES DE LOS CONECTORES
+       Las opciones de los conectores directos se pueden configu­
+       rar con setsockopt(2) y leer con getsockopt(2), pasando la
+       opción de familia SOL_RAW.
+
+
+       ICMP_FILTER
+              Activa  un  filtro  especial  para  los  conectores
+              directos asociados al protocolo  IPPROTO_ICMP.   El
+              valor tiene un bit activo para cada tipo de mensaje
+              ICMP que debe filtrarse. Por defecto, no se  filtra
+              ningún mensaje ICMP.
+
+
+       Además,  se  soportan  todas  las opciones SOL_IP de ip(7)
+       válidas.
+
+
+NOTAS
+       Los conectores directos fragmentan un  paquete  cuando  su
+       longitud  total excede la MTU de la interfaz. Una alterna­
+       tiva más rápida y favorable para la red es implementar  el
+       descubrimiento  del  MTU de la ruta como se describe en la
+       sección IP_PMTU_DISCOVER de ip(7).
+
+       Se puede asociar un conector directo a una dirección local
+       específica  usando  la llamada bind(2).  Si no está asoci­
+       ado, se reciben todos los paquetes  con  el  protocolo  IP
+       especificado. Además, se puede asociar un conector directo
+       a un dispositivo de red específico usando SO_BINDTODEVICE.
+       Vea socket(7).
+
+       Un  conector  IPPROTO_RAW  es sólo de envío. Si verdadera­
+       mente quiere recibir todos los paquetes IP, use un  conec­
+       tor packet(7) con el protocolo ETH_P_IP.  Dése cuenta que,
+       a diferencia de los conectores directos, los conectores de
+       paquete no reensamblan fragmentos IP.
+
+       Si quiere recibir todos los paquetes ICMP para un conector
+       de datagramas, normalmente es mejor usar IP_RECVERR en ese
+       conector particular. Vea ip(7).
+
+       Los  conectores directos pueden interceptar todos los pro­
+       tocolos IP de Linux, incluso protocolos como  ICMP  o  TCP
+       que  poseen  un  módulo de protocolo dentro del núcleo. En
+       este caso, los paquetes  se  pasan  tanto  al  módulo  del
+       núcleo  como  al  conector  (o  conectores) directo. No se
+       debería confiar en esto en programas transportables ya que
+       muchas  otras  implementaciones  de  conectores BSD tienen
+       limitaciones aquí.
+
+       Linux nunca cambia las cabeceras pasadas  por  el  usuario
+       (salvo  para rellenar algunos campos de valor 0 como se ha
+       descrito en IP_HDRINCL).   Esto  es  diferente  de  muchas
+       otras implementaciones de conectores directos.
+
+       Generalmente, los conectores directos son poco transporta­
+       bles y deberían evitarse en  programas  destinados  a  ser
+       transportables.
+
+
+MANEJO DE ERRORES
+       Sólo  se pasan al usuario los errores generados por la red
+       cuando el conector está conectado o está activa la  opción
+       IP_RECVERR.   Para  conectores  conectados,  sólo se pasan
+       EMSGSIZE y EPROTO por compatibilidad. Con IP_RECVERR todos
+       los errores de red se guardan en la cola de errores.
+
+ERRORES
+       EMSGSIZE
+               Paquete demasiado grande. O bien el descubrimiento
+               del  MTU  de  la  ruta  está  activo  (la   opción
+               IP_PMTU_DISCOVER  de  los  conectores)  o  bien el
+               tamaño del paquete excede el máximo tamaño de 64KB
+               permitido por IPv4.
+
+       EACCES  El  usuario ha intentado enviar a una dirección de
+               difusión sin tener activa la opción de difusión en
+               el conector.
+
+       EPROTO  Ha llegado un error ICMP informando de un problema
+               de parámetros.
+
+       EFAULT  Se ha pasado una dirección de memoria inválida.
+
+       EOPNOTSUPP
+               Se ha pasado a la llamada socket una opción invál­
+               ida (como MSG_OOB).
+
+       EINVAL  Argumento inválido.
+
+       EPERM   El  usuario no tiene permiso para abrir conectores
+               directos. Sólo los procesos con  un  identificador
+               de usuario efectivo de 0 o el atributo CAP_NET_RAW
+               pueden hacerlo.
+
+
+VERSIONES
+       IP_RECVERR y ICMP_FILTER son nuevos en la versión  2.2  de
+       Linux. Ambos son extensiones de Linux y no deberían usarse
+       en programas transportables.
+
+       La versión 2.0 de  Linux  activaba  cierta  compatibilidad
+       fallo  a  fallo  con  BSD  en  el código de los conectores
+       directos cuando se activaba la opción  SO_BSDCOMPAT.  Ésto
+       se ha eliminado en la versión 2.2.
+
+
+FALLOS
+       No  se han descrito las extensiones de proxy transparente.
+
+       Cuando se activa la opción IP_HDRINCL, los  datagramas  no
+       se fragmentan y están limitados por la MTU de la interfaz.
+       Ésta es una limitación de la versión 2.2 de Linux.
+
+
+AUTOR
+       Esta página de manual fue escrita por Andi Kleen.
+
+
+VÉASE TAMBIÉN
+       ip(7), socket(7), recvmsg(2), sendmsg(2)
+
+       RFC1191 para el descubrimiento del MTU de la ruta.
+
+       RFC791 y el fichero cabecera <linux/ip.h> para  el  proto­
+       colo IP.
+
+
+
+
+
+Página man de Linux       2 octubre 1998                   RAW(7)

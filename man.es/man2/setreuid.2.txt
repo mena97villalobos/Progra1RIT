@@ -1,0 +1,61 @@
+SETREUID(2)      Manual del Programador de Linux      SETREUID(2)
+
+
+
+NOMBRE
+       setreuid,  seteuid  -  definir  el  ID de usuario real y/o
+       efectivo
+
+SINOPSIS
+       #include <unistd.h>
+
+       int setreuid(uid_t ruid, uid_t euid);
+       int seteuid(uid_t euid);
+
+DESCRIPCIÓN
+       setreuid define el ID de usuario real y efectivo del  pro­
+       ceso  actual.  Los usuarios sin privilegios pueden cambiar
+       el ID de usuario del efectivo al real y viceversa.
+
+       Anteriormente  a  Linux  1.1.37,  el  paradigma   del   ID
+       guardado, se rompía al ser usado con setreuid o seteuid.
+
+       Empezando  en  la 1.1.37, también es posible definir el ID
+       de usuario efectivo con el ID de usuario guardado.
+
+       Solo el superusuario puede realizar otros cambios.
+
+       Dando el valor -1 para el valor del ID de usuario  ya  sea
+       el  real o el efectivo, fuerza al sistema a dejar dicho ID
+       sin cambios.
+
+       Actualmente, seteuid(euid) es funcionalmente equivalente a
+       setreuid(-1, euid).
+
+       Si  el  ID de usuario real es cambiado, o el ID de usuario
+       efectivo se pone a un valor distinto  del  ID  de  usuario
+       real  previo,  el  ID  de  usuario guardado será puesto al
+       nuevo ID de usuario efectivo.
+
+VALOR REGRESADO
+       Si hay éxito, se devuelve cero. Si hay error, se  devuelve
+       -1, y errno se actualiza de la forma apropiada.
+
+ERRORES
+       EPERM  El  proceso  actual no es el superusuario y especi­
+              fica un cambio que no es (1) intercambiar el ID  de
+              usuario  efectivo con el real, o (2) poner el valor
+              de uno al del otro, o (3) poner el  ID  de  usuario
+              efectivo al valor del ID de usuario guardado.
+
+CONFORME A
+       BSD  4.3  (la función setreuid apareció por primera vez en
+       4.2BSD.)
+
+VÉASE TAMBIÉN
+       getuid(2), setuid(2)
+
+
+
+
+Linux 1.1.38              2 Agosto 1994               SETREUID(2)

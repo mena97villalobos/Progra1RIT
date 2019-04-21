@@ -1,0 +1,68 @@
+RESIZECONS(8)           Soporte de Consola          RESIZECONS(8)
+
+
+
+NOMBRE
+       resizecons - cambia la idea que tiene el núcleo del tamaño
+       de la consola
+
+SINOPSIS
+       resizecons COLUMNASxFILAS
+       resizecons -lines FILAS
+
+DESCRIPCIÓN
+       La orden resizecons intenta cambiar el modo de vídeo de la
+       consola.   Esto  tiene varios aspectos: (a) el núcleo debe
+       saber acerca de esto, (b) el equipo también debe saber  de
+       esto,  (c) los programas de usuario también, y (d) el tipo
+       de consola puede tener que ser adaptado.
+
+       (a) Se le informa al núcleo del cambio mediante la llamada
+       a  ioctl VT_RESIZE. Esto hace que el núcleo reasigne memo­
+       ria de pantalla de consola para todas  las  consolas  vir­
+       tuales,  y  puede  fallar  si no hay bastante memoria. (En
+       este caso, intente  primero  desasignar  algunas  consolas
+       virtuales  en  desuso.)   Si  esta llamada a ioctl() tiene
+       éxito, pero hay un fallo  en  un  paso  posterior  (p.ej.,
+       porque  Ud.  no tenga permisos de root), su pantalla puede
+       quedar en un estado muy confuso.
+
+       La parte más difícil de  todo  esto  es  (b),  puesto  que
+       requiere un conocimiento detallado de la cacharrería de la
+       tarjeta de vídeo, y el establecimiento de  numerosos  reg­
+       istros.  Sólo  el cambio en el número de filas es algo más
+       fácil, y resizecons intentará hacerlo solo cuando se le da
+       la opción -lines.  (Probablemente se requieran permisos de
+       root.)   La  orden  resizecons  COLUMNASxFILAS   ejecutará
+       restoretextmode  -r  COLUMNASxFILAS  (y  por  consiguiente
+       requiere que uno tenga instalada svgalib). Aquí COLUMNASx­
+       FILAS  es  un  fichero  que  fue  creado anteriormente por
+       restoretextmode -w  COLUMNASxFILAS.   De  nuevo,  o  harán
+       falta  permisos  de root o restoretextmode tiene que estar
+       suid root.
+
+       Para tratar con (c), resizecons hace un `stty  rows  FILAS
+       cols  COLUMNAS'  para  cada  consola  activa  (en el rango
+       tty0..tty15), y envía una señal SIGWINCH  a  selection  si
+       encuentra el fichero /tmp/selection.pid.
+
+       Finalmente, se trata con (d) ejecutando una orden setfont.
+       Muy probablemente, se carga  el  tipo  equivocado,  y  uno
+       puede  querer  dar uno mismo otra orden setfont después de
+       todo.
+
+
+FALLOS
+       resizecons no funciona en todos los equipos.   Esta  orden
+       se llamaba antes resize, pero se renombró para evitar con­
+       flictos con otra orden con el mismo nombre.
+
+
+VÉASE TAMBIÉN
+       setfont(8),  stty(1),  selection(1),   restoretextmode(8),
+       disalloc(8)
+
+
+
+
+Local                  17 de Enero de 1995          RESIZECONS(8)

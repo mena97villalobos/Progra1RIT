@@ -1,0 +1,36 @@
+CLOSEDIR(3)      Manual del Programador de Linux      CLOSEDIR(3)
+
+
+
+NOMBRE
+       closedir - cierra un directorio
+
+SINOPSIS
+       #include <sys/types.h>
+
+       #include <dirent.h>
+
+       int closedir(DIR *dir);
+
+DESCRIPCIÓN
+       La  función closedir() cierra el canal del directorio aso­
+       ciado con dir. El descriptor del canal del directorio  dir
+       no estará disponible después de esta llamada.
+
+VALOR DEVUELTO
+       La  función  closedir()  devuelve 0 si tiene éxito o -1 si
+       falla.
+
+ERRORES
+       EBADF  Descriptor del canal del directorio dir no  válido.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3
+
+VÉASE TAMBIÉN
+       close(2),     opendir(3),     readdir(3),    rewinddir(3),
+       seekdir(3), telldir(3), scandir(3)
+
+
+
+                       11 de Junio de 1995            CLOSEDIR(3)

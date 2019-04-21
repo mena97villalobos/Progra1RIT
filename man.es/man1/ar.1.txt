@@ -1,0 +1,314 @@
+ar(1)           Herramientas de desarrollo de GNU           ar(1)
+
+
+
+NOMBRE
+       ar - crea, modifica y  extrae de archivos
+
+
+SINOPSIS
+       ar [-]{dmpqrtx}[abcilosSuvV] [nombre_miembro] archivo
+       ficheros...
+
+
+DESCRIPCIÓN
+       El programa  de  GNU  ar  crea,  modifica,  y   extrae  de
+       archivos.  Un archivo es un simple fichero que contiene un
+       conjunto de otros ficheros  en  una  estructura  que  hace
+       posible  recuperar  los  ficheros  individuales originales
+       (llamados miembros del archivo).
+
+       El contenido de los ficheros originales, modos (permisos),
+       tiempos, propietario y grupo se mantienen en el archivo, y
+       se pueden reconstituir en la extracción.
+
+       El programa ar de GNU  puede mantener ficheros cuyos miem­
+       bros  tengan  nombres  de cualquier longitud; sin embargo,
+       dependiendo de cómo se configure  ar  en  su  sistema,  se
+       puede  imponer  un límite a la longitud de los nombres  de
+       los miembros (para compatibilizar con formatos de  archivo
+       mantenidos  por  otras herramientas). Si existe, el límite
+       es  frecuentemente  15  caracteres  (típico  de   formatos
+       referidos  a  a.out)  ó  16 caracteres (típico de formatos
+       relacionados con COFF).
+
+       ar se considera una utilidad binaria porque los   archivos
+       de esta forma son usados con más frecuencia como bibliote­
+       cas que contienen las subrutinas necesarias.
+
+       ar creará un índice hacia los símbolos  definidos  en  los
+       módulos objetos reubicables del archivo cuando especifique
+       el modificador  `s'.  Una vez creado, este índice se actu­
+       aliza  en  el  archivo cuando  ar efectúa un cambio en sus
+       contenidos (guardados para la operación  de  actualización
+       `q').  Un archivo con tal índice acelera el enlace para la
+       biblioteca, y permite que las rutinas de la biblioteca  se
+       llamen unas a otras sin importar su situación en el archi­
+       vo.
+
+
+       Puede usar `nm -s' o `nm --print-armap' para  obtener  una
+       lista de estas tablas de índices.  Si un archivo carece de
+       la tabla, se puede emplear otra forma de  ar llamada  ran­
+       lib para añadir la tabla.
+
+       ar  insiste en recibir al menos dos argumentos para ejecu­
+       tarse: uno, la letra que  especifica  la   operación  (op­
+       cionalmente  acompañada  por  otras letras que especifican
+       los  modificadores), y el nombre del archivo sobre el  que
+       actuar.
+
+       Muchas  operaciones  pueden también aceptar más argumentos
+       fichero que especifican ficheros particulares para operar.
+
+
+OPCIONES
+       El programa ar de GNU  le permite mezclar el código de op­
+       eración p y opciones modificadoras mod en cualquier orden,
+       con el primer argumento de la línea de mandatos.
+
+       Si  quiere, puede comenzar el primer argumento de la línea
+       de órdenes con un signo menos.
+
+
+       La letra p especifica qué operación  ejecutar;  puede  ser
+       cualquiera  de  las siguientes, pero debe especificar sólo
+       una de ellas:
+
+
+       d      Borra (delete) módulos del archivo.  Especifica los
+              nombres  que  serán  eliminados  como  ficheros; el
+              archivo permanece intacto si no especifica ficheros
+              para borrar.
+
+              Si  especifica el modificador `v', ar mostrará cada
+              módulo  que se borre.
+
+
+       m      Use esta operación para mover miembros de un archi­
+              vo.
+
+
+              La  ordenación  de los miembros de un archivo puede
+              originar diferencias en cómo los programas  se  en­
+              lazan  al  usar  la  biblioteca, si un símbolo está
+              definido en más de un miembro.
+
+              Si no se usan modificadores con m, cualquier  miem­
+              bro que nombre en los argumentos ficheros se mueven
+              al final del archivo; puede usar los  modificadores
+              `a',  `b', o `i' para moverlos a las posiciones es­
+              pecificadas.
+
+
+       p      Muestra (print) el miembro especificado del archivo
+              en el fichero de salida estándar.  Si se especifica
+              el modificador, `v' muestra el nombre  del  miembro
+              antes de copiarlo a la salida estándar.
+
+              Si  no  especifica  ficheros, se imprimen todos los
+              ficheros del archivo.
+
+
+       q      Añadido rápido (quick append) ; añade  ficheros  al
+              final del  archivo, sin comprobar posibles sustitu­
+              ciones.
+
+              Los modificadores `a', `b', e `i' ,  no  afectan  a
+              esta  operación;  los  nuevos  miembros  siempre se
+              sitúan al final del archivo.
+
+              El modificador `v' hace que ar liste  cada  fichero
+              que es añada.
+
+              Como el objetivo de esta operación es la velocidad,
+              la tabla índice de símbolos del archivo no se actu­
+              aliza,  incluso si existe; puede usar `ar s' o ran­
+              lib explícitamente para actualizar el índice de  la
+              tabla de símbolos.
+
+              Sin embargo, demasiados sistemas diferentes suponen
+              que el añadido rápido reconstruye el índice, por lo
+              que  ar  de  GNU implementa `q' como un sinónimo de
+              `r'.
+
+
+       r      Inserta ficheros en un archivo  (con  sustitución).
+              Esta  operación  difiere de `q' en que cualesquiera
+              miembros existentes se borran si sus nombres  coin­
+              ciden con los  que son añadidos.
+
+              Si uno de los ficheros nombrados en ficheros no ex­
+              iste, ar muesta un mensaje de error, y deja intacto
+              cualquier  miembro  que exista coincidiendo con ese
+              nombre.
+
+              Por omisión, los nuevos miembros se añaden al final
+              del  fichero; pero puede usar alguno de los modifi­
+              cadores  `a', `b', o `i'  para  requerir  una  ubi­
+              cación relativa a algún miembro existente.
+
+              El  modificador  `v'  utilizado  con esta operación
+              genera una línea de salida por cada fichero  inser­
+              tado,  con  una de estas letras  `a' o `r' para in­
+              dicar si el fichero fue añadido (no antiguos  miem­
+              bros borrados) o sustituido.
+
+
+       t      Muestra una tabla que lista el contenido del archi­
+              vo, o aquellos ficheros listados  en  ficheros  que
+              estén  presentes en el archivo. Normalmente sólo se
+              muestra el nombre del miembro;  si  también  quiere
+              ver  los  modos  (permisos),  tiempos, propietario,
+              grupo y tamaño, puede pedirlo también especificando
+              el modificador `v ' .
+
+              Si  no  especifica  ningún fichero, se listan todos
+              los ficheros del archivo.
+
+              Si hay más de un fichero con el mismo nombre  (dig­
+              amos,  `fie')  en un archivo (digamos `b.a'), `ar t
+              b.a fie' sólo listará la  primera  aparición;  para
+              verlos  todos, tiene  que solicitar un listado com­
+              pleto: en nuestro ejemplo, `ar t b.a'.
+
+
+       x      Extrae miembros (llamados  ficheros)  del  archivo.
+              Puede  usar  el modificador `v' con esta operación,
+              para solicitar que ar liste cada nombre mientras lo
+              extrae.
+
+              Si  no  especifica ningún fichero, se extraen todos
+              los ficheros de este archivo.
+
+
+
+       Un número de modificadores (mod) puede  seguir  inmediata­
+       mente a la letra p para especificar variaciones en el com­
+       portamiento de la operación:
+
+
+       a      Añade nuevos ficheros tras un miembro existente del
+              archivo. Si usa el modificador  a, tiene  que estar
+              presente el nombre de un miembro del  archivo  como
+              argumento nombre-de-miembro,  antes de la especifi­
+              cación de archivo.
+
+
+       b      Añade nuevos ficheros antes  de  un  miembro  exis­
+              tente  del archivo.  Si usa el modificador b, tiene
+              que estar presente el  nombre  de  un  miembro  del
+              archivo como argumento  nombre-de-miembro, antes de
+              la especificación de archivo.  (igual que `i').
+
+
+       c      Crea el archivo.  El archivo  especificado  siempre
+              se crea si no existía, cuando se solicita una actu­
+              alización. Pero se produce un aviso salvo  que  es­
+              pecifique  previamente  que  espera  crearlo usando
+              este modificador.
+
+
+       f      Trunca los nombres que hay en el archivo.  ar  nor­
+              malmente permitirá nombres de ficheros de cualquier
+              longitud. Esto ocasionará que se creen archivos que
+              no son compatibles con el ar nativo de algunos sis­
+              temas.  Si esto es de interés, el modificador f  se
+              puede  usar  para  truncar  los nombres de ficheros
+              poniéndolos en el archivo.
+
+
+       i      Inserta nuevos ficheros antes de un  miembro  exis­
+              tente  del  archivo. Si usa el modificador i, tiene
+              que estar presente el nombre de  un  miembro  exis­
+              tente   del   archivo   como  el  argumento    nom­
+              bre_de_miembro  antes  de  la  especificación   del
+              archivo .  (igual que `b').
+
+
+       l      Este modificador se acepta pero no se usa.
+
+
+
+       o      Preserva  las  fechas  originales  de  los miembros
+              cuando se extraen.  Si no especifica  este  modifi­
+              cador,  los  ficheros extraídos del archivo se mar­
+              carán con el instante de la extracción.
+
+
+
+       s      Escribe un índice objeto-fichero en el  archivo,  o
+              actualiza uno existente, incluso si no se han efec­
+              tuado cambios en el archivo. Puede usar esta opción
+              modificadora bien con operaciones o bien sola. Eje­
+              cutar  `ar s' en un archivo es equivalente a ejecu­
+              tar `ranlib' en él.
+
+
+       S      No  genera  una tabla de símbolos del archivo. Esto
+              puede acelerar la construcción de grandes bibliote­
+              cas  en  varios  pasos. El archivo resultante no se
+              puede usar con el  enlazador.  Para  construir  una
+              tabla  de  símbolos,  debe de omitir el modificador
+              `S' en la última ejecución de `ar', o deberá ejecu­
+              tar `ranlib' sobre el archivo.
+
+
+       u      Normalmente,  ar  r...  inserta  todos los ficheros
+              listados en el archivo. Si quisiera  insertar  sólo
+              aquellos  ficheros  listados  que son más recientes
+              que los miembros existentes del mismo  nombre,  use
+              este  modificador.  El  modificador  `u' se permite
+              sólo para la operación  `r' (replace,  reemplazar).
+              En  particular,  la combinación `qu' no se permite,
+              ya que las  verificaciones  de  los  tiempos  haría
+              perder  cualquier  ventaja  de  velocidad de la op­
+              eración  `q'.
+
+
+       v      Este  modificador  (verbose)  solicita  la  versión
+              prolija  de una operación. Muchas operaciones mues­
+              tran información adicional, tales como  nombres  de
+              ficheros  procesados  cuado se añade el modificador
+              `v'.
+
+
+       V      Este modificador muestra el número  de  versión  de
+              ar.
+
+
+
+
+VÉASE TAMBIÉN
+       La  entrada del menú `Binutils' en Info; Las Utilidades de
+       Binarios de  GNU,  Roland  H.  Pesch  (Octubre  de  1991).
+       nm(1), ranlib(1).
+
+
+DERECHOS DE COPIA
+       Copyright © 1991 Free Software Foundation, Inc.
+
+       Permission  is  granted  to  make  and distribute verbatim
+       copies of this manual provided the  copyright  notice  and
+       this permission notice are preserved on all copies.
+
+       Permission is granted to copy and distribute modified ver­
+       sions of this manual under  the  conditions  for  verbatim
+       copying,  provided  that the entire resulting derived work
+       is distributed under the  terms  of  a  permission  notice
+       identical to this one.
+
+       Permission  is granted to copy and distribute translations
+       of this manual into another language, under the above con­
+       ditions for modified versions, except that this permission
+       notice may be included in  translations  approved  by  the
+       Free  Software  Foundation  instead of in the original En­
+       glish.
+
+       N. del T.: Sólo tiene validez legal el aviso de  copyright
+       original.  En  el  fichero fuente de esta página de manual
+       puede encontar una traducción.
+
+
+
+Cygnus support        5 de Noviembre de 1991                ar(1)

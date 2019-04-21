@@ -1,0 +1,41 @@
+TTY(4)           Manual del Programador de Linux           TTY(4)
+
+
+
+NOMBRE
+       tty - terminal en control
+
+DESCRIPCIÓN
+       El  fichero  /dev/tty es un dispositivo de carácter con el
+       número mayor 5 y número menor 0, creado normalmente con el
+       modo  0666 y propietario root.tty. Es un sinónimo del ter­
+       minal en control de un processo, si existe.
+
+       Además de las peticiones ioctl() soportadas por el dispos­
+       itivo  al  que se refiere tty, también se soporta la sigu­
+       iente petición ioctl():
+
+       TIOCNOTTY
+              Desligar el proceso actual de su terminal  en  con­
+              trol  y  eliminarlo  de su grupo de proceso actual,
+              sin ligarlo a un nuevo grupo de procesos (esto  es,
+              poner  su  ID  de  grupo de processos a cero). Esta
+              ioctl() sólo funciona con descriptores  de  fichero
+              conectados  a  /dev/tty.   Los  procesos de demonio
+              usan esta  ioctl()  cuando  son  invocados  por  el
+              usuario  a  un  terminal.  El proceso intenta abrir
+              /dev/tty. Si la apertura tiene  exito,  se  desliga
+              del  terminal  usando TIOCNOTTY, mientras que si la
+              apertura falla, obviamente no esta ligado a un ter­
+              minal y no necesita desligarse.
+
+FICHEROS
+       /dev/tty
+
+VÉASE TAMBIÉN
+       mknod(1),   chown(1),  getty(1),  termios(2),  console(4),
+       ttys(4)
+
+
+
+Linux                     30 Junio 1996                    TTY(4)

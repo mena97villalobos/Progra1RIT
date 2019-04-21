@@ -1,0 +1,39 @@
+SIGPAUSE(2)      Manual del Programador de Linux      SIGPAUSE(2)
+
+
+
+NOMBRE
+       sigpause - libera atómicamente señales bloqueadas y espera
+       interrupción
+
+
+SINOPSIS
+       #include <signal.h>
+
+       int sigpause(int sigmask);
+
+
+DESCRIPCIÓN
+       Esta interfaz está  anticuada  desde  que  existe  sigsus­
+       pend(2).
+
+       sigpause  asigna  sigmask  al  conjunto  de señales enmas­
+       caradas y luego espera que llegue una señal; al  regresar,
+       se restaura el conjunto de señales enmascaradas.
+
+       sigmask  es normalmente 0 para indicar que no se va a blo­
+       quear ninguna  señal.   sigpause  siempre  termina  siendo
+       interrumpida, devolviendo -1 con errno valiendo EINTR.
+
+CONFORME A
+       4.4BSD.   La  función  sigpause apareció en 4.3BSD y no se
+       recomienda su uso pues puede  ser  retirada  en  cualquier
+       momento.
+
+VÉASE TAMBIÉN
+       sigsuspend(2), kill(2), sigaction(2), sigprocmask(2), sig­
+       block(2), sigvec(2)
+
+
+
+Linux 1.3                 30 Enero 1998               SIGPAUSE(2)

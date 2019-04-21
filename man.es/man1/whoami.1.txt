@@ -1,0 +1,31 @@
+WHOAMI(1)                                               WHOAMI(1)
+
+
+
+NOMBRE
+       whoami - imprime el identificador de usuario efectivo
+
+SINOPSIS
+       whoami [--help] [--version]
+
+DESCRIPCIÓN
+       Esta documentación no va a ser mantenida a partir de ahora
+       y puede ser inexacta o incompleta. La  documentación  Tex­
+       info es ahora la fuente autorizada.
+
+       Esta  página  de  manual  documenta  la  versión de GNU de
+       whoami.  whoami imprime el nombre de usuario asociado  con
+       el  identificador  efectivo  de usuario. Es equivalente al
+       comando `id -un'.
+
+   OPCIONES
+       --help Imprime un mensaje del uso por la salida estándar y
+              termina satisfactoriamente.
+
+       --version
+              Imprime  información sobre la versión por la salida
+              estándar y termina satisfactoriamente.
+
+
+
+FSF                  Utilidades Shell de GNU            WHOAMI(1)

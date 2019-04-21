@@ -1,0 +1,17 @@
+raidadd(8)                                             raidadd(8)
+
+
+
+NOMBRE
+       raidadd, - orden RAID obsoleta
+
+SINOPSIS
+       raidadd
+
+
+VÉASE TAMBIÉN
+       raidtab(5), raidstart(8), mkraid(8)
+
+
+
+raidtools-0.90                                         raidadd(8)

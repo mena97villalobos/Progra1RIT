@@ -1,0 +1,59 @@
+TMPNAM(3)        Manual del Programador de Linux        TMPNAM(3)
+
+
+
+NOMBRE
+       tmpnam - crea un nombre para un fichero temporal
+
+SINOPSIS
+       #include <stdio.h>
+
+       char *tmpnam(char *s);
+
+DESCRIPCIÓN
+       La  función  tmpnam() devuelve un puntero a una cadena que
+       es un nombre válido  de  fichero  tal  que  no  existe  un
+       fichero  con  ese nombre en ningún instante por lo que los
+       programadores ingénuos pueden pensar en él como en un nom­
+       bre  adecuado  para un fichero temporal. Si el argumento s
+       es NULL este nombre se genera en un área estática  interna
+       que puede ser sobreescrito por la siguiente llamada a tmp­
+       nam().  Si s no es NULL, el nombre se copia  al  array  de
+       caracteres  (de longitud, al menos, L_tmpnam) apuntado por
+       s y se devuelve el valor s en caso de éxito
+
+       La ruta que se crea  tiene  como  prefijo  de  directorios
+       P_tmpdir.   (Tanto  L_tmpnam  como  P_tmpdir se definen en
+       <stdio.h>, de la misma manera que el  valor  TMP_MAX  men­
+       cionado más abajo).
+
+VALOR DEVUELTO
+       La función tmpnam() devuelve un puntero al nombre único de
+       fichero temporal, o NULL si no se puede generar un  nombre
+       único.
+
+ERRORES
+       No se han definido errores.
+
+NOTAS
+       Las  aplicaciones  transportables que usan hilos no pueden
+       llamar a tmpnam() con un parámetro NULL  si  se  define  o
+       bien _POSIX_THREAD_SAFE_FUNCTIONS o bien _POSIX_THREADS.
+
+       La  función  tmpnam() genera una cadena diferente cada vez
+       que se llama, hasta TMP_MAX veces.  Si  se  llama  más  de
+       TMP_MAX  veces,  el  comportamiento  depende  de la imple­
+       mentación.
+
+FALLOS
+       Nunca use esta función. En su lugar use mkstemp(3).
+
+CONFORME A
+       SVID 2, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       mktemp(3), mkstemp(3), tempnam(3), tmpfile(3)
+
+
+
+                          14 junio 1999                 TMPNAM(3)

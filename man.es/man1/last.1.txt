@@ -1,0 +1,77 @@
+LAST,LASTB(1)  Manual del Administrador de Sistemas LAST,LASTB(1)
+
+
+
+NOMBRE
+       last,  lastb  - Muestra un listado de los últimos usuarios
+       conectados
+
+SINOPSIS
+       last [-R] [-num] [ -n num ] [-adx] [ -f  archivo  ]  [nom­
+       bre...]  [tty...]
+       lastb  [-R]  [-num] [ -n num ] [ -f archivo ] [-adx] [nom­
+       bre...]  [tty...]
+
+DESCRIPCIÓN
+       Last Busca  a  través  del  archivo  /var/log/wtmp  (o  el
+       archivo indicado por la bandera -f) e imprime una lista de
+       todos los usuarios conectados (y desconectados) desde  que
+       el  fichero fue creado. Pueden indicarse nombres de usuar­
+       ios o ttys, en cuyo caso last mostrará solamente la  lista
+       de  los  argumentos  indicados.  Los  nombres  de las ttys
+       pueden ser abreviados, así, last 0 es igual que last tty0.
+
+       Cuando  last  detecta  una  señal  SIGINT (generada por la
+       tecla de interrupción, generalmente control-C) o una señal
+       SIGQUIT (generada por la tecla de salir, generalmente con­
+       trol-\), last mostrará las  entradas  leídas  del  fichero
+       hasta  ese  momento;  en  el  caso de la señal SIGINT last
+       finalizará.
+
+       El pseudo usuario reboot se conectará cada vez que el sis­
+       tema  es  reiniciado.  De esta manera last reboot mostrará
+       todas las desconexiones desde que el fichero fue creado.
+
+       Lastb es igual que last, excepto porque por defecto  mues­
+       tra  el  fichero /var/log/btmp, el cual contiene todos los
+       intentos de conexión fallados.
+
+OPCIONES
+       -num   Un contador que le indica  a  last  cuantas  lineas
+              mostrar.
+
+       -n num Lo mismo.
+
+       -R     Suprime la impresión del campo hostname.
+
+       -a     Imprime  el hostname en la última columna. Usado en
+              combinación con el siguiente flag.
+
+       -d     Para conexiones no-locales, Linux además del  host-
+              name  de  la  máquina remota, almacena su número de
+              IP. Esta opción convierte el número  de  IP  en  un
+              hostname.
+
+       -x     Muestra las desconexiones del sistema y los cambios
+              en niveles de ejecución.
+
+NOTAS
+       Los archivos wtmp y btmp podrían no encontrarse.  El  sis­
+       tema  solo  almacenará  la información en esos archivos si
+       existen. Es una característica de configuración local.  Si
+       quieres usar los archivos, los puedes crear con el comando
+       touch(1), por ejemplo touch /var/log/wtmp).
+
+ARCHIVOS
+       /var/log/wtmp
+       /var/log/btmp
+
+AUTOR
+       Miquel van Smoorenburg, miquels@cistron.nl
+
+VÉASE TAMBIÉN
+       shutdown(8), login(1), init(8)
+
+
+
+Linux                      27 mayo 1997             LAST,LASTB(1)

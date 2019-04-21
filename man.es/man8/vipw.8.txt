@@ -1,0 +1,66 @@
+
+NOMBRE
+     vipw, vigr - editan los ficheros de cuentas y grupos
+
+SINOPSIS
+     vipw [-V] [--version]
+
+     vigr [-V] [--version]
+
+DESCRIPCIÓN
+     Vipw edita el fichero de cuentas tras establecer los bloqueos apropiados,
+     y hace cualquier procesado que sea necesario después de que el fichero de
+     cuentas se desbloquee.  Si el fichero de cuentas ya está bloqueado para
+     la edición por parte de otro usuario, vipw le pedirá que lo intente de
+     nuevo más tarde. El editor predeterminado para vipw suele ser, como
+     indica su nombre, vi(1).
+     Vigr edita el fichero de grupos de la misma manera que vipw.
+
+ENTORNO
+     Si la siguiente variable de entorno existe, será utilizada por vipw:
+
+     EDITOR  El editor especificado por la cadena EDITOR será llamado en vez
+             del predeterminado vi(1).
+
+VÉASE TAMBIÉN
+     passwd(1), vi(1), passwd(5)
+
+HISTORIA
+     La orden vipw apareció en 4.0BSD.
+     La orden vigr apareció en Util-Linux 2.6.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

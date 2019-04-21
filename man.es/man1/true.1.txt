@@ -1,0 +1,39 @@
+TRUE(1)                                                   TRUE(1)
+
+
+
+NOMBRE
+       true - no hace nada; acaba con éxito
+
+SINOPSIS
+       true
+       true {--help,--version}
+
+DESCRIPCIÓN
+       Este  documento ya no es mantenido y puede ser impreciso o
+       incompleto.  La  documentación  de  Texinfo  es  ahora  la
+       fuente de información recomendada.
+
+       Esta página del manual documenta la versión GNU de true (y
+       probablemente cualquier otra versión).  true no hace  nada
+       excepto  devolver  un  valor  de salida de 0, significando
+       "éxito".  Puede  ser  usado  en  aquellos  lugares  de  un
+       archivo  de  comandos  donde  sea necesario un comando que
+       acabe con éxito, de todas maneras, el comando  interno  de
+       la shell ":" (dos puntos) hace lo mismo de manera más ráp­
+       ida.
+
+   OPCIONES
+       Cuando el comando GNU true es invocado con exactamente  un
+       argumento, las siguientes opciones son reconocidas:
+
+       --help Escribe un mensaje sobre el uso en la salida están­
+              dar y acaba sin provocar error.
+
+       --version
+              Escribe información sobre la versión en  la  salida
+              estándar y acaba sin provocar error.
+
+
+
+FSF                  Utilidades Shell de GNU              TRUE(1)

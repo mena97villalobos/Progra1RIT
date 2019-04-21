@@ -1,0 +1,50 @@
+SETJMP(3)            Funciones de biblioteca            SETJMP(3)
+
+
+
+NOMBRE
+       setjmp,  sigsetjmp  -  guardan  el  contexto  de pila para
+       saltos no locales
+
+SINOPSIS
+       #include <setjmp.h>
+
+       int setjmp(jmp_buf env);
+       int sigsetjmp(sigjmp_buf env, int savesigs);
+
+DESCRIPCIÓN
+       Las funciones setjmp() y longjmp() son útiles para  tratar
+       con  errores e interrupciones encontradas en una subrutina
+       de  bajo  nivel  de  un  programa.   setjmp()  guarda   el
+       entorno/contexto  de  pila en env para un uso posterior de
+       longjmp().  El contexto de pila será invalidado si la fun­
+       ción que llamó a setjmp() regresa.
+
+       sigsetjmp()  es  similar  a setjmp().  Si savesigs es dis­
+       tinto de cero, el conjunto de señales bloqueadas se guarda
+       en  env  y  será  restaurado  si se llama más tarde a sig­
+       longjmp() con este env.
+
+VALOR DEVUELTO
+       setjmp() y sigsetjmp() devuelven 0  si  regresan  directa­
+       mente, y no-cero cuando regresan desde longjmp() usando el
+       contexto previamente salvaguardado.
+
+CONFORMES CON
+       POSIX. setjmp también está definida por ``C ANSI''.
+
+OBSERVACIONES
+       POSIX no especifica si  setjmp  guardará  el  contexto  de
+       señales.  Si  Ud.  quiere  salvaguardar  las  máscaras  de
+       señales, emplee sigsetjmp.
+
+       setjmp() y sigsetjmp hacen que los  programas  sean  difí­
+       ciles  de  entender  y mantener. Si es posible busque otra
+       alternativa.
+
+VÉASE TAMBIÉN
+       longjmp(3), siglongjmp(3)
+
+
+
+Linux                      8 Marzo 1998                 SETJMP(3)

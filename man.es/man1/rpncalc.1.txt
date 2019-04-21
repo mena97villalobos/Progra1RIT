@@ -1,0 +1,84 @@
+RPNCALC(1)       Manual de referencia de usuarios      RPNCALC(1)
+
+
+
+NOMBRE
+       rpncalc  -  una  calculadora  de  notación  polaca inversa
+       (RPN).
+
+SINOPSIS
+       rpncalc [-h]|[-v]|["expresión"]
+
+
+DESCRIPCIÓN
+       rpncalc emula parcialmente una HP 28S y está pensada  para
+       cálculos del día a día (por ejemplo 1 1 +), no para tareas
+       complejas (en ese caso,  use  gnuplot(1)  u  octave(1)  ).
+       rpncalc  evalúa  la  expresión dada o la lee de la entrada
+       estándar si no hay tal expresión.   No  está  implementado
+       nada concerniente a:
+        · números complejos,
+        · vectores, matrices, listas y tablas,
+        · datos algebraicos, evaluación simbólica,
+        · distintas unidades,
+        · variables.
+
+       rpncalc  reconoce  las siguientes funciones, operaciones y
+       constantes:
+
+       !     %       %ch       %t     &      *       +      -
+       /     ?       ^         abs    acos   acosh   alog   and
+       arg   asin    asinh     atan   atan2  atanh   cbrt   ceil
+       char  chs     clear     cos    cosh   dec     depth  div
+       drop  drop2   dropn     dup    dup2   dupn    erf    erfc
+       exit  exp     expm      fact   floor  fp      gcd    help
+       hex   hypot   inv       ip     j0     j1      jn     ld
+       ldb   lg      lgamma    ln     lnp1   log     max    min
+       mod   neg     not       oct    or     over    pick   pop
+       prec  prod    push      quit   rand   rdz     rint   rnd
+       rot   shl     show      shr    sign   sin     sinh   sl
+       slb   sq      sqr       sqrt   sr     srb     sum    swap
+       tan   tanh    warranty  xor    y0     y1      yn     |
+       ~
+
+       Los delimitadores son ,, ;, espacio, tab y el caracter de
+       cambio de línea.
+
+       Hay  un par de añadidos respecto a la HP28: el uso de pre­
+       fijos 0x y 0 para representar los números hexadecimales  y
+       octales  respectivamente,  como en C. Las nuevas Funciones
+       de Bessel y funciones de error son para hacer un mejor uso
+       de la biblioteca de rutinas matemáticas.
+
+OPCIONES
+       -h, --help
+              para obtener la ayuda
+
+       -v, --version
+              escribe la versión de rpncalc y finaliza.
+
+VÉASE TAMBIÉN
+       dc(1), bc(1), gnuplot(1), pari(1), octave(1), units(1).
+
+FALLOS
+       La forma de tratarse las excepciones de las operaciones en
+       coma flotante depende de la máquina y arquitectura en  que
+       se encuentre.
+
+       La precisión y el rango de los cálculos depende de la bib­
+       lioteca de funciones matemáticas (y en general será  mucho
+       peor que los datos originales).
+
+AUTOR
+       David Frey
+
+NOTA
+       HP  28S  es  una  marca registrada Hewlett Packard Instru­
+       ments.
+
+RECONOCIMIENTOS Y DERECHOS DE COPIA
+       Véase /usr/doc/rpncalc/copyright
+
+
+
+Debian                   6 - Julio - 1999              RPNCALC(1)

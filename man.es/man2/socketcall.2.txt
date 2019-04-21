@@ -1,0 +1,38 @@
+IPC(2)           Manual del Programador de Linux           IPC(2)
+
+
+
+NOMBRE
+       socketcall - llamadas al sistema relativas a zócalos
+
+SINOPSIS
+       int socketcall(int llamada, unsigned long *args);
+
+DESCRIPCIÓN
+       socketcall es un punto de entrada al núcleo común para las
+       llamadas al sistema relativas  a  zócalos.   El  argumento
+       llamada  determina  a  qué  función de zócalos llamar.  El
+       parámetro args apunta a un bloque que contiene  los  argu­
+       mentos  reales, que se pasan tal cual a la función apropi­
+       ada.
+
+       Los programas de usuario deberían llamar a  las  funciones
+       apropiadas  por  sus nombres usuales. Solamente los imple­
+       mentadores de la biblioteca estándar y los buenos  progra­
+       madores  del  núcleo  necesitan  conocer  la existencia de
+       socketcall.
+
+CONFORME A
+       Esta  llamada  es  específica  de  Linux,  y  no   debería
+       emplearse en programas pretendidamente transportables.
+
+VÉASE TAMBIÉN
+       accept(2),  bind(2),  connect(2), getpeername(2), getsock­
+       name(2), getsockopt(2), listen(2),  recv(2),  recvfrom(2),
+       send(2), sendto(2), setsockopt(2), shutdown(2), socket(2),
+       socketpair(2)
+
+
+
+
+Linux 1.2.4              17 Febrero 1998                   IPC(2)

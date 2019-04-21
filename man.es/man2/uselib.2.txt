@@ -1,0 +1,42 @@
+USELIB(2)        Manual del Programador de Linux        USELIB(2)
+
+
+
+NOMBRE
+       uselib - selecciona biblioteca compartida
+
+SINOPSIS
+       #include <unistd.h>
+
+       int uselib(const char *biblioteca);
+
+DESCRIPCIÓN
+       uselib  selecciona  el  fichero  binario de la  biblioteca
+       compartida que será empleado por este proceso.
+
+VALOR DEVUELTO
+       En caso de éxito se devuelve cero. En  caso  de  error  se
+       devuelve -1 y se pone en errno un valor apropiado.
+
+ERRORES
+       Además de todos los códigos de error devueltos por open(2)
+       y mmap(2), también pueden devolverse los siguientes:
+
+
+       ENOEXEC
+              El fichero especificado por biblioteca no  es  eje­
+              cutable,  o no posee los números mágicos correctos.
+
+       EACCES La biblioteca especificada por biblioteca no  tiene
+              permiso de lectura.
+
+CONFORME A
+       uselib() es específica de Linux, y no debería emplearse en
+       programas que se pretendan transportables.
+
+VÉASE TAMBIÉN
+       open(2), mmap(2), ldd(1), gcc(1), ar(1), ld(1)
+
+
+
+Linux 0.99.11             9 Febrero 1998                USELIB(2)

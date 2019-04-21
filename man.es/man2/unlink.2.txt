@@ -1,0 +1,91 @@
+UNLINK(2)        Manual del programador de Linux        UNLINK(2)
+
+
+
+NOMBRE
+       unlink  - borra un nombre y posiblemente el fichero al que
+       hace referencia
+
+SINOPSIS
+       #include <unistd.h>
+
+       int unlink(const char *pathname);
+
+DESCRIPCIÓN
+       unlink borra un nombre del sistema de ficheros.  Si  dicho
+       nombre era el último enlace a un fichero, y ningún proceso
+       tiene el fichero abierto, el fichero es borrado y el espa­
+       cio que ocupaba vuelve a estar disponible.
+
+       Si el nombre era el último enlace a un fichero, pero algún
+       proceso sigue teniendo  el  fichero  abierto,  el  fichero
+       seguirá  existiendo  hasta  que  el  último  descriptor de
+       fichero referente a él sea cerrado.
+
+       Si el nombre hacía referencia a un  enlace  simbólico,  el
+       enlace es eliminado.
+
+       Si el nombre hacía referencia a un socket, fifo o disposi­
+       tivo, el nombre es eliminado, pero los procesos que tengan
+       el objeto abierto pueden continuar usándolo.
+
+
+VALOR DEVUELTO
+       En caso de éxito, se devuelve cero. En caso de  error,  se
+       devuelve -1 y se establece el errno apropiado.
+
+ERRORES
+       EFAULT  pathname apunta fuera del espacio  de  direcciones
+               accesible.
+
+       EACCES  No se otorga permiso de escritura para el directo­
+               rio contenido  en  pathname  al  identificador  de
+               usuario  efectivo del proceso, o uno de los direc­
+               torios de pathname no permite búsquedas (no  tiene
+               permiso de ejecución).
+
+       EPERM   El  directorio  contenido en pathname tiene puesto
+               el sticky-bit (S_ISVTX),  y  el  identificador  de
+               usuario  efectivo  del  proceso no es el identifi­
+               cador de usuario del fichero a borrar  ni  el  del
+               directorio  que  lo  contiene,  o  pathname  es un
+               directorio.
+
+       ENAMETOOLONG
+               pathname es demasiado largo.
+
+       ENOENT  Un elemento usado como directorio en  pathname  no
+               existe o es un enlace simbólico colgado.
+
+       ENOTDIR Un  elemento  usado como directorio en pathname no
+               es en realidad un directorio.
+
+       EISDIR  pathname hace referencia a un directorio.
+
+       ENOMEM  No hay suficiente memoria disponible en el núcleo.
+
+       EROFS   pathname  hace  referencia a un fichero de un sis­
+               tema de ficheros de sólo lectura.
+
+       ELOOP   Se encontraron demasiados  enlaces  simbólicos  al
+               traducir pathname.
+
+       EIO     Ocurrió un error de E/S.
+
+CONFORME A
+       SVr4,  SVID,  POSIX,  X/OPEN,  4.3BSD.  SVr4 documenta las
+       condiciones de error adicionales EBUSY, EINTR,  EMULTIHOP,
+       ETXTBUSY, ENOLINK.
+
+FALLOS
+       Algunos  hechos  desafortunados en el protocolo NFS pueden
+       causar la desaparición inesperada de ficheros  que  siguen
+       en uso.
+
+VÉASE TAMBIÉN
+       link(2),    rename(2),    open(2),   rmdir(2),   mknod(2),
+       mkfifo(3), remove(3), rm(1)
+
+
+
+Linux 2.0.30              21 Agosto 1997                UNLINK(2)

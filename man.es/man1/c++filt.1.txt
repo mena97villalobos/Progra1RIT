@@ -1,0 +1,103 @@
+c++filt(1)      Herramientas de desarrollo de GNU      c++filt(1)
+
+
+
+NOMBRE
+       c++filt - restaura nombres de símbolos de C++
+
+
+SINOPSIS
+       c++filt
+              [-_|--strip-underscores] [-s {gnu,lucid,arm} |
+              --format={gnu,lucid,arm}] [--help] [--version]
+              [símbolo...]
+
+DESCRIPCIÓN
+       El lenguaje C++ proporciona sobrecarga de funciones, lo
+       que significa que uno puede escribir varias funciones con
+       el mismo nombre (siempre que la lista de argumentos de
+       cada una sea distinta). Todos los nombres de funciones de
+       C++ se codifican a una etiqueta de ensamblador de bajo
+       nivel (este proceso se conoce como desfiguración
+       (mangling)).  El programa c++filt realiza la
+       correspondencia inversa: descodifica (restaura, demangles)
+       los nombres de bajo nivel a los nombres que dio el usuario
+       de forma que el enlazador pueda evitar que estas funciones
+       sobrecargadas colisionen.
+
+       Cada palabra alfanumérica (consistente en letras, dígitos,
+       subrayados, dólares o puntos) vista en la entrada, es una
+       etiqueta en potencia. Si la etiqueta se descodifica a un
+       nombre de C++, este nombre de C++ reemplaza a la etiqueta
+       de bajo nivel en la salida.
+
+       Uno puede emplear c++filt para descifrar símbolos
+       individuales especificándolos en la linea de órdenes.
+
+       Si no se dan argumentos símbolo, c++filt lee nombres de
+       símbolos desde la entrada estándar y escribe los nombres
+       recompuestos en la salida estándar. Todos los resultados
+       se muestran en la salida estándar.
+
+OPCIONES
+       -_
+
+       --strip-underscores
+              En algunos sistemas, los compiladores de C y de C++
+              ponen un subrayado delante de cada nombre. Por
+              ejemplo, el nombre de C fuu se convierte en el
+              nombre de bajo nivel _fuu.  Esta opción quita el
+              subrayado inicial.
+
+
+       -s {gnu,lucid,arm}
+
+       --format={gnu,lucid,arm}
+              El programa nm de GNU puede descodificar tres
+              métodos diferentes de desfiguración, empleados por
+              diferentes compiladores de C++. Esta opción
+              selecciona qué método emplear: el del compilador de
+              GNU, el del compilador de Lucid, o el especificado
+              en el Manual de Referencia Anotado de C++ (The C++
+              Annotated Reference Manual). El predeterminado es
+              el estilo de GNU.
+
+       --help Muestra un sumario de las opciones de c++filt y
+              acaba.
+
+
+       --version
+              Muestra el número de versión de c++filt y acaba.
+
+
+VÉASE TAMBIÉN
+       `binutils' en Info; Las Utilidades de Binarios de GNU,
+       Roland H. Pesch (Junio de 1993).
+
+
+DERECHOS DE COPIA
+       Copyright (c) 1993 Free Software Foundation, Inc.
+
+       Permission is granted to make and distribute verbatim
+       copies of this manual provided the copyright notice and
+       this permission notice are preserved on all copies.
+
+       Permission is granted to copy and distribute modified
+       versions of this manual under the conditions for verbatim
+       copying, provided that the entire resulting derived work
+       is distributed under the terms of a permission notice
+       identical to this one.
+
+       Permission is granted to copy and distribute translations
+       of this manual into another language, under the above
+       conditions for modified versions, except that this
+       permission notice may be included in translations approved
+       by the Free Software Foundation instead of in the original
+       English.
+
+       N. del T.: Sólo tiene validez legal el aviso de copyright
+       original.
+
+
+
+Cygnus support            Junio de 1993                c++filt(1)

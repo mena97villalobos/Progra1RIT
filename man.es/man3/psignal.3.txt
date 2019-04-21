@@ -1,0 +1,36 @@
+PSIGNAL(3)       Manual del Programador de Linux       PSIGNAL(3)
+
+
+
+NOMBRE
+       psignal - muestra el mensaje correspondiente a una señal
+
+SINOPSIS
+       #include <signal.h>
+
+       void psignal(int sig, const char *s);
+
+       extern const char *const sys_siglist[]
+
+DESCRIPCIÓN
+       La  función psignal() muestra un mensaje en stderr consis­
+       tente en la cadena de caracteres s, un signo de  dos  pun­
+       tos,  un espacio en blanco, y una cadena de caracteres que
+       describe el número de señal sig.  Si sig no es válido,  el
+       mensaje mostrado indicará una señal desconocida.
+
+       El  vector  sys_siglist contiene las cadenas de caracteres
+       de descripción de señales, indizadas por número de  señal.
+
+VALOR DEVUELTO
+       La función psignal() no devuelve nada.
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       perror(3), strsignal(3)
+
+
+
+GNU                        5 Marzo 1998                PSIGNAL(3)

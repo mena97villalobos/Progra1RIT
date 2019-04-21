@@ -1,0 +1,74 @@
+READDIR(2)       Manual del Programador de Linux       READDIR(2)
+
+
+
+NOMBRE
+       readdir - lee una entrada de un directorio
+
+SINOPSIS
+       #include <unistd.h>
+       #include <linux/dirent.h>
+       #include <linux/unistd.h>
+
+       _syscall3(int, readdir, uint, fd, struct dirent *, dirp, uint, count);
+
+       int readdir(unsigned int fd, struct dirent *dirp, unsigned int count);
+
+DESCRIPCIÓN
+       Esta  no es la funcion que buscabas.  Mira readdir(3) para
+       ver la interfase de la biblioteca  C  que  se  conforma  a
+       POSIX.   Esta  página  documenta la interfaz desnuda de la
+       llamada de sistema del kernel, que puede  cambiar,  y  que
+       está superada por getdents(2).
+
+       readdir  lee  una  estructura dirent del directorio al que
+       apunta fd y lo mete en el área de memoria  al  que  apunta
+       dirp.   El  parámetro count es ignorado; como mucho se lee
+       una estructura dirent.
+
+       La estructura dirent se declara como sigue:
+
+              struct dirent
+              {
+                  long d_ino;                 /* número de nodo-i */
+                  off_t d_off;                /* ajuste hasta el dirent */
+                  unsigned short d_reclen;    /* longitud del d_name */
+                  char d_name [NAME_MAX+1];   /* nombre fichero
+                                                 (acabado en nulo) */
+              }
+
+       d_ino es un número de nodo-i.  d_off es la distancia desde
+       el  principio  del directorio hasta este dirent.  d_reclen
+       es el tamaño de d_name, sin contar el  carácter  nulo  del
+       final.  d_name es un nombre de fichero, una cadena de car­
+       acteres terminada en nulo.
+
+
+VALOR DEVUELTO
+       En caso de éxito, se devuelve 1.  Si se halló el final del
+       directorio,  se devuelve 0.  Si hubo un error, se devuelve
+       -1, y errno es actualizada de acuerdo al error.
+
+ERRORES
+       EBADF  Descriptor de fichero fd inválido.
+
+       EFAULT El argumento señala fuera  del  espacio  de  direc­
+              ciones del proceso que realiza la llamada.
+
+       EINVAL El buffer para el resultado es demasiado pequeño.
+
+       ENOENT No existe el directorio.
+
+       ENOTDIR
+              El  descriptor de fichero no se refiere a un direc­
+              torio.
+
+CONFORME A
+       Esta llamada al sistema es específica de Linux.
+
+VÉASE TAMBIÉN
+       getdents(2), readdir(3)
+
+
+
+Linux 1.3.6                22 Jul 1995                 READDIR(2)

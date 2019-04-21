@@ -1,0 +1,67 @@
+MDEL(1)                                                   MDEL(1)
+
+
+
+NOMBRE
+       mdel - borra un fichero MSDOS
+
+
+
+NOTA
+       Esta  página  de manual ha sido generada automáticamente a
+       partir de la documentación texinfo de mtools. Sin embargo,
+       el  proceso  es sólo aproximado, y algunos elementos tales
+       como referencias cruzadas, notas  al  pie  e  índices,  se
+       pierden  en  este  proceso de traducción.  De hecho, estos
+       elementos no tienen una representación adecuada en el for­
+       mato  de  las  páginas del manual. Por otra parte, sólo se
+       han traducido los elemntos específicos de cada comando,  y
+       se  ha  desechado de la versión de la página del manual la
+       información general de mtools. Por este motivo,  le  aviso
+       encarecidamente que use el documento texinfo original.
+
+       *      Para generar un copia imprimible del documento tex­
+       info use los siguientes comandos:
+
+                     ./configure; make dvi; dvips mtools.dvi .fi
+
+
+
+       *      Para generar una copia html, ejecute:
+
+                     ./configure; make html
+
+              Puede   encontrar   un  html  preconfeccionado  en:
+              `http://linux.wauug.org/pub/knaff/mtools'
+
+       *      Para generar un copia info (visualizable usando  el
+              modo info de emacs), ejecute:
+
+                     ./configure; make info
+
+
+
+       El documento texinfo parece más bonito en html o cuando se
+       imprime. De hecho, la versión info contiene ciertos ejemp­
+       los que son difíciles de leer debido a las convenciones de
+       notación usadas en info.
+
+
+DESCRIPCIÓN
+       El comando mdel se utiliza para borrar un fichero  MS-DOS.
+       Su sintaxis es:
+
+       mdel [-v] ficheromsdos [ ficherosmsdos ...  ]
+
+
+       Mdel borra ficheros en un sistema de ficheros MS-DOS.
+
+       Mdel solicita verificación antes de eliminar un fichero de
+       sólo lectura.
+
+VÉASE TAMBIÉN
+       Documentación texinfo de mtools
+
+
+
+mtools-3.7                29 Junio 1997                   MDEL(1)

@@ -1,0 +1,114 @@
+PSNUP(1)                                                 PSNUP(1)
+
+
+
+NOMBRE
+       psnup - múltiples páginas por hoja.
+
+SINOPSIS
+       psnup  [  -wwidth ] [ -hheight ] [ -ppaper ] [ -Wwidth ] [
+       -Hheight ] [ -Ppaper ] [ -l ] [ -r ] [  -f  ]  [  -c  ]  [
+       -mmargin  ] [ -bborder ] [ -dlwidth ] [ -sscale ] [ -nup ]
+       [ -q ] [ infile [ outfile ] ]
+
+DESCRIPCIÓN
+       Psnup mete físicamente múltiples páginas lógicas  en  cada
+       hoja  de  papel.   El  fichero  PostScript de entrada debe
+       seguir los Convenios de Estructuración  de  Documentos  de
+       Adobe (Document Structuring Conventions).
+
+       La  opción -w especifica la anchura del papel, y la opción
+       -h especifica la altura del papel,  expresada  normalmente
+       en  cm  o  in para convertir puntos de PostScript (1/72 de
+       una pulgada) a centimetros o pulgadas.  La opción -p puede
+       utilizarse  como  alternativa  para  indicar el tamaño del
+       papel como a3, a4, a5, b5, letter, legal, tabloid,  state­
+       ment,  executive,  folio,  quarto  o 10x14.  El tamaño del
+       papel de salida por defecto es a4.  Las opciones -W, -H, y
+       -P  especifican  el  tamaño del papel de la entrada, si es
+       que es diferente del tamaño del papel de la salida.   Esto
+       facilita  imponer  páginas  de  un  tamaño  en un papel de
+       tamaño diferente.
+
+       La opción -l debe utilizarse para páginas que tienen  ori­
+       entación  apaisada (giradas 90 grados en sentido contrario
+       a las agujas del reloj). La opción -r debe utilizarse para
+       páginas  con  orientación  apaisada  invertida (giradas 90
+       grados en el sentido de las agujas del reloj), y la opción
+       -f se debe utilizar para páginas que tienen intercambiadas
+       la anchura y la altura, pero no están giradas.
+
+       Psnup usa normalmente formato `row-major', en el  que  las
+       páginas  adyacentes  se  colocan  en  filas a lo largo del
+       papel.  La opción -c cambia  el  orden  a  `column-major',
+       donde  las  páginas sucesivas se colocan en columnas hacia
+       abajo del papel.
+
+       Se puede usar la opción -m para dejar un margen  alrededor
+       de  toda  la página, lo cual es útil para realizar páginas
+       guía, porque  los  márgenes  normales  de  una  página  se
+       reducen al poner múltiples páginas en una sola hoja.
+
+       La  opción  -b  se utiliza para especificar un margen adi­
+       cional alrededor de cada una de las páginas de una hoja.
+
+       La opción -d  dibuja  una  línea  de  anchura  determinada
+       alrededor  del  borde  de  cada  página.   Si el parámetro
+       lwidth se omite, se asume una anchura de línea de 1 punto.
+       El  ancho  de  línea  es  relativo  a las dimeniones de la
+       página original, es decir, se escala hacia  menor  con  el
+       resto de la página.
+
+       La escala escogida por psnup se puede ignorar si la opción
+       -s es utilizada. Esto es útil para fusionar páginas que ya
+       han sido reducidas.
+
+       La opción -nup selecciona el número de páginas lógicas que
+       se ponen en cada  hoja  de  papel.   Puede  ser  cualquier
+       número  entero.  psnup intenta optimizar la disposición de
+       manera que se pierda la menor cantidad de espacio posible.
+       Si  psnup no puede encontrar una disposición dentro de sus
+       límites de tolerancia, abortará con un mensaje  de  error.
+       También  se puede usar la forma alternativa i nup por com­
+       patibilidad con otros programas n-up.
+
+       Por defecto, Psnup imprime los números de  página  de  las
+       páginas reordenadas. La opción -q suprime esto.
+
+EJEMPLOS
+       El  uso potencial de esta utilidad es variado, pero un uso
+       en particular es con psbook(1).  Por ejemplo, usando groff
+       para  crear un documento PostScript y lpr como el servidor
+       de impresión UNIX, una línea de comando típica podría  ser
+       como la siguiente:
+
+       groff -Tps -ms file | psbook | psnup -2 | lpr
+
+       file  es  un  documento  de 4 páginas y el comando da como
+       resultado un documento de dos páginas, con dos páginas  de
+       file  imprimidas por cada página, con el orden de la pági­
+       nas cambiado para que las páginas 4  y  1  de  la  primera
+       página  de file se encuentren en la primera página de sal­
+       ida, y las páginas 2 y 3  de  file  se  encuentren  en  la
+       segunda página de salida.
+
+AUTOR
+       Copyright (C) Angus J. C. Duggan 1991-1995
+
+VÉASE TAMBIÉN
+       psbook(1),  psselect(1),  pstops(1), epsffit(1), psnup(1),
+       psresize(1), psmerge(1), fixscribeps(1), getafm(1), fixdl­
+       srps(1),  fixfmps(1),  fixmacps(1),  fixpsditps(1),  fixp­
+       spps(1), fixtpps(1), fixwfwps(1), fixwpps(1),  fixwwps(1),
+       extractres(1), includeres(1)
+
+MARCAS REGISTRADAS
+       PostScript es una marca registrada de Adobe Systems Incor­
+       porated.
+
+FALLOS
+       Psnup no acepta todos los comentarios de las DSC.
+
+
+
+                 PSUtils Release 1 Patchlevel 17         PSNUP(1)

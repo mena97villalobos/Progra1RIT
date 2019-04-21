@@ -1,0 +1,649 @@
+CONSOLE_IOCTLS(4)Manual del Programador de LinuxCONSOLE_IOCTLS(4)
+
+
+
+NOMBRE
+       console ioctl - ioctl's para la terminal de consola y con­
+       solas virtuales
+
+DESCRIPCIÓN
+       ATENCIÓN: Si Ud. usa la siguiente información, es bajo  su
+       reponsabilidad. Allá Ud.
+
+       ATENCIÓN: Estas llamadas a ioctl son internas a Linux y no
+       documentadas, sujetas a cambios sin previo aviso. Use fun­
+       ciones POSIX.
+
+       Se admiten las siguientes peticiones ioctl() peculiares de
+       Linux.  Cada una requiere un  tercer  argumento,  supuesto
+       aquí como argp.
+
+       KDGETLED
+              Obtiene  estado de los LEDs.  argp apunta a un long
+              int.  Los 3 bits más bajos de *argp se ponen  según
+              el estado de los LEDs, como sigue:
+
+                  LED_CAP       0x04   LED Bloq. Mayús
+                  LEC_NUM       0x02   LED Bloq. Num
+                  LED_SCR       0x01   LED Bloq. Despl
+
+
+       KDSETLED
+              Enciende los LEDs.  Los LEDs se encienden según los
+              3 bits más bajos de argp.  Sin embargo, si se  pone
+              un  bit  de  más alto orden, los LEDs se ponen a su
+              funcionamiento normal: mostrar  el  estado  de  las
+              funciones  del  teclado:  bloqueo de mayúsculas, de
+              teclado auxiliar numérico y de desplazamiento.
+
+       Antes de 1.1.54, los LEDs simplemente reflejaban el estado
+       de   las   correspondientes   señales   del   teclado,   y
+       KDGETLED/KDSETLED  tamibén  cambiaban  las   señales   del
+       teclado. Desde 1.1.54, los LEDs pueden mostrar información
+       arbitraria, pero por  omisión  muestran  las  señales  del
+       teclado.  Las  2  siguientes llamadas a ioctl se usan para
+       acceder a las señales del teclado.
+
+
+       KDGKBLED
+              Obtiene las señales del  teclado  Bloq.Mayús,  Blo­
+              qNum,  BloqDespl  (no las luces).  argp apunta a un
+              char que se pone con el estado de la señal.  Los  3
+              bits  de  más  bajo orden (máscara 0x7) obtienen el
+              estado de la señal actual, y los bits de  más  bajo
+              orden  de  la  siguiente  cuarteta  (máscara  0x70)
+              obtienen el  estado  de  la  señal  predeterminado.
+              (Desde 1.1.54.)
+
+
+       KDSKBLED
+              Pone  las  señales del teclado Bloq.Mayús, BloqNum,
+              BloqDespl (no las luces).  argp tiene el estado  de
+              la  señal  deseado.   Los  3 bits de más bajo orden
+              (máscara 0x7) tienen el estado de la señal,  y  los
+              bits  de  más  bajo  orden de la siguiente cuarteta
+              (máscara 0x70) tienen el estado de la señal  prede­
+              terminado. (Desde 1.1.54.)
+
+
+       KDGKBTYPE
+              Obtiene  el tipo de teclado. Esto devuelve el valor
+              KB_101, definido como 0x02.
+
+
+       KDADDIO
+              Añade puerto de E/S como válido.  Equivale  a  iop­
+              erm(arg,1,1).
+
+
+       KDDELIO
+              Quita  puerto  de  E/S como válido. Equivale a iop­
+              erm(arg,1,0).
+
+
+       KDENABIO
+              Habilita E/S a la tarjeta de vídeo. Equivale a iop­
+              erm(0x3b4, 0x3df-0x3b4+1, 1).
+
+
+       KDDISABIO
+              Inhabilita la E/S a la tarjeta de vídeo. Equivale a
+              ioperm(0x3b4, 0x3df-0x3b4+1, 0).
+
+
+       KDSETMODE
+              Pone el modo de texto o gráfico.  argp  es  uno  de
+              éstos:
+
+                  KD_TEXT       0x00
+                  KD_GRAPHICS   0x01
+
+
+       KDGETMODE
+              Obtiene  el modo de texto o gráfico.  argp apunta a
+              un long int que se pone a uno  de  los  valores  de
+              arriba.
+
+
+       KDMKTONE
+              Genera un tono de la longitud especificada.  Los 16
+              bits más bajos de argp especifican  el  periodo  en
+              ciclos  de  reloj,  y  los 16 bits más altos dan la
+              duración en ms.  Si la duración es 0, el sonido  se
+              apaga.  Se devuelve el control inmediatamente.  Por
+              ejemplo, argp = (125<<16) + 0x637 especificaría  el
+              pitido  asociado  normalmente con un Ctrl-G.  (Este
+              modo de funcionamiento desde 0.99pl1; infringido en
+              2.1.49-50.)
+
+
+       KIOCSOUND
+              Empieza  o  para  la generación de sonido. Los 16 b
+              más bajos de argp especifican el periodo en  ciclos
+              de  reloj  (esto  es,  argp  = 1193180÷frecuencia).
+              argp = 0 apaga el sonido.  En  cualquier  caso,  se
+              devuelve el control inmediatamente.
+
+
+       GIO_CMAP
+              Obtiene  el  mapa  de colores predeterminado actual
+              del núcleo.  argp apunta a un vector de  48  bytes.
+              (Desde 1.3.3.)
+
+
+       PIO_CMAP
+              Cambia  el  mapa  de colores predeterminado en modo
+              texto. argp apunta a un vector de  48  B  que  con­
+              tiene,  en orden, los valores de Rojo, Verde y Azul
+              para los 16 colores de la pantalla  sisponibles:  0
+              es  apagado, y 255 es intensidad completa. Los col­
+              ores predeterminados son,  en  orden,  negro,  rojo
+              oscuro,  verde oscuro, marrón, azul oscuro, púrpura
+              oscuro, celeste oscuro, gris  claro,  gris  oscuro,
+              rojo  brillante,  verde  brillante,  amarillo, azul
+              brillante, púrpura brillante, celeste  brillante  y
+              blanco. (Desde 1.3.3.)
+
+
+       GIO_FONT
+              Obtiene  el tipo de letra de pantalla de 256 carac­
+              teres en forma expandida. argp apunta a  un  vector
+              de  8192  B. Falla con el código de error EINVAL si
+              el tipo cargado actualmente es uno  de  512  carac­
+              teres, o si la consola no está en modo texto.
+
+
+       GIO_FONTX
+              Obtiene  el tipo de letra de la pantalla e informa­
+              ción asociada. argp apunta a  una  struct  console­
+              fontdesc (vea PIO_FONTX).  En el momento de la lla­
+              mada, el campo charcount debería estar  puesto  con
+              el  máximo  número de caracteres que cupieran en el
+              búfer apuntado por chardata.  Al regresar, los cam­
+              pos  charcount y charheight se llenan con los datos
+              respectivos para el tipo cargado actualmente, y  el
+              vector  chardata  contiene los datos del tipo si el
+              valor inicial de charcount indicaba que había espa­
+              cio  suficiente disponible; de otra forma, el búfer
+              queda intacto y en errno se pone el  valor  ENOMEM.
+              (Desde 1.3.1.)
+
+
+       PIO_FONT
+              Establece  el tipo de letra de pantalla de 256 car­
+              acteres. Carga el tipo en el  generador  de  carac­
+              teres  EGA/VGA.   argp  apunta  a  un  mapa de 8192
+              bytes,  con  32  bytes  por  carácter.   Sólo   los
+              primeros  N de ellos se emplean para un tipo de 8×N
+              (0 < N <= 32).  Esta llamada  también  invalida  la
+              asociación Unicode.
+
+
+       PIO_FONTX
+              Establece  el tipo de pantalla e información asoci­
+              ada de atributos de vídeo. argp apunta a una
+
+              struct consolefontdesc {
+                      u_short charcount;      /* caracteres en el tipo (256 ó 512) */
+                      u_short charheight;     /* líneas de rastreo por carácter (1-32) */
+                      char *chardata;         /* datos de tipo en forma expandida */
+              };
+
+              Si es  necesario,  la  pantalla  se  redimensionará
+              apropiadamente,  y se enviará SIGWINCH a los proce­
+              sos apropiados. Esta llamada  también  invalida  la
+              asociación Unicode. (Desde 1.3.1.)
+
+
+       PIO_FONTRESET
+              Restaura  el tipo de letra de pantalla, el tamaño y
+              la asociación Unicode a los valores predeterminados
+              en el arranque. No se usa argp, pero debe igualarse
+              a NULL para asegurar  la  compatibilidad  con  ver­
+              siones futuras de Linux. (Desde 1.3.28.)
+
+
+       GIO_SCRNMAP
+              Obtiene  del núcleo la asociación de pantalla. argp
+              apunta a un área de tamaño E_TABSZ, que se carga en
+              las  posiciones  del  tipo usadas para mostrar cada
+              carácter. Esta llamada más bien  devuelve  informa­
+              ción inútil si el tipo de letra cargado en la actu­
+              alidad es de más de 256 caracteres.
+
+
+       GIO_UNISCRNMAP
+              Obtiene del núcleo la asociación de  pantalla  com­
+              pleta  Unicode.  argp  apunta  a  un área de tamaño
+              E_TABSZ*sizeof(unsigned short), que  se  carga  con
+              los  Unicodes que representan cada carácter. Se usa
+              un conjunto especial  de  Unicodes,  empezando  por
+              U+F000, para representar asociaciones ``directas al
+              tipo''. (Desde 1.3.1.)
+
+
+       PIO_SCRNMAP
+              Carga la (4ª) tabla ``definible por el usuario'' en
+              el  núcleo,  que  asocia bytes con símbolos de pan­
+              talla de la consola.  argp  apunta  a  un  área  de
+              tamaño E_TABSZ.
+
+
+       PIO_UNISCRNMAP
+              Carga en el núcleo la (4ª) tabla ``definible por el
+              usuario'', que asocia bytes con Unicodes, que luego
+              se traducen a símbolos de la pantalla según el mapa
+              cargado en la actualidad Unicode-a-tipo.  Los  Uni­
+              codes  especiales  que empiezan en U+F000 se pueden
+              usar para asociar directamente a los  símbolos  del
+              tipo. (Desde 1.3.1.)
+
+
+       GIO_UNIMAP
+              Obtiene  del  núcleo  la  asocación Unicode-a-tipo.
+              argp apunta a una
+
+              struct unimapdesc {
+                      u_short entry_ct;
+                      struct unipair *entries;
+              };
+
+              donde entries apunta a un vector de
+
+              struct unipair {
+                      u_short unicode;
+                      u_short fontpos;
+              };
+
+              (Desde 1.1.92.)
+
+
+       PIO_UNIMAP
+              Poner la asociación Unicode-a-tipo  en  el  núcleo.
+              argp   apunta  a  una  struct  unimapdesc.   (Desde
+              1.1.92)
+
+
+       PIO_UNIMAPCLR
+              Limpia la tabla, posiblemente informa al  algoritmo
+              de hash. argp apunta a una
+
+              struct unimapinit {
+                      u_short advised_hashsize;  /* 0 si no opinión */
+                      u_short advised_hashstep;  /* 0 si no opinión */
+                      u_short advised_hashlevel; /* 0 si no opinión */
+              };
+
+              (Desde 1.1.92.)
+
+
+       KDGKBMODE
+              Obtiene  el modo de teclado en curso. argp apunta a
+              un long int que toma una de estos valores:
+
+                  K_RAW         0x00
+                  K_XLATE       0x01
+                  K_MEDIUMRAW   0x02
+                  K_UNICODE     0x03
+
+
+       KDSKBMODE
+              Establece el modo de teclado actual.   argp  es  un
+              long int igual a uno de los valores de antes.
+
+
+       KDGKBMETA
+              Obtiene  el  modo  de manejo de la tecla META. argp
+              apunta a un long int que se pone con uno  de  estos
+              valores:
+
+                  K_METABIT      0x03    pone  a  1 el bit de más
+              alto orden
+                  K_ESCPREFIX   0x04   prefijo de ESCAPE
+
+
+       KDSKBMETA
+              Establece el modo de manejo de la tecla META.  argp
+              es  un  long int igual a uno de los valores anteri­
+              ores.
+
+
+       KDGKBENT
+              Obtiene una entrada de la tabla  de  traducción  de
+              teclas  (código  de tecla a coigo de acción).  argp
+              apunta a una
+
+              struct kbentry {
+                  u_char kb_table;
+                  u_char kb_index;
+                  u_short kb_value;
+              };
+
+              con los  primeros  dos  miembros  llenos:  kb_table
+              selecciona  la  tabla  de  teclas  (0 <= kb_table <
+              MAX_NR_KEYMAPS), y kb_index es el código  de  tecla
+              (0  <=  kb_index  <  NR_KEYS).  kb_value se pone al
+              código de acción correspondiente, o  K_HOLE  si  no
+              hay   tal  tecla,  o  K_NOSUCHMAP  si  kb_table  es
+              inválido.
+
+
+       KDSKBENT
+              Establece una entrada en la  tabla  de  traducción.
+              argp apunta a una struct kbentry.
+
+
+       KDGKBSENT
+              Obtiene una cadena de tecla de función. argp apunta
+              a una
+
+              struct kbsentry {
+                  u_char kb_func;
+                  u_char kb_string[512];
+              };
+
+              kb_string es pone a la cadena (terminada  en  cero)
+              correspondiente  al código de acción de la tecla de
+              función kb_func-sima.
+
+
+       KDSKBSENT
+              Establece una entrada de cadena de  tecla  de  fun­
+              ción.  argp apunta a una struct kbsentry.
+
+
+       KDGKBDIACR
+              Lee  la  tabla de acentos del núcleo. argp apunta a
+              una
+
+              struct kbdiacrs {
+                  unsigned int kb_cnt;
+                  struct kbdiacr kbdiacr[256];
+              };
+
+              donde kb_cnt es el número de entradas en el vector,
+              cada una siendo una
+
+              struct kbdiacr { u_char diacr, base, result; };
+
+
+       KDGETKEYCODE
+              Lee  una  entrada  de la tabla de códigos de teclas
+              del núcleo (código de rastreo a código  de  tecla).
+              argp apunta a una
+
+              struct kbkeycode { unsigned int scancode, keycode; };
+
+              keycode se pone a un valor correspondiente al scan­
+              code dado.  (89 <= scancode <= 255 solamente.  Para
+              1  <=  scancode  <= 88, keycode==scancode.)  (Desde
+              1.1.63.)
+
+
+       KDSETKEYCODE
+              Escribe una entrada de tabla de códigos  de  teclas
+              del  núcleo.   argp  apunta a una struct kbkeycode.
+              (Desde 1.1.63.)
+
+
+       KDSIGACCEPT
+              El proceso que hace la llamada indica  su  voluntad
+              de  aceptar  la  señal argp cuando se genere por la
+              pulsación de una combinación de  teclas  apropiada.
+              (1  <=  argp  <=  NSIG).   (Vea  spawn_console() en
+              linux/drivers/char/keyboard.c.)
+
+
+       VT_OPENQRY
+              Devuelve  la   primera   consola   disponible   (no
+              abierta).   argp  apunta  a  un  int que se pone al
+              número de la vt (1 <= *argp <= MAX_NR_CONSOLES).
+
+
+       VT_GETMODE
+              Obtiene el modo de la vt activa.  argp apunta a una
+
+              struct vt_mode {
+                  char mode;     /* modo de la vt */
+                  char waitv;    /* si puesto, se cuelga en escrituras si no activa */
+                  short relsig;  /* señal a lanzar en petición de liberación */
+                  short acqsig;  /* señal a lanzar en adquisición */
+                  short frsig;   /* sin uso (a 0) */
+              };
+
+              mode se pone a uno de estos valores:
+
+                  VT_AUTO       cambio de vt automático
+                  VT_PROCESS    cambio de controles de proceso
+                  VT_ACKACQ     cambio de confirmación
+
+
+       VT_SETMODE
+              Establece  el  modo de la vt activa.  argp apunta a
+              una struct vt_mode.
+
+
+       VT_GETSTATE
+              Obtiene información de estado global  de  vt.  argp
+              apunta a una
+
+              struct vt_stat {
+                  ushort v_active;  /* vt activa */
+                  ushort v_signal;  /* señal a enviar */
+                  ushort v_state;   /* máscara de bits de la vt */
+              };
+
+              Para  cada  vt en uso, el bit correspondiente en el
+              miembro v_state  se  pone  a  1.   (Núcleos  1.0  a
+              1.1.92.)
+
+
+       VT_RELDISP
+              Libera una pantalla.
+
+
+       VT_ACTIVATE
+              Cambia a la vt argp (1 <= argp <= MAX_NR_CONSOLES).
+
+
+       VT_WAITACTIVE
+              Espera hasta que la vt argp ha sido activada.
+
+
+       VT_DISALLOCATE
+              Desaloja  la  memoria  asociada  con  la  vt  argp.
+              (Desde 1.1.54.)
+
+
+       VT_RESIZE
+              Establece la idea que tiene el núcleo del tamaño de
+              pantalla. argp apunta a una
+
+              struct vt_sizes {
+                  ushort v_rows;       /* Nº de filas */
+                  ushort v_cols;       /* Nº de columnas */
+                  ushort v_scrollsize; /* ya no se usa */
+              };
+
+              Note que esto no cambia  el  modo  de  vídeo.   Vea
+              resizecons(8).  (Desde 1.1.54.)
+
+
+       VT_RESIZEX
+              Establece  la idea que tiene el núcleo sobre varios
+              parámetros de pantalla.  argp apunta a una
+
+              struct vt_consize {
+                      ushort v_rows;          /* número de filas */
+                      ushort v_cols;          /* número de columnas */
+                      ushort v_vlin;          /* Nº de filas de píxeles en la pantalla */
+                      ushort v_clin;          /* Nº de filas de píxeles por carácter */
+                      ushort v_vcol;          /* Nº de cols. de píxeles en la pantalla */
+                      ushort v_ccol;          /* Nº de cols. de píxeles por carácter */
+              };
+
+              Cualquier parámetro puede ponerse a cero, indicando
+              ``no hay cambio'', pero si se ponen varios parámet­
+              ros, deben ser auto-consistentes. Note que esto  no
+              cambia  el modo de vídeo. Vea resizecons(8). (Desde
+              1.3.3.)
+
+
+       La acción de las siguientes ioctls depende del primer byte
+       en la struct apuntada por argp, referido aquí como el sub-
+       código. Éstos son legales sólo para el súper-usuario o  el
+       propietario de la tty actual.
+
+
+       TIOCLINUX, sub-código=0
+              Vuelca la pantalla.  Desapareció en 1.1.92. (Con el
+              núcleo  1.1.92  o  superior,  lee  de  /dev/vcsN  o
+              /dev/vcsaN en su lugar.)
+
+
+       TIOCLINUX, sub-código=1
+              Obtiene   información   de  tarea.  Desapareció  en
+              1.1.92.
+
+
+       TIOCLINUX, sub-código=2
+              Establece selección.  argp apunta a una
+
+                 struct {char subcode;
+                     short xs, ys, xe, ye;
+                     short sel_mode;
+                 }
+
+              xs e ys son las columna y fila de comienzo.   xe  e
+              ye  son  la  columna  y fila de final.  (La esquina
+              superior izquierda es file=columna=1.)  sel_mode es
+              0 para selección carácter a carácter, 1 para selec­
+              ción palabra a palabra, ó 2 para selección línea  a
+              línea.   Los  caracteres  de  pantalla indicados se
+              resaltan y salvan en el vector estático  sel_buffer
+              en devices/char/console.c.
+
+
+       TIOCLINUX, sub-código=3
+              Selección de pegado.  Los caracteres en el búfer de
+              selección se escriben a fd.
+
+
+       TIOCLINUX, sub-código=4
+              Desblanquea la pantalla.
+
+
+       TIOCLINUX, sub-código=5
+              Establece los contenidos de una tabla  de  búsqueda
+              de  256  b  que define caracteres en una "palabra",
+              para  la  selección  palabra  a   palabra.   (Desde
+              1.1.32.)
+
+
+       TIOCLINUX, sub-código=6
+              argp  apunta a un  char que se pone con el valor de
+              la  variable  del   núcleo   shift_state.    (Desde
+              1.1.32.)
+
+
+       TIOCLINUX, sub-código=7
+              argp  apunta  a  un char que se pone al valor de la
+              variable del núcleo report_mouse.  (Desde  1.1.33.)
+
+
+       TIOCLINUX, sub-código=8
+              Vuelca la anchura y altura de la pantalla, posición
+              de cursor, y todos  los   pares  carácter-atributo.
+              (Núcleos  1.1.67 a 1.1.91 solamente.  Con el núcleo
+              1.1.92 ó posterior, lee de /dev/vcsa* en su lugar.)
+
+
+       TIOCLINUX, sub-código=9
+              Restaura  la anchura y altura de la pantalla, posi­
+              ción de cursor, y todos los  pares  carácter-atrib­
+              uto.   (Núcleos  1.1.67 a 1.1.91 solamente.  Con el
+              núcleo 1.1.92 ó posterior, escribe en /dev/vcsa* en
+              su lugar.)
+
+
+       TIOCLINUX, sub-código=10
+              Maneja la característica de Ahorro de Energía de la
+              nueva generación de monitores.  El modo de blanqueo
+              de pantalla VESA se pone a argp[1], que gobierna lo
+              que hace el blanqueo de pantalla:
+
+                  0: El blanqueo de pantalla es deshabilitado.
+
+                  1: Se guardan los valores de los registros  del
+              adaptador  de vídeo instalado, luego se programa el
+              controlador  para  apagar  los   pulsos   de   sin­
+              cronización  vertical.  Esto  pone el monitor en el
+              estado de "modo de espera". Si su monitor tiene  un
+              temporizador  Off_Mode,  entonces  eventualmente se
+              apagará solo.
+
+                  2: Se salvan los  valores  actuales,  luego  se
+              apagan los pulsos de sincronización vertical y hor­
+              izontal.  Esto pone el monitor  en  modo  de  "apa­
+              gado".   Si  su  monitor  no  tiene el temporizador
+              Off_Mode, o si Ud. quiere que su monitor se  apague
+              inmediatamente  cuando  el  tiempo  del blank_timer
+              pase, entonces debe escoger esta opción.   (Precau­
+              ción:: Apagar frecuentemente dañará el monitor.)
+
+              (Desde 1.1.76.)
+
+
+VALOR DEVUELTO
+       -1 en caso de error, y errno toma un valor.
+
+ERRORES
+       errno puede tomar uno de estos valores:
+
+
+       EBADF  el descriptor de fichero es inválido.
+
+       ENOTTY el  descriptor  de  fichero no está asociado con un
+              dispositivo especial de caracteres, o  la  petición
+              especificada no se aplica a él.
+
+       EINVAL el descriptor de fichero o argp es inválido.
+
+       EPERM  violación de permiso.
+
+ATENCIÓN
+       No  mire  esta  página del Manual como documentación sobre
+       las ioctl's de la consola de Linux. Esta  página  sólo  se
+       proporciona  para  el curioso, como una alternativa a leer
+       los fuentes. Las  ioctl's  son  cosas  internas  de  Linux
+       indocumentadas,  sujetas  a  cambios  sin previo aviso. (Y
+       desde luego, esta página describe más o menos la situación
+       en  los  tiempos  del  núcleo  versión  1.1.94; hay muchas
+       diferencias menores y no tan menores con versiones anteri­
+       ores.)
+
+       Muy  a menudo, las ioctl's se introducen para comunicación
+       entre el núcleo y un  programa  particular  bien  conocido
+       (fdisk,  hdparm,  setserial,  tunelp, loadkeys, selection,
+       setfont, etc.), y su  comportamiento  cambiará  cuando  se
+       requiera por este programa particular.
+
+       Los  programas que usen estas ioctl's no serán transporta­
+       bles a otras versiones de Unix,  no  funcionarán  en  ver­
+       siones  más  antiguas  de  Linux, y no funcionarán en ver­
+       siones futuras de Linux.
+
+       Use funciones POSIX.
+
+
+VÉASE TAMBIÉN
+       kbd_mode(1),    loadkeys(1),    dumpkeys(1),     mknod(1),
+       setleds(1),    setmetamode(1),    ioperm(2),   termios(2),
+       execve(2),   fcntl(2),   charsets(4),   console(4),   con­
+       sole_codes(4),  mt(4),  sd(4),  tty(4),  ttys(4),  vcs(4),
+       vcsa(4),    mapscrn(8),     setfont(8),     resizecons(8),
+       /usr/include/linux/kd.h, /usr/include/linux/vt.h
+
+
+
+Linux                   18 Septiembre 1995      CONSOLE_IOCTLS(4)

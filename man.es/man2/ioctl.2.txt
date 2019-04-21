@@ -1,0 +1,60 @@
+IOCTL(2)         Manual del Programador de Linux         IOCTL(2)
+
+
+
+NOMBRE
+       ioctl - controlar dispositivo
+
+SINOPSIS
+       #include <sys/ioctl.h>
+
+       int ioctl(int d, int peticion, ...)
+
+       [El  "tercer"  argumento es tradicionalmente char *argp, y
+       así se le llamará de aquí en adelante.]
+
+DESCRIPCIÓN
+       La función ioctl manipula los  parámetros  subyacentes  de
+       ficheros especiales. En particular, muchas características
+       operacionales de los  ficheros  especiales  de  caracteres
+       (verbigracia  las  terminales) pueden controlarse con lla­
+       madas a ioctl.  El argumento d debe ser un  descriptor  de
+       fichero abierto.
+
+       Una  peticion  de ioctl tiene codificada en sí misma si el
+       argumento es un parámetro de entrada o  de  salida,  y  el
+       tamaño  del  argumento  argp  en  bytes.  En el fichero de
+       cabecera <sys/ioctl.h>  se  definen  macros  empleadas  al
+       especificar una peticion de ioctl.
+
+VALOR DEVUELTO
+       En  caso  de éxito, se devuelve cero. En caso de error, se
+       devuelve -1 y se pone en errno un valor apropiado.
+
+ERRORES
+       EBADF  d no es un descriptor válido.
+
+       ENOTTY d no está asociado con un dispositivo  especial  de
+              caracteres.
+
+       ENOTTY La petición especificada no se aplica a la clase de
+              objeto que referencia el descriptor d.
+
+       EINVAL Peticion o argp no es válido.
+
+CONFORME A
+       Ningún estándar en  particular.  Los  argumentos,  valores
+       devueltos  y semántica de ioctl(2) varían según el contro­
+       lador de dispositivo en cuestión (la llamada se  usa  como
+       un  recogedor  para  las operaciones que no encajen clara­
+       mente en  el  modelo  de  flujos  de  E/S  de  Unix).  Vea
+       ioctl_list(2)  para  una  lista  de muchas de las llamadas
+       conocidas a ioctl.  La función ioctl apareció por  primera
+       vez en Unix de AT&T Versión 7.
+
+VÉASE TAMBIÉN
+       execve(2), fcntl(2), mt(4), sd(4), tty(4)
+
+
+
+BSD                      22 Octubre 1996                 IOCTL(2)

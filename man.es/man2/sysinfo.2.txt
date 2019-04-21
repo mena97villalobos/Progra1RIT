@@ -1,0 +1,55 @@
+SYSINFO(2)       Manual del Programador de Linux       SYSINFO(2)
+
+
+
+NOMBRE
+       sysinfo - devuelve información sobre estadísticas globales
+       del sistema
+
+SINOPSIS
+       #include <sys/sysinfo.h>
+
+       int sysinfo(struct sysinfo *info);
+
+DESCRIPCIÓN
+       sysinfo devuelve información en la siguiente estructura:
+
+              struct sysinfo {
+                   long uptime;              /* Segundos desde el arranque */
+                   unsigned long loads[3];   /* cargas medias en 1, 5, y 15 min */
+                   unsigned long totalram;   /* Mem. pral. total útil */
+                   unsigned long freeram;    /* Tamaño de memoria disponible */
+                   unsigned long sharedram;  /* Cantidad de memoria compartida */
+                   unsigned long bufferram;  /* Memoria empleaada por búferes */
+                   unsigned long totalswap;  /* Tamaño del espacio total de swap */
+                   unsigned long freeswap;   /* Espacio de swap aún disponible */
+                   unsigned short procs;     /* Nº de procesos actualmente */
+                   char _f[22];              /* Rellena la struct a 64 bytes */
+              };
+
+       sysinfo proporciona una forma simple de obtener estadísti­
+       cas  globales  del  sistema.  Eso es más transportable que
+       leer /dev/kmem.
+
+VALOR DEVUELTO
+       En caso de éxito se devuelve cero. En caso  de  error,  se
+       devuelve -1 y se pone en errno un valor apropiado.
+
+ERRORES
+       EFAULT  el puntero a la struct sysinfo es inválido.
+
+CONFORME A
+       Esta   función  es  específica  de  Linux,  y  no  debería
+       emplearse en programas supuestamente transportables.
+
+       El núcleo de Linux tiene una llamada  al  sistema  sysinfo
+       desde  la versión 0.98.pl16. La libc de Linux contiene una
+       rutina sysinfo() desde la versión 5.2.5 y glibc tiene  una
+       desde la versión 1.90.
+
+VÉASE TAMBIÉN
+       proc(5)
+
+
+
+Linux 2.0                25 Agostro 1997               SYSINFO(2)

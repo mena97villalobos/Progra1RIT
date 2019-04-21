@@ -1,0 +1,36 @@
+UPDWTMP(3)       Manual del Programador de Linux       UPDWTMP(3)
+
+
+
+NOMBRE
+       updwtmp, logwtmp - añade una entrada al fichero wtmp
+
+SINOPSIS
+       #include <utmp.h>
+
+       void updwtmp(const char *wtmp_file, const struct utmp *ut);
+       void logwtmp(const char *line, const char *name, const char *host);
+
+DESCRIPCIÓN
+       updwtmp() añade la estructura utmp ut al fichero wtmp.
+
+       logwtmp()  crea una estructura utmp utilizando línea, nom­
+       bre, host, instante de tiempo actual e  identificador  del
+       proceso  actual.   A  continuación, llama a updwtmp() para
+       añadir la estructura al fichero wtmp.
+
+DISPONIBILIDAD
+       Ambas funciones están disponibles  bajo  glibc2,  pero  no
+       bajo   glibc1   o   libc.   Sin  embargo,  logwtmp()  está
+       disponible en la vieja libbsd.
+
+FICHEROS
+       /var/log/wtmp      base de datos de anteriores inicios  de
+       sesión de usuario
+
+VÉASE TAMBIÉN
+       utmp(5)
+
+
+
+GNU                        2 Julio 1997                UPDWTMP(3)

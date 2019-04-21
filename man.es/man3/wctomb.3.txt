@@ -1,0 +1,31 @@
+WCTOMB(3)        Manual del Programador de Linux        WCTOMB(3)
+
+
+
+NOMBRE
+       wctomb - convierte un carácter ancho en un carácter multi­
+       byte
+
+SINOPSIS
+       #include <stdlib.h>
+
+       int wctomb(char *s, wchar_t wchar);
+
+DESCRIPCIÓN
+       La función wctomb() convierte un carácter ancho  wchar  en
+       un carácter multibyte y, si s no es NULL, guarda la repre­
+       sentación del carácter multibyte en s.
+
+VALOR DEVUELTO
+       wctomb() devuelve el número de bytes en el carácter multi­
+       byte ó -1 si el carácter ancho no es válido.
+
+CONFORME A
+       SVID 3, ISO 9899
+
+VÉASE TAMBIÉN
+       mblen(3), mbstowcs(3), mbtowc(3), wcstombs(3)
+
+
+
+GNU                       29 Marzo 1993                 WCTOMB(3)

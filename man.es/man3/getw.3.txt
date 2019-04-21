@@ -1,0 +1,42 @@
+GETW(3)          Manual del Programador de Linux          GETW(3)
+
+
+
+NOMBRE
+       getw, putw - entrada y salida de palabras (ints)
+
+SINOPSIS
+       #include <stdio.h>
+
+       int getw(FILE *flujo);
+       int putw(int p, FILE *flujo);
+
+DESCRIPCIÓN
+       getw lee una palabra (esto es, un int) de flujo. Se sumin­
+       istra por compatibilidad con  SVID.  Le  recomendamos  que
+       emplee fread(3) en su lugar.
+
+       putw  escribe la palabra p (esto es, un int) en flujo.  Se
+       suministra por compatibilidad con SVID, pero  recomendamos
+       el empleo de fwrite(3) en su lugar.
+
+VALOR DEVUELTO
+       Normalmente,  getw  devuelve  la  palabra  leída,  y  putw
+       devuelve la palabra escrita.   En  caso  de  error,  ambas
+       devuelven EOF.
+
+FALLOS
+       El  valor  devuelto  en  caso de error es también un valor
+       legítimo para un dato. Para distinguir entre los dos casos
+       se puede utilizar ferror(3).
+
+CONFORME A
+       SVID
+
+VÉASE TAMBIÉN
+       fread(3), fwrite(3), ferror(3), getc(3), putc(3)
+
+
+
+
+GNU                      25 Febrero 1998                  GETW(3)

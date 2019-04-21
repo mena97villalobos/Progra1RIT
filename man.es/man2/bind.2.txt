@@ -1,0 +1,101 @@
+BIND(2)          Manual del Programador de Linux          BIND(2)
+
+
+
+NOMBRE
+       bind - enlaza un nombre a un conector (socket)
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <sys/socket.h>
+
+       int  bind(int  sockfd, struct sockaddr *my_addr, socklen_t
+       addrlen);
+
+DESCRIPCIÓN
+       bind da al conector sockfd  la  dirección  local  my_addr.
+       my_addr tiene una longitud de addrlen bytes.  Tradicional­
+       mente, esto se conoce como "asignar un nombre a un  conec­
+       tor."  Cuando un conector se crea con socket(2), existe en
+       un espacio de nombres (familia de direcciones) pero carece
+       de nombre.
+
+       Normalmente,  es  necesario  asignar  una  dirección local
+       usando bind a un conector SOCK_STREAM antes  de  que  éste
+       pueda recibir conexiones (vea accept(2)).
+
+NOTAS
+       Las  reglas  usadas  en  el enlace de nombres varían entre
+       familias de direcciones. Consulte las entradas  de  manual
+       de  la  sección  4 para obtener una información más detal­
+       lada. Para AF_INET vea ip(7), para  AF_UNIX  vea  unix(7),
+       para   AF_APPLETALK   vea   ddp(7),   para  AF_PACKET  vea
+       packet(7), para AF_X25 vea x25(7) y  para  AF_NETLINK  vea
+       netlink(7).
+
+VALOR DEVUELTO
+       Se  devuelve  0  en  caso  de  éxito. En caso de error, se
+       devuelve -1 y a errno se le asigna un valor apropiado.
+
+ERRORES
+       EBADF   sockfd no es un descriptor válido.
+
+       EINVAL  El conector ya está enlazado a una dirección. Esto
+               puede     cambiar     en    el    futuro:    véase
+               linux/unix/sock.c para más detalles.
+
+       EACCES  La dirección está protegida y el usuario no es  el
+               superusuario.
+
+       Los  siguientes  errores  son específicos a los conectores
+       del dominio UNIX (AF_UNIX):
+
+       EINVAL  La dirección addr_len es incorrecta o el  conector
+               no pertenecia a la familia AF_UNIX.
+
+       EROFS   El  nodo-i  del  conector  reside en un sistema de
+               ficheros de `sólo lectura'.
+
+       EFAULT  my_addr señala fuera del  espacio  de  direcciones
+               accesible por el usuario.
+
+       ENAMETOOLONG
+               my_addr es demasiado larga.
+
+       ENOENT  El fichero no existe.
+
+       ENOMEM  No hay suficiente memoria disponible en el núcleo.
+
+       ENOTDIR Un componente del camino no es un directorio.
+
+       EACCES  El permiso de búsqueda ha sido denegado en uno  de
+               los componentes del camino.
+
+       ELOOP   Se han encontrado demasiados enlaces simbólicos al
+               resolver my_addr.
+
+FALLOS
+       No están descritas las opciones de proxy transparente.
+
+CONFORME A
+       SVr4, 4.4BSD (la función bind apareció por primera vez  en
+       BSD  4.2).  SVr4  documenta condiciones generales de error
+       adicionales: EADDRNOTAVAIL, EADDRINUSE y ENOSR,  y  condi­
+       ciones  de error específicas del dominio UNIX adicionales:
+       EIO, EISDIR y EROFS.
+
+NOTA
+       El tercer argumento de bind es en realidad  un  entero  (y
+       esto  es  lo  que  tienen BSD 4.*, libc4 y libc5).  Cierta
+       confusión en POSIX dio como resultado el actual socklen_t.
+       El  estándar  propuesto  todavía  no ha sido adoptado pero
+       glibc2 ya lo sigue y tiene también socklen_t. Véa  también
+       accept(2).
+
+VÉASE TAMBIÉN
+       accept(2),   connect(2),  listen(2),  socket(2),  getsock­
+       name(2), ip (7), socket (7)
+
+
+
+Linux 2.2                 3 octubre 1998                  BIND(2)

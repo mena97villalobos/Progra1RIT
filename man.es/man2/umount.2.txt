@@ -1,0 +1,128 @@
+MOUNT(2)         Manual del Programador de Linux         MOUNT(2)
+
+
+
+NOMBRE
+       mount, umount - monta y desmonta sistemas de ficheros.
+
+SINOPSIS
+       #include <sys/mount.h>
+
+       int  mount(const char *fespecial, const char * dir , const
+       char * tiposf, unsigned long le , const void * datos);
+
+       int umount(const char *fespecial);
+
+       int umount(const char *dir);
+
+DESCRIPCIÓN
+       mount engarza el sistema de ficheros especificado por fes­
+       pecial (que es frecuentemente un nombre de dispositivo) al
+       directorio especificado por dir.
+
+       umount desengancha el sistema de ficheros especificado por
+       fespecial o dir.
+
+       Sólo el super-usuario puede montar y desmontar sistemas de
+       ficheros.
+
+       El argumento tiposf puede tomar  cualquier  valor  de  los
+       listados   en  /proc/filesystems  (como  "minix",  "ext2",
+       "msdos", "proc", "nfs", "iso9660", etc.).
+
+       El argumento le tiene el número mágico 0xC0ED en los últi­
+       mos  16  bits,  y  varias  opciones  de  montaje (como las
+       definidas  en  <linux/fs.h>  para  libc4  y  libc5  y   en
+       <sys/mount.h> para glibc2) en los primeros 16 bits:
+
+       #define MS_RDONLY    1 /* montar para lectura exclusiva */
+       #define MS_NOSUID    2 /* no tener en cuenta los bits suid ni sgid */
+       #define MS_NODEV     4 /* no permitir acceso a ficheros especiales
+                                 de dispositivo */
+       #define MS_NOEXEC    8 /* no permitir ejecución de programas */
+       #define MS_SYNC     16 /* las escrituras se vuelcan a disco
+                                 inmediatamente */
+       #define MS_REMOUNT  32 /* alterar opciones de un SF ya montado */
+       #define MS_MGC_VAL  0xC0ED0000
+
+       Si el número mágico está ausente, los dos últimos argumen­
+       tos no se utilizan.
+
+       El argumento datos es interpretado por cada diferente sis­
+       tema de ficheros.
+
+
+VALOR DEVUELTO
+       En caso de éxito se devuelve 0. En caso de error, -1, y se
+       da a errno un valor apropiado.
+
+ERRORES
+       Los valores de error dados más  abajo  son  independientes
+       del  tipo de sistema de ficheros. Cada tipo de sistemas de
+       ficheros puede tener sus propios errores especiales y com­
+       portamiento.  Consulte  los  fuentes  del  núcleo para los
+       detalles.
+
+
+       EPERM   El usuario no es el super-usuario.
+
+       ENODEV  tiposf no configurado en el núcleo.
+
+       ENOTBLK fespecial no es un dispositivo de  bloque  (si  se
+               necesitaba un dispositivo).
+
+       EBUSY   fespecial  ya  está montado. O no puede remontarse
+               para  lectura  exclusiva,   porque   ya   contiene
+               ficheros abiertos para escritura.  O no puede mon­
+               tarse en dir porque dir ya  está  ocupado  (es  el
+               directorio de trabajo de alguna tarea, el punto de
+               montaje de otro dispositivo, tiene ficheros abier­
+               tos, etc.).
+
+       EINVAL  fespecial  tiene un superbloque inválido.  O se ha
+               intentado  volver  a  montar,  pero  fespecial  no
+               estaba  ya  montado  en  dir.   O  se ha intentado
+               desmontar, pero dir no era un punto de montaje.
+
+       EFAULT  Uno de  los  argumentos  de  tipo  puntero  apunta
+               afuera del espacio de direcciones de usuario.
+
+       ENOMEM  El  núcleo  no  pudo obtener una página libre para
+               copiar en ella nombres de ficheros o datos.
+
+       ENAMETOOLONG
+               Un nombre de camino era más largo que  MAXPATHLEN.
+
+       ENOENT  Un nombre de camino estaba vacío o tenía un compo­
+               nente inexistente.
+
+       ENOTDIR El segundo argumento, o un prefijo del primero, no
+               es un directorio.
+
+       EACCES  Un componente del camino era inaccesible.
+               O  se  intentó  montar un sistema de ficheros para
+               lectura exclusiva sin dar la opción MS_RDONLY.
+               O el dispositivo de bloques fespecial estaba en un
+               sistema   de   ficheros   montado  con  la  opción
+               MS_NODEV.
+
+       ENXIO   El número mayor del dispositivo de bloques  fespe­
+               cial está fuera de rango.
+
+       EMFILE  (En  caso  de que no se necesite un dispositivo de
+               bloques:) La tabla de dispositivos ficticios  está
+               llena.
+
+CONFORME A
+       Estas  funciones  son  específicas  de Linux y no deberían
+       emplearse en programas pretendidamente transportables.
+
+VÉASE TAMBIÉN
+       mount(8), umount(8)
+
+
+
+
+
+
+Linux                    4 Noviembre 1996                MOUNT(2)

@@ -1,0 +1,207 @@
+INITTAB(5)  Manual del Administrador de Sistemas Linux INITTAB(5)
+
+
+
+NOMBRE
+       inittab - formato del fichero inittab usado por el proceso
+       init compatible SysV
+
+DESCRIPCIÓN
+       El fichero inittab describe qué procesos se inician en  la
+       carga  y  durante  la  operación  normal  (por  ejemplo,
+       /etc/init.d/boot,  /etc/init.d/rc,  gettys...).    Init(8)
+       distingue  múltiples niveles de ejecución, cada uno de los
+       cuales puede tener su propio conjunto de procesos  que  se
+       inician. Los niveles de ejecución válidos son 0-6 más A, B
+       y C para entradas bajo demanda.  Una entrada  del  fichero
+       inittab tiene el siguiente formato:
+
+              id:niveles_ejecución:acción:proceso
+
+       Las líneas que comienzan con `#' se ignoran.
+
+       id     es  una  secuencia  única  de  1 a 4 caracteres que
+              identifican una entrada de inittab (para  las  ver­
+              siones  de  sysvinit  compiladas  con bibliotecas <
+              5.2.18 o bibliotecas a.out el límite es de 2 carac­
+              teres).
+
+              Nota:  Para gettys u otros procesos de presentación
+              al sistema, el campo id debería de  ser  el  sufijo
+              tty de la correspondiente tty, por ejemplo,  1 para
+              tty1.  En otro caso, las contabilidades  de  conex­
+              iones puede que no funcionen correctamente
+
+       niveles_ejecución
+              es  la lista de niveles de ejecución para lo cuales
+              se llevarán a cabo las acciones especificadas.
+
+       acción describe qué acción se debería llevar a cabo.
+
+       proceso
+              especifica el proceso a ejecutar. Si el campo  pro­
+              ceso  comienza  con un carácter `+', init no regis­
+              trará utmp y wtmp para ese proceso.  Esto es  nece­
+              sario para gettys que insisten en hacer sus propias
+              labores de utmp/wtmp.  Esto  es  también  un  fallo
+              histórico.
+
+       El  campo  niveles_ejecución  tiene que contener múltiples
+       caracteres para diferente niveles de ejecución. Por  ejem­
+       plo,  123  especifica que el proceso se debería iniciar en
+       los niveles de ejecución 1, 2 y 3.  Las entrada de niveles
+       de  ejecución  bajo demanda pueden contener una A, B, o C.
+       Las entradas de campos de nivel_ejecución de sysinit, boot
+       y bootwait se ignoran.
+
+       Cuando  se cambia un nivel de ejecución, cualesquiera pro­
+       cesos en ejecución que no estén especificados en el  nuevo
+       nivel  de  ejecución  se  matan,  primero  con   SIGTERM y
+       después con SIGKILL.
+
+       Acciones válidas para el campo acción son:
+
+       respawn
+              El  proceso  se  reiniciará  cuando  termine  (v.g.
+              getty).
+
+       wait   El  proceso  se iniciará una vez cuando se entre en
+              el nivel de ejecución específico e init esperará  a
+              su terminación.
+
+
+       once   El  proceso se ejecutará una vez cuando se entre en
+              el nivel de ejecución especificado.
+
+       boot   El proceso se ejecutará  durante  el  arranque  del
+              sistema.  El campo The niveles_ejecución se ignora.
+
+       bootwait
+              El proceso se ejecutará  durante  el  arranque  del
+              sistema,  mientras init espera su terminación (v.g.
+              /etc/rc).  El campo niveles_ejección se ignora.
+
+       off    Esto no hace nada.
+
+       ondemand
+              Un proceso marcado con un nivel de ejecución  onde­
+              mand  se ejecutará cuando se llame al nivel de eje­
+              cución especificado ondemand. Sin  embargo,  no  se
+              produce  cambio  de nivel de ejecución (los niveles
+              de ejecución ondemand son  `a', `b', y `c').
+
+       initdefault
+              Una entrada initdefault especifica el nivel de eje­
+              cución  en  el cual se entrará tras el arranque del
+              sistema. Si no existe ninguno, init pedirá un nivel
+              de  ejecución  en  la  consola. El campo proceso se
+              ignora.
+
+       sysinit
+              El proceso se ejecutará  durante  el  arranque  del
+              sistema.  Se  ejecutará  antes de cualquier entrada
+              boot o  bootwait.  El  campo  niveles_ejecución  se
+              ignora.
+
+       powerwait
+              El proceso se ejecutará cuando init reciba la señal
+              SIGPWR, indicando que hay  algún  problema  con  la
+              alimentación  eléctrica.  Init esperará que el pro­
+              ceso termine antes de continuar.
+
+       powerfail
+              Como en powerwait, excepto que init no  espera  que
+              el proceso se complete.
+
+       powerokwait
+              El proceso se ejecutará cuando init reciba la señal
+              SIGPWR, con la condición de  que  haya  un  fichero
+              llamado  /etc/powerstatus  que  contenga la palabra
+              OK. Esto significa que la alimentación eléctrica ha
+              vuelto.
+
+       ctrlaltdel
+              El proceso se ejecutará cuando init reciba la señal
+              SIGINT.  Esto significa que alguien en  la  consola
+              del  sistema  ha  pulsado  la combinación de teclas
+              CTRL-ALT-DEL  .  Normalmente  uno  quiere  ejecutar
+              algún  tipo  de  shutdown  bien para entrar en modo
+              monousuario o reiniciar la máquina.
+
+       kbrequest
+              El proceso se  ejecutará  cuando  init  reciba  una
+              señal  del  gestor de teclado que se ha pulsado una
+              combinación especial de teclas en el teclado de  la
+              consola.
+
+              La documentación para esta función no está completa
+              aun; se puede encontrar más  documentación  en  los
+              paquetes  kbd-x.xx (el mas reciente era kbd-0.94 en
+              el momento de escribir  esto).  Básicamente  quiere
+              aplicar  alguna  combinación de teclado a la acción
+              "KeyboardSignal". Por ejemplo,  para  aplicar  Alt-
+              FlechaArriba  para  este propósito use lo siguiente
+              en su fichero keymap:
+
+              alt keycode 103 = KeyboardSignal
+
+
+EJEMPLOS
+       Esto es un ejemplo de un inittab que reensambla  el  viejo
+       inittab de Linux:
+
+              # inittab para linux
+              id:1:initdefault:
+              rc::bootwait:/etc/rc
+              1:1:respawn:/etc/getty 9600 tty1
+              2:1:respawn:/etc/getty 9600 tty2
+              3:1:respawn:/etc/getty 9600 tty3
+              4:1:respawn:/etc/getty 9600 tty4
+
+       Este fichero inittab ejecuta /etc/rc durante el arranque e
+       inicia gettys en tty1-tty4.
+
+       Un inittab más elaborado con diferentes niveles de  ejecu­
+       ción (vea los comentarios interiores):
+
+              # Nivel para ejecutar
+              id:2:initdefault:
+
+              # Inicialización del sistema antes de cualquier otra cosa.
+              si::sysinit:/etc/rc.d/bcheckrc
+
+              # Nivel de Ejecución 0,6 es halt y reinicio, 1 modo mantenimiento.
+              l0:0:wait:/etc/rc.d/rc.halt
+              l1:1:wait:/etc/rc.d/rc.single
+              l2:2345:wait:/etc/rc.d/rc.multi
+              l6:6:wait:/etc/rc.d/rc.reboot
+
+              # Qué hacer ante el "saludo de 3 dedos".
+              ca::ctrlaltdel:/sbin/shutdown -t5 -rf now
+
+              # Nivel de ejecución 2&3: getty en consola, nivel 3 también  getty
+              # en el puerto del módem.
+              1:23:respawn:/sbin/getty tty1 VC linux
+              2:23:respawn:/sbin/getty tty2 VC linux
+              3:23:respawn:/sbin/getty tty3 VC linux
+              4:23:respawn:/sbin/getty tty4 VC linux
+              S2:3:respawn:/sbin/uugetty ttyS2 M19200
+
+
+
+FICHEROS
+       /etc/inittab
+
+AUTOR
+       Init    fue    escrito    por   Miquel   van   Smoorenburg
+       (miquels@cistron.nl).  Esta página de  manual fue  escrita
+       por  Sebastian  Lederer  (lederer@francium.informatik.uni-
+       bonn.de)    y    modificada     por     Michael     Haardt
+       (u31b3hs@pool.informatik.rwth-aachen.de).
+
+VÉASE TAMBIÉN
+       init(8), telinit(8)
+
+
+
+Linux                     16 Julio 1997                INITTAB(5)

@@ -1,0 +1,34 @@
+ATEXIT(3)        Manual del Programador de Linux        ATEXIT(3)
+
+
+
+NOMBRE
+       atexit  - registra una función para ser llamada al momento
+       de una terminación normal del programa.
+
+SINOPSIS
+       #include <stdlib.h>
+
+       int atexit(void (*function)(void));
+
+DESCRIPCIÓN
+       La función atexit() registra function para ser llamada  al
+       momento  de  una  terminación  normal,  tanto  por  vía de
+       exit(3) o de un retorno desde main. Las funciones así reg­
+       istradas  se llaman en orden inverso al de su registro; no
+       se puede pasar ningún argumento.
+
+VALOR DEVUELTO
+       En caso de éxito, la función atexit() devuelve el valor 0;
+       en  caso  contrario  devuelve  el  valor  -1; no se asigna
+       ningún valor a errno.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       exit(3), on_exit(3)
+
+
+
+GNU                     14 Septiembre 1997              ATEXIT(3)

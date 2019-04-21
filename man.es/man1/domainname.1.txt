@@ -1,0 +1,163 @@
+HOSTNAME(1)        Manual del Programador Linux       HOSTNAME(1)
+
+
+
+NOMBRE
+       hostname - muestra o establece el nombre del sistema
+       domainname  -  muestra  o  establece  el nombre de dominio
+       NIS/YP del sistema
+       dnsdomainname - muestra el nombre de dominio DNS del  sis­
+       tema
+       nisdomainname  -  muestra o establece el nombre de dominio
+       NIS/YP del sistema
+       ypdomainname - muestra o establece el  nombre  de  dominio
+       NIS/YP del sistema
+
+
+SINOPSIS
+       hostname [-v] [-a] [--alias] [-d] [--domain] [-f] [--fqdn]
+       [-i] [--ip-address] [--long] [-s]  [--short]  [-y]  [--yp]
+       [--nis]
+
+
+       hostname [-v] [-F filename] [--file filename] [hostname]
+
+
+       domainname [-v] [-F filename] [--file filename] [name]
+
+
+       hostname [-v] [-h] [--help] [-V] [--version]
+
+
+       dnsdomainname [-v]
+       nisdomainname [-v]
+       ypdomainname [-v]
+
+
+DESCRIPCIÓN
+       Hostname  es  el  programa  que  se utiliza para mostrar o
+       establecer el nombre actual del  sistema.  Muchos  de  los
+       programas  de trabajo en red usan este nombre para identi­
+       ficar a la máquina.  El NIS/YP también utiliza  el  nombre
+       de dominio.
+
+
+   OBTENER NOMBRES
+       Cuando  se  invoca sin argumentos, el programa muestra los
+       nombres actuales:
+
+
+       hostname muestra el nombre del sistema que le devuelve  la
+       función gethostname(2).
+
+
+       domainname, nisdomainname, ypdomainname muestran el nombre
+       de sistema que devuelve la función getdomainname(2).  Esta
+       también  se  conoce  como  el nombre de dominio YP/NIS del
+       sistema.
+
+
+       dnsdomainname muestra la parte del dominio del FQDN  (Nom­
+       bre  de  Dominio Completamente Especificado). El FQDN com­
+       pleto del sistema se muestra con hostname --fqdn
+
+
+   ESTABLECER NOMBRES
+       Cuando se invoca con un argumento o con la opción  --file,
+       esta  orden establece el nombre del sistema o el nombre de
+       dominio NIS/YP.
+
+
+       Nótese que sólo el superusuario puede cambiar los nombres.
+
+
+       No  es  posible  establecer el FQDN o el nombre de dominio
+       DNS con la orden dnsdomainname (véase EL FQDN más  abajo).
+
+
+       El  nombre  de la máquina se establece normalmente durante
+       el arranque  del  ordenador  en  /etc/rc.d/rc.inet1  o  en
+       /etc/init.d/boot  (normalmente  leyendo el contenido de un
+       archivo que contiene el nombre de la máquina, por ejemplo,
+       /etc/hostname).
+
+
+   EL FQDN
+       No  se puede cambiar el FQDN (tal y como lo devuelve host­
+       name --fqdn) ni el nombre de dominio DNS (tal  y  como  lo
+       devuelve  dnsdomainname ) con esta orden. El FQDN del sis­
+       tema es el nombre que devuelve el resolver(3) para el nom­
+       bre de la máquina.
+
+
+       Técnicamente: El FQDN es el nombre que devuelve gethostby­
+       name(2) para el nombre de la máquina devuelto por gethost­
+       name(2).   El  nombre  de  dominio  DNS es la parte que va
+       después del primer punto.
+
+       Por lo tanto, el cómo se puede cambiar depende de la  con­
+       figuración (normalmente en /etc/hosts.conf).  A menudo (si
+       se analiza el fichero de nombres de máquinas antes que  la
+       DNS o NIS) se podrá cambiar en /etc/hosts.
+
+
+OPCIONES
+       -a, --alias
+              Muestra el álias de la máquina (si se usa uno).
+
+       -d, --domain
+              Muestra  el nombre del dominio DNS. No use la orden
+              domainname para obtener el nombre  de  dominio  DNS
+              porque  éste mostrará el nombre de dominio NIS y no
+              el nombre de dominio DNS. Use dnsdomainname  en  su
+              lugar.
+
+       -F, --file filename
+              Lee el nombre de la máquina de un fichero especifi­
+              cado. Cualquier comentario  (líneas  que  comienzan
+              por un '#') se ignorará.
+
+       -f, --fqdn, --long
+              Muestra  el  FQDN  (Nombre de Dominio Completamente
+              Especificado). Un FQDN consiste en un pequeño  nom­
+              bre  de la máquina y el nombre de dominio DNS. A no
+              ser que esté usando bind o NIS  para  comprobar  el
+              nombre  de  una máquina, puede cambiar el FQDN y el
+              nombre de dominio DNS (que es parte del FQDN) en el
+              archivo /etc/hosts.
+
+       -h, --help
+              Muestra un mensaje de uso y termina.
+
+       -i, --ip-address
+              Muestra la dirección(es) IP del ordenador.
+
+       -s, --short
+              Muestra  el  nombre  abreviado  de la máquina. Éste
+              consiste en el nombre de la máquina cortado por  el
+              primer punto.
+
+       -V, --version
+              Muestra  la  información de la versión en la salida
+              estándar y termina.
+
+       -v, --verbose
+              Sé prólijo en palabras y di qué esta pasando.
+
+       -y, --yp, --nis
+              Muestra el nombre de dominio NIS. Si se proporciona
+              un  parámetro  (o  --file name) entonces el usuario
+              root puede establecer también un nombre de  dominio
+              NIS nuevo.
+
+FICHEROS
+       /etc/hosts
+
+AUTOR
+       Peter Tobias, <tobias@et-inf.fho-emden.de>
+       Bernd Eckenfels, <net-tools@lina.inka.de> (NIS y página de
+       manual).
+
+
+
+Herramientas de Red       28 Enero 1996               HOSTNAME(1)

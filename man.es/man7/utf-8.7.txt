@@ -1,0 +1,125 @@
+UTF-8(7)         Manual del Programador de Linux         UTF-8(7)
+
+
+
+NOMBRE
+       UTF-8  -  una codificación Unicode mutibyte compatible con
+       ASCII
+
+DESCRIPCIÓN
+       El conjunto de caracteres  Unicode  ocupa  un  espacio  de
+       códigos  de  16  bits.  La  codificación Unicode más obvia
+       (conocida como UCS-2) consiste en una  secuencia  de  pal­
+       abras  de  16  bits.  Tales  cadenas pueden contener, como
+       parte de muchos caracteres de 16 bits, bytes como '\0'  or
+       '/',  que  tienen  un  significado  especial en nombres de
+       ficheros y en otras variables  de  funciones  de  la  bib­
+       lioteca  C. Además, la mayoría de las herramientas de UNIX
+       esperan ficheros ASCII y no pueden  leer  palabras  de  16
+       bits como caracteres sin considerables modificaciones. Por
+       estas  razones,  UCS-2  no  es  una  codificación  externa
+       apropiada  de Unicode en nombres de ficheros, variables de
+       entorno, etc. El ISO 10646 Universal Character Set  (UCS),
+       es  un  superconjunto de Unicode con un espacio de códigos
+       de hasta 31 bits y la codificación obvia para  dicho  con­
+       junto, UCS-4 (una secuencia de palabras de 32 bits), posee
+       los mismos problemas.
+
+       La codificación UTF-8 de Unicode y  UCS  carece  de  estos
+       problemas  y es la forma a seguir para usar el conjunto de
+       caracteres Unicode  bajo  sistemas  operativos  al  estilo
+       UNIX.
+
+PROPIEDADES
+       La  codificación  UTF-8  tiene  los siguientes propiedades
+       atractivas:
+
+       * Los caracteres UCS 0x00000000 a 0x0000007f (el  conjunto
+         clásico  de caracteres US-ASCII se codifican simplemente
+         como los bytes 0x00 a  0x7f (compatibilidad  con  ASCII)
+         Esto  significa que los ficheros y cadenas que contengan
+         solament caracteres ASCII de 7 bits tienen la misma cod­
+         ificación en ASCII y en UTF-8.
+
+       * Todos los caracteres UCS
+          >  0x7f  se codifican como una secuencia multibyte for­
+         madae solamente por bytes en el rango 0x80 a  0xfd,  por
+         tanto  ningún  byte  ASCII  puede aparecer como parte de
+         otro carácter y no hay problemas con, por ejemplo,  '\0'
+         or '/'.
+
+       * Se  preserva la enumeración lexicográfica de las cadenas
+         UCS-4
+
+       * Los  2^31 códigos posibles UCS  pueden  codificarse  con
+         UTF-8.
+
+       * Los  bytes  0xfe  y  0xff no se usan nunca en la codifi­
+         cación UTF-8
+
+       * El primer byte de una secuencia multibyte que represente
+         un  carácter  no  ASCII UCS siempre se halla en el rango
+         0xc0 a 0xfd, e indica la longitud de  la  secuencia.  El
+         resto de los bytes de la secuencia se hallan en el rango
+         0x80 a 0xbf. Esto permite una fácil  resincronización  y
+         resulta  en una codificación sin estado y robusta frente
+         a la pérdida de bytes.
+
+       * Los caracteres UCS codificados en UTF-8 pueden llegar  a
+         ser  de 6 bytes, no obstante los caracteres Unicode sólo
+         pueden ser de 3 bytes a lo sumo. Como Linux usa tan solo
+         el  subconjunto  Unicode  de 16 bits de UCS, en Linux la
+         secuencias multibyte UTF-8 sólo pueden tener 1,  2  ó  3
+         bytes.
+
+CODIFICACIÓN
+       Las  siguientes secuencias de bytes se usan para represen­
+       tar un carácter. La secuencia a usar  depende  del  código
+       UCS correspondiente al carácter:
+
+       0x00000000 - 0x0000007F:
+           0xxxxxxx
+
+       0x00000080 - 0x000007FF:
+           110xxxxx 10xxxxxx
+
+       0x00000800 - 0x0000FFFF:
+           1110xxxx 10xxxxxx 10xxxxxx
+
+       0x00010000 - 0x001FFFFF:
+           11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+
+       0x00200000 - 0x03FFFFFF:
+           111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+
+       0x04000000 - 0x7FFFFFFF:
+           1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+
+       Las  posiciones xxx se rellenan con los bits del número de
+       código del carcter representado en binario. Sólo se  puede
+       usar  la  secuencia  más  corta  que  pueda representar el
+       número de código.
+
+EJEMPLOS
+       El carácter Unicode 0xa9 = 1010 1001 (el  signo  de  copy­
+       right) se codifica en UTF-8 como
+
+              11000010 10101001 = 0xc2 0xa9
+
+       y  el carácter 0x2260 = 0010 0010 0110 0000 (el símbolo de
+       "distinto que") se codifica como:
+
+              11100010 10001001 10100000 = 0xe2 0x89 0xa0
+
+ESTÁNDARES
+       ISO 10646, Unicode 1.1, XPG4, Plan 9.
+
+AUTOR
+       Markus Kuhn <mskuhn@cip.informatik.uni-erlangen.de>
+
+VÉASE TAMBIÉN
+       unicode(7)
+
+
+
+Linux                   26 Noviembre 1995                UTF-8(7)

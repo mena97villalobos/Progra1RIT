@@ -1,0 +1,40 @@
+BANNER(6)                                               BANNER(6)
+
+
+
+NOMBRE
+       banner - imprime un título grande en la impresora
+
+SINOPSIS
+       /usr/games/banner [ -wn ] mensaje ...
+
+DESCRIPCIÓN
+       Banner  imprime  un  título grande y de gran calidad en la
+       salida estandar.  Si se omite el mensaje, pregunta por él,
+       y  lee una línea de su entrada estandar. Si -w se incluye,
+       la salida se achata desde una anchura de 132 a n ,  conve­
+       niente  para  una terminal más estrecha. Si n se omite, su
+       valor por defecto será 80.
+
+       La salida debería ser impresa en un dispositivo  de  copia
+       física,  de hasta 132 columnas de ancho, sin caracteres de
+       interrupción de página. El volumen es  lo  suficientemente
+       grande para que se desee una impresora o una terminal ráp­
+       ida de  copia  fisica  ,  pero  si  se  es  paciente,  una
+       decwriter u otra terminal de 300 baudios puede hacerlo.
+
+BUGS
+       Agunos  caracteres ASCII no están definidos, destacando <,
+       >, [, ], \, ^, _, {, }, |, y ~.  También,  los  caracteres
+       ", ', y & tienen un aspecto divertido (pero util.)
+
+       La opción -w se implementa saltando algunas filas y colum­
+       nas.  Cuanto más pequeño se haga, más grano tendrá la sal­
+       ida.  Algunas veces mezcla las letras.
+
+AUTOR
+       Mark Horton
+
+
+
+                           6 Junio 1993                 BANNER(6)

@@ -1,0 +1,56 @@
+ECHO(1)                                                   ECHO(1)
+
+
+
+NOMBRE
+       echo - muestra una línea de texto
+
+SINOPSIS
+       echo [-ne] [cadena ...]
+       echo {--help,--version}
+
+DESCRIPCIÓN
+       Esta  documentación  ha  dejado  de mantenerse y puede ser
+       inexacta o estar incompleta. La documentación  Texinfo  es
+       ahora la fuente autorizada.
+
+       Esta  página  de  manual documenta la versión GNU de echo.
+       Tenga en cuenta que la mayor parte de los shell incorporan
+       una orden con el mismo nombre y funcionamiento análogo.
+
+       echo  escribe  cada  una de las cadenas dadas en su salida
+       estándar, con un espacio en blanco entre  cada  una  y  un
+       carácter "salto de línea" después de la última cadena.
+
+   OPCIONES
+       -n     No enviar el carácter "salto de línea" al final.
+
+       -e     Activa  la  interpretación  en  las  cadenas de los
+              siguientes  caracteres  precedidos  por  una  barra
+              invertida:
+              \a     alarma (timbre)
+              \b     espacio atrás
+              \c     suprime el "salto de línea" final
+              \f     salto de página
+              \n     salto de línea
+              \r     retorno de carro
+              \t     tabulado horizontal
+              \v     tabulado vertical
+              \\     barra invertida
+              \nnn   el  carácter  cuyo  código  ASCII es nnn (en
+                     octal)
+
+   OPCIONES
+       Cuando se ejecuta el programa GNU echo con exactamente  un
+       parámetro, se reconocen las siguientes opciones:
+
+       --help Muestra  un  mensaje de uso en la salida estándar y
+              termina sin errores.
+
+       --version
+              Muestra información acerca de la versión  del  pro­
+              grama  en la salida estándar y termina sin errores.
+
+
+
+FSF                  Utilidades shell de GNU              ECHO(1)

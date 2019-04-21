@@ -1,0 +1,46 @@
+BASHBUG(1)                                             BASHBUG(1)
+
+
+
+NOMBRE
+       bashbug - para informar de un fallo en bash
+
+SINOPSIS
+       bashbug [dirección]
+
+DESCRIPCIÓN
+       bashbug  es  un  guión  del shell para ayudar al usuario a
+       componer y enviar por  electrocorreo  informes  de  fallos
+       concernientes  a bash, en un formato normalizado.  bashbug
+       llama al editor especificado en la  variable  de  ambiente
+       EDITOR  sobre  una  copia  temporal de la plantilla con el
+       formato del informe de fallos. El  usuario  debe  rellenar
+       los campos apropiados y salir del editor.  Entonces, bash­
+       bug envía por electrocorreo el informe completado  a  bug-
+       bash@prep.ai.mit.edu,  o  a  dirección.  Si  el informe no
+       puede ser enviado, se guarda en el fichero dead.bashbug en
+       el  directorio inicial de trabajo del usuario en cuestión.
+
+       La plantilla del informe de fallos consiste en varias sec­
+       ciones.   La  primera  proporciona  información  sobre  la
+       máquina, el sistema operativo, la versión  de  bash  y  el
+       entorno  de  compilación.  La segunda sección debería rel­
+       lenarse con una descripción del fallo. La tercera  sección
+       debería  ser  una descripción de cómo reproducir el fallo.
+       La cuarta sección, opcional, es para una correción que  se
+       proponga. Se anima a los usuarios a mandar correcciones.
+
+ENTORNO
+       bashbug  utilizará  las siguientes variables de entorno si
+       existen:
+
+       EDITOR Especifica el editor preferido. Si EDITOR  no  está
+              definido, bashbug toma como editor predeterminado a
+              emacs.
+
+       HOME   Directorio en el que se guarda el informe de fallos
+              si no se puede enviar por electrocorreo.
+
+
+
+GNU                       10 Agosto 1995               BASHBUG(1)

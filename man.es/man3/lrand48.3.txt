@@ -1,0 +1,113 @@
+DRAND48(3)       Manual del Programador de Linux       DRAND48(3)
+
+
+
+NOMBRE
+       drand48,  erand48,  lrand48,  nrand48,  mrand48,  jrand48,
+       srand48, seed48, lcong48 - generan  números  seudo-aleato­
+       rios distribuidos uniformemente
+
+SINOPSIS
+       #include <stdlib.h>
+
+       double drand48(void);
+
+       double erand48(unsigned short int xsubi[3]);
+
+       long int lrand48(void);
+
+       long int nrand48(unsigned short int xsubi[3]);
+
+       long int mrand48(void);
+
+       long int jrand48(unsigned short int xsubi[3]);
+
+       void srand48(long int seedval);
+
+       unsigned short int *seed48(unsignedshortint seed16v [3]);
+
+       void lcong48(unsigned short int param[7]);
+
+DESCRIPCIÓN
+       Estas funciones generan números seudo-aleatorios usando el
+       algoritmo congruente lineal y artimética de enteros de  48
+       bits.
+
+       Las  funciones  drand48() y erand48() devuelven valores en
+       coma flotante de doble precisión  no  negativos  uniforme­
+       mente distribuidos entre [0.0, 1.0).
+
+       Las funciones lrand48() y nrand48() devuelven enteros lar­
+       gos no negativos  distribuidos  uniformemente  entre  0  y
+       2^31.
+
+       Las funciones mrand48() y jrand48() devuelven enteros lar­
+       gos con signo distribuidos  uniformemente  entre  -2^31  y
+       2^31.
+
+       Las  funciones  srand48(),  seed48()  y lcong48() son fun­
+       ciones de inicialización, una de las cuales debe ser  lla­
+       mada  antes  de usar drand48(), lrand48() o mrand49(). Las
+       funciones erand48(), nrand48() y  jrand48()  no  requieren
+       que una función de inicialización sea llamada primero.
+
+       Todas  las  funciones  trabajan generando una secuencia de
+       enteros de 48 bits, Xi, de acuerdo a la fórmula de congru­
+       encia lineal:
+
+              Xn+1 = (aXn + c) mod m, donde n >= 0
+
+       El parámetro m = 2^48, de aquí que la aritmética sea de 48
+       bits.  A menos que se llame a lcong48(), a y c son:
+
+              a = 0x5DEECE66D
+              c = 0xB
+
+       El  valor  devuelto  por  cualquiera  de   las   funciones
+       drand48(),  erand48(),  lrand48(),  nrand48(), mrand48() o
+       jrand48() es calculado primero al generar el próximo Xi de
+       48  bits  en  la  secuencia.  Entonces  se copia el número
+       apropiado de bits, de  acuerdo  al  tipo  de  dato  a  ser
+       devuelto, desde los bits de mayor orden de Xi, y se trans­
+       forman en el valor devuelto.
+
+       Las funciones drand48(), lrand48() y mrand48() guardan  el
+       último  Xi  de  48  bits generado, en un búfr interno. Las
+       funciones erand48(), nrand48() y jrand48()  requieren  que
+       el  programa que las llame proporcione almacenamiento para
+       los sucesivos valores Xi en el argumento vector xsubi. Las
+       funciones se inicializan al colocar el valor inicial de Xi
+       en la cadena antes de llamar a la función la primera  vez.
+
+       La  función inicializadora srand48() asigna los 32 bits de
+       mayor orden de Xi al argumento seedval.  Los  16  bits  de
+       orden bajo se rellenan con un valor arbitrario 0x330E.
+
+       La  función  inicializadora seed48() asigna el valor de Xi
+       al valor de 48 bits especificado en  el  argumento  vector
+       seed16v.  Los  valores  anteriores  de  Xi se copian en un
+       búfer interno y seed48() devuelve un puntero a este  búfer
+       interno.
+
+       La  función  inicializadora  lcong48()  permite al usuario
+       especificar los valores iniciales para Xi, a y c.  En  los
+       elementos  del  argumento  vector param[0-2] se especifica
+       Xi, en param[3-5]  se  especifica  a,  y  en  param[6]  se
+       especifica c. Después de llamar a lcong48(), una llamada a
+       srand48() o seed48()  puede restaurar los  valores  están­
+       dares de a y c.
+
+CONFORME A
+       SVID 3
+
+NOTAS
+       Estas  funciones  están declaradas como obsoletas por SVID
+       3, que dice que en su  lugar  debe  emplearse  la  función
+       rand(3).
+
+VÉASE TAMBIÉN
+       rand(3), random(3)
+
+
+
+                          21 Enero 1995                DRAND48(3)

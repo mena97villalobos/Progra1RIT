@@ -1,0 +1,57 @@
+GETPASS(3)       Manual del Programador de Linux       GETPASS(3)
+
+
+
+NOMBRE
+       getpass - obtiene una contraseña
+
+SINOPSIS
+       #include <pwd.h>
+       #include <unistd.h>
+
+       char *getpass( const char * prompt );
+
+DESCRIPCIÓN
+       La función getpass muestra un mensaje indicador en la sal­
+       ida estándar de errores, y lee una contraseña de /dev/tty.
+       Si este fichero no es accesible, getpass lee de la entrada
+       estándar.
+
+       La contraseña puede ser de hasta 128 caracteres de  larga,
+       incluyendo  un  NUL  final.  Cualesquier  caracteres  adi­
+       cionales y el de nueva-línea final se descartan.
+
+       Getpass desactiva el eco e  inhabilita  la  generación  de
+       señales  por caracteres especiales de la tty (interrupción
+       por Control-C, suspensión por  Control-Z,  etc.)  mientras
+       está leyendo la contraseña.
+
+
+VALOR DEVUELTO
+       Getpass devuelve un puntero a la contraseña, una cadena de
+       caracteres acabada en cero.
+
+FICHEROS
+       /dev/tty
+
+VÉASE TAMBIÉN
+       crypt(3)
+
+HISTORIA
+       Una función getpass apareció en la Versión 7  de  UNIX  de
+       AT&T.
+
+FALLOS
+       La función getpass deja su resultado en un objeto estático
+       interno y devuelve un puntero  a  dicho  objeto.  Llamadas
+       subsecuentes a getpass modificarán ese mismo objeto.
+
+       El  proceso  que llama a esta función debería poner a cero
+       todos los caracteres de la contraseña tan pronto  como  le
+       fuera  posible  para evitar dejar la contraseña sin cifrar
+       visible en el espacio de direcciones del proceso.
+
+
+
+
+BSD                       28 Enero 1998                GETPASS(3)

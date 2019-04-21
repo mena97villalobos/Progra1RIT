@@ -1,0 +1,79 @@
+RAND(3)          Manual del Programador de Linux          RAND(3)
+
+
+
+NOMBRE
+       rand, srand - generador de números pseudo-aleatorios
+
+SINOPSIS
+       #include <stdlib.h>
+
+       int rand(void);
+
+       void srand(unsigned int semilla);
+
+DESCRIPCIÓN
+       La  función  rand()  devuelve  un  entero pseudo-aleatorio
+       entre 0 y RAND_MAX.
+
+       La función srand() establece su argumento como la  semilla
+       de  una  nueva serie de enteros seudo-aleatorios que serán
+       devueltos en secuencia por rand().  Estas  secuencias  son
+       repetibles  si  se llama a srand() con el mismo valor para
+       semilla.
+
+       Si no se proporciona ningún valor para la  semilla  (i.e.,
+       no  se llama a srand()), la función rand() automáticamente
+       coge el valor 1 para la semilla.
+
+VALOR DEVUELTO
+       La función rand() devuelve un valor entre  0  y  RAND_MAX.
+       La función srand() no devuelve nada.
+
+OBSERVACIONES
+       Las versiones de rand() y srand() de la Biblioteca de C de
+       Linux emplean el mismo generador de números aleatorios que
+       random()  y  srandom(),  de modo que los bits de orden más
+       bajo deberían ser tan aleatorios como  los  de  orden  más
+       alto.   Sin  embargo,  en  implementaciones  de rand() más
+       antiguas, los bits de  más  bajo  orden  son  mucho  menos
+       aleatorios que los de orden más alto.
+
+       En Numerical Recipes in C: The Art of Scientific Computing
+       (William H. Press, Brian P. Flannery, Saul  A.  Teukolsky,
+       William  T.  Vetterling;  New  York:  Cambridge University
+       Press, 1990 (1ª ed, pág. 207)), se  hacen  los  siguientes
+       comentarios:
+              "Si  Ud. quiere generar un entero aleatorio entre 1
+              y 10, siempre debería hacerlo así:
+
+                     j=1+(int) (10.0*rand()/(RAND_MAX+1.0));
+
+              y nunca con algo parecido a esto:
+
+                     j=1+((int) (1000000.0*rand()) % 10);
+
+              (que utiliza bits de más bajo orden)."
+
+       La generación de números aleatorios es un  tema  complejo.
+       El  libro  Numerical Recipes in C (ver la referencia ante­
+       rior) proporciona una excelente discusión  sobre  la  gen­
+       eración  práctica  de  números aleatorios en el capítulo 7
+       (Números Aleatorios).
+
+       Para una discusión más teórica que también cubra  en  pro­
+       fundidad  otros  detalles prácticos, por favor consulte el
+       capítulo 3 (Números Aleatorios) en el libro de  Donald  E.
+       Knuth  The Art of Computer Programming, volumen 2 (Seminu­
+       merical Algorithms), 2ª ed.; Reading, Massachusetts: Addi­
+       son-Wesley Publishing Company, 1981.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       random(3), srandom(3), initstate(3), setstate(3)
+
+
+
+GNU                        5 Marzo 1998                   RAND(3)

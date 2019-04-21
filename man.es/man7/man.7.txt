@@ -1,0 +1,226 @@
+MAN(7)           Manual del programador de Linux           MAN(7)
+
+
+
+NOMBRE
+       man - macros para formatear páginas del manual
+
+SINOPSIS
+       groff -Tascii -man fichero ...
+
+       groff -Tps -man fichero ...
+
+       man [sección] título
+
+DESCRIPCIÓN
+       Esta página del manual describe el paquete de macros groff
+       tmac.an.  El programador debe usar este paquete de  macros
+       cuando  escriba  o porte páginas del manual para Linux. Al
+       ser bastante compatible con otras versiones, portar  pági­
+       nas  del  manual  no  debería  dar  mayores problemas (con
+       excepción de la distribución incluida en  NET-2  BSD,  que
+       utiliza un paquete de macros totalmente distinto).
+
+       Para  usar  las páginas del manual del NET-2 BSD con groff
+       simplemente se utiliza la opción -mdoc en vez de la opción
+       -man.   De  todas formas, se recomienda utilizar la opción
+       -mandoc porque así detecta de forma automática qué paquete
+       de macros se está utilizando.
+
+PREÁMBULO
+       La primera orden en una página de manual debería ser
+
+              .TH título sección fecha fuente manual,
+
+       donde:
+
+              título  Es  el  título  de  la  página  del  manual
+                      (p.ej., MAN).
+
+              sección Es el número de sección donde debería ir la
+                      página (p.ej., 7).
+
+              fecha   Esta  es la fecha de la última revisión (la
+                      fecha debería cambiarse  cada  vez  que  se
+                      modifica la página, ya que ésta es la forma
+                      mas genérica de llevar  un  control  de  la
+                      versión.
+
+              fuente  Indica cual es la fuente de la orden.
+
+                      Para ficheros binarios, se utilizan nombres
+                      como: GNU, NET-2,  Distribución  SLS,  Dis­
+                      tribución MCC.
+
+                      Para  llamadas al sistema, se especifica la
+                      versión actual del núcleo: Linux 0.99.11.
+
+                      Para llamadas a las bibliotecas, se especi­
+                      fica la fuente de la función: GNU, BSD 4.3,
+                      Linux DLL 4.4.1.
+
+              manual  Indica el título del manual (p.ej.,  Manual
+                      del Programador de Linux).
+
+       Tradicionalmente, las secciones del manual se definen como
+       las siguientes:
+
+              1 Comandos
+                      Son órdenes que el usuario  puede  ejecutar
+                      desde el intérprete de comandos.
+
+              2 Llamadas al sistema
+                      Son  funciones que el núcleo debe ejecutar.
+
+              3 Llamadas a bibliotecas
+                      La mayoría de  las  funciones  libc,  tales
+                      como qsort(3))
+
+              4 Ficheros especiales
+                      Ficheros que se encuentran en /dev)
+
+              5 Formatos de ficheros y convenciones
+                      El  formato de /etc/passwd y otros ficheros
+                      legibles.
+
+              6 Juegos
+
+              7 Paquetes de macros y convenciones
+                      Describe la distribución estándard del sis­
+                      tema  de ficheros, ésta pagina del manual y
+                      otras cosas.
+
+              8 Órdenes para la administración del sistema
+                      Órdenes como mount(8), que sólo pueden  ser
+                      ejecutadas por el usuario root.
+
+              9 Rutinas del núcleo
+                      Esta  sección  del  manual no es estándar y
+                      está incluída porqué el código  fuente  del
+                      núcleo  de Linux está libremente disponible
+                      bajo la Licencia Pública GNU  y  hay  mucha
+                      gente trabajando y modificando el núcleo.
+
+TIPOS DE LETRA
+       Aunque el mundo UNIX tiene muchas convenciones arbitrarias
+       para las páginas del manual, la existencia de  cientos  de
+       páginas del manual Linux definen nuestros estándares:
+
+              Para funciones, los argumentos siempre se especifi­
+              can usando itálicas, incluso en la  sección  SINOP­
+              SIS, mientras que el resto de la función se escribe
+              en negrita:
+              int myfunction(int argc, char **argv);
+
+              Los  nombres  de  ficheros  van  siempre  en  letra
+              itálica  (p.ej.,  /usr/include/stdio.h), excepto en
+              la sección SINOPSIS,  donde  los  ficheros  van  en
+              negrita (p.ej., #include <stdio.h>).
+
+              Las  macros especiales que suelen ir en mayúsculas,
+              van en negrita (p.ej., MAXINT).
+
+              Cuando enumeramos una lista de  códigos  de  error,
+              estos van en negrita (esta lista normalmente usa el
+              macro .TP).
+
+              Referencias a otras páginas del manual (o de  algún
+              tema  dentro  de  la página actual) van en negrita.
+              Si se incluye el número de sección del  manual,  se
+              debe  dar  en  tipo  de  letra romana, sin espacios
+              (p.ej., man(7)).
+
+              Las órdenes usadas para seleccionar distintos tipos
+              de letra son las siguientes:
+
+       .B      Negrita
+
+       .BI     Negrita alternándose con itálica
+
+       .BR     Negrita alternándose con romana
+
+       .I      Itálica
+
+       .IB     Itálica alternándose con negrita
+
+       .IR     Itálica alternándose con romana
+
+       .RB     Romana alternándose con negrita
+
+       .RI     Romana alternándose con itálica
+
+       .SB     Pequeña alternándose con negrita
+
+       .SM     Pequeña
+
+       Tradicionalmente,  cada  órden puede tener seis argumentos
+       como máximo, pero la versión de  GNU  no  tiene  esa  lim­
+       itación.  Los argumentos se delimitan por espacios.  Si el
+       argumento  contiene  espacios,  se  deben  usar   comillas
+       dobles.   Todos los argumentos se imprimen uno al lado del
+       otro sin espacios entre medio, de esta forma, la orden .BR
+       se  puede  usar  para  especificar  una palabra en negrita
+       seguido por un signo de puntuación en romano.
+
+SECCIONES
+       Las secciones se empiezan con .SH  seguido  del  encabeza­
+       miento.  Si  el  nombre  contiene espacios y aparece en la
+       misma  linea  que  el  .SH,  entonces  se  debe  poner  el
+       encabezamiento  dentro  de comillas dobles.  Los encabeza­
+       mientos tradicionales que se incluyen son: NOMBRE,  SINOP­
+       SIS, DESCRIPCIóN, OPCIONES, FICHEROS, VÉASE TAMBIÉN, DIAG­
+       NÓSTICOS, ERRORES, y AUTOR.  El único encabezamiento obli­
+       gatorio  es  el  NOMBRE,  que debe incluir una descripción
+       breve del programa en  la  linea  siguiente  al  encabeza­
+       miento:
+
+              .SH NOMBRE
+              ajedrez \- el juego de ajedrez
+
+       Es  muy  importante  respetar  este  formato,  nótese  que
+       después del nombre de la órden  hay  una  barra  invertida
+       antes  del  guión.  Esta  sintaxis  la utiliza el programa
+       makewhatis(8) para crear una base  de  datos  de  descrip­
+       ciones breves para las órdenes whatis(1) y apropos(1).
+
+OTRAS MACROS
+       Otras macros que se pueden utilizar:
+
+       .DT    Tabuladores por omisión
+
+       .HP    Empezar sangrado pendiente
+
+       .IP    Empezar  un  párrafo  con  una  etiqueta pendiente.
+              Tiene el mismo efecto que .TP, con la excepción que
+              la  etiqueta  está en la misma linea, pero no en la
+              siguiente.
+
+       .LP    Lo mismo que .PP.
+
+       .PD    Establece la distancia entre párrafos al valor dado
+              por el argumento
+
+       .PP    Empieza un nuevo párrafo
+
+       .RE    Finaliza un sangrado relativo (párrafo sangrado)
+
+       .RS    Comienza sangrado relativo (párrafo sangrado)
+
+       .SS    Subencabezamiento  (igual  que .SH, pero usado para
+              subsecciones)
+
+       .TP    Comienza un párrafo con una etiqueta pendiente.  La
+              etiqueta está en la siguiente linea.  Esta órden es
+              parecida a .IP.
+
+
+FICHEROS
+       /usr/local/lib/groff/tmac/tmac.an
+       /usr/man/whatis
+
+VÉASE TAMBIÉN
+       groff(1), man(1), whatis(1), apropos(1), makewhatis(8)
+
+
+
+Linux                     25 Julio 1993                    MAN(7)

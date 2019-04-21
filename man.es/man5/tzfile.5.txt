@@ -1,0 +1,112 @@
+TZFILE(5)                                               TZFILE(5)
+
+
+
+NOMBRE
+       tzfile - información de huso horario
+
+SINOPSIS
+       #include <tzfile.h>
+
+DESCRIPCIÓN
+       Los  ficheros  de  información  de huso horario usados por
+       tzset(3) comienzan con la secuencia de caracteres  mágicos
+       "TZif" para identificarlos como ficheros de información de
+       huso horario, seguidos por 16 bytes  reservados  para  uso
+       futuro  y  seguidos por 6 valores de 4 bytes de tipo long,
+       escritos en un orden de  bytes  ``estándar''  (se  escribe
+       primero  el byte de orden superior del valor).  Estos val­
+       ores son, en orden:
+
+       tzh_ttisgmtcnt
+              El número de indicadores UTC/local  almacenados  en
+              el fichero.
+
+       tzh_ttisstdcnt
+              El número de indicadores estándar/incorporado alma­
+              cenados en el fichero.
+
+       tzh_leapcnt
+              El número de "segundos de  salto"  para  los  datos
+              almacenados en el fichero.
+
+       tzh_timecnt
+              El  número  de  "instantes  de transición" para los
+              datos almacenados en el fichero.
+
+       tzh_typecnt
+              El número de "tipos de hora local" para  los  datos
+              almacenados en el fichero (no debe ser cero).
+
+       tzh_charcnt
+              El  número  de  caracteres de las "cadenas de abre­
+              viación  de  husos  horarios"  almacenadas  en   el
+              fichero.
+
+       A  la  cabecera  anterior le siguen valores tzh_timecnt de
+       cuatro bytes de tipo long,  almacenados  en  orden  ascen­
+       dente.   Estos  valores  se  escriben en un orden de bytes
+       ``estándar''.  Cada  uno  de  ellos  se  utiliza  como  un
+       instante  de  transición  (tal y como time(2) devuelve las
+       horas) en el que cambian las reglas para el cálculo de  la
+       hora  local.  A continuación viene un valor tzh_timecnt de
+       un byte de tipo unsigned char;  cada  uno  de  los  cuales
+       indica  cuál  de  los  diferentes  tipos de ``hora local''
+       descritos en el fichero se asocia con el instante de tran­
+       sición colocado en la misma posición relativa.  Estos val­
+       ores sirven como índices en un array de estructuras ttinfo
+       que  aparecen  después en el fichero; estas estructuras se
+       definen como sigue:
+
+            struct ttinfo {
+                 long          tt_gmtoff;
+                 int           tt_isdst;
+                 unsigned int  tt_abbrind;
+            };
+
+       Cada estructura se escribe como un valor  de  cuatro  byte
+       para  tt_gmtoff  de tipo long, en un orden de bytes están­
+       dar, seguido por un valor de un byte para  tt_isdst  y  un
+       valor  de  un  byte  para tt_abbrind.  En cada estructura,
+       tt_gmtoff da  el  número  de  segundos  a  añadir  a  UTC,
+       tt_isdst  indica si tm_isdst debe ser o no establecido por
+       localtime(3) y tt_abbrind se utiliza como un índice en  el
+       array  de  caracteres  de  abreviación de huso horario que
+       siguen a la(s) estructura(s) ttinfo en el fichero.
+
+       Después hay parejas de valores  tzh_leapcnt  de  4  bytes,
+       escritas en un orden de bytes estándar; el primer valor de
+       cada pareja  indica  la  hora  (tal  y  como  la  devuelve
+       time(2))  a  la  que  se  produce  un segundo de salto; el
+       segundo indica el número total  de  segundos  de  salto  a
+       aplicar después del instante dado.  Las parejas de valores
+       se almacenan en orden ascedente de tiempo.
+
+       A continuación,  exiten  indicadores  estándar/incorporado
+       tzh_ttisstdcnt,  cada  uno  almacenado como un valor de un
+       byte; indican si los instantes de transición asociados con
+       los  tipos  de  hora  local se especificaron como una hora
+       estándar o como una hora del reloj incorporado, y se  usan
+       cuando  un  fichero  de  huso  horario se usa para manejar
+       variables de entorno de huso horario al estilo POSIX.
+
+       Finalmente, hay indicadores UTC/local tzh_ttisgmtcnt, cada
+       uno  almacenado  como  un valor de un byte; indican si los
+       instantes de transición asociados con los  tipos  de  hora
+       local se especificaron como horas UTC o locales, y se usan
+       cuando un fichero de huso  horario  se  usa  para  manejar
+       variables de entorno de huso horario al estilo POSIX.
+
+       Localtime  usa la primera estructura ttinfo de hora están­
+       dar del fichero (o,  simplemente,  la  primera  estructura
+       ttinfo en ausencia de un estructura de hora estándar) si o
+       bien tzh_timecnt es cero o bien el argumento de tiempo  es
+       menor  que  el primer instante de transición almacenado en
+       el fichero.
+
+VÉASE TAMBIÉN
+       newctime(3)
+
+
+
+                                                        TZFILE(5)

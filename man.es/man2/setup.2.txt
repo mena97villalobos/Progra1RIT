@@ -1,0 +1,38 @@
+SETUP(2)         Manual del Programador de Linux         SETUP(2)
+
+
+
+NOMBRE
+       setup  - pone a punto dispositivos y sistemas de ficheros,
+       monta el sistema de ficheros raíz
+
+SINOPSIS
+       #include <unistd.h>
+
+       _syscall0(int, setup);
+
+       int setup(void);
+
+DESCRIPCIÓN
+       setup se llama una vez desde linux/init/main.c.   Llama  a
+       funciones  de  inicio  para  dispositivos  y  sistemas  de
+       ficheros configurados en el núcleo y luego monta  el  sis­
+       tema de ficheros raíz.
+
+       Ningún proceso de usuario puede llamar a setup.  Cualquier
+       proceso de usuario, incluso un  proceso  con  permisos  de
+       súper-usuario, recibirá EPERM.
+
+VALOR DEVUELTO
+       setup siempre devuelve -1 para un proceso de usuario.
+
+ERRORES
+       EPERM  Siempre, para un proceso de usuario.
+
+CONFORME A
+       Esta  función  es específica de Linux, y no debe emplearse
+       en programas pretendidamente transportables.
+
+
+
+Linux 1.2.9               27 Enero 1998                  SETUP(2)

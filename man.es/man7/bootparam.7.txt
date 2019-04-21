@@ -1,0 +1,1359 @@
+BOOTPARAM(7)     Manual del Programador de Linux     BOOTPARAM(7)
+
+
+
+NOMBRE
+       bootparam  - Introducción a los parámetros de arranque del
+       núcleo de Linux
+
+DESCRIPCIÓN
+       El núcleo Linux acepta ciertas `opciones de  la  línea  de
+       orden' o `parámetros de arranque' cuando se carga. En gen­
+       eral esto sirve para  suministrar  al  núcleo  información
+       sobre  parámetros  del  equipo que el núcleo es incapaz de
+       determinar por sí mismo, o para evitar o cambiar los  val­
+       ores que el núcleo detectaría.
+
+       Cuando  es  la  BIOS  quien arranca directamente el núcleo
+       (por ejemplo desde un disquete donde Ud. copió  el  núcleo
+       mediante  `cp  zImage /dev/fd0'), Ud. no tiene oportunidad
+       de especificar ningún parámetro.  Así que para  aprovechar
+       esta  posibilidad Ud. debe emplear algún programa capaz de
+       pasar parámetros, como LILO o LOADLIN.  Para algunos pocos
+       parámetros,  uno  puede también modificar la propia imagen
+       del núcleo, empleando rdev, vea rdev(8) para más detalles.
+
+       El  programa  LILO  (LInux  LOader,  cargador  de  Linux),
+       escrito por Werner Almesberger, es el más empleado  común­
+       mente.  Tiene  la  capacidad de arrancar varios núcleos, y
+       guarda la información de configuración en  un  fichero  de
+       texto  plano.  (Vea  lilo(8)  y lilo.conf(5).)  LILO puede
+       arrancar también  DOS,  OS/2,  Linux,  FreeBSD,  UnixWare,
+       etc., y es bastante flexible.
+
+       El  otro  cargador  de Linux empleado comúnmente es `Load­
+       Lin', que es un programa de DOS con la capacidad de lanzar
+       un  núcleo  Linux  desde  la línea de órdenes del DOS (con
+       argumentos de arranque),  suponiendo  que  se  dispone  de
+       ciertos  recursos. Esto está bien para la gente que quiera
+       lanzar Linux desde DOS.
+
+       También es muy útil si Ud. posee cierto hardware que  con­
+       fía  en el controlador suministrado para DOS para poner el
+       equipo en un estado determinado. Un ejemplo muy  común  es
+       el  de  las  tarjetas  de  sonido  `Compatibles con Sound­
+       Blaster' que necesitan el controlador para DOS para  hacer
+       no  se sabe qué con unos pocos misteriosos registros a fin
+       de poner la tarjeta en modo compatible  con  SB.  Arrancar
+       DOS  con  el  controlador  de  marras y cargar luego Linux
+       desde el indicador del DOS mediante Loadlin evita la  ini­
+       cialización de la tarjeta que tendría lugar si se rearran­
+       cara el sistema.
+
+
+LA LISTA DE ARGUMENTOS
+       La línea de órdenes del núcleo se analiza y divide en  una
+       lista  de  cadenas de caracteres (argumentos del arranque)
+       separadas  por  espacios.  La  mayoría  de  argumentos  de
+       arranque toman la forma:
+
+              nombre[=valor_1][,valor_2]...[,valor_10]
+
+       donde  `nombre'  es  una  palabra  reservada  única que se
+       emplea para identificar a qué parte del núcleo se va a dar
+       los  valores  (si  hay  alguno) asociados.  Observe que el
+       límite de 10 es real, puesto que  el  código  actual  sólo
+       maneja  10  parámetros separados por coma por cada palabra
+       reservada. (Sin embargo, se puede reutilizar la misma pal­
+       abra  con  hasta  10  parámetros adicionales más en situa­
+       ciones inusualmente complicadas, suponiendo que la función
+       setup  ---vea  un  par  de  párrafos  más  adelante---  lo
+       aguante.)
+
+       La mayor parte del manejo  de  los  argumentos  ocurre  en
+       linux/init/main.c.  Primero  el  núcleo  mira  a ver si el
+       argumento es uno de los  especiales  `root=',  `nfsroot=',
+       `nfsaddrs=',  `ro', `rw', `debug' o `init'. El significado
+       de estos argumentos especiales se describe más adelante.
+
+       Luego recorre una lista de funciones setup (contenidas  en
+       el  vector bootsetups) para ver si la cadena del argumento
+       especificado (como `fu') ha sido asociada con una  función
+       setup  (`fu_setup()')  para  un  dispositivo  particular o
+       parte del núcleo.  Si  se  le  pasa  al  núcleo  la  línea
+       fu=3,4,5,6 entonces el núcleo buscará en el vector bootse­
+       tups si `fu' ha sido registrada. Si lo ha  sido,  entonces
+       llamará  a la función setup asociada con `fu' (fu_setup())
+       y le pasará los argumentos 3, 4, 5 y 6 tal como se  dieron
+       en la línea de órdenes del núcleo.
+
+       Cualquier  cosa de la forma `fu=bar' que no se acepte como
+       una función setup tal como se ha descrito arriba se inter­
+       preta  entonces  como  una variable de entorno que toma un
+       valor. Un (¿inútil?) ejemplo sería poner `TERM=vt100' como
+       un argumento de arranque.
+
+       Cualesquiera  argumentos restantes que no han sido tomados
+       por el núcleo ni han sido interpretados como variables  de
+       entorno se pasan entonces al proceso 1, que normalmente es
+       el programa init. El más usual  de  ellos  es  la  palabra
+       `single',  que  ordena  a init arrancar el sistema en modo
+       monousuario, sin lanzar los demonios usuales. Eche un vis­
+       tazo  a la página del manual de la versión de init instal­
+       ada en su sistema para ver qué argumentos acepta.
+
+
+ARGS. DE ARRANQUE GENERALES, NO ESPECÍFICOS DE NINGÚN DISPOSITIVO
+   `init=...'
+       Esto  indica  el programa inicial que ejecutará el núcleo.
+       Si no se establece o no  se  puede  encontrar,  el  núcleo
+       intentará  ejecutar  /etc/init,  luego  /bin/init, después
+       /sbin/init, más tarde /bin/sh y acabará dando  un  mensaje
+       de pánico (y con razón) si todo esto falla.
+
+
+   `nfsaddrs=...'
+       Esto  pone  la  dirección de arranque de NFS con la cadena
+       dada.  Esta dirección de arranque se emplea en caso de  un
+       arranque remoto, por red.
+
+
+   `nfsroot=...'
+       Esto  pone el nombre de la raíz de NFS con la cadena dada.
+       Si esta cadena no empieza con '/' ni  ','  ni  un  dígito,
+       entonces  se le añade el prefijo `/tftpboot/'. Este nombre
+       de raíz se emplea en caso de un arranque remoto.
+
+
+   `no387'
+       (Sólo cuando  se  ha  definido  CONFIG_BUGi386.)   Algunos
+       chips  del coprocesador i387 tienen fallos que se ponen de
+       relieve cuando se emplean en modo protegido  de  32  bits.
+       Por ejemplo, algunos de los primeros chips ULSI-387 podían
+       causar bloqueos durante  cálculos  en  coma  flotante.  El
+       argumento de arranque `no387' hace que Linux no utilice el
+       coprocesador matemático aunque se disponga  de  uno.  ¡Por
+       supuesto,  el  núcleo  debe  haber sido compilado con emu­
+       lación del coprocesador matemático!
+
+
+   `no-hlt'
+       (Sólo cuando se ha definido CONFIG_BUGi386.)   Algunos  de
+       los  primeros  chips i486DX/100 tenían un pequeño problema
+       con la instrucción `hlt', y es que  no  podían  confiable­
+       mente volver al modo operativo normal tras utilizarse esta
+       instrucción. Mediante el argumento `no-hlt' se le  dice  a
+       Linux  que  ejecute  un bucle infinito cuando no haya nada
+       mejor que hacer, en vez de parar la UCP. Esto permite  que
+       la gente con estos chips defectuosos pueda usar Linux.
+
+
+   `root=...'
+       Este  argumento  le dice al núcleo qué dispositivo se va a
+       emplear como el sistema de ficheros raíz al  arrancar.  El
+       valor  predeterminado  de  este valor se pone en tiempo de
+       compilación, usualmente como el dispositivo raíz del  sis­
+       tema  donde se construyó el núcleo. Para tomar otro valor,
+       y seleccionar por ejemplo la segunda  disquetera  como  el
+       dispositivo raíz, uno utilizaría `root=/dev/fd1'. (El dis­
+       positivo raíz también se pude poner empleando rdev(8).)
+
+       El  dispositivo  raíz  puede  especificarse  simbólica   o
+       numéricamente. Una especificación simbólica tiene la forma
+       /dev/XXYN, donde XX designa el tipo de  dispositivo  (`hd'
+       para  discos  duros  compatibles  con  ST-506, con Y en el
+       rango `a'--`d'; `sd' para  discos  duros  compatibles  con
+       SCSI,  con  Y en el rango `a'--`e'; `ad' para discos duros
+       Atari ACSI, con Y en el  rango  `a'--`e';  `ez'  para  una
+       unidad  portátil  enchufable  en  puerto  paralelo Syquest
+       EZ135, con Y=`a'; `xd' para discos duros  compatibles  XT,
+       con  Y  `a' o `b'; `fd' para disquetes, siendo Y el número
+       de la unidad --- fd0 sería la unidad de  DOS  `A:'  y  fd1
+       sería  la  `B:'), Y la letra o número de la unidad, y N el
+       número (en base diez) de la partición en este  dispositivo
+       (ausente  en  el  caso  de  disquetes).  Núcleos recientes
+       admiten otros muchos tipos, mayormente  de  CD-ROMs:  nfs,
+       ram,  scd,  mcd,  cdu535,  aztcd,  cm206cd,  gscd,  sbpcd,
+       sonycd,  bpcd,  optcd.   (El  tipo  `nfs'  especifica   un
+       arranque  remoto;  `ram'  se refiere a un disco en memoria
+       RAM.)
+
+       Observe que esto no tiene nada que ver con la  designación
+       de  estos dispositivos en el sistema de ficheros. La parte
+       `/dev/' es puramente convencional.
+
+       La especificación numérica, más fea y menos transportable,
+       de  los  posibles  dispositivos  raíz de arriba en formato
+       mayor/menor, se acepta también.  (Por  ejemplo,  /dev/sda3
+       tiene  de  número  mayor 8 y de menor 3, así que se podría
+       poner `root=0x803' de forma alternativa.)
+
+
+   `ro' y `rw'
+       La opción `ro' le dice al núcleo que monte el  sistema  de
+       ficheros  raíz como `de lectura exclusiva', de modo que el
+       programa de comprobación de consistencia  del  sistema  de
+       ficheros  (fsck)  pueda  hacer su trabajo en un sistema de
+       ficheros sin actividad. Ningún proceso puede  escribir  en
+       ficheros  del  sistema  de  ficheros en cuestión hasta que
+       éste se `re-monte' como capaz para  lectura  y  escritura,
+       por  ejemplo  mediante  `mount  -w -n -o remount /'.  (Vea
+       también mount(8).)
+
+       La opción `rw' le dice al núcleo que monte el  sistema  de
+       ficheros  raíz  para  lectura  y escritura. Esto es lo que
+       ocurre normalmente si no se pone nada.
+
+       La elección entre lectura  exclusiva  y  lectura/escritura
+       también puede hacerse empleando rdev(8).
+
+
+   `reserve=...'
+       Esto  se  emplea para proteger regiones de E/S de pruebas.
+       La forma de la orden es:
+
+              reserve=baseE/S,extensión[,baseE/S,extensión]...
+
+       En algunas máquinas puede ser necesario evitar que ciertos
+       controladores  de  periféricos comprueben la existencia de
+       éstos (auto-pruebas) en una región específica. Esto  puede
+       ser  porque  algún  dispositivo  reaccione  malamente a la
+       prueba, o porque algún otro se identifique erróneamente, o
+       simplemente  porque  no  queremos que el núcleo inicialice
+       cierto hardware.
+
+       El argumento de arranque reserve especifica una región  de
+       un  puerto  de E/S que no debe ser probado. Un controlador
+       no probará una región reservada, a menos  que  otro  argu­
+       mento  de  arranque  explícitamente  le especifique que lo
+       haga.
+
+       Por ejemplo, la línea de arranque
+
+              reserve=0x300,32  bla=0x300
+
+
+       hace que ningún controlador pruebe la región  0x300--0x31f
+       excepto el de `bla'.
+
+
+   `mem=...'
+       La  llamada a la BIOS definida en la especificación del PC
+       que debe devolver la cantidad  de  memoria  instalada  fue
+       diseñada  de  modo  que  solamente es capaz de informar de
+       hasta 64 MB. Linux emplea esta llamada a  la  BIOS  en  el
+       arranque  para determinar cuánta memoria hay. Si Ud. tiene
+       más de 64 MB de RAM instalada, puede  emplear  este  argu­
+       mento  de  arranque  para  decirle  a Linux cuánta memoria
+       tiene. El valor es en base diez o dieciséis (prefijo  0x),
+       y  pueden  emplearse  los sufijos `k' (kilo, × 1024) o `M'
+       (mega, × 1048576). Lo siguiente es  un  párrafo  de  Linus
+       sobre el empleo del parámetro `mem='.
+
+       ``El  núcleo  aceptará cualquier parámetro `mem=xx' que se
+       le dé, y si se le engaña, más pronto o más  tarde  fallará
+       estrepitosamente. El parámetro indica la dirección RAM más
+       alta direccionable, así que `mem=0x1000000' significa  que
+       Ud.  tiene 16 MB de memoria, por ejemplo. Para una máquina
+       con 96 MB sería `mem=0x6000000'.
+
+       NOTA NOTA NOTA: algunas máquinas pueden emplear  la  parte
+       de arriba de la memoria para antememoria de la BIOS o para
+       otra cosa, así que  Ud.  no  tendría  realmente  hasta  el
+       límite de 96 MB direccionables. Lo inverso también es ver­
+       dad: algunos chipsets harán corresponder la memoria física
+       cubierta  por  el área de la BIOS al área justo por encima
+       del límite de la memoria, así que el tope-de-memoria sería
+       realmente  96  MB  +  384 kB por ejemplo. Si Ud. le dice a
+       Linux que tiene más memoria que la  que  realmente  tiene,
+       cosas malas acontecerán: puede ser que no de momento, pero
+       con seguridad alguna vez.''
+
+
+   `panic=N'
+       Por omisión el núcleo no rearrancará tras un pánico,  pero
+       esta  opción hará que el núcleo rearranque tras N segundos
+       (si N > 0).  Este tiempo de retardo también se puede poner
+       con "echo N > /proc/sys/kernel/panic".
+
+
+   `reboot=[warm|cold][,[bios|hard]]'
+       (Sólo  cuando  se  ha  definido CONFIG_BUGi386.)  Desde la
+       versión 2.0.22 un rearranque es por omisión un  rearranque
+       en  frío.   Uno  obtiene  el  comportamiento  antiguo  con
+       `reboot=warm'.  (Un rearranque en frío puede ser necesario
+       para  inicializar  cierto  hardware,  pero  puede destruir
+       datos no escritos aún en un caché de disco.  Un rearranque
+       en caliente puede ser más rápido.)
+
+       Por omisión un rearranque es duro, pidiendo al controlador
+       de teclado pulsar la línea de puesta a cero baja, pero hay
+       al menos un tipo de placa madre donde esto no funciona. La
+       opción `reboot=bios', en lugar de eso saltará a través  de
+       la BIOS.
+
+
+   `nosmp' y `maxcpus=N'
+       (Sólo  cuando se defina __SMP__ .)  Una opción de línea de
+       orden como `nosmp' o `maxcpus=0'  deshabilitará  por  com­
+       pleto MPS (multiproceso simétrico); una opción como `maxc­
+       pus=N' limita el número máximo de  UCPs  activados  en  el
+       modo MPS a N.
+
+
+ARGUMENTOS DE ARRANQUE PARA USO DE LOS DESARROLLADORES DEL NÚCLEO
+   `debug'
+       Los mensajes del núcleo son manejados por  el  demonio  de
+       registro del núcleo klogd de modo que pueden ser registra­
+       dos en disco. Los mensajes con  una  prioridad  mayor  que
+       console_loglevel  también se muestran en la consola. (Para
+       estos niveles, consulte  <linux/kernel.h>.)   Por  omisión
+       esta  variable  está puesta de modo que registre cualquier
+       cosa más importante que mensajes de depuración. Este argu­
+       mento  de  arranque hace que el núcleo también muestre los
+       mensajes de prioridad DEBUG.  El nivel de registro  de  la
+       consola se puede establecer también en tiempo de ejecución
+       mediante una opción de klogd. Consulte klogd(8).
+
+
+   `profile=N'
+       Es posible habilitar una función de perfil del núcleo,  si
+       uno  desea  saber dónde está el núcleo gastando sus ciclos
+       de  UCP.  El  perfil  se  habilita  poniendo  la  variable
+       prof_shift  a un valor distinto de cero. Esto se hace bien
+       especificando CONFIG_PROFILE en la compilación, o mediante
+       la   opción   `profile='.    Ahora  el  valor  que  tendrá
+       prof_shift será N, cuando se dé,  o  CONFIG_PROFILE_SHIFT,
+       cuando se haya dado éste, ó 2, el valor predeterminado. La
+       significancia de esta variable es que da  la  granularidad
+       del  perfil: para cada pulso del reloj, si el sistema está
+       ejecutando código del núcleo, se incrementa un contador:
+
+              profile[address >> prof_shift]++;
+
+       La información de perfil, sin procesar,  puede  leerse  de
+       /proc/profile.   Probablemente  sea mejor idea emplear una
+       herramienta  como   readpropfile.c   para   verla   mejor.
+       Escribir en /proc/profile limpiará los contadores.
+
+
+   `swap=N1,N2,N3,N4,N5,N6,N7,N8'
+       Da  valores a los 8 parámetros max_page_age, page_advance,
+       page_decline,     page_initial_age,     age_cluster_fract,
+       age_cluster_min, pageout_weight, bufferout_weight que con­
+       trolan el algoritmo de trasiego del núcleo.  Sólo para los
+       afinadores del núcleo.
+
+
+   `buff=N1,N2,N3,N4,N5,N6'
+       Da  valores a los 6 parámetros max_buff_age, buff_advance,
+       buff_decline, buff_initial_age, bufferout_weight,  buffer­
+       mem_grace  que controlan el manejo de memoria de búfer del
+       núcleo. Sólo para los afinadores.
+
+
+
+ARGUMENTOS DE ARRANQUE PARA USO DE DISCO EN MEMORIA
+       (Sólo  si  el  núcleo   ha   sido   compilado   con   CON­
+       FIG_BLK_DEV_RAM.)   En general es una mala idea emplear un
+       disco RAM  en  Linux;  el  sistema  utilizará  la  memoria
+       disponible  más  eficientemente  sin  él.  Pero durante el
+       arranque (o cuando se construyen disquetes de arranque) es
+       útil  a  menudo  cargar  los contenidos del disquete en un
+       disco RAM. Uno también podría tener un sistema en el  cual
+       deban  cargarse  primero  algunos  módulos (de sistemas de
+       ficheros o periféricos) antes de que se pueda  acceder  al
+       disco principal.
+
+       En Linux 1.3.48 se cambió radicalmente el manejo de discos
+       RAM.  Anteriormente, la memoria se asignaba estáticamente,
+       y había un parámetro `ramdisk=N' para dar su tamaño. (Esto
+       también podía establecerse en la imagen del núcleo al com­
+       pilarlo, o mediante rdev(8).)
+
+       Hogaño  los  discos  RAM  emplean el búfer caché, y crecen
+       dinámicamente. Para obtener mucha  más  información  sobre
+       esto  (como  por  ejemplo, cómo usar rdev(8) en conjunción
+       con   la   nueva   disposición   de   discos   RAM),   lea
+       /usr/src/linux/Documentation/ramdisk.txt.
+
+       Hay cuatro parámetros, dos booleanos y dos enteros.
+
+
+   `load_ramdisk=N'
+       Si N=1, cárguese un disco RAM. Si N=0, no se cargue. (Éste
+       es el comportamiento predeterminado.)
+
+
+   `prompt_ramdisk=N'
+       Si N=1, pídase la inserción del disquete. (Éste es el com­
+       portamiento predeterminado.)  Si N=0, no se pregunte. (Por
+       tanto, este parámetro no sirve para nada.)
+
+
+   `ramdisk_size=N' o (anticuado) `ramdisk=N'
+       Pone el tamaño máximo del disco RAM (o de los discos) a  N
+       kB. El valor predeterminado es 4096 (esto es, 4 MB).
+
+
+   `ramdisk_start=N'
+       Pone el número del bloque inicial (el desplazamiento desde
+       el principio en el disquete donde empieza el disco RAM)  a
+       N.  Esto es necesario si el disco RAM está tras una imagen
+       del núcleo.
+
+
+   `noinitrd'
+       (Sólo si el núcleo fue compilado con CONFIG_BLK_DEV_RAM  y
+       con CONFIG_BLK_DEV_INITRD.)  Actualmente es posible compi­
+       lar el núcleo  de  forma  que  emplee  initrd.  Cuando  se
+       habilita  esta característica, el proceso de arranque car­
+       gará el núcleo y un disco RAM inicial; entonces el  núcleo
+       convierte  initrd  a  un  disco RAM "normal", que se monta
+       para lectura y escritura como el dispositivo  raíz;  luego
+       se ejecuta /linuxrc; después de eso se monta el sistema de
+       ficheros raíz "de verdad", y el sistema de ficheros initrd
+       se  mueve sobre /initrd; finalmente tiene lugar la secuen­
+       cia de arranque habitual (o sea, la llamada a /sbin/init).
+
+       Para  una  descripción  detallada  de  lo  de  initrd, lea
+       /usr/src/linux/Documentation/initrd.txt.
+
+       La opción `noinitrd' le dice al  núcleo  que  aunque  haya
+       sido  compilado  para  la  operación  con  initrd, no debe
+       seguir los pasos anteriores, sino dejar los datos de  ini­
+       trd   bajo  /dev/initrd.   (Este  dispositivo  sólo  puede
+       emplearse una vez; los datos son liberados tan pronto como
+       el  último  proceso que lo haya utilizado cierre /dev/ini­
+       trd.)
+
+
+
+ARGUMENTOS DE ARRANQUE PARA DISPOSITIVOS SCSI
+       Notación general para esta sección:
+
+       iobase -- el primer puerto de E/S que ocupa  el  anfitrión
+       SCSI.  Se especifica en notación hexadecimal y normalmente
+       cae en el rango de 0x200 a 0x3ff.
+
+       irq -- la interrupción de hardware a  la  que  la  tarjeta
+       está configurada.  Los valores válidos dependen de la tar­
+       jeta en cuestión, pero normalmente son 5, 7, 9, 10, 11, 12
+       y  15.  Los otros valores se emplean normalmente para per­
+       iféricos comunes como discos duros IDE, disquetes, puertos
+       serie, etc.
+
+       scsi-id  -- La ID (identificación) que emplea el adaptador
+       anfitrión para identificarse en el bus SCSI. Sólo  algunos
+       permiten  que  se cambie este valor, puesto que la mayoría
+       lo tiene especificado de modo  permanente  e  interno.  El
+       valor  predeterminado  más  usual  es 7, pero las tarjetas
+       Seagate y Future Domain emplean el 6.
+
+       paridad -- si el adaptador anfitrión SCSI espera  que  los
+       dispositivos  acoplados a él suministren un valor de pari­
+       dad con todos los intercambios de información. El valor  1
+       indica  que  el control de paridad está activo, y el 0 que
+       no. De nuevo, no todos los adaptadores admiten  la  selec­
+       ción  del  comportamiento  de la paridad como argumento de
+       arranque.
+
+
+   `max_scsi_luns=...'
+       Un dispositivo SCSI puede tener un número de `sub-disposi­
+       tivos' contenidos en él mismo. El ejemplo más común es uno
+       de los nuevos CD-ROMs SCSI que manejan más de un  disco  a
+       la  vez.  Cada  CD  se direcciona con un `Número Lógico de
+       Unidad' (NLU, o LUN) de ese dispositivo  particular.  Pero
+       la mayoría de dispositivos, como discos duros, unidades de
+       cinta magnética y otros por  el  estilo  son  dispositivos
+       únicos, y tendrán el LUN 0.
+
+       Algunos  dispositivos  SCSI pobremente diseñados no pueden
+       admitir que se compruebe la existencia de otros LUNs  dis­
+       tintos  del  0.  Por lo tanto, si la opción de compilación
+       CONFIG_SCSI_MULTI_LUN no está puesta, los  núcleos  nuevos
+       sólo probarán de forma predeterminada el LUN 0.
+
+       Para   especificar  el  número  de  LUNs  probados  en  el
+       arranque, uno introduce `max_scsi_luns=n'  como  un  argu­
+       mento  del  arranque, siendo n un número entre 1 y 8. Para
+       evitar problemas como  los  descritos  anteriormente,  uno
+       debería emplear n=1 para evitar problemas con los disposi­
+       tivos del párrafo anterior.
+
+
+   Configuración de unidades de cinta magnética SCSI
+       Algo de la configuración en tiempo de arranque del contro­
+       lador  de  cinta  magnética SCSI puede hacerse mediante lo
+       siguiente:
+
+              st=tam_buf[,write_threshold[,bufs_max]]
+
+       Los primeros dos números se especifican en unidades de kB.
+       El  valor  predeterminado de tam_buf es 32 kB, y el tamaño
+       máximo que puede especificarse es de 16384  ridículos  kB.
+       write_threshold  es el valor al cual el búfer es volcado a
+       la cinta, siendo el predeterminado 30 kB. El máximo número
+       de búferes varía con el de unidades detectadas, y el valor
+       predeterminado es 2.  Un ejemplo del modo de empleo sería
+
+              st=32,30,2
+
+       Los detalles pueden encontrarse en  el  fichero  README.st
+       que está en el directorio scsi del árbol de directorios de
+       los fuentes del núcleo.
+
+
+   Configuración  de  las  Adaptec  aha151x,  aha152x,   aic6260,
+       aic6360, SB16-SCSI
+       Los  números  del  AHA  se  refiere  a  las tarjetas y los
+       números del AIC se refieren al chip SCSI que hay en  estos
+       tipos de tarjetas, incluyendo la Soundblaster-16 SCSI.
+
+       El  código  probatorio  de estos anfitriones SCSI busca un
+       BIOS instalado, y si no lo hay, la tarjeta no será recono­
+       cida.  Entonces  Ud. tendrá que dar un arg. de arranque de
+       la forma:
+
+              aha152x=iobase[,irq[,scsi-id[,reconexión[,pari­
+              dad]]]]
+
+       Si el controlador se compiló con la depuración habilitada,
+       se puede dar un 6º valor para el nivel de depuración.
+
+       Todos los parámetros son como se describieron al inicio de
+       esta  sección,  y  el  valor  de  reconexión  permitirá la
+       des/re-conexión del dispositivo si se emplea un valor dis­
+       tinto  de  cero.  Un  ejemplo  del  modo de empleo es como
+       sigue:
+
+              aha152x=0x340,11,7,1
+
+       Observe que los parámetros deben darse  en  su  orden,  de
+       forma que si Ud. quiere especificar un valor para la pari­
+       dad, también deberá especificar cada uno  de  los  anteri­
+       ores: iobase, irq, scsi-id y reconexión.
+
+
+   Configuración de la Adaptec aha154x
+       Las  tarjetas  de las series AHA1542 tienen un controlador
+       de disquete i82077 en la placa, mientras que  las  AHA1540
+       no  lo tienen. Estas tarjetas son de bus maestro, y poseen
+       parámetros para establecer la ``generosidad'' que  emplean
+       para  compartir el bus con otros periféricos. Los args. de
+       arranque son como sigue.
+
+              aha1542=iobase[,buson,busoff[,dmaspeed]]
+
+       Los valores válidos para iobase son  normalmente  uno  de:
+       0x130, 0x134, 0x230, 0x234, 0x330, 0x334.  Tarjetas clóni­
+       cas pueden permitir otros valores.
+
+       Los valores de buson, busoff  se  refieren  al  número  de
+       microsegundos  que  la tarjeta domina el bus ISA. Los val­
+       ores predeterminados son 11 µs sí y 4 µs no, de  modo  que
+       otras  tarjetas  (como  una  tarjeta  Ethernet  ISA LANCE)
+       tienen una oportunidad de acceder al bus ISA.
+
+       El valor de dmaspeed se refiere a la velocidad (en MB/s) a
+       la  cual  procede  la  transferencia DMA (Acceso Directo a
+       Memoria, Direct Memory Access). El valor predeterminado es
+       5  MB/s.   Las  tarjetas  de  revisión  más nueva permiten
+       seleccionar este valor como parte de la configuración  por
+       programa; tarjetas más antiguas emplean conmutadores en la
+       propia placa. Se pueden utilizar valores de hasta 10  MB/s
+       suponiendo  que  la  placa  madre sea capaz de aguantarlo.
+       Experimente con precaución para  valores  superiores  a  5
+       MB/s.
+
+
+   Configuración de las Adaptec aha274x, aha284x, aic7xxx
+       Estas tarjetas pueden aceptar un argumento de la forma:
+
+              aic7xxx=extendido,no_reset
+
+       El valor extendido , si no es cero, indica que se habilita
+       la traducción extendida  para  discos  grandes.  El  valor
+       no_reset  ,  si  no es cero, le dice al controlador que no
+       reinicialice el bus SCSI cuando  inicialice  el  adaptador
+       anfitrión en el arranque.
+
+
+   Configuración de los anfitriones AdvanSys SCSI (`advansys=')
+       El  controlador AdvanSys puede aceptar hasta 4 direcciones
+       de E/S que se emplearán para las pruebas de reconocimiento
+       de  una  tarjeta  SCSI AdvanSys. Observe que estos valores
+       (si se emplean) no tienen efecto sobre las pruebas de EISA
+       ni  PCI de ninguna forma. Sólo se emplean para probar tar­
+       jetas ISA y VLB. Además, si el controlador ha sido  compi­
+       lado  con  la opción de depuración habilitada, el nivel de
+       salida de mensajes de depuración puede  ponerse  añadiendo
+       un  parámetro  0xdep[0-f]. El 0-f permite poner el nivel a
+       uno de los 16 que hay.
+
+
+   AM53C974
+              AM53C974=host-scsi-id,target-scsi-id,max-rate,max-
+              offset
+
+
+
+   Configuración de anfitriones BusLogic SCSI (`BusLogic=')
+              BusLogic=N1,N2,N3,N4,N5,S1,S2,...
+
+       Para  una  discusión exhaustiva de los parámetros de línea
+       de   órdenes    de    las    tarjetas    BusLogic,    mire
+       /usr/src/linux/drivers/scsi/BusLogic.c (líneas 4350 a 4496
+       en la versión 2.0.30 que estoy usando). El texto siguiente
+       es un extracto muy abreviado.
+
+       Los parámetros N1 a N5 son enteros. Los parámetros S1, ...
+       son cadenas de caracteres. N1 es la Dirección de E/S donde
+       se  encuentra el Adaptador Anfitrión. N2 es la Profundidad
+       de Cola Etiquetada para emplear con Dispositivos que admi­
+       tan Cola Etiquetada.  N3 es el Tiempo de Ajuste del Bus en
+       segundos. Esto es  la  cantidad  de  tiempo  que  hay  que
+       esperar  entre una Iniciación Dura del Adaptador Anfitrión
+       que principia una Iniciación del Bus SCSI y el lanzamiento
+       de  cualesquiera  órdenes  SCSI.   N4  corresponde  a  las
+       Opciones Locales (para un Adaptador Anfitrión).  N5 corre­
+       sponde a las Opciones Globales (para todos los Adaptadores
+       Anfitriones).
+
+       Las opciones de cadena se emplean para  proporcionar  con­
+       trol  sobre  la  Cola  Etiquetada  (TQ:Default, TQ:Enable,
+       TQ:Disable, TQ:<Espec-Por-Dispos>), sobre Recuperación  en
+       caso de Errores (ER:Default, ER:HardReset, ER:BusDeviceRe­
+       set, ER:None, ER:<Espec-Por-Dispos>), y  sobre  Probar  el
+       Adaptador Anfitrión (NoProbe, NoProbeISA, NoSortPCI).
+
+
+   Configuración de la EATA/DMA
+       La  lista  predeterminada de puertos de E/S que deben com­
+       probarse pude cambiarse con
+
+              eata=iobase,iobase,....
+
+
+
+   Configuración de la Future Domain TMC-16x0
+              fdomain=iobase,irq[,id_adaptador]
+
+
+
+   Configuración del controlador SCSI de  Great  Valley  Products
+       (GVP)
+              gvp11=máscara_de_bits_de_transferencia_dma
+
+
+
+   Configuración de las Future Domain TMC-8xx, TMC-950
+              tmc8xx=mem_base,irq
+
+       El  valor de mem_base es el de la región de E/S con corre­
+       spondencia en memoria que emplea la  tarjeta.  Normalmente
+       será  uno  de  los  valores  siguientes: 0xc8000, 0xca000,
+       0xcc000, 0xce000, 0xdc000, 0xde000.
+
+
+   Configuración de la IN2000
+              in2000=S
+
+       donde S es una  cadena  de  elementos  de  la  forma  pal­
+       abra_reservada[:valor]   separados  por  comas.   Palabras
+       reservadas   reconocidas   (con   posible   valor)    son:
+       ioport:addr,  noreset,  nosync:x, period:ns, disconnect:x,
+       debug:x, proc:x. Para la funcionalidad de  estos  parámet­
+       ros, vea /usr/src/linux/drivers/scsi/in2000.c.
+
+
+   Configuración de las NCR5380 y NCR53C400
+       El arg. de arranque es de la forma
+
+              ncr5380=iobase,irq,dma
+
+       o
+
+              ncr53c400=iobase,irq
+
+       Si  la tarjeta no emplea interrupciones, entonces un valor
+       de 255 (0xff) para IRQ, deshabilitará las  interrupciones.
+       Una  valor  de  IRQ  de  254  significa autocomprobar. Más
+       detalles             en             el             fichero
+       /usr/src/linux/drivers/scsi/README.g_NCR5380.
+
+
+   Configuración de las NCR53C8xx
+              ncr53c8xx=S
+
+       donde  S  es  una  cadena  de  elementos  de la forma pal­
+       abra_reservada:valor separados por comas.  Palabras reser­
+       vadas   reconocidas   son:   mpar   (master_parity),  spar
+       (scsi_parity), disc (disconnection),  specf  (special_fea­
+       tures),  ultra  (ultra_scsi),  fsn (force_sync_nego), tags
+       (default_tags), sync (default_sync), verb (verbose), debug
+       (debug),  burst  (burst_max).  Para la función de los val­
+       ores                    asignados,                     vea
+       /usr/src/linux/drivers/scsi/ncr53c8xx.c.
+
+
+   Configuración de la NCR53c406a
+              ncr53c406a=iobase[,irq[,fastpio]]
+
+       Especifique irq = 0 para el modo no dirigido por interrup­
+       ciones.   Ponga  fastpio  =  1  para  el  modo  rápido  de
+       entrada/salida programada, ó 0 para el modo lento.
+
+
+   Configuración de la IOMEGA PPA3
+              ppa=iobase[,speed_high[,speed_low[,nybble]]]
+
+       Aquí  iobase  es  la  dirección  del  puerto paralelo (por
+       omisión 0x378), speed_high es el  retardo  del  puerto  en
+       fase  de datos en microsegundos (1 por omisión), speed_low
+       es el retardo del puerto (en µs) de otro modo (por omisión
+       6),  y nybble es un valor booleano: `forzar modo nibble (4
+       bits)'   (por   omisión   0   =   falso).    Lea   también
+       /usr/src/linux/drivers/scsi/README.ppa.
+
+
+   Configuración de la Pro Audio Spectrum
+       La  PAS16  utiliza  un chip SCSI NC5380, y los modelos más
+       nuevos admiten configuración sin interruptores.  El  argu­
+       mento de arranque es de la forma:
+
+              pas16=iobase,irq
+
+       La  única  diferencia es que se puede especificar un valor
+       de IRQ de 255, que le dirá al controlador que trabaje  sin
+       emplear  interrupciones,  si  bien  con  alguna pérdida de
+       rendimiento. Normalmente iobase es 0x388.
+
+
+   Configuración de la Seagate ST-0x
+       Si su tarjeta no  es  detectada  en  el  arranque,  deberá
+       emplear un argumento de la forma:
+
+              st0x=mem_base,irq
+
+       El  valor de mem_base es el de la región de E/S con corre­
+       spondencia en memoria que emplea la  tarjeta.  Normalmente
+       será  uno  de  los  valores  siguientes: 0xc8000, 0xca000,
+       0xcc000, 0xce000, 0xdc000, 0xde000.
+
+
+   Configuración de la Trantor T128
+       Estas tarjetas también están basadas en el chip NCR5380, y
+       admiten las siguientes opciones:
+
+              t128=mem_base,irq
+
+       Los  valores  válidos  para  mem_base  son los siguientes:
+       0xcc000, 0xc8000, 0xdc000, 0xd8000.
+
+
+   Configuración de la UltraStor 14F/34F
+       La lista predeterminada de puertos de E/S que  se  compro­
+       barán puede cambiarse con
+
+              eata=iobase,iobase,....
+
+
+
+   Configuración de la WD7000
+              wd7000=irq,dma,iobase
+
+
+
+   Configuración   del   controlador  SCSI  del  Commodore  Amiga
+       A2091/590
+              wd33c93=S
+
+       donde S es una cadena de opciones separadas por comas. Las
+       opciones    reconocidas   son   nosync:bitmask,   nodma:x,
+       period:ns, disconnect:x, debug:x, clock:x, next. Para  los
+       detalles, vea /usr/src/linux/drivers/scsi/wd33c93.c.
+
+
+DISCOS DUROS
+   Parámetros del Controlador de Disco/CD-ROM IDE
+       El controlador IDE acepta una serie de parámetros, que van
+       desde  especificaciones  de  la  geometría  del  disco,  a
+       soporte  para  chips  controladores  no  muy  bien hechos.
+       Opciones específicas de una unidad se dan como `hdX=', con
+       X en el rango `a'--`h'.
+
+       Las  opciones  no  específicas de una unidad se dan con el
+       prefijo `hd='. Observe que emplear un  prefijo  específico
+       de unidad para una opción no específica de unidad, todavía
+       funcionará, y la opción será aplicada simplemente como  se
+       espera.
+
+       Observe también que `hd=' puede emplearse para referirse a
+       la siguiente unidad no especificada de  la  secuencia  (a,
+       ...,  h).  Para  las  discusiones que siguen, se citará la
+       opción `hd=' por brevedad. Vea el  fichero  README.ide  en
+       linux/drivers/block para más detalles.
+
+
+   Las opciones `hd=cils,cabezas,sectores[,pcomes[,irq]]'
+       Estas  opciones  se  emplean para especificar la geometría
+       física del disco.  Sólo son obligatorios los tres primeros
+       valores.  Los  valores de cilindros/cabezas/sectores serán
+       los empleados por fdisk. El valor  de  precompensación  de
+       escritura  no se tiene en cuenta para discos IDE. El valor
+       de IRQ especificado será  el  empleado  para  la  interfaz
+       donde  resida  la  unidad,  y no es realmente un parámetro
+       específico de la unidad.
+
+
+   La opción `hd=serialize'
+       La interfaz IDE dual con el chip CMD-640 está mal diseñada
+       pues  cuando se emplean unidades en la interfaz secundaria
+       al mismo tiempo que en la primaria, se corromperán  datos.
+       Con  esta  opción se le dice al controlador que se asegure
+       de que nunca se usan a la vez ambas interfaces.
+
+
+   La opción `hd=dtc2278'
+       Esta opción le dice al controlador que tenemos una  inter­
+       faz  IDE  DTC-2278D. Entonces el controlador intenta hacer
+       operaciones específicas del DTC para habilitar la  segunda
+       interfaz y modos de transferencia más rápidos.
+
+
+   La opción `hd=noprobe'
+       No comprobar la existencia de esta unidad. Por ejemplo,
+
+              hdb=noprobe hdb=1166,7,17
+
+       inhabilitará  las  pruebas  de existencia, pero al especi­
+       ficar la geometría de la unidad se registrará ésta como un
+       dispositivo de bloque válido, y por tanto utilizable.
+
+
+   La opción `hd=nowerr'
+       Algunas  unidades  tienen  aparentemente el bit WRERR_STAT
+       permanentemente encendido. Esto activa una  solución  para
+       estos aparatos con este fallo.
+
+
+   La opción `hd=cdrom'
+       Esto le dice al controlador IDE que hay un CD-ROM compati­
+       ble ATAPI puesto en el lugar de un disco duro IDE  normal.
+       En  la  mayoría  de  los  casos  el  CD-ROM  se identifica
+       automáticamente, pero si no ocurre así, esto puede ayudar.
+
+
+   Opciones del Controlador de Disco Estándar ST-506 (`hd=')
+       El  controlador estándar de disco puede aceptar argumentos
+       de geometría para los discos, similar al controlador  IDE.
+       Observe  sin embargo que sólo espera tres valores (C/CZ/S)
+       -- más o menos de tres y sin decir nada no  se  tendrá  en
+       cuenta  ninguno. Además, sólo acepta `hd=' como argumento;
+       o sea, nada de `hda=' ni nada por el estilo. El formato es
+       como sigue:
+
+              hd=cils,cabezas,sects
+
+       Si hay dos discos instalados, lo de arriba se repetirá con
+       los parámetros de geometría del segundo disco.
+
+
+   Opciones del Controlador de Disco XT (`xd=')
+       Si Ud. es tan infortunado como para estar  utilizando  una
+       de  estas viejas tarjetas de 8 bits que mueven los datos a
+       la asombrosa velocidad de 125 kB/s, aquí está lo que nece­
+       sita.   Si la tarjeta no es reconocida, deberá dar un arg.
+       de arranque de la forma:
+
+              xd=tipo,irq,iobase,canal_dma
+
+       El valor de tipo especifica el fabricante particular de la
+       tarjeta, y es como sigue: 0=genérico; 1=DTC; 2,3,4=Western
+       Digital, 5,6,7=Seagate; 8=OMTI.  La única diferencia entre
+       múltiples  tipos del mismo fabricante es la cadena de car­
+       acteres de la BIOS empleada para la detección, que  no  se
+       emplea si se especifica el tipo.
+
+       La  función  xd_setup() no comprueba los valores, y supone
+       que Ud. ha introducido los 4 valores. No la defraude. Aquí
+       hay  un  ejemplo  del  modo  de empleo para un controlador
+       WD1002 con la BIOS inhabilitada o quitada,  empleando  los
+       parámetros `predeterminados' del controlador XT:
+
+              xd=2,5,0x320,3
+
+
+
+   Discos desmontables EZ* de Syquest
+              ez=iobase[,irq[,rep[,nybble]]]
+
+
+
+DISPOSITIVOS IBM PARA EL BUS MCA
+       Lea también /usr/src/linux/Documentation/mca.txt.
+
+
+   Discos duros PS/2 ESDI
+       Es   posible   especificar  la  geometría  deseada  en  el
+       arranque:
+
+              ed=cils,cabezas,sectores.
+
+       Para un ThinkPad-720, añada la opción
+
+              tp720=1.
+
+
+
+   Configuración del Subsistema SCSI IBM Microchannel
+              ibmmcascsi=N
+
+       donde N es el pun (ID. SCSI) del subsistema.
+
+
+CD-ROMs (No SCSI/ATAPI/IDE)
+   La Interfaz Aztech
+       La sintaxis para este tipo de tarjeta es:
+
+              aztcd=iobase[,número_mágico]
+
+       Si pone el número_mágico a 0x79  entonces  el  controlador
+       intentará  trabajar  de  todas formas aunque no conozca la
+       versión del firmware.  Todos  los  demás  valores  no  son
+       tenidos en cuenta.
+
+
+   El CD-ROM del `backpack' de MicroSolutions
+       Sintaxis:
+
+              bpcd=iobase
+
+
+
+   La Interfaz CDU-31A y CDU-33A de Sony
+       Esta  interfaz  de  CD-ROM  se encuentra en algunas de las
+       tarjetas de sonido Pro Audio Spectrum, y otras tarjetas de
+       interfaz de Sony. La sintaxis es como sigue:
+
+              cdu31a=iobase,[irq[,es_pas]]
+
+       Un IRQ 0 indica al controlador que no se admiten interrup­
+       ciones por hardware (como en algunas tarjetas PAS). Si  su
+       tarjeta  admite  interrupciones, debería emplearlas puesto
+       que mejora el empleo de la UCP por parte del  controlador.
+
+       La  opción es_pas debe ponerse como `PAS' si se emplea una
+       tarjeta Pro Audio Spectrum; en otro caso no debe especifi­
+       carse en absoluto.
+
+
+   La Interfaz CDU-535 de Sony
+       La sintaxis para esta interfaz de CD-ROM es:
+
+              sonycd535=iobase[,irq]
+
+       Se  puede emplear un cero para la dirección base de E/S si
+       se desea solamente especificar un valor de IRQ.
+
+
+   La Interfaz de GoldStar
+       La sintaxis para esta interfaz de CD-ROM es:
+
+              gscd=iobase
+
+
+
+   La Interfaz del CD-ROM ISP16
+       Sintaxis:
+
+              isp16=[iobase[,irq[,dma[,tipo]]]]
+
+       (tres enteros y una cadena). Si el tipo es  `noisp16',  la
+       interfaz no será configurada. Otros tipos reconocidos son:
+       `Sanyo', `Sony', `Panasonic' y `Mitsumi'.
+
+
+   La Interfaz Estándar de Mitsumi
+       La sintaxis para esta interfaz de CD-ROM es:
+
+              mcd=iobase,[irq[,valor_espera]]
+
+       El valor_espera se emplea como un valor de retardo interno
+       para  gente  que  tiene  problemas  con su unidad, y puede
+       estar implementada o no, dependiendo de una macro del pre­
+       procesador cuando se hubo compilado el controlador.
+
+       El  Mitsumi  FX400  es  un CD-ROM IDE/ATAPI y por tanto no
+       emplea el controlador mcd.
+
+
+   La Interfaz de Mitsumi XA/MultiSession
+       Esto es para el mismo equipo que antes, sólo que  el  con­
+       trolador tiene más características.  Sintaxis:
+
+              mcdx=iobase[,irq]
+
+
+
+   La Interfaz de Optics Storage
+       La sintaxis para este tipo de tarjeta (Dolphin 8000AT) es:
+
+              optcd=iobase
+
+
+
+   La Interfaz de Phillips CM206
+       La sintaxis para este tipo de tarjeta es:
+
+              cm206=[iobase][,irq]
+
+
+       El controlador supone que números entre 3 y 11 son valores
+       de  IRQ, y que entre 0x300 y 0x370 son puertos de E/S, así
+       que se puede especificar uno o ambos números, en culquuier
+       orden. También acepta `cm206=auto' para habilitar la auto­
+       comprobación.
+
+
+   La Interfaz de Sanyo
+       La sintaxis para este tipo de tarjeta es:
+
+              sjcd=iobase[,irq[,canal_dma]]
+
+
+
+   La Interfaz SoundBlaster Pro
+       La sintaxis para este tipo de tarjeta es:
+
+              sbpcd=iobase,tipo
+
+       donde el tipo es una de las cadenas de caracteres  (sensi­
+       bles  a mayúsculas/minúsculas) siguientes: `SoundBlaster',
+       `LaserMate', o `SPEA'.  La dirección base de E/S es la  de
+       la  interfaz del CD-ROM, no la de la parte de sonido de la
+       tarjeta.
+
+
+DISPOSITIVOS DE RED ETHERNET
+       Controladores diferentes hacen uso  de  parámetros  difer­
+       entes,  pero  todos comparten al menos un IRQ, un valor de
+       dirección base del puerto de E/S, y un nombre. En su forma
+       más genérica, el aspecto es el siguiente:
+
+              ether=irq,iobase[,parám_1[,...parám_8]],nombre
+
+       El  primer  argumento  no numérico se toma como el nombre.
+       Los valores de los parám_i  (cuando  sean  de  aplicación)
+       normalmente  tienen significados diferentes para cada con­
+       trolador/tarjeta. Usualmente se emplean  para  especificar
+       cosas como direcciones de memoria compartida, selección de
+       interfaz, canal DMA y cosas así.
+
+       El empleo más común de este  parámetro  es  el  forzar  la
+       autocomprobación de una segunda tarjeta de red, puesto que
+       por omisión sólo se prueba una. Esto se puede  hacer  sim­
+       plemente con:
+
+              ether=0,0,eth1
+
+       Observe que los valores de cero para el IRQ y la dirección
+       base de E/S en el ejemplo anterior le dicen al controlador
+       o  controladores  que  prueben la existencia de la(s) tar­
+       jeta(s).
+
+       El documento `Ethernet-Howto'  tiene documentación extensa
+       sobre cómo usar varias tarjetas de red y sobre los valores
+       de los parámetros parám_i específicos a cada  tarjeta/con­
+       trolador donde haya que emplearlos. Los lectores interesa­
+       dos deberán irse a la sección de su tarjeta particular  en
+       ese documento.
+
+
+EL CONTROLADOR DE DISQUETERA
+       Hay  muchas  opciones para el controlador de disquetera, y
+       todas están relacionadas en el fichero  README.fd  que  se
+       encuentra  en  linux/drivers/block.  Esta información está
+       tomada directamente de ese fichero.
+
+
+   floppy=máscara,máscara_de_unidad_permitida
+       Pone a `máscara' la máscara de bits de  los  controladores
+       permitidos.  Por omisión sólo se permiten las unidades 0 y
+       1 de cada controladora de disquete. Esto  se  hace  porque
+       cierto  hardware  no estándar (placas madre ASUS PCI) lían
+       al teclado cuando se accede a las unidades  2  ó  3.  Esta
+       opción  está  de todas formas anticuada debido a la opción
+       `cmos'.
+
+
+   floppy=all_drives
+       Pone la máscara de bits de las unidades permitidas a todas
+       las  unidades.  Emplee  esto  si tiene más de dos unidades
+       conectadas a un controlador de disquete.
+
+
+   floppy=asus_pci
+       Pone la máscara de bits de modo que permita solamente  las
+       unidades 0 y 1 (esto es el comportamiento predeterminado).
+
+
+   floppy=daring
+       Le dice al controlador de disquete que se posee un contro­
+       lador  de  disquetera  que se comporta correctamente. Esto
+       permite una operación más eficiente y  mejor,  pero  puede
+       fallar en ciertos controladores. Esto puede acelerar cier­
+       tas operaciones.
+
+
+   floppy=0,daring
+       Le dice al controlador de disquete que el  controlador  de
+       disquetera debe utilizarse con cuidado.
+
+
+   floppy=one_fdc
+       Le  dice  al  controlador  de disquete que sólo tenemos un
+       controlador de disquetera (lo normal).
+
+
+   floppy=two_fdc o floppy=dirección,two_fdc
+       Le  dice  al  controlador  de  disquete  que  tenemos  dos
+       controladores de disquetera. El segundo se supone que está
+       en `dirección'. Si no se da, se supone 0x370.
+
+
+   floppy=thinkpad
+       Le dice  al  controlador  de  disquete  que  se  tiene  un
+       ThinkPad. Los ThinkPads emplean un convenio invertido para
+       la línea de cambio de disco.
+
+
+   floppy=0,thinkpad
+       Le dice al controlador  de  disquete  que  no  tenemos  un
+       ThinkPad.
+
+
+   floppy=unidad,tipo,cmos
+       Pone  el  tipo  `cmos' de la `unidad' a `tipo'. Adicional­
+       mente, esta unidad se permite en la máscara de bits.  Esto
+       es útil si se tiene más de dos disqueteras (sólo se pueden
+       describir dos en la CMOS física),  o  si  la  BIOS  emplea
+       tipos  CMOS  no  estándar.  Poner la CMOS a 0 para las dos
+       primeras disqueteras (predeterminado) hace que el  contro­
+       lador de disquete lea la CMOS física para esas unidades.
+
+
+   floppy=unexpected_interrupts
+       Muestra un mensaje de aviso cuando se recibe una interrup­
+       ción inesperada (éste  es  el  comportamiento  predetermi­
+       nado).
+
+
+   floppy=no_unexpected_interrupts o floppy=L40SX
+       No se imprima un mensaje cuando se reciba una interrupción
+       inesperada. Esto se necesita en los ordenadores portátiles
+       de  bolsillo  IBM  L40SX  en ciertos modos de vídeo. (Esto
+       parece ser una interacción entre el vídeo y la disquetera.
+       Las    interrupciones    inesperadas   sólo   afectan   al
+       rendimiento, y pueden ser no tenidas en consideración  sin
+       problemas.)
+
+
+EL CONTROLADOR DE SONIDO
+       El  controlador  de  sonido también puede aceptar args. de
+       arranque para sobreescribir los valores  con  los  que  ha
+       sido  compilado.  Esto  no se recomienda, pues es bastante
+       complejo. Se describe en el fichero  Readme.Linux,  en  el
+       directorio linux/drivers/sound. Acepta un arg. de arranque
+       de la forma:
+
+              sound=dispositivo1[,dispositivo2[,disposi­
+              tivo3...[,dispositivo10]]]
+
+       donde cada valor dispositivoN está en el formato: 0xTaaaId
+       y los bytes se emplean como sigue:
+
+       T  -  tipo  de  dispositivo:  1=FM,  2=SB,  3=PAS,  4=GUS,
+       5=MPU401, 6=SB16, 7=SB16-MPU401
+
+       aaa - dirección de E/S en hexadecimal.
+
+       I  - línea de interrupción en hexadecimal (i.e 10=a, 11=b,
+       ...)
+
+       d - canal DMA.
+
+       Como puede ver es bastante lioso, y  lo  mejor  que  puede
+       hacer  es compilar el controlador con los valores deseados
+       como  se  recomienda.  Un  argumento  de   arranque   como
+       `sound=0'  anulará el controlador de sonido completamente.
+
+
+CONTROLADORES ISDN
+   El controlador ISDN ICN
+       Sintaxis:
+
+              icn=iobase,membase,icn_id1,icn_id2
+
+       donde icn_id1,icn_id2 son dos cadenas empleadas para iden­
+       tificar la tarjeta en mensajes del núcleo.
+
+
+   El controlador ISDN PCBIT
+       Sintaxis:
+
+              pcbit=membase1,irq1[,membase2,irq2]
+
+       donde  membaseN  es la base de la memoria compartida de la
+       N-sima tarjeta, e irqN es el número de interrupción de  la
+       tarjeta  N-sima.  Los  valores predeterminados son IRQ 5 y
+       membase 0xD0000.
+
+
+   El controlador ISDN Teles
+       Sintaxis:
+
+              teles=iobase,irq,membase,protocolo,teles_id
+
+       donde iobase es la dirección del puerto de E/S de la  tar­
+       jeta,  membase  es la dirección base de la memoria compar­
+       tida de la tarjeta, irq es el canal de interrupción que la
+       tarjeta  emplea,  y teles_id es el identificador de cadena
+       de caracteres único.
+
+
+CONTROLADORES DE PUERTO SERIE
+   El Controlador Serie RISCom/8 Multipuerto (`riscom8=')
+       Sintaxis:
+
+              riscom=iobase1[,iobase2[,iobase3[,iobase4]]]
+
+       Más detalles pueden encontrarse en /usr/src/linux/Documen­
+       tation/riscom8.txt.
+
+
+   El Controlador de DigiBoard (`digi=')
+       Si  se  emplea esta opción, debe tener seis parámetros, ni
+       más ni menos.  Sintaxis:
+
+              digi=status,tipo,altpin,numports,iobase,membase
+
+       Los parámetros se pueden dar como enteros o  como  cadenas
+       de  caracteres.   Si  se emplean cadenas, iobase y membase
+       deben darse en hexadecimal.  Los  argumentos  enteros  (se
+       pueden  dar  menos)  son  en  orden: status (Enable [acti­
+       var](1) o  Disable  [desactivar](0)  esta  tarjeta),  tipo
+       (PC/Xi(0),   PC/Xe(1),   PC/Xeve(2),   PC/Xem(3)),  altpin
+       (Enable [activar](1)  o  Disable  [desactivar](0)  arreglo
+       alterno de los pines), numports (número de puertos en esta
+       tarjeta), iobase (Puerto de E/S donde  se  configura  esta
+       tarjeta (en HEX.)), membase (base de la ventana de memoria
+       (en  HEX.)).   Así,  los  dos  siguientes  argumentos   de
+       arranque son equivalentes:
+
+              digi=E,PC/Xi,D,16,200,D0000
+              digi=1,0,0,16,0x200,851968
+
+       Pueden encontrarse más detalles en /usr/src/linux/Documen­
+       tation/digiboard.txt.
+
+
+   El Módem Serie/Paralelo Radio de Baycom
+       Sintaxis:
+
+              baycom=iobase,irq,modem
+
+       Hay exactamente 3 parámetros;  para  varias  tarjetas,  dé
+       varias órdenes `baycom='. El parámetro modem es una cadena
+       que puede tomar uno de los valores ser12,  ser12*,  par96,
+       par96*.   Aquí  el  *  denota que se va a utilizar DCD por
+       software, y ser12/par96 escoge entre los  tipos  de  módem
+       admitidos.        Para       más       detalles,       lea
+       /usr/src/linux/drivers/net/README.baycom.
+
+
+   Controlador de la Tarjeta de sonido radio modem
+       Sintaxis:
+
+              soundmo­
+              dem=iobase,irq,dma[,dma2[,serio[,pario]]],0,modo
+
+       Todos  los  parámetros  son  enteros salvo el último; el 0
+       fijo es necesario debido a un fallo del código de puesta a
+       punto (setup). El parámetro modo es una cadena con la sin­
+       taxis hw:modem donde hw es uno de sbc, wss, wssfdx y modem
+       es uno de afsk1200, fsk9600.
+
+
+EL CONTROLADOR DE LA IMPRESORA DE LÍNEA
+   `lp='
+       A  partir de los núcleos 1.3.75, se le puede decir al con­
+       trolador de  impresora  paralelo  qué  puertos  emplear  y
+       cuáles  no.  Lo último resulta útil si no se quiere que el
+       controlador de impresora tome todos los puertos  paralelos
+       disponibles,  para  que  otros  controladores (como PLIP o
+       PPA) puedan usarlos en su lugar.
+
+       El formato del argumento es pares múltiples de E/S e  IRQ.
+       Por  ejemplo,  lp=0x3bc,0,0x378,7  emplearía  el puerto en
+       0x3bc en modo sin IRQ (polling), y el IRQ 7 para el puerto
+       en 0x378. El puerto en 0x278 (si lo hay) no sería probado,
+       puesto que la autocomprobación sólo ocurre en la  ausencia
+       de  un  argumento  `lp='. Para desactivar completamente la
+       impresora se puede hacer lp=0.
+
+
+   Controlador WDT500/501
+       Sintaxis:
+
+              wdt=io,irq
+
+
+
+CONTROLADORES DE RATÓN
+   `bmouse=irq'
+       El controlador de ratón busmouse sólo acepta un parámetro,
+       que es el valor de IRQ hardware que se va a emplear.
+
+
+   `msmouse=irq'
+       Y  justamente  lo  mismo  es  verdad  para  el controlador
+       msmouse.
+
+
+   Configuración del ratón ATARI
+              Si sólo se da un argumento, se emplea para umbral-x
+              y  umbral-y.  Si no, el primero es el umbral-x y el
+              segundo el umbral-y. Estos valores deben caer entre
+              1 y 20 (incluidos); el valor predeterminado es 2.
+
+
+HARDWARE DE VÍDEO
+   `no-scroll'
+       Esta  opción  le dice al controlador de consola que no use
+       rodamiento por hardware (donde  la  rodadura  tiene  lugar
+       moviendo  el origen de la pantalla en memoria de vídeo, en
+       vez de moviendo los datos). El empleo de esto es necesario
+       en algunas máquinas Braille.
+
+
+AUTORES
+       Linus Benedictus Torvalds (y muchos otros).
+
+
+VÉASE TAMBIÉN
+       klogd(8), lilo.conf(5), lilo(8), mount(8), rdev(8)
+
+       Grandes  partes  de  esta página del Manual se derivan del
+       Boot Parameter HOWTO  (version  1.0.1)  escrito  por  Paul
+       Gortmaker.   Se puede encontrar algo más de información en
+       este (u otro más reciente) HOWTO (`CÓMO').
+
+
+
+
+
+
+Linux 2.0.30            27 Diciembre 1997            BOOTPARAM(7)

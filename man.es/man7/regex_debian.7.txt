@@ -1,0 +1,121 @@
+REGEX(7)                                                 REGEX(7)
+
+
+
+NOMBRE
+       regex - expresiones regulares
+
+DESCRIPCIÓN
+       Una  expresión  regular  es un patrón que describe un con­
+       junto de cadenas de caracteres. Las expresiones  regulares
+       se construyen de forma análoga a las aritméticas, empleán­
+       dose  varios  operadores  para  combinar  expresiones  más
+       pequeñas.
+
+       Hay  dos versiones diferentes de la sintaxis de las expre­
+       siones regulares: la ``básica''  y  la  ``extendida''.  En
+       algunas  implementaciones (como en la del grep de GNU), no
+       hay ninguna diferencia entre las dos en cuanto a  la  fun­
+       cionalidad  disponible  con cada una. En otras implementa­
+       ciones,  las  expresiones  regulares  básicas  son   menos
+       potentes.  La descripción siguiente se aplica a las expre­
+       siones regulares extendidas; las diferencias con las bási­
+       cas se resumen después.
+
+       Los  bloques  de construcción fundamentales son las expre­
+       siones regulares que concuerdan con un solo  carácter.  La
+       mayoría  de  los caracteres, incluyendo todas las letras y
+       los dígitos, son expresiones regulares que concuerdan con­
+       sigo  mismos.  Cualquier  meta-carácter con un significado
+       especial puede ser protegido precediéndolo con  una  barra
+       inclinada inversa.
+
+       Una  lista  de caracteres rodeados por [ y ] concuerda con
+       cualquier carácter solo de los de la  lista;  pero  si  el
+       primer  carácter  de  ella  es  el  acento  circunflejo  ^
+       entonces concuerda con cualquier carácter que no  esté  en
+       la  lista.  Por ejemplo, la expresión regular [0123456789]
+       concuerda con cualquier dígito. Se  puede  especificar  un
+       rango  de  caracteres  ASCII dando el primero y el último,
+       separados por un guión.   Finalmente,  ciertas  clases  de
+       caracteres   tienen  nombres  predefinidos,  y  uno  puede
+       referirse a ellas por éstos. Los nombres son auto-explica­
+       tivos,   y   son  los  siguientes:  [:alnum:],  [:alpha:],
+       [:cntrl:],  [:digit:],  [:graph:],  [:lower:],  [:print:],
+       [:punct:],  [:space:], [:upper:], y [:xdigit:].  Por ejem­
+       plo, [[:alnum:]] significa [0-9A-Za-z], excepto en que  la
+       última forma depende de que se use la codificación de car­
+       acteres ASCII, mientras que la primera  es  transportable.
+       (Note  que  en  estos  nombres de clases los corchetes son
+       parte de los nombres simbólicos, y deben incluirse  aparte
+       de los que delimiten la lista entre corchetes.) La mayoría
+       de los meta-caracteres  pierden  su  significado  especial
+       cuando  están dentro de listas. Para incluir un ] literal,
+       póngase el primero de la lista.  De  forma  similar,  para
+       incluir  un ^ literal, póngase en cualquier posición menos
+       en la primera. Finalmente, para incluir un - literal, pón­
+       gase el último.
+
+       El  punto .  concuerda con cualquier carácter.  El símbolo
+       \w  es  un  sinónimo  de  [[:alnum:]]  y  \W  lo   es   de
+       [^[:alnum]].
+
+       El acento circunflejo ^ y el signo del dólar (o del escudo
+       portugués) $ son meta-caracteres que concuerdan  respecti­
+       vamente con la cadena vacía al principio y al final de una
+       línea.  Los símbolos \< y  \>  concuerdan  respectivamente
+       con  la  cadena  vacía al principio y al final de una pal­
+       abra.  El símbolo \b concuerda  con  la  cadena  vacía  al
+       borde  de  una palabra, y \B concuerda con la cadena vacía
+       si no está en el extremo de una palabra.
+
+       A una expresión regular que concuerde con un solo carácter
+       puede seguir uno de los varios operadores de repetición:
+       ?      El  elemento  precedente  es  opcional y concordaba
+              como mucho una vez.
+       *      El elemento precedente concordará cero o más veces.
+       +      El  elemento precedente concordará una o más veces.
+       {n}    El elemento precedente va a concordar exactamente n
+              veces.
+       {n,}   El elemento precedente ha concordado n o más veces.
+       {,m}   El elemento precedente es opcional y ha  concordado
+              como mucho m veces.
+       {n,m}  El  elemento  precedente  ha concordado como poco n
+              veces, pero no más de m veces.
+
+       Dos expresiones regulares pueden concatenarse;  la  expre­
+       sión  regular resultante concuerda con cualquier cadena de
+       caracteres formada por la concatenación de dos  subcadenas
+       que concuerden respectivamente con las subexpresiones con­
+       catenadas.
+
+       Dos expresiones regulares pueden juntarse  por  medio  del
+       operador  infijo  |;  la expresión regular resultante con­
+       cuerda con cualquier cadena que lo haga con cualquiera  de
+       las subexpresiones.
+
+       La repetición tiene precedencia sobre la concatenación, la
+       cual a su vez la tiene sobre la alternancia. Una subexpre­
+       sión  entera  puede encerrarse entre paréntesis para modi­
+       ficar estas reglas de precedencia.
+
+       La retrorreferencia \n, donde n es un  solo  dígito,  con­
+       cuerda  con la subcadena que previamente concordaba con la
+       n-sima subexpresión entre paréntesis de la expresión regu­
+       lar.
+
+       En  las expresiones regulares básicas, los meta-caracteres
+       ?, +, {, |, (, y ) pierden su significado especial; en  su
+       lugar  emplee las versiones protegidas por la barra incli­
+       nada inversa \?, \+, \{, \|, \(, y \).
+
+OBSERVACIÓN
+       Esta página del Manual de Debian/GNU Linux se ha  extraído
+       de la de grep(1).
+
+VÉASE TAMBIÉN
+       regcomp(3), grep(1)
+
+
+
+Debian GNU/Linux        10 Septiembre 1992               REGEX(7)

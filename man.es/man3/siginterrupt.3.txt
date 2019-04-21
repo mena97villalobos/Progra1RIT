@@ -1,0 +1,50 @@
+SIGINTERRUPT(3)  Manual del Programador de Linux  SIGINTERRUPT(3)
+
+
+
+NOMBRE
+       siginterrupt - permite que señales interrumpan llamadas al
+       sistema
+
+SINOPSIS
+       #include <signal.h>
+
+       int siginterrupt(int sig, int flag);
+
+DESCRIPCIÓN
+       La función  siginterrupt()  cambia  el  comportamiento  de
+       reanudación cuando una señal sig interrumpe una llamada al
+       sistema. Si el argumento flag es falso (0),  entonces  las
+       llamadas  al sistema se reanudarán si han sido interrumpi­
+       das por la señal especificada en sig. Éste es  el  compor­
+       tamiento  predeterminado  en Linux. Sin embargo, cuando se
+       especifica un nuevo manejador de señal mediante la función
+       signal(2),  la  llamada al sistema se interrumpe de manera
+       predeterminada.
+
+       Si el argumento flags es verdad (distinto de cero,  1  por
+       ejemplo)  y  no se han transferido datos, cuando una señal
+       sig interrumpe una llamada al sistema, ésta devolverá -1 y
+       la variable global  errno contendrá el valor EINTR.
+
+       Si el argumento flags es verdad y ha empezado la transfer­
+       encia de datos, entonces la llamada al sistema será inter­
+       rumpida  y  devolverá la cantidad real de datos transferi­
+       dos.
+
+VALOR DEVUELTO
+       La función siginterrupt() devuelve 0 si acaba bien,  ó  -1
+       si el número de señal sig es inválido.
+
+ERRORES
+       EINVAL El número de señal especificado no es válido.
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       signal(2)
+
+
+
+Linux                      9 Marzo 1998           SIGINTERRUPT(3)

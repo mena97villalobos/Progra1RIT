@@ -1,0 +1,40 @@
+USERS(1)                                                 USERS(1)
+
+
+
+NOMBRE
+       users  -  imprime  los nombres de los usuarios actualmente
+       conectados al ordenador actual
+
+SINOPSIS
+       users [FILE]
+       users {--help,--version}
+
+DESCRIPCIÓN
+       Esta documentación no va a ser mantenida a partir de ahora
+       y  puede  ser inexacta o incompleta. La documentación Tex­
+       info es ahora la fuente autorizada.
+
+       Esta página de manual  documenta  la  versión  de  GNU  de
+       users.  users imprime en una sola línea una lista de todos
+       los nombres  de  usuario  que  actualmente  se  encuentran
+       conectados  al ordenador actual, separados por espacios en
+       blanco.   Cada  nombre  de  usuario  corresponde  con  una
+       sesión,  de  tal manera que si un usuario tiene más de usa
+       sesión abierta, su nombre aparecerá  el  mismo  número  de
+       veces  en  la  salida.   Sin  argumentos,  users extrae la
+       información del fichero /etc/utmp .  Si se  especifica  el
+       nombre  de  un  fichero,  users usa ese fichero en vez del
+       anterior.  Una opción típica es usar /etc/wtmp .
+
+   OPCIONES
+       --help Imprime un mensaje del uso por la salida estándar y
+              termina satisfactoriamente.
+
+       --version
+              Imprime  información sobre la versión por la salida
+              estándar y termina satisfactoriamente.
+
+
+
+FSF                  Utilidades Shell de GNU             USERS(1)

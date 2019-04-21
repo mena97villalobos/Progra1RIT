@@ -1,0 +1,72 @@
+mkraid(8)                                               mkraid(8)
+
+
+
+NOMBRE
+       mkraid - inicializa/actualiza arrays de dispositivos RAID
+
+SYNOPSIS
+       mkraid    [--configfile]   [--version]   [--force]
+       [--upgrade] [-acvfuv] </dev/md?>+
+
+
+
+DESCRIPCIÓN
+       mkraid configura un conjunto de dispositivos de bloques en
+       un  único array RAID. Busca en su fichero de configuración
+       los dispositivos md mencionados en la línea de  órdenes  e
+       inicializa esos arrays. mkdraid sólo funciona para dispos­
+       itivos RAID1, RAID4 y RAID5; los arrays lineales  y  RAID0
+       (striping) no necesitan inicialización.
+
+       Dése cuenta que la inicialización de los dispositivos RAID
+       destruye todos  los  datos  de  los  dispositivos  consti­
+       tuyentes.
+
+
+OPCIONES
+       -c, --configfile nombrefichero
+              Usa  nombrefichero  como  fichero  de configuración
+              (por defecto se usa /etc/raidtab).
+
+
+       -f, --force
+              Inicializa los dispositivos constituyentes, incluso
+              aunque ya parezcan tener datos.
+
+
+       -h, --help
+              Muestra  un  breve  mensaje de uso y a continuación
+              termina.
+
+
+       -o, --upgrade
+              Esta opción actualiza antiguos arrays a la  versión
+              RAID  del  núcleo actual sin destruir datos. Aunque
+              el programa detecta  varios  peligros  como  discos
+              mezclados   y   superbloques  inconsistentes,  esta
+              opción debería usarse con cuidado.
+
+
+       -V, --version
+              Muestra un breve mensaje de  versión  y  a  contin­
+              uación termina.
+
+
+NOTAS
+       El  paquete  raidtools  deriva  de los paquetes md-tools y
+       raidtools, que originalmente fueron escritos por Marc Zyn­
+       gier,  Miguel  de  Icaza, Gadi Oxman, Bradley Ward Allen e
+       Ingo Molnar.
+
+
+FALLOS (BUGS)
+       Probablemente muchos.
+
+
+VÉASE TAMBIÉN
+       raidtab(5), ckraid(8), raidadd(8)
+
+
+
+raidtools-0.90                                          mkraid(8)

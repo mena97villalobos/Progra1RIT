@@ -1,0 +1,66 @@
+
+NOMBRE
+     renice - altera la prioridad de los procesos en ejecución
+
+SINOPSIS
+     renice priority [[-p] pid ...] [[-g] pgrp ...] [[-u] user ...]
+
+DESCRIPCIÓN
+     Renice altera la prioridad de planificación de uno o más procesos en eje­
+     cución.
+
+     Los siguientes parámetros quién son interpretados como ID's de proceso,
+     ID's de grupo de proceso, o nombres de usuario. Aplicar renice a un grupo
+     de procesos provoca que todos los procesos del grupo de procesos vean
+     alterada su prioridad de planificación. Aplicar renice a un usuario hace
+     que todos sus procesos vean la prioridad de planificación alterada.  Por
+     defecto, los procesos se especifican a partir de su ID de proceso.
+
+     Las opciones soportadas por renice son:
+
+     -g      Forzar que los parámetros quién sean interpretados como ID's de
+             grupo de proceso.
+
+     -u      Forzar que los parámetros quién sean interpretados como nombres
+             de usuario.
+
+     -p      Reinicia la interpretación de quién para que sea la de ID de pro­
+             ceso (por defecto).
+
+     Por ejemplo,
+
+     renice +1 987 -u daemon root -p 32
+
+     cambiaría la prioridad de los procesos con ID 987 y 32, y todos los pro­
+     cesos de los usuarios daemon y root.
+
+     Cada usuario, excepto el superusuario, sólo podrá alterar la prioridad de
+     sus procesos y solo podrá incrementar su ``valor nice'' entre el rango 0
+     a PRIO_MAX (20).  (Esto evita saltarse los mandatos administrativos.)  El
+     superusuario podrá modificar la prioridad de cualquier proceso y poner la
+     prioridad en cualquier valor en el rango PRIO_MIN (-20) a PRIO_MAX.  Pri­
+     oridades útiles son: 20 (los procesos afectados solo correrán cuando
+     ningún otro lo desee en el sistema), 0 (la prioridad de planificación
+     ``base''), cualquier cosa negativa (para hacer que las cosas vayan rápi­
+     das).
+
+FICHEROS
+     /etc/passwd  para mapear entre los nombres de los usuarios y su ID.
+
+VÉASE TAMBIÉN
+     getpriority(2), setpriority(2)
+
+FALLOS
+     Los usuarios normales no pueden incrementar la prioridad de sus procesos,
+     aunque la decrementaran ellos mismos con anterioridad.
+     El kernel de Linux (por lo menos la versión 2.0.0) y la libc linux (por
+     lo menos la versión 5.2.18) no concuerdan completamente en lo que quiere
+     decir la interfaz de la llamada al sistema para poner nuevos valores.
+     Esto causa que renice muestre valores de nice anteriores incorrectos.
+
+HISTORIA
+     El comando renice apareció en 4.0BSD.
+
+
+
+

@@ -1,0 +1,118 @@
+GETTIMEOFDAY(2)  Manual del Programador de Linux  GETTIMEOFDAY(2)
+
+
+
+NOMBRE
+       gettimeofday, settimeofday - pone u obtiene la hora
+
+SINOPSIS
+       #include <sys/time.h>
+       #include <unistd.h>
+
+       int gettimeofday(struct timeval *tv, struct timezone *tz);
+       int settimeofday(const struct timeval *tv ,  const  struct
+       timezone *tz);
+
+DESCRIPCIÓN
+       gettimeofday  y  settimeofday  pueden  poner tanto la hora
+       como una zona horaria.  tv es una estructura timeval,  tal
+       como se especifica en /usr/include/sys/time.h:
+
+       struct timeval {
+               long    tv_sec;         /* segundos */
+               long    tv_usec;        /* microsegundos */
+       };
+
+
+       y tz es una estructura timezone :
+
+       struct timezone {
+               int   tz_minuteswest; /* minutos al O de Greenwich */
+               int   tz_dsttime;     /* tipo de correción horaria invierno/verano */
+       };
+
+       El  uso  de  la  estructura timezone es obsoleto; el campo
+       tz_dsttime nunca ha sido utilizado en Linux  -  no  lo  ha
+       sido y nunca será soportado por libc o glibc. Todas y cada
+       una de las ocurrencias de este  campo  en  el  fuente  del
+       núcleo  (distintas  de  la  declaración) son un fallo. Por
+       tanto, lo siguiente es puramente de interés histórico.
+
+       El campo tz_dsttime contiene una constante simbólica  (los
+       valores  se dan más abajo) que indica en qué parte del año
+       la `correción horaria  invierno/verano'  (Daylight  Saving
+       Time,  DST,  también  conocida  como  `horario  de  ahorro
+       energético') está en vigor.  (Nota: su valor es  constante
+       a  lo largo del año - no indica si DST está o no en vigor,
+       sólo selecciona un algoritmo).  Los algoritmos de  correc­
+       ción horaria invierno/verano se definen como sigue:
+
+        DST_NONE       /* no hay */
+        DST_USA        /* estilo EE.UU. */
+        DST_AUST       /* estilo australiano */
+        DST_WET        /* como en Europa Occidental */
+        DST_MET        /* como en Europa Central */
+        DST_EET        /* como en Europa del Este */
+        DST_CAN        /* Canadá */
+        DST_GB         /* Gran Bretaña e Irlanda */
+        DST_RUM        /* Rumanía */
+        DST_TUR        /* Turquía */
+        DST_AUSTALT    /* est. australiano con cambio en 1986 */
+
+       Naturalmente, resultó ser que el periodo en el que la cor­
+       rección horaria invierno/verano está en vigor no se  podía
+       dar  mediante un simple algoritmo, uno por país: de hecho,
+       este periodo se determina por decisiones políticas  impre­
+       decibles.  Por tanto, este método de representación de las
+       zonas horarias se ha abandonado. Bajo Linux, en  una  lla­
+       mada a settimeofday el campo tz_dsttime debe ser cero.
+
+       Bajo Linux hay algunas semánticas de `Warp clock' pecular­
+       iares asociadas a la llamada al sistema settimeofday si en
+       la  primera  llamada  de  todas (después del arranque) que
+       tenga un argumento tz no NULL, el argumento tv es  NULL  y
+       el  campo tz_minuteswest es no cero. En tal caso, se asume
+       que el reloj CMOS está en el horario local y que tiene que
+       ser  incrementado en esta cantidad para obtener el horario
+       del sistema UTC. No cabe duda que usar esta característica
+       es una mala idea.
+
+       Para  operar  sobre  la  estructura timeval se definen las
+       siguientes macros:
+       #define timerisset(tvp)\
+               ((tvp)->tv_sec || (tvp)->tv_usec)
+       #define timercmp(tvp, uvp, cmp)\
+               ((tvp)->tv_sec cmp (uvp)->tv_sec ||\
+               (tvp)->tv_sec == (uvp)->tv_sec &&\
+               (tvp)->tv_usec cmp (uvp)->tv_usec)
+       #define timerclear(tvp)\
+               ((tvp)->tv_sec = (tvp)->tv_usec = 0)
+
+       Si tv o tz es nulo, la estructura  correspondiente  no  se
+       ajusta ni se devuelve.
+
+       Solamente el super-usuario puede emplear settimeofday.
+
+VALOR DEVUELTO
+       gettimeofday y settimeofday devuelven 0 en caso de éxito ó
+       -1 si ocurre un fallo (en cuyo caso errno  toma  un  valor
+       apropiado).
+
+ERRORES
+       EPERM  Alguien  que  no  es  el super-usuario ha llamado a
+              settimeofday
+
+       EINVAL La zona horaria (o algo más) es inválida.
+
+       EFAULT Uno de tv o tz apuntaba afuera  de  su  espacio  de
+              direcciones accesible.
+
+CONFORME A
+       SVr4, BSD 4.3
+
+VÉASE TAMBIÉN
+       date(1), adjtimex(2), time(2), ctime(3), ftime(3)
+
+
+
+Linux 2.0.32            10 Diciembre 1997         GETTIMEOFDAY(2)

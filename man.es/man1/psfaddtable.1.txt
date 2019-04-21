@@ -1,0 +1,46 @@
+PSFADDTABLE(1)                                     PSFADDTABLE(1)
+
+
+
+NOMBRE
+       psfaddtable  -  añade una tabla de caracteres Unicode a un
+       tipo de letra de consola
+
+SINOPSIS
+       psfaddtable fichero-de-tipos  fichero-tabla  [fichero-sal­
+       ida]
+
+
+DESCRIPCIÓN
+       psfaddtable  toma  un  tipo de letra de consola en formato
+       .psf como el dado por fichero-de-tipos y lo mezcla con  la
+       tabla  de  caracteres  Unicode  dada en fichero-tabla para
+       producir un fichero de tipos con una tabla  de  caracteres
+       empotrada, que se escribe en fichero-salida si se da, o si
+       no en  la  salida  estándar.  O  bien  fichero-de-tipos  o
+       fichero-de-salida  (pero no ambos) pueden reemplazarse por
+       un guión (-) para leer desde la  entrada  estándar  en  su
+       lugar.  Si  el  fichero-de-tipos  ya contiene una tabla de
+       caracteres empotrada, no se tiene en consideración.
+
+FORMATO DEL FICHERO DE TABLA
+       Cada línea del fichero-tabla debe estar o bien en  blanco,
+       o contener un comentario (precedido por #), o contener una
+       secuencia de números en base diez (predeterminada),  octal
+       (precedidos por 0), o hexadecimal (precedidos por 0x).  El
+       primer número de cada línea indica  el  índice  del  signo
+       gráfico  en  el  tipo  al cual nos estamos refiriendo, que
+       estará entre 0 y 0xff para un tipo de letra de 256  carac­
+       teres  y  entre  0  y 0x1ff para uno de 512.  Cualesquiera
+       otros números en la misma línea son  Unicodes  que  corre­
+       sponden a este índice de signo gráfico específico. Es per­
+       misible que haya varias líneas para el mismo signo.
+
+VÉASE TAMBIÉN
+       setfont(8), psfgettable(1), psfstriptable(1)
+
+
+
+
+
+                      25 de Octubre de 1994        PSFADDTABLE(1)

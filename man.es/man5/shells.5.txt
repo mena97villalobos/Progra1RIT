@@ -1,0 +1,30 @@
+SHELLS(5)        Manual del Programador de Linux        SHELLS(5)
+
+
+
+NOMBRE
+       shells  -  nombres  de  ruta para intérpretes iniciales de
+       órdenes válidos
+
+DESCRIPCIÓN
+       /etc/shells es un fichero de texto que contiene el  nombre
+       de  ruta  completo  para intérpretes de órdenes que puedan
+       utilizarse al entrar en el sistema.  Este fichero es  con­
+       sultado por chsh(1) y está disponible también para su con­
+       sulta por otros programas.
+
+EJEMPLOS
+       /etc/shells puede contener las siguientes rutas de acceso:
+
+              /bin/sh
+              /bin/csh
+
+FICHEROS
+       /etc/shells
+
+VÉASE TAMBIÉN
+       chsh(1)
+
+
+
+Linux                   21 Noviembre 1993               SHELLS(5)

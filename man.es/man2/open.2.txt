@@ -1,0 +1,273 @@
+OPEN(2)                Llamadas al Sistema                OPEN(2)
+
+
+
+NOMBRE
+       open, creat - abren y posiblemente crean un fichero o dis­
+       positivo
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <sys/stat.h>
+       #include <fcntl.h>
+
+       int open(const char *camino, int flags);
+       int open(const char *camino, int flags, mode_t modo);
+       int creat(const char *camino, mode_t modo);
+
+DESCRIPCIÓN
+       La llamada al sistema open() se utiliza para convertir una
+       ruta  en  un  descriptor  de fichero (un pequeño entero no
+       negativo que se utiliza en las operaciones de E/S posteri­
+       ores  como en read, write, etc.).  Cuando la llamada tiene
+       éxito, el descriptor de fichero devuelto será el  descrip­
+       tor  de fichero más pequeño no abierto actualmente para el
+       proceso.  Esta llamada crea un nuevo fichero  abierto,  no
+       compartido  con ningún otro proceso. (Pero pueden aparecer
+       ficheros abiertos compartidos a través de  la  llamada  al
+       sistema  fork(2).)  El nuevo descriptor de fichero se con­
+       figura para que permanezca abierto a través  de  funciones
+       exec  (vea  fcntl(2)).   El apuntador de lectura/escritura
+       del fichero se configura para que apunte al principio  del
+       fichero.  flags es uno de O_RDONLY, O_WRONLY u O_RDWR que,
+       respectivamente, piden que la  apertura  del  fichero  sea
+       solamente  para  lectura, solamente para escritura, o para
+       lectura y escritura.
+
+       flags puede también ser la combinación, con el operador de
+       bits OR (|), de una o más de las siguientes macros:
+
+       O_CREAT Si el fichero no existe, será creado.
+
+       O_EXCL  Cuando  se combina con O_CREAT, es un error que el
+               fichero ya exista, y open fallará.  O_EXCL no fun­
+               ciona  en sistemas de ficheros de red NFS, progra­
+               mas que confíen en él para efectuar tareas de blo­
+               queo  contendrán  una  condición  de  concurso. La
+               solución  para  efectuar  un  bloqueo  atómico  de
+               fichero mediante un fichero de bloqueo es crear un
+               fichero único en el mismo sistema de ficheros (por
+               ejemplo, incorporando el nombre del ordenador y el
+               PID) y utilizar link(2) para hacer  un  enlace  al
+               fichero  de bloqueo. Si link() devuelve 0, el blo­
+               queo tiene éxito. En caso contrario,  use  stat(2)
+               en el fichero único para comprobar si su número de
+               enlaces se ha incrementado a 2, en  cuyo  caso  el
+               bloqueo también tiene éxito.
+
+       O_NOCTTY
+               Si  camino se refiere a una terminal -- vea tty(4)
+               -- no se convertirá en  la  terminal  controladora
+               del  proceso  ni  en  el caso de que el proceso no
+               tenga ninguna.
+
+       O_TRUNC Si el fichero ya existe, será truncado.
+
+       O_APPEND
+               El fichero se abrirá en modo de sólo-añadir. Antes
+               de  cada  escritura,  el  apuntador del fichero es
+               posicionado al final del fichero,  como  se  haría
+               con  lseek.   O_APPEND  puede  conducir a ficheros
+               corruptos en sistemas de ficheros NFS si más de un
+               proceso añade datos a un fichero a la vez. Esto es
+               así porque NFS no admite añadir a un fichero,  así
+               que  el núcleo del cliente ha de simularlo, lo que
+               no puede hacerse sin una condición de concurso.
+
+       O_NONBLOCK u O_NDELAY
+               El fichero se abre en modo no  bloqueante.  Ni  el
+               open  ni  ninguna  operación  subsecuente sobre el
+               descriptor de fichero    que es devuelto harán que
+               el proceso que hace la llamada espere.
+
+       O_SYNC  El fichero se abre para E/S síncrona. Cualesquiera
+               operaciones de escritura write sobre el descriptor
+               de fichero resultante bloquearán el proceso que ha
+               efectuado la llamada hasta  que  los  datos  hayan
+               sido físicamente escritos en el dispositivo subya­
+               cente.  Vea  no  obstante  más  abajo  la  sección
+               RESTRICCIONES.
+
+       O_NOFOLLOW
+               Si  pathname  es  un enlace simbólico, entonces la
+               apertura falla. Ésta es una extensión  de  FreeBSD
+               que  fue  añadida  a  Linux en la versión 2.1.126.
+               Todavía se seguirán los enlaces simbólicos de  los
+               componentes  anteriores  de  la ruta. Los ficheros
+               cabecera de la versión 2.0.100  y  posteriores  de
+               glibc  incluyen una definición de esta opción; los
+               núcleos anteriores al 2.1.126 lo ignorarán  si  se
+               usa.
+
+       O_DIRECTORY
+               Si pathname no es un directorio, hará que la aper­
+               tura falle. Esta opción es específica de  Linux  y
+               fue  añadida en la versión 2.1.126 del núcleo para
+               evitar problemas de denegación de servicio al lla­
+               mar  a  opendir(3) sobre una FIFO o dispositivo de
+               cinta, pero no se debería usar fuera de la  imple­
+               mentación de opendir.
+
+       O_LARGEFILE
+               En sistemas de 32 bits que soportan el `sistema de
+               ficheros grandes' (Large Files System,  LFS)  per­
+               mite  abrir  ficheros  cuyos tamaños no pueden ser
+               representados en  31  bits.  El  núcleo  de  Linux
+               todavía  no  soporta  esto  (hasta,  al  menos, el
+               2.1.130), pero la definición de la opción está ahí
+               y  las  interfaces de LFS en el espacio de usuario
+               están presentes en las versiones 2.1 de prueba  de
+               glibc.
+
+       Algunos de estos modificadores opcionales pueden alterarse
+       mediante el empleo de fcntl después de que el fichero haya
+       sido abierto.
+
+       El  argumento modo especifica los permisos a emplear si se
+       crea un nuevo fichero. Es modificado por la máscara  umask
+       del proceso de la forma habitual: los permisos del fichero
+       creado son (modo & ~umask).
+
+       Se proporcionan las siguientes constantes simbólicas  para
+       modo:
+
+       S_IRWXU
+              00700 el usuario (el propietario del fichero) tiene
+              permisos de lectura, escritura y ejecución
+
+       S_IRUSR (S_IREAD)
+              00400 el usuario tiene permiso de lectura
+
+       S_IWUSR (S_IWRITE)
+              00200 el usuario tiene permiso de escritura
+
+       S_IXUSR (S_IEXEC)
+              00100 el usuario tiene permiso de ejecución
+
+       S_IRWXG
+              00070 el grupo tiene permiso de lectura,  escritura
+              y ejecución
+
+       S_IRGRP
+              00040 el grupo tiene permiso de lectura
+
+       S_IWGRP
+              00020 el grupo tiene permiso de escritura
+
+       S_IXGRP
+              00010 el grupo tiene permiso de ejecución
+
+       S_IRWXO
+              00007  los otros tienen permiso de lectura, escrit­
+              ura y ejecución
+
+       S_IROTH
+              00004 los otros tienen permiso de lectura
+
+       S_IWOTH
+              00002 los otros tienen permiso de escritura
+
+       S_IXOTH
+              00001 los otros tienen permiso de ejecución
+
+       El  argumento  modo  siempre  debe  especificarse   cuando
+       O_CREAT  está  en  flags,  y  si  no está, no es tenido en
+       cuenta.
+
+       creat   equivale   a    open    con    flags    igual    a
+       O_CREAT|O_WRONLY|O_TRUNC.
+
+VALOR DEVUELTO
+       open  y  creat devuelven el nuevo descriptor de fichero, o
+       -1 si ha ocurrido un error (en cuyo caso, se da  un  valor
+       apropiado   a  errno).   Observe  que  open  pueden  abrir
+       ficheros especiales de dispositivo, pero  creat  no  puede
+       crearlos; emplee mknod(2) en su lugar.
+
+       En sistemas de ficheros NFS con asociación de UIDs habili­
+       tada, open puede devolver un descriptor de fichero pero p.
+       ej.  llamadas a read(2) pueden denegarse con el error EAC­
+       CES.  Esto es así porque el cliente hace el  open  compro­
+       bando  los  permisos, pero la asociación de UID la hace el
+       servidor sobre las peticiones de lectura y escritura.
+
+ERRORES
+       EEXIST  camino ya existe y se usaron O_CREAT y O_EXCL.
+
+       EISDIR  camino se refiere a  un  directorio  y  el  acceso
+               pedido implicaba escribir.
+
+       EACCES  El acceso pedido al fichero no es permitido, o uno
+               de los directorios en camino no tiene  permiso  de
+               búsqueda  o paso (ejecución), o el fichero todavía
+               no existe y el directorio padre no  tiene  permiso
+               de escritura.
+
+       ENAMETOOLONG
+               camino era demasiado largo.
+
+       ENOENT  Un  componente directorio en camino no existe o es
+               un enlace simbólico  colgante  (que  apunta  a  un
+               fichero inexistente).
+
+       ENOTDIR Un  componente de camino empleado como un directo­
+               rio no es, de hecho, un directorio o se ha especi­
+               ficado  la  opción O_DIRECTORY y pathname no es un
+               directorio.
+
+       ENXIO   Se  ha  seleccionado  O_NONBLOCK  |  O_WRONLY,  el
+               fichero  indicado  identifica  a una FIFO y ningún
+               proceso tiene el fichero abierto para lectura.   O
+               el fichero es un fichero especial de dispositivo y
+               no existe el dispositivo correspondiente.
+
+       ENODEV  pathname se refiere a un fichero especial de  dis­
+               positivo  y  no existe el dispositivo correspondi­
+               ente.
+
+       EROFS   camino se refiere a un fichero de  un  sistema  de
+               ficheros  de sólo lectura y se ha pedido un acceso
+               de escritura.
+
+       ETXTBSY camino se refiere a una imagen ejecutable  que  se
+               está  ejecutando  ahora mismo y se pidió un acceso
+               de escritura.
+
+       EFAULT  camino apunta afuera de su espacio de  direcciones
+               accesible.
+
+       ELOOP   Se han encontrado demasiados enláces simbólicos al
+               resolver camino, o se ha  especificado  la  opción
+               O_NOFOLLOW  pero  pathname  no  es  un enlace sim­
+               bólico.
+
+       ENOSPC  camino iba a ser creado pero el dispositivo que lo
+               habría  de contener no tiene espacio para el nuevo
+               fichero.
+
+       ENOMEM  No hay disponible bastante memoria del núcleo.
+
+       EMFILE  El proceso ya tiene abiertos  todos  los  ficheros
+               que puede.
+
+       ENFILE  Se  ha  alcanzado  el  límite  del número total de
+               ficheros abiertos en el sistema.
+
+CONFORME A
+       SVr4, SVID, POSIX, X/OPEN, BSD 4.3
+
+RESTRICCIONES
+       Hay muchas impropiedades en el protocolo subyacente a NFS,
+       afectando  entre  otros a O_SYNC y a O_NDELAY.  POSIX pro­
+       porciona tres variantes diferentes de E/S síncrona, corre­
+       spondientes  a  las  opciones  O_SYNC,  O_DSYNC y O_RSYNC.
+       Actualmente (2.1.130) todas ellas son sinónimas en  Linux.
+
+VÉASE TAMBIÉN
+       read(2),    write(2),   fcntl(2),   close(2),   unlink(2),
+       mknod(2),   stat(2),   umask(2),   mount(2),    socket(2),
+       fopen(3), link(2).
+
+
+
+Linux                      3 junio 1999                   OPEN(2)

@@ -1,0 +1,44 @@
+STRSIGNAL(3)     Manual del programador de Linux     STRSIGNAL(3)
+
+
+
+NOMBRE
+       strsignal - devuelve una cadena que describe una señal
+
+SINOPSIS
+       #define _GNU_SOURCE
+       #include <string.h>
+
+       char *strsignal(int sig);
+
+       extern const char * const sys_siglist[];
+
+DESCRIPCIÓN
+       La función strsignal() devuelve una cadena que describe la
+       señal cuyo número corresponde al parámetro sig. La  cadena
+       sólo  puede ser usada hasta la siguiente llamada a strsig­
+       nal().
+
+       El vector sys_siglist guarda las cadenas de descripción de
+       señales  indexadas  por  número de señal. En lugar de este
+       vector debería usarse la función strsignal()  siempre  que
+       fuera posible.
+
+VALOR DEVUELTO
+       La  función  strsignal()  devuelve  la  cadena descriptiva
+       apropiada, o un mensaje de señal desconocida si el  número
+       de  señal  no  es válido.  En algunos sistemas (excepto en
+       Linux) el valor devuelto puede ser un puntero NULL en  vez
+       de un número de señal inválido.
+
+CONFORME A
+       Esta  función no es parte de ningún estándar pero se puede
+       encontar en systemas Linux y otros sistemas UNIX (como  en
+       Solaris).
+
+VÉASE TAMBIÉN
+       psignal(3), strerror(3)
+
+
+
+GNU                       8 febrero 1999             STRSIGNAL(3)

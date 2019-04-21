@@ -1,0 +1,34 @@
+STRSTR(3)        Manual del Programador de Linux        STRSTR(3)
+
+
+
+NOMBRE
+       strstr - localiza una subcadena.
+
+SINOPSIS
+       #include <string.h>
+
+       char *strstr(const char *haystack, const char *needle);
+
+DESCRIPCIÓN
+       La  función strstr() encuentra la primera ocurrencia de la
+       subcadena needle en la cadena haystack.  Los caracteres de
+       terminacion `\0' no se comparan.
+
+VALOR DEVUELTO
+       La  función strstr() devuelve un puntero al comienzo de la
+       subcadena o NULL si la subcadena no se encuentra.
+
+FALLOS
+       Las primeras versiones de libc de Linux (como  4.5.26)  no
+       permitían  un  argumento  vacío. Las versiones posteriores
+       (como  4.6.27)  funcionan   correctamente,   y   devuelven
+       haystack cuando la cadena needle está vacía.
+
+CONSULTAR TAMBIÉN
+       index(3),  memchr(3),  rindex(3),  strchr(3),  strpbrk(3),
+       strsep(3), strspn(3), strtok(3)
+
+
+
+GNU                       13 Enero 1998                 STRSTR(3)

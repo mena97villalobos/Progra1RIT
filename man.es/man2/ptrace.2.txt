@@ -1,0 +1,88 @@
+PTRACE(2)        Manual del Programador de Linux        PTRACE(2)
+
+
+
+NOMBRE
+       ptrace - traza de un proceso
+
+SINOPSIS
+       #include <sys/ptrace.h>
+
+       int ptrace(int peticion, int pid, int direc, int datos);
+
+DESCRIPCIÓN
+       Ptrace  porporciona  un  medio por el que un proceso padre
+       puede controlar la ejecución de un proceso hijo, y  exami­
+       nar  y  cambiar su imagen de memoria. Su uso primordial es
+       en la implementación de depuración con punto  de  ruptura.
+       Un  proceso del que se lleva la traza se ejecuta hasta que
+       ocurre una señal. Entonces se para y al padre se le  noti­
+       ficará  con  wait(2).  Cuando el proceso está en su estado
+       parado, su memoria puede ser leída  y  escrita.  El  padre
+       puede  hacer  también  que  el hijo continúe la ejecución,
+       opcionalmente sin tener en cuenta la señal que provocó  la
+       parada.
+
+       El  valor  del  argumento  peticion  determina  la precisa
+       acción de la llamada al sistema:
+
+       PTRACE_TRACEME
+              El padre de este proceso le va a seguir  la  traza.
+              El  padre debería estar esperando a llevar la traza
+              del hijo.
+
+       PTRACE_PEEKTEXT, PTRACE_PEEKDATA
+              Lee palabra en la localización direc.
+
+       PTRACE_PEEKUSR
+              Lee palabra en la localización  direc  en  el  área
+              USER.
+
+       PTRACE_POKETEXT, PTRACE_POKEDATA
+              Escribe palabra en la localización direc.
+
+       PTRACE_POKEUSR
+              Escribe palabra en la localización direc en el área
+              USER.
+
+       PTRACE_SYSCALL, PTRACE_CONT
+              Rearranca tras la señal.
+
+       PTRACE_KILL
+              Envía al hijo una señal SIGKILL para hacerlo termi­
+              nar.
+
+       PTRACE_SINGLESTEP
+              Establece la señal de trampa para ir paso a paso.
+
+       PTRACE_ATTACH
+              Se ata al proceso especificado en pid.
+
+       PTRACE_DETACH
+              Desata un proceso que estaba atado previamente.
+
+OBSERVACIONES
+       init,  el  proceso  con PID 1, no puede utilizar esta fun­
+       ción.
+
+VALOR DEVUELTO
+       En caso de éxito, se devuelve cero. En caso de  error,  se
+       devuelve -1 y se pone en errno un valor apropiado.
+
+ERRORES
+       EPERM   El proceso especificado (i.e., init), no puede ser
+               trazado, o ya lo está siendo.
+
+       ESRCH   El proceso especificado no existe.
+
+       EIO     Peticion no es válida.
+
+CONFORME A
+       SVr4, SVID EXT, AT&T, X/OPEN, BSD 4.3
+
+VÉASE TAMBIÉN
+       gdb(1), exec(3), signal(2), wait(2)
+
+
+
+Linux 0.99.11             31 Enero 1997                 PTRACE(2)

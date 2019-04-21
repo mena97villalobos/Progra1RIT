@@ -1,0 +1,39 @@
+PWD(1)                                                     PWD(1)
+
+
+
+NOMBRE
+       pwd  -  imprime el nombre del directorio de trabajo actual
+       (print working directory)
+
+SINOPSIS
+       pwd
+       pwd {--help,--version}
+
+DESCRIPCION
+       Esta documentación no será mantenida y puede ser  inexacta
+       o incompleta.  La documentación Texinfo es ahora la fuente
+       autorizada.
+
+       Esta página de manual documenta la  versión  GNU  de  pwd.
+       pwd  imprime el nombre del directorio actual completamente
+       resuelto.  Esto  es,  todos  los  componentes  del  nombre
+       impreso serán los nombres de directorios actuales  -- nada
+       serán enlace simbólicos.
+
+       Observe que la mayoría de las shell Unix  proporcionan  un
+       comando  pwd con una funcionalidad similar, y por tanto el
+       comando interactivo sin nada más que pwd normalmente  eje­
+       cutará la versión integrada en la shell y no ésta.
+
+   OPCIONES
+       --help Imprime  un  mensaje de uso en la salida estándar y
+              termina correctamente.
+
+       --version
+              Imprime información sobre la versión en  la  salida
+              estándar y termina correctamente.
+
+
+
+FSF                    Utilidades Shell GNU                PWD(1)

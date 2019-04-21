@@ -1,0 +1,382 @@
+IPFWADM(8)       Manual del Programador de Linux       IPFWADM(8)
+
+
+
+NOMBRE
+       ipfwadm - Administración del cortafuegos y contabilidad IP
+
+SINOPSIS
+       ipfwadm -A parámetros [opciones]
+       ipfwadm -I parámetros [opciones]
+       ipfwadm -O parámetros [opciones]
+       ipfwadm -F parámetros [opciones]
+       ipfwadm -M [-l | -s] [opciones]
+
+DESCRIPCIÓN
+       Ipfwadm se utiliza para  configurar,  mantener  e  inspec­
+       cionar los cortafuegos IP y las reglas de contabilidad del
+       núcleo Linux.  Estas reglas se pueden  dividir  en  cuatro
+       categorías diferentes: contabilidad de paquetes IP, corta­
+       fuegos de entrada IP, cortafuegos de salida IP y cortafue­
+       gos  de  reenvío.   Para  cada  una de estas categorías se
+       mantiene una lista separada de reglas.
+
+       Las prestaciones de  cortafuegos  y  de  contabilidad  del
+       núcleo  Linux  proporcionan  mecanismos  para contabilizar
+       paquetes IP, para construir cortafuegos basados en el fil­
+       trado  a nivel de paquetes, para construir cortafuegos que
+       usen servidores proxy transparentes (mediante  redirección
+       de  paquetes  a  conectores  (sockets) locales), y para el
+       reenvio de paquetes enmascarados (con  IP-masquerade).  La
+       administración de estas funciones se mantiene en el núcleo
+       mediante cuatro listas separadas, cada una de  las  cuales
+       contiene reglas: ninguna, una, dos...  Cada regla contiene
+       información específica sobre las direcciones origen y des­
+       tino,  protocolos, número de puerto y algunas otras carac­
+       terísticas. Un paquete se ajusta a una  regla  cuando  las
+       características  de una regla se ajustan a la dirección IP
+       de ese paquete. Estas reglas se pueden dividir  en  cuatro
+       categorías diferentes:
+
+       Reglas de contabilidad del cortafuegos IP:
+              Se usan para todos los paquetes IP que son enviados
+              o recibidos por el  interfaz  local  de  red.  Cada
+              paquete  se  compara  con  la lista de reglas, y en
+              caso de coincidencia se incrementan los  contadores
+              de paquetes y bytes asociados con las reglas.
+
+       Reglas de entrada del cortafuegos IP:
+              Estas   reglas   se   aplican  a  los  paquetes  IP
+              entrantes. Todos los paquetes que llegan por  algún
+              interfaz  local  se  comprueban  con  las reglas de
+              entrada. La primera regla que se verifica determina
+              la  política  que  se  usa.  Cuando  no se ajusta a
+              ninguna regla se utiliza la política por defecto.
+
+       Reglas de salida del cortafuegos IP:
+              Estas  reglas  definen  los  permisos  para  enviar
+              paquetes  IP.  Todos  los paquetes que están listos
+              para ser enviados por un interfaz local son compro­
+              bados  con  las  reglas de salida. La primera regla
+              que se cumple determina el  comportamiento  que  se
+              aplica. Cuando no se ajusta a ninguna regla se uti­
+              liza la política por defecto.
+
+       Reglas de reenvío del cortafuegos IP:
+              Estas reglas definen los permisos para  el  reenvío
+              de paquetes IP.  Todos los paquetes enviados por un
+              host remoto con destino a otro host remoto se  com­
+              prueban con las reglas de reenvío. La primera regla
+              que verifica un paquete determina la  política  que
+              se utilizará.  Cuando no se verifica ninguna regla,
+              se aplica el comportamiento por defecto.
+
+       Para cada una de estas categorías se  mantiene  una  lista
+       separada de reglas. Véase ipfw(4) para más detalles.
+
+OPCIONES
+       Las  opciones reconocidas por ipfwadm se dividen en varios
+       grupos diferentes.
+
+   CATEGORÍAS
+       Las siguientes opciones se usan para seleccionar la  cate­
+       goría de reglas a las que se aplican los comandos:
+
+       -A [dirección]
+              Reglas  de  contabilidad IP. Opcionalmente se puede
+              especificar un sentido (in, out,  both),  indicando
+              si  sólo  se  deben  contar paquetes de entrada, de
+              salida o de ambos tipos. La opción por  defecto  es
+              both.
+
+       -I     Reglas de entrada al cortafuegos IP.
+
+       -O     Reglas de salida del cortafuegos IP.
+
+       -F     Reglas de reenvío del cortafuegos IP.
+
+       -M     Administración de "IP masquerading". Esta categoría
+              sólo se puede usar en combinación con el comando -l
+              (list)   o   el   comando   -s   (fijar  tiempo  de
+              expiración).
+
+       Se  tiene  que  especificar  exactamente  una   de   estas
+       opciones.
+
+
+   COMANDOS
+       Las siguientes opciones especifican la acción concreta que
+       hay que realizar. Sólo se puede especificar una  de  ellas
+       en la línea de comandos, salvo que se indique otra cosa en
+       la descripción.
+
+       -a [comportamiento]
+              Añade una o más reglas al final de la lista  selec­
+              cionada.  Para  la contabilidad no se puede especi­
+              ficar ningún comportamiento. Para el cortafuegos es
+              necesario especificar una de las siguientes políti­
+              cas: accept, masquerade (válida sólo para reglas de
+              reenvío), deny o reject.
+
+              Cuando  los nombre de origen y/o destino se resuel­
+              ven con más de una dirección, se añadirá una  regla
+              para cada posible combinación.
+
+       -i [comportamiento]
+              Inserta  una  o más reglas al principio de la lista
+              seleccionada. Vea la  descripción  del  comando  -a
+              para más detalles.
+
+       -d [comportamiento]
+              Borra  una  o  más entradas al comienzo de la lista
+              seleccionada. La semántica es idéntica a la de  los
+              comandos  anteriores.  Los parámetros especificados
+              deben coincidir exactamente con los  dados  en  los
+              comandos  añadir o insertar. En otro caso, si no se
+              ajusta a nada, no se borrará ninguna regla. Sólo se
+              borra la primera coincidencia.
+
+       -l     Lista  todas  las  reglas de la lista seleccionada.
+              Este comando se puede combinar con  el  comando  -z
+              (reiniciar  el  contador  a  cero). En ese caso los
+              contadores de bytes  y  de  paquetes  se  reinician
+              inmediatamente  tras  mostrar sus valores actuales.
+              Salvo que la opción -x esté  presente,  los  conta­
+              dores  de  paquetes  (si son listados) se mostrarán
+              como númeroK o númeroM donde 1K significa 1000 y 1M
+              significa  1000K  (redondeado  al  valor entero más
+              cercano). Vea también las opciones -e y -x para ver
+              más posibilidades.
+
+       -z     Reinicia  los  contadores de bytes y de paquetes de
+              todas las reglas de  la  lista  seleccionada.  Este
+              comando se puede combinar con el comando -l (list).
+
+       -f     Vacía la lista de reglas seleccionada.
+
+       -p política
+              Cambia la política por defecto para el tipo  selec­
+              cionado  de cortafuegos. La política dada tiene que
+              ser una de accept,  masquerade  (sólo  válida  para
+              reglas de reenvío), deny o reject.  La política por
+              defecto se utiliza cuando no se  encuentra  ninguna
+              regla  que se ajuste. Esta operación sólo es válida
+              para cortafuegos IP, esto es,  en  combinación  con
+              las opciones -I, -O o -F.
+
+       -c     Comprueba  si este paquete IP sería aceptado, dene­
+              gado o rechazado por el tipo de cortafuegos  selec­
+              cionado.  Esta operación sólo es válida para corta­
+              fuegos IP en combinación con las opciones -I, -O
+               o -F.
+
+       -s tcp tcpfin udp
+              Cambia los valores de caducidad (timeout) usados en
+              el enmascaramiento.  Este comando siempre toma tres
+              parámetros, que representan  valores  de  caducidad
+              (en  segundos) para sesiones TCP, sesiones TCP tras
+              recibir un paquete FIN y paquetes UDP,  respectiva­
+              mente.   Un  valor  de caducidad 0 significa que el
+              valor actual de caducidad, de la entrada correspon­
+              diente, se preserva.  Esta operación sólo está per­
+              mitida en combinación con la opción -M.
+
+       -h     Ayuda. Da una descripción (actualmente breve) de la
+              sintaxis del comando.
+
+
+   PARÁMETROS
+       Los  siguientes  parámetros  se pueden usar en combinación
+       con los comandos -a, -i, -d o -c:
+
+       -P protocolo
+              El protocolo de la regla o del paquete a comprobar.
+              El  protocolo especificado puede ser tcp, udp, icpm
+              o all.  El protocolo all se adaptará  a  todos  los
+              protocolos  y  se  toma por defecto cuando se omite
+              esta opción.  all no se puede usar  en  combinación
+              con el comando -c.
+
+       -S dirección[/máscara] [puerto...]
+              Especificación  de  origen (obligatorio). La direc­
+              ción puede ser bien un nombre de host, un nombre de
+              red  o  una dirección IP concreta. La máscara puede
+              ser una máscara de red o un número que  indique  el
+              número  de  bits  con  valor 1 a la izquierda de la
+              máscara de red. Es decir, son equivalentes la  más­
+              cara 255.255.255.0 y el número 24.  El origen puede
+              incluir una o más  especificaciones  de  puertos  o
+              tipos  ICMP.  Cada uno de ellos puede ser un nombre
+              de servicio,  número  de  puerto  o  un  tipo  ICPM
+              (numérico).  En  el  resto  de este párrafo, puerto
+              significa o una especificación de puerto o un  tipo
+              ICPM.  Una  de  estas especificaciones puede ser un
+              rango de puertos,  con  el  formato  puerto:puerto.
+              Además,  el  número  total de puertos especificados
+              con las direcciones origen y destino  no  debe  ser
+              mayor que IP_FW_MAX_PORTS (actualmente 10). Aquí un
+              rango de puertos cuenta como dos puertos.
+
+              Los paquetes que no son el primer fragmento  de  un
+              paquete  TCP,  UDP o ICMP son siempre aceptados por
+              el cortafuegos.  Por motivos de contabilidad, estos
+              segundos  y  posteriores  fragmentos  se  tratan de
+              forma  especial  para  poderlos  contar  de  alguna
+              forma.  El puerto número 0xFFFF (65535) se usa para
+              ajustarse con el segundo y siguientes fragmentos de
+              paquetes TCP o UDP. Estos paquetes se tratarán para
+              propósitos de  contabilidad  como  si  sus  puertos
+              fueran  0xFFFF.  El  número  0xFF (255) se usa para
+              ajustarse con el segundo  y  siguientes  fragmentos
+              para  contabilidad de paquetes ICPM. Estos paquetes
+              se tratarán, para propósitos de contabilidad,  como
+              si  sus  tipos  ICPM  fueran  0xFF. Observe que los
+              comando y protocolo especificados  pueden  implicar
+              restricciones  sobre el puerto que sea especificado
+              en combinación con los protocolos tcp, udp o  icpm.
+              También,  cuando  se  especifica  el comando -c, se
+              requiere exactamente un puerto.
+
+       -D dirección[/máscara] [puerto...]
+              Especificaciones de destino (obligatorio).  Vea  la
+              descripción  de  la  opción  -S  (origen)  para una
+              descripción detallada de la sintaxis.  Observe  que
+              los  tipos  ICMP no están permitidos en combinación
+              con la opción -D; los tipos  ICMP  sólo  se  pueden
+              especificar tras la bandera -S.
+
+       -V dirección
+              La  dirección  opcional de un interfaz a través del
+              cual se envía o recibe un paquete.  dirección puede
+              ser un nombre de host o una dirección IP. Cuando se
+              especifica un nombre de host, éste se debe resolver
+              a  exactamente  una  dirección  IP. Cuando se omite
+              esta opción, se supone la  dirección  0.0.0.0,  que
+              tiene  un  significado  especial  y  se  ajustará a
+              cualquier dirección de interfaz.  Para  el  comando
+              -c, esta opción es obligatoria.
+
+       -W nombre
+              Nombre opcional de un interfaz a través del cual se
+              envían o reciben  paquetes.  Cuando  se  omite,  se
+              supone una cadena de caracteres vacía, que tiene un
+              significado especial y se ajustará a cualquier nom­
+              bre de interfaz.
+
+
+   OTRAS OPCIONES
+       Se pueden especificar las siguientes opciones adicionales:
+
+       -b     Modo  Bidireccional.   La  regla  se  ajustará  con
+              paquetes  IP en ambas direcciones. Esta opción sólo
+              es válida en combinación con los comandos -a, -i  o
+              -d.
+
+       -e     Salida  extendida.   Esta opción hace al comando -l
+              mostrar también la dirección  del  interfaz  y  las
+              opciones  de  la regla (si existe). Para las listas
+              del cortafuegos, también se  mostrarán  los  conta­
+              dores  de  bytes  y  paquetes  (por defecto sólo se
+              muestran los contadores para  las  reglas  de  con­
+              tabilidad)  y  se muestran las máscaras TOS. Cuando
+              se usa en combinación con -M, también  mostrará  la
+              información relacionada con la secuencia de números
+              delta. Esta opción sólo es  válida  en  combinación
+              con el comando -l.
+
+       -k     Ajustar  sólo a paquetes TCP con el bit ACK activo.
+              Esta opción sólo es válida en combinación  con  los
+              comandos -a, -i o -d, y el protocolo TCP.
+
+       -m     Enmascaramiento de paquetes aceptados para reenvío.
+              Cuando se utiliza esta opción, los paquetes acepta­
+              dos  por  esta  regla  serán  enmascarados  como si
+              fueran originales  del  host  local.   Además,  los
+              paquetes  de respuesta serán reconocidos como tales
+              y serán desenmascarados automáticamente pasando  el
+              cortafuegos de reenvío.  Esta opción es sólo válida
+              para  las  reglas  de  reenvío  con  comportamiento
+              accept  (o  cuando se haya especificado accept como
+              el comportamiento por defecto),  y  sólo  se  puede
+              usar cuando se compila el núcleo con la opción CON­
+              FIG_IP_MASQUERADE.
+
+       -n     Salida numérica.  Las direcciones IP y  números  se
+              imprimirán  en  formato  numérico.  Por defecto, el
+              programa intentará mostrarlos como nombres de host,
+              nombres  de red o servicios (cuando sea aplicable).
+
+       -o     Activa el registro del núcleo de  paquetes  ajusta­
+              dos.  Cuando se pone esta opción para una regla, el
+              núcleo de Linux imprimirá cierta información básica
+              de  todos  los paquetes que se ajusten a ella medi­
+              ante printk().   Esta  opción  sólo  será  efectiva
+              cuando  se  compile  el  núcleo  con la opción CON­
+              FIG_IP_FIREWALL_VERBOSE.  Esta opción sólo es  vál­
+              ida en combinación con los comandos -a, -i o -d.
+
+       -r [puerto]
+              Redirecciona paquetes a un conector (socket) local.
+              Cuanto se utiliza esta opción, los paquetes acepta­
+              dos  por la regla serán redireccionados a un conec­
+              tor local, incluso si fueran redireccionados  a  un
+              host  remoto. Si el puerto redireccionado es 0, que
+              es el valor por defecto, se usará el puerto destino
+              del  paquete  como  el  puerto de redirección. Esta
+              opción es sólo válida en las reglas de entrada  del
+              cortafuegos  con comportamiento accept y sólo puede
+              ser utilizada cuando el núcleo de Linux está compi­
+              lado con la opción CONFIG_IP_TRANSPARENT_PROXY.
+
+       -t andmask xormask
+              Máscara utilizada para modificar el campo TOS en la
+              cabecera IP. Cuando un paquete se acepta (con o sin
+              masquerade)  por  una  regla  del cortafuegos, a su
+              campo TOS primero se le hace  un  Y-lógico  con  la
+              máscara  andmask  y al resultado se le aplica un O-
+              lógico exclusivo con la máscara xormask.   La  más­
+              cara  se debe especificar en valores de 8 bits hex­
+              adecimales. Esta opción sólo es  válida  en  combi­
+              nación  con  los  comandos -a, -i o -d, y no tendrá
+              efectos cuando se utilice en combinación con reglas
+              de  contabilidad  o  de cortafuegos para rechazar o
+              denegar un paquete.
+
+       -v     Salida detallada.  Imprime información detallada de
+              la  regla  o paquete añadido, borrado o comprobado.
+              Esta opción sólo tendrá efecto con los comandos -a,
+              -i, -d o -c.
+
+       -x     Expande  números.   Muestra  el valor exacto de los
+              contadores de bytes y de paquetes, en lugar de sólo
+              los  números  redondeados a múltiplos de 1K o de 1M
+              (múltiplo de 1000K). Esta opción sólo tendrá efecto
+              cuando  se  muestren  los  contadores  de cualquier
+              forma (vea la opción -e).
+
+       -y     Solo ajusta paquetes TCP con el bit SYN activado  y
+              el  bit ACK desactivado. Esta opción sólo es válida
+              en combinación con los comandos -a, -i o -d,  y  el
+              protocolo TCP.
+
+
+FICHEROS
+       /proc/net/ip_acct
+       /proc/net/ip_input
+       /proc/net/ip_output
+       /proc/net/ip_forward
+       /proc/net/ip_masquerade
+
+
+VÉASE TAMBIÉN
+       ipfw(4)
+
+
+AUTOR
+       Jos Vos <jos@xos.nl>
+       X/OS Expert in Open Systems BV, Amsterdam, The Netherlands
+
+
+
+
+Linux                     30 Julio 1996                IPFWADM(8)

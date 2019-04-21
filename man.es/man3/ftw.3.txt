@@ -1,0 +1,60 @@
+FTW(3)           Manual del Programador de Linux           FTW(3)
+
+
+
+NOMBRE
+       ftw - recorre un árbol de ficheros
+
+SINOPSIS
+       #include <ftw.h>
+
+       int ftw(const char *directorio, int (*ptrfunc )(const char
+       *fichero, struct stat *sb, int flag), int profun);
+
+DESCRIPCIÓN
+       ftw() recorre un árbol de  directorios  empezando  por  el
+       directorio  indicado.   Para cada entrada encontrada en el
+       árbol, llama a ptrfunc con el nombre de camino completo de
+       la entrada, relativa a directorio, un puntero a la estruc­
+       tura stat(2) para la entrada, y un int,  cuyo  valor  será
+       uno de los siguientes:
+              FTW_F     El ítem es un fichero normal
+              FTW_D     EL ítem es un directorio
+              FTW_NS    stat ha fallado en el ítem
+              FTW_DNR   El ítem es un directorio que no puede leerse
+       Atención:  Cualquier  otra  cosa que no sea un directorio,
+       como enlaces simbólicos, obtiene la etiqueta FTW_F.
+
+       ftw() se llama a sí misma  recursivamente  para  atravesar
+       los  directorios  que  encuentra.   Para  evitar el uso de
+       todos los descriptores de fichero de un programa, el argu­
+       mento  profun especifica el número de directorios abiertos
+       simultáneamente. Cuando  la  profundidad  es  sobrepasada,
+       ftw()  se  ralentizará porque los directorios deberán cer­
+       rarse y volverse a abrir.
+
+       Para detener el recorrido por el árbol,  ptrfunc  devuelve
+       un  valor no-cero; este valor se convertirá en el devuelto
+       por ftw().  De otro modo, ftw() continuará hasta que  haya
+       recorrido  el árbol entero, en cuyo caso devolverá cero, o
+       hasta que ocurra un error como un fallo de  malloc(3),  en
+       cuyo caso devolverá -1.
+
+       Puesto  que   ftw() usa estructuras de datos dinámicas, la
+       única forma segura de salir de un recorrido por  un  árbol
+       es devolver un valor no cero. Para manejar interrupciones,
+       por ejemplo, marque que ha  ocurrido  una  interrupción  y
+       devuelva  un  valor  no-cero--no emplee longjmp(3) a menos
+       que el programa vaya a terminar.
+
+
+CONFORME A
+       AES, SVID2, SVID3, XPG2, XPG3 y XPG4
+
+
+VÉASE TAMBIÉN
+       stat(2)
+
+
+
+Linux                     10 Julio 1993                    FTW(3)

@@ -1,0 +1,26 @@
+SINH(3)          Manual del Programador de Linux          SINH(3)
+
+
+
+NOMBRE
+       sinh - función de seno hiperbólico
+
+SYNOPSIS
+       #include <math.h>
+
+       double sinh(double x);
+
+DESCRIPCIÓN
+       La  función  sinh()  devuelve el seno hiperbólico de x, la
+       cual se define matemáticamente como (exp(x) -  exp(-x))  /
+       2.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VEA TAMBIÉN
+       acosh(3), asinh(3), atanh(3), cosh(3), tanh(3)
+
+
+
+                       13 de Junio de 1993                SINH(3)

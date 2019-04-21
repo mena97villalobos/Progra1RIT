@@ -1,0 +1,55 @@
+FORK(2)          Manual del Programador de Linux          FORK(2)
+
+
+
+NOMBRE
+       fork, vfork - crean un proceso hijo
+
+SINOPSIS
+       #include <unistd.h>
+
+       pid_t fork(void);
+       pid_t vfork(void);
+
+DESCRIPCIÓN
+       fork  crea un proceso hijo que difiere de su proceso padre
+       sólo en su PID y PPID, y en el hecho  de  que  el  uso  de
+       recursos esté asignado a 0.  Los candados de fichero (file
+       locks) y las señales pendientes no se heredan.
+
+       En linux, fork está implementado usando páginas de  copia-
+       en-escritura  (copy-on-write),  así  que  la  única penal­
+       ización en que incurre fork es  en  el  tiempo  y  memoria
+       requeridos  para  duplicar  las  tablas de las páginas del
+       padre, y para crear una única estructura  de  tarea  (task
+       structure) para el hijo.
+
+VALOR DEVUELTO
+       En  caso  de éxito, se devuelve el PID del proceso hijo en
+       el hilo de ejecución de su padre, y se devuelve un  0   en
+       el  hilo  de  ejecución  del  hijo.  En  caso de fallo, se
+       devolverá un -1 en el contexto del  padre,  no  se  creará
+       ningún proceso hijo, y se pondrá en errno un valor apropi­
+       ado.
+
+ERRORES
+       EAGAIN fork no puede  reservar  sufficiente  memoria  para
+              copiar las tablas de páginas del padre y alojar una
+              estructura de tarea para el hijo.
+
+       ENOMEM fork no pudo obtener las necesarias estructuras del
+              núcleo porque la cantidad de memoria era escasa.
+
+FALLOS
+       En Linux, vfork es simplemente un alias para fork.
+
+CONFORME A
+       La  llamada  al  sistema  fork es conforme con SVr4, SVID,
+       POSIX, X/OPEN y BSD 4.3.
+
+VÉASE TAMBIÉN
+       clone(2), execve(2), wait(2)
+
+
+
+Linux 1.2.9                1 Julio 1996                   FORK(2)

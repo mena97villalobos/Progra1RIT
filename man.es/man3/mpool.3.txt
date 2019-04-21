@@ -1,0 +1,134 @@
+MPOOL(3)                                                 MPOOL(3)
+
+
+
+NOMBRE
+       mpool - depósito de buffers de memoria compartida
+
+SINOPSIS
+       #include <db.h>
+       #include <mpool.h>
+
+       MPOOL *
+       mpool_open (DBT *key, int fd, pgno_t pagesize, pgno_t maxcache);
+
+       void
+       mpool_filter (MPOOL *mp, void (*pgin)(void *, pgno_t, void *),
+            void (*pgout)(void *, pgno_t, void *), void *pgcookie);
+
+       void *
+       mpool_new (MPOOL *mp, pgno_t *pgnoaddr);
+
+       void *
+       mpool_get (MPOOL *mp, pgno_t pgno, u_int flags);
+
+       int
+       mpool_put (MPOOL *mp, void *pgaddr, u_int flags);
+
+       int
+       mpool_sync (MPOOL *mp);
+
+       int
+       mpool_close (MPOOL *mp);
+
+DESCRIPCIÓN
+       Mpool  es  la  interfaz  de biblioteca destinada a propor­
+       cionar un manejo de buffers de fichero orientado  a  pági­
+       nas.  Los buffers pueden ser compartidos entre procesos.
+
+       La  función  mpool_open inicializa un depósito de memoria.
+       El argumento key es la cadena de bytes usada para negociar
+       entre  varios  procesos  que desean compartir buffers.  Si
+       los buffers de fichero se asocian  a  memoria  compartida,
+       todos los procesos que usen la misma clave compartirán los
+       buffers.  Si key es NULL, los buffers  se  asocian  a  una
+       memoria  privada.   El  argumento  fd  es un descriptor de
+       fichero para el fichero subyacente, que debe  soportar  el
+       posicionamiento   del  puntero  de  lectura/escritura  (es
+       decir, las búsquedas).  Si key no es NULL y  coincide  con
+       un  fichero que ya está asociado, el argumento fd se igno­
+       rará.
+
+       El argumento pagesize es el tamaño, en bytes, de las pági­
+       nas  en  las  que  se descompone el fichero.  El argumento
+       maxcache es el número máximo de páginas del fichero subya­
+       cente  a  colocar en cache en todo momento.  Esta valor no
+       es relativo  al  número  de  procesos  que  comparten  los
+       buffers  de un fichero, pero será el mayor valor especifi­
+       cado por cualquiera  de  los  procesos  que  compartan  el
+       fichero.
+
+       La  función  mpool_filter está destinada a hacer transpar­
+       ente el procesamiento de la entrada y  la  salida  de  las
+       posibles  páginas.   Si  se especifica la función pgin, se
+       llamará cada vez que se lea un buffer al depósito de memo­
+       ria  procedente del fichero de respaldo.  Si se especifica
+       la función pgout, se llamará cada vez  que  un  buffer  se
+       escriba  en  el  fichero  de respaldo.  Ambas funciones se
+       llaman con el puntero pgcookie, el número de página  y  un
+       puntero a la página a leer o escribir.
+
+       La función mpool_new toma un puntero MPOOL y una dirección
+       como argumentos.  Si se puede asignar una nueva página, se
+       devolverá  un puntero a la página y el número de página se
+       almacenará en la dirección pgnoaddr.  En  caso  contrario,
+       se devolverá NULL y se asignará un valor a errno.
+
+       La  función mpool_get toma un puntero MPOOL y un número de
+       página como argumentos.  Si la página existe, devolverá un
+       puntero  a la página.  En caso contrario, devolverá NULL y
+       se asignará un valor a errno.  El parámetro de  opción  no
+       se usa actualmente.
+
+       La  función mpool_put desprende la página referenciada por
+       pgaddr.  Pgaddr debe ser una  dirección  devuelta  previa­
+       mente  por  mpool_get  o mpool_new.  El valor de opción se
+       especifica haciendo una operación O-lógica con  cualquiera
+       de los siguientes valores:
+
+       MPOOL_DIRTY
+              La página ha sido modificada y necesita ser escrita
+              en el fichero de respaldo.
+
+       Mpool_put devuelve 0 en caso de éxito y -1 si  se  produce
+       un error.
+
+       La  función  mpool_sync  escribe en el fichero de respaldo
+       todas las páginas modificadas  asociadas  con  el  puntero
+       MPOOL.   Mpool_sync devuelve 0 en caso de éxito y -1 si se
+       produce un error.
+
+       La función mpool_close libera cualquier memoria  reservada
+       asociada  con el depósito de memoria.  Las páginas modifi­
+       cadas  no  se  escribirán  en  el  fichero  de   respaldo.
+       Mpool_close devuelve 0 en caso de éxito y -1 si se produce
+       un error.
+
+ERRORES
+       La función mpool_open  puede  fallar  y  asignar  a  errno
+       cualquiera  de los errores especificados para la rutina de
+       biblioteca malloc(3).
+
+       La función mpool_get puede fallar y asignar a errno uno de
+       los siguiente valores:
+
+       [EINVAL]       El registro solicitado no exite.
+
+       Las  funciones mpool_new y mpool_get pueden fallar y asig­
+       nar a errno cualquiera de los errores  especificados  para
+       las rutinas de biblioteca read(2), write(2) y malloc(3).
+
+       La  función  mpool_sync  puede  fallar  y  asignar a errno
+       cualquiera de los errores especificados para la rutina  de
+       biblioteca write(2).
+
+       La  función  mpool_close  puede  fallar  y asignar a errno
+       cualquiera de los errores especificados para la rutina  de
+       biblioteca free(3).
+
+VÉASE TAMBIÉN
+       dbopen(3), btree(3), hash(3), recno(3)
+
+
+
+                           4 Junio 1993                  MPOOL(3)

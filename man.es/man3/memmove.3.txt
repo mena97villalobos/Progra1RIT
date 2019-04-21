@@ -1,0 +1,29 @@
+MEMMOVE(3)       Manual del Programador de Linux       MEMMOVE(3)
+
+
+
+NOMBRE
+       memmove - copia un área de memoria.
+
+SINOPSIS
+       #include <string.h>
+
+       void *memmove(void *dest, const void *src, size_t n);
+
+DESCRIPCIÓN
+       La función memmove() copia n bytes del área de memoria src
+       al área de memoria dest.   Las  áreas  de  memoria  pueden
+       solaparse.
+
+VALOR DEVUELTO
+       La función memmove() devuelve un puntero a dest.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       bcopy(3), memccpy(3), memcpy(3), strcpy(3), strncpy(3)
+
+
+
+GNU                    10 de Abril de 1993             MEMMOVE(3)

@@ -1,0 +1,179 @@
+AT(1)            Manual del Programador de Linux            AT(1)
+
+
+
+NOMBRE
+       at, batch, atq, atrm - encolan, examinan o borran trabajos
+       pendientes de ejecución
+
+SINOPSIS
+       at [-V] [-q cola] [-f fichero] [-mldbv] TIME
+       at -c trabajo [trabajo...]
+       atq [-V] [-q cola]
+       atrm [-V] trabajo [trabajo...]
+       batch [-V] [-q cola] [-f fichero] [-mv] [TIME]
+
+DESCRIPCIÓN
+       at y batch leen comandos desde la entrada  estándar  o  un
+       fichero  especificado, los cuales van a ser ejecutados más
+       tarde, utilizando read commands from standard input  or  a
+       specified  file  which are to be executed at a later time,
+       using /bin/sh.
+
+       at      ejecuta comandos a una determinada hora.
+
+       atq     lista los trabajos pendientes del  usuario,  a  no
+               ser que se trate del superusuario; en ese caso, se
+               listan los trabajos de todo el mundo.  El  formato
+               de  las  líneas  de salida (una para cada trabajo)
+               es: Número de trabajo, fecha, hora, clase de  tra­
+               bajo.
+
+       atrm    borra trabajos, identificados por su número.
+
+       batch   ejecuta  comandos  cuando  lo  permite el nivel de
+               carga del sistema; osea, cuando la carga media cae
+               por  debajo de 0.8, o del valor especificado en la
+               invocación de atrun.
+
+       At permite especificaciones de  hora  bastante  complejas,
+       extendiendo  el estándar POSIX.2. Acepta horas con formato
+       HH:MM para ejecutar un trabajo a una determinada hora  del
+       día.   (Si  esa hora ya ha pasado, se asume que es del día
+       siguiente.)  También se puede especificar midnight,  noon,
+       o  teatime  (4pm)  y  se puede especificar la hora con los
+       sufijos AM o PM para ejecutar  por  la  mañana  o  por  la
+       tarde.  También se puede indicar el día de ejecución, pro­
+       porcionando la fecha con el formato nombre-del-mes  día  y
+       opcionalmente  año, o bien indicándolo con el formato MMD­
+       DYY o MM/DD/YY o DD.MM.YY.  La especificación de una fecha
+       debe  seguir  a  la de la hora del día.  También se pueden
+       dar horas  como  now  +  count  unidades-de-tiempo,  donde
+       unidades-de-tiempo  puede  ser where the time-units can be
+       minutes, hurs, days, o weeks y se puede indicar a  at  que
+       ejecute  el trabajo hoy poniendo como sufijo de la hora la
+       palabra today y para ejecutarlo mañana,  se  pondría  como
+       sufijo la palabra tomorrow.
+
+       Por  ejemplo, para ejecutar un trabajo a las 4pm dentro de
+       tres días, haríamos at 4pm + 3 days, para ejecutar un tra­
+       bajo  a  las 10:00am del 31 de Julio, haríamos at 10am Jul
+       31 y para ejecutarlo mañana a la 1 de la  madrugada,  pon­
+       dríamos at 1am tomorrow.
+
+       La definición exacta de la especificación de hora se puede
+       encontrar en /usr/doc/at/timespec.
+
+       Para ambos at y batch, los comandos a los que se aplicarán
+       son  leídos  de la entrada estándar o del fichero indicado
+       en la opción -f y ejecutados.  El directorio  de  trabajo,
+       el  entorno (excepto para las variables TERM, DISPLAY y _)
+       y el umask son tomados del momento de invocación, y no  el
+       de ejecución.  Un comando at - o batch - invocado desde un
+       shell su(1) retendrá también el identificador  de  usuario
+       (userid).   El usuario recibirá un correo con la salida de
+       error estándar y la salida estándar de  sus  comandos,  si
+       hay  alguna.   El  correo se enviará utilizando el comando
+       /usr/lib/sendmail.  Si at se ejecuta desde un shell  su(1)
+       ,  el propietario del shell de login será el que reciba el
+       mensaje.
+
+       El superusuario siempre  puede  utilizar  estos  comandos.
+       Para  otros  usuarios, los permisos para utilizarlos están
+       determinados en los ficheros /etc/at.allow y /etc/at.deny.
+
+       Si  el  fichero  /etc/at.allow  existe,  sólo los usuarios
+       cuyos nombres están mencionados aquí tienen  permiso  para
+       utilizar at.
+
+       Si  /etc/at.allow  no  existe,  se  chequea /etc/at.deny y
+       entonces todos los usuarios cuyos nombres  no  estén  men­
+       cionados allí tienen permiso para utilizar at.
+
+       Si  ninguno  de  los ficheros existe, sólo el superusuario
+       puede utilizar at.
+
+       Un /etc/at.deny vacío significa  que  todo  usuario  puede
+       utilizar  estos  comandos,  esta  es  la configuración por
+       defecto.
+
+OPCIONES
+       -V      escribe el número de versión en la salida de error
+               estándar.
+
+       -q cola utiliza  la cola especificada.  Una designación de
+               cola consiste en una  única  letra;  designaciones
+               válidas  van  desde  a  hasta z.  y A hasta Z.  La
+               cola a es la que se usa por defecto para at  y  la
+               cola  b para batch.  Las colas con letras posteri­
+               ores se ejecutan con creciente 'suavidad'. La cola
+               especial  "="  está  reservada  para  trabajos que
+               están actualmente en ejecución.
+
+       Si un trabajo se envía a una cola designada con una  letra
+       mayúscula,  es  tratado como si se hubiese enviado al pro­
+       ceso de lotes en ese momento.  Si a atq se le  proporciona
+       una cola específica, sólo mostrará los trabajso pendientes
+       en esa cola.
+
+       -m      Envía un correo (mail) al usuario cuando  el  tra­
+               bajo  termina  incluso  si  no  hubiese salida que
+               mostrar.
+
+       -f fichero
+               Lee el trabajo desde el fichero  en  lugar  de  la
+               entrada estándar.
+
+       -l      Es un alias para atq.
+
+       -d      Es un alias para atrm.
+
+
+       -v      Muestra  la  hora  a la que se ejecutará el
+               trabajo.
+
+       Los   tiempos   mostrados   tendrán   el    formato
+       "1997-02-20  14:50"  a  no  ser  que la variable de
+       entorno POSIXLY_CORRECT  esté  establecida;  si  lo
+       está, entonces será "Thu Feb 20 14:50:00 1996".
+
+       -c     manda  los  comandos listados en la línea de
+              comandos a la salida estándar.
+
+FICHEROS
+       /var/spool/cron/atjobs
+       /var/spool/cron/atspool
+       /proc/loadavg
+       /var/run/utmp
+       /etc/at.allow
+       /etc/at.deny
+
+VÉASE TAMBIÉN
+       cron(1), nice(1), sh(1), umask(2), atd(8)
+
+FALLOS
+       El funcionamiento  correcto  de  batch  para  Linux
+       depende  de  la presencia de un directorio del tipo
+       proc- montado en /proc.
+
+       Si el fichero /var/run/utmp no  está  disponible  o
+       está  corrupto, o si el usuario no tiene una sesión
+       activa en el momento en que at es invocado, el men­
+       saje de correo se envía al identificador de usuario
+       que se encuentre en la variable de entorno LOGNAME.
+       Si  ésta  está  sin  definir  o  vacía, se asume el
+       actual identificador de usuario.
+
+       At y batch tal y como están implementados ahora  no
+       son satisfactorios cuando los usuarios compiten por
+       los recursos.  Si este es su  caso,  podría  querer
+       considerar  otro  sistema  batch,  como por ejemplo
+       nqs.
+
+AUTOR
+       At fue escrito en su mayor parte por  Thomas  Koen­
+       ing, ig25@rz.uni-karlsruhe.de.
+
+
+
+Linux                     Noviembre 1996                    AT(1)

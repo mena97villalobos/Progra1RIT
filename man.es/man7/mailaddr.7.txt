@@ -1,0 +1,118 @@
+MAILADDR(7)        Manual del Usuario de Linux        MAILADDR(7)
+
+
+
+NOMBRE
+       mailaddr - descripción de las direcciones de correo.
+
+DESCRIPCIÓN
+       Esta  página del manual facilita una breve introducción al
+       uso de direcciones de correo electrónico en SMTP, como las
+       usadas  en  Internet. Las direcciones siguen en general el
+       siguiente formato:
+
+            usuario@dominio
+
+       donde 'dominio' es una lista  de  subdominios  jerárquica­
+       mente  organizada,  separados por puntos. Por ejemplo, las
+       direcciones
+
+            eric@monet.berkeley.edu
+            Eric Allman <eric@monet.berkeley.edu>
+            eric@monet.berkeley.edu (Eric Allman)
+
+       son formas válidas de la misma dirección.
+
+       La parte del dominio (``monet.berkeley.edu'') puede ser el
+       nombre de un anfitrión de Internet, o puede ser una direc­
+       ción lógica de correo.  El dominio de una dirección no  es
+       sensible al uso de mayúsculas o minúsculas.
+
+       La  parte local (``eric'') suele ser el nombre de usuairo,
+       pero su significado está definido por el  software  local.
+       Podría distinguir entre mayúsculas y minúsculas, pero nor­
+       malmente no lo hace. Si se observara una parte  local  que
+       pudiera parecer basura, suele deberse a un "gateway" entre
+       el sistema de correo interno y la red.  Véanse  los  sigu­
+       ientes ejemplos
+
+            "nombre/admd=telemail/c=us/o=hp/prmd=hp"@algun.sitio
+            USUARIO%ALGO@algun.sitio
+            máquina!máquina!nombre@algun.sitio
+            I2461572@algun.sitio
+
+       (Estos  son, respectivamente, un gateway X.400, un gateway
+       a un sistema de correo interno arbitrario  que  carece  de
+       soporte  de  internet propio, un gateway UUCP, y la última
+       sigue una de esas políticas  aburridas  de  asignación  de
+       nombres de usuario.)
+
+       La parte del nombre real (``Eric Allman'') puede colocarse
+       al principio, fuera de <>,  o  al  final,  dentro  de  ().
+       (Estrictamente  las  dos  posibilidades  no son idénticas,
+       pero la diferencia está fuera de los límites de este docu­
+       mento).  El  nombre puede que necesite usar comillas "" si
+       contiene ciertos caracteres, el más común ``.'' :
+
+            "Eric P. Allman" <eric@monet.berkeley.edu>
+
+   Abreviaciones.
+       Muchos sistemas de correo permiten a los usuarios abreviar
+       el nombre del dominio. Por ejemplo, los usuarios en berke­
+       ley.edu  pueden  simplificar  usando   ``eric@monet'  para
+       enviar  correo  a  Eric Allman.  Se desaconseja  esta con­
+       ducta.
+
+   Direcciones de Enrutado.
+       Bajo ciertas circunstancias puede ser necesario enrutar un
+       mensaje a través de varios anfitriones para llegar al des­
+       tino final.  Normalmente esto ocurre de forma automática e
+       invisible,  pero  no  siempre, en particular con programas
+       anticuados y defectuosos.  Las direcciones que usan  estos
+       relevos (relays) se denominan ``direcciones de enrutado''.
+       Estas usan la siguiente sintaxis:
+
+            <@hosta,@hostb:usuario@hostc>
+
+       Aquí se especifica que  el  mensaje  debe  ser  enviado  a
+       hosta,  de  allí  a  hostb,  y finalmente a hostc. Algunos
+       anfitriones ignoran las direciones enrutadas (route-addrs)
+       y transmiten directamente a hostc.
+
+       Las  "direcciones  de enrutado" aparecen con frecuencia en
+       direcciones de retorno, ya que estas normalmente  aumentan
+       debido  a  los programas en los anfitriones. Es posible en
+       general ignorar todas  los  componentes  de  la  dirección
+       excepto  ``user@hostc'', la cual determina la procedencia.
+
+   Postmaster.
+       Es obligatorio que en cada sitio un usuario,  o  alias  de
+       usuario,  sea  designado ``postmaster'', al que se dirigen
+       mensajes concernientes al mal funcionamiento  del  sistema
+       de  correos.  La dirección de  ``postmaster'' no distingue
+       entre mayúsculas y minúsculas.
+
+   Preguntas Comunes
+       rtfm.mit.edu y muchos otros mirrors almacenan  una  colec­
+       ción  de  FAQs (preguntas comunes). Por favor busque y use
+       un archivo de FAQs cercano; hay docenas o cientos de  mir­
+       rors   alrededor   del   mundo.   mail/inter-network-guide
+       explica  cómo  enviar   correo   entre   diversas   redes.
+       mail/country-codes lista el nivel superior de los dominios
+       (ejemplo:  ``no''  es  Noruega  y  ``ea''   es   Eritrea).
+       mail/college-email/part*  da algunos consejos útiles sobre
+       como encontrar una dirección e-mail.
+
+FICHEROS
+       /etc/aliases
+       ~/.forward
+
+VÉASE TAMBIÉN
+       binmail(1), mail(1), mconnect(1), forward(5),  aliases(5),
+       sendmail(8), vrfy(8),
+       RFC822  (Estándard  para el Formato de "Arpa Internet Text
+       Messages").
+
+
+
+Linux                     24 Junio 1995               MAILADDR(7)

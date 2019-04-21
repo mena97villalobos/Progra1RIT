@@ -1,0 +1,29 @@
+MEMSET(3)        Manual del Programador de Linux        MEMSET(3)
+
+
+
+NOMBRE
+       memset - rellena una zona de memoria con bytes repetidos
+
+SINOPSIS
+       #include <string.h>
+
+       void *memset(void *s, int c, size_t n);
+
+DESCRIPCIÓN
+       La  función memset() rellena los primeros n bytes del área
+       de memoria apuntada por s con el byte constante c.
+
+VALOR DEVUELTO
+       La función memset() devuelve un puntero al área de memoria
+       s.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       bzero(3), swab(3)
+
+
+
+GNU                        4 Marzo 1998                 MEMSET(3)

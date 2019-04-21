@@ -1,0 +1,111 @@
+SYSCTL(2)        Manual del Programador de Linux        SYSCTL(2)
+
+
+
+NOMBRE
+       sysctl - lee/escribe parámetros del sistema
+
+SINOPSIS
+       #include <unistd.h>
+
+       #include <linux/unistd.h>
+
+       #include <linux/sysctl.h>
+
+       _syscall1(int, _sysctl, struct __sysctl_args *, args);
+
+       int _sysctl(struct __sysctl_args *args);
+
+DESCRIPCIÓN
+       La  llamada  _sysctl  lee o escribe parámetros del núcleo.
+       Por ejemplo, el nombre del computador, o el número  máximo
+       de ficheros abiertos. El argumento tiene la forma
+
+       struct __sysctl_args {
+               int *name;        /* vector describiendo la variable */
+               int nlen;         /* longitud de este vector */
+               void *oldval;     /* 0 ó dir. donde guardar valor antiguo */
+               size_t *oldlenp;  /* sitio disponible para el valor antiguo,
+                           sobrescrito por el tamaño real de dicho valor */
+               void *newval;     /* 0 ó dirección del nuevo valor */
+               size_t newlen;    /* tamaño del nuevo valor */
+       };
+
+       Esta  llamada  efectúa  una  búsqueda en una estructura de
+       árbol, posiblemente parecido a  un  árbol  de  directorios
+       bajo  /proc/sys,  y  si  lo  pedido  se encuentra, llama a
+       alguna rutina apropiada para leer o modificar el valor.
+
+
+EJEMPLO
+       #include <linux/unistd.h>
+       #include <linux/types.h>
+       #include <linux/sysctl.h>
+
+       _syscall1(int, _sysctl, struct __sysctl_args *, args);
+       int sysctl(int *name, int nlen, void *oldval, size_t *oldlenp,
+                  void *newval, size_t newlen)
+       {
+               struct __sysctl_args args={name,nlen,oldval,oldlenp,newval,newlen};
+               return _sysctl(&args);
+       }
+
+       #define SIZE(x) sizeof(x)/sizeof(x[0])
+       #define OSNAMESZ 100
+
+       char osname[OSNAMESZ];
+       int osnamelth;
+       int name[] = { CTL_KERN, KERN_OSTYPE };
+
+       main(){
+               osnamelth = SIZE(osname);
+               if (sysctl(name, SIZE(name), osname, &osnamelth, 0, 0))
+                       perror("sysctl");
+               else
+                       printf("Esta máquina ejecuta %*s\n", osnamelth, osname);
+               return 0;
+       }
+
+
+VALOR DEVUELTO
+       Tras una terminación exitosa, _sysctl devuelve 0. En  otro
+       caso,  se devuelve el valor -1 y se pone en errno un valor
+       que indica el error.
+
+ERRORES
+       ENOTDIR name no se ha encontrado.
+
+       EPERM   No había permiso de paso para uno de los `directo­
+               rios'  encontrados,  o no había permiso de lectura
+               donde oldval era no-cero, o no  había  permiso  de
+               escritura donde newval era no-cero.
+
+       EFAULT  La llamada pidió el valor anterior poniendo oldval
+               como no NULL, pero se permitió un espacio cero  en
+               oldlenp.
+
+CONFORME A
+       Esta   llamada  es  específica  de  Linux,  y  no  debería
+       emplearse  en  programas  pretendidamente  transportables.
+       Una  llamada  sysctl  ha estado presente en Linux desde la
+       versión 1.3.57. Se originó en 4.4BSD. Sólo Linux tiene  el
+       espejo  /proc/sys, y los esquemas de nomenclatura de obje­
+       tos difieren entre Linux y BSD 4.4, pero la declaración de
+       la función sysctl(2) es la misma en ambos.
+
+FALLOS
+       Los  nombres  de  los  objetos  varían entre versiones del
+       núcleo.  ESTO HACE QUE ESTA LLAMADA AL SISTEMA SEA  INÚTIL
+       PARA  LAS  APLICACIONES.   Use  en  su  lugar  la interfaz
+       /proc/sys.
+       No todos los objetos disponibles están correctamente docu­
+       mentados.
+       Aún no es posible cambiar el sistema operativo escribiendo
+       en /proc/sys/kernel/ostype.  :-)
+
+VÉASE TAMBIÉN
+       proc(5).
+
+
+
+Linux 1.3.85               5 Enero 1998                 SYSCTL(2)

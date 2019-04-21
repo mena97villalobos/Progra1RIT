@@ -1,0 +1,304 @@
+AGETTY(8)                                               AGETTY(8)
+
+
+
+NOMBRE
+       agetty - getty alternativo de Linux
+
+
+SINOPSIS
+       agetty  [-ihLmnw]  [-f  fichero_issue] [-l programa_login]
+       [-I inicio] [-t  tiempo_límite]  puerto  ratio_baudios,...
+       [terminal]
+       agetty  [-ihLmnw]  [-f  fichero_issue] [-l programa_login]
+       [-I inicio] [-t tiempo_límite]  ratio_baudios,...   puerto
+       [terminal]
+
+
+DESCRIPCIÓN
+       agetty  abre  un  puerto  tty, pide un nombre de entrada e
+       invoca el comando /bin/login. Es llamado  normalmente  por
+       init(8).
+
+       agetty tiene algunas características no-estandares que son
+       útiles para líneas de cable y para líneas telefónicas:
+
+       o      Adapta los parámetros de la tty en bits de  paridad
+              y    en    los    caracteres   de   borrado(erase),
+              cierre(kill), fin-de-línea y mayusculas cuando  lee
+              el  nombre  de  entrada.  El programa puede manejar
+              caracteres de 7-bit con paridad par, impar, nínguna
+              o  espacio , y caracteres de 8-bit sin paridad. Los
+              siguientes caracteres especiales son reconocidos: @
+              y  Control-U  (kill);  #,  DEL  y  borrado (erase);
+              retorno de carro y salto de línea (end of line).
+
+       o      Opcionalmente deduce el ratio  de  baudios  de  los
+              mensajes  de CONNECT producidos por los modems com­
+              patibles Hayes(tm).
+
+       o      Opcionalmente no cuelga cuando se le da  una  línea
+              ya  abierta  (útil para aplicaciones con llamada de
+              respuesta).
+
+       o      Opcionalmente no muestra los contenidos del fichero
+              /etc/issue.
+
+       o      Opcionalmente  muestra un fichero issue alternativo
+              en vez de /etc/issue.
+
+       o      Opcionalmente no pregunta por un nombre de  acceso.
+
+       o      Opcionalmente  invoca  un  programa  de  acceso  no
+              estandar en vez de /bin/login.
+
+       o      Opcionalmente activa el control de flujo por  hard-
+              ware
+
+       o      Opcionalmente  fuerza  a  la  línea a ser local sin
+              necesidad de detectar la portadora.
+
+       Este programa no utiliza los ficheros /etc/gettydefs (Sis­
+       tema V) o /etc/gettytab (SunOS 4).
+
+ARGUMENTOS
+       puerto Un  nombre  de path relativo al directorio /dev. Si
+              se especifica un "-" , agetty asume que su  entrada
+              estandar ya está conectada con un puerto tty
+               y que la conexión con un usuario remoto ya ha sido
+              establecida.
+
+              Bajo Sistema V, un argumento  "-"  puerto  debe  ir
+              precedido por un "--".
+
+       ratio_baudios,...
+              Una  lista, separada por comas, de uno o más ratios
+              de baudios. Cada vez que agetty recive un  caracter
+              de  BREAK  avanza a través de la lista , la cual se
+              trata como si fuera circular.
+
+              Los ratios de baudios se  deberían  especificar  en
+              orden   descendete,   para  que  el  caracter  nulo
+              (Ctrl-@) pueda también ser usado para ir  cambiando
+              de ratio de baudios.
+
+       terminal
+              El  valor para ser usado por la variable de entorno
+              TERM.  Esto  reemplaza  cualquier  otro  valor  que
+              init(8)  pueda haber establecido, y es heredado por
+              login y por el shell.
+
+OPCIONES
+       -h     Activar el control de flujo por hardware (RTS/CTS).
+              Se  deja a la aplicación el desactivar el protocolo
+              de flujo por software (XON/XOFF)  cuando  sea  ade­
+              cuado.
+
+       -i     No  muestra  el  contenido  de  /etc/issue (u otro)
+              antes de escribir el mensaje de login.  Los  termi­
+              nales  o el hardware de comunicaciones, pueden vol­
+              verse confusos cuando reciben montones de  texto  a
+              un  ratio erroneo de baudios; los archivos de lotes
+              de marcación pueden fallar si la petición  de  men­
+              saje de login va precedido de demasiado texto.
+
+       -f fichero_issue
+              Muestra  el  contenido del fichero fichero_issue en
+              vez de /etc/issue.  Esto permite  que  se  muestren
+              distintos  mensajes  en  terminales diferentes.  La
+              opción -i reemplazará a esta opción.
+
+       -I CadenadeInicio
+              Establece una cadena de inicio para ser enviada  al
+              tty o al modem antes de enviar nada más. Esto puede
+              ser usado para inicializar un modem. Los caracteres
+              no  imprimibles  pueden ser enviados escribiendo su
+              código octal precedido por la contrabarra (\).  Por
+              ejemplo,  para enviar un caracter de salto de línea
+              (ASCII 10, octal 012) se escribe\012.
+
+
+       -l programa_login
+              Invoca  el  programa  programa_login  en   vez   de
+              /bin/login.   Esto permite el uso de un programa de
+              login no estandar (por ejemplo,  uno  que  pida  un
+              password  al  conectar  por  modem o que utilice un
+              fichero de claves distinto).
+
+       -m     Intenta extraer el ratio de baudios del mensaje  de
+              estatus de CONNECT que producen los modems compati­
+              bles Hayes(tm). Estos mensajes de estatus son de la
+              forma:  "<vacío><velocidad><vacío>".   agetty asume
+              que el modem emite su mensaje de estatus a la misma
+              velocidad  que  la especificada con (el primero) el
+              valor ratio_baudios en la línea de comando.
+
+              Ya que  la  opción  -m  puede  fallar  en  sistemas
+              fuertemente   cargados,  se  debería  habilitar  el
+              procesado a través de BREAK  enumerando  todos  los
+              ratios de baudios esperados en la línea de comando.
+
+       -n     No preguntar al usuario por  un  nombre  de  login.
+              Esto  puede  ser usado en conexión con la opción -l
+              para invocar un proceso de login  no-estandar  como
+              un sistema BBS. Se debe notar que con la opción -n,
+              agetty no obtiene ninguna entrada del  usuario  que
+              accede  y por lo tanto no podrá deducir la paridad,
+              tamaño de caracter, y procesado de nueva línea. Por
+              defecto  cae  en  paridad  espacio, caracteres de 7
+              bit, y el caracter ASCII CR (13) como fin-de-línea.
+              Hay  que tener en cuenta que el programa que agetty
+              arranca (normalmente /bin/login)  se  ejecuta  como
+              root.
+
+       -t tiempo_límite
+              Termina si no se puede leer un nombre de usuario en
+              tiempo_límite segundos. Esta opción no debería  ser
+              usada en líneas de cable físico.
+
+       -L     Fuerza  a  la  línea  a  ser local sin necesidad de
+              detectar la portadora. Esto puede ser  útil  cuando
+              se tiene una terminal conectada localmente donde la
+              línea serie no establece la señal de  detección  de
+              portadora.
+
+       -w     Espera a que o el usuario o el modem envíen un car­
+              acter de retorno de carro o de nueva línea antes de
+              mostrar el fichero /etc/issue (u otro) y el mensaje
+              de login. Muy útil en conexión con la opción -I.
+
+
+EJEMPLOS
+       Esta sección muestra ejemplos para el campo de proceso  de
+       una entrada en el fichero /etc/inittab.  Tendrá que intro­
+       ducir valores apropiados para los otros campos.  Ver init­
+       tab(5) para más detalles.
+
+       Para una línea de cable o una tty de consola:
+            /sbin/agetty 9600 ttyS1
+
+       Para  un  terminal  conectada  directamente  sin  cableado
+       apropiado para detectar portadora (pruebe esto si su  ter­
+       minal  solo se queda esperando en vez de mostrarle un men­
+       saje password):
+            /sbin/agetty -L 9600 ttyS1 vt100
+
+       Para  una  línea  al  estilo  antiguo  con  un  modem   de
+       9600/2400/1200 baudios:
+            /sbin/agetty -mt60 ttyS1 9600,2400,1200
+
+       Para  un modem Hayes con un interfaz fijo a 115200 bps con
+       la  máquina:  (la  cadena  de  inicialización  de  ejemplo
+       desconecta  el  eco  y los códigos de retorno, hace que el
+       DCD modem/ordenador siga al DCD modem/modem,  provoca  que
+       una  caida  de DTR cause una desconexión y activa la auto-
+       respuesta tras 1 tono.)
+            /sbin/agetty  -w  -I  'ATE0Q1&D2&C1S0=1\015'   115200
+       ttyS1
+
+
+CÓDIGOS DE ESCAPE EN ISSUE
+       EL  fichero issue (/etc/issue o el fichero establecido con
+       la opción -f) puede contener  ciertos  códigos  de  escape
+       para  mostrar  el nombre del sistema, la fecha y hora etc.
+       Todos los códigos de escape consisten en  una  contrabarra
+       (\)  inmediatemente  seguida  por una de las letras expli­
+       cadas más abajo.
+
+
+       b      Inserta el ratio en baudios en la línea actual.
+
+       d      Inserta la fecha actual.
+
+       s      Inserta el nombre del sistema, el nombre  del  sis­
+              tema operativo.
+
+       l      Inserta el nombre de la línea tty actual.
+
+       m      Inserta  el  identificador de la arquitectura de la
+              máquina, ej. i486
+
+       n      Inserta el nombre de nodo de  la  máquina,  también
+              conocido como el nombre de host.
+
+       o      Inserta el nombre de dominio de la máquina.
+
+       r      Inserta el número de versión del SO, ej. 1.1.9.
+
+       t      Inserta la hora actual.
+
+       u      Inserta  el  número  de  usuarios conectados en ese
+              momento.
+
+       U      Inserta la cadena "1 user" o "<n> users" donde  <n>
+              es el número de usuarios conectados en ese momento.
+
+       v      Inserta la versión de SO,  ej.  fecha  de  creación
+              etc.
+
+       Ejemplo: En mi sistema, el siguiente fichero /etc/issue:
+
+              Este es \n.\o (\s \m \r) \t
+
+       muestra
+
+              Este es thingol.orcan.dk (Linux i386 1.1.9) 18:29:30
+
+
+
+FICHEROS
+       /var/run/utmp, el fichero de estado del sistema.
+       /etc/issue, se imprime antes del mensaje de login.
+       /dev/console, para reportar problemas (si no se usa syslog(3) ).
+       /etc/inittab, fichero de configuración de init(8).
+
+FALLOS
+       La  característica  de  detección del ratio de baudios (la
+       opción -m) requiere que agetty sea programado lo  bastante
+       pronto  después  de  que  se complete una llamada entrante
+       (dentro de unos 30 ms con modems que hablen  a  2400  bau­
+       dios).  Por robustez, se debe usar siempre la opción -m en
+       combinación con una línea de comando con múltiples  ratios
+       de  baudios,  por  lo  que  estará  activo el procesado de
+       BREAK.
+
+       EL texto en el fichero /etc/issue (u otro) y el mensaje de
+       login  siempre se muestran con caracteres de 7-bit y pari­
+       dad espacio.
+
+       La característica de detección del ratio  de  baudios  (la
+       opción  -m)  requieres  que  el  modem emita su mensaje de
+       estado después de levantar la línea DCD.
+
+DIAGNÓSTICOS
+       Dependiendo de como fuera configurado el  programa,  todos
+       los  diagnósticos  se escribirán en el dispositivo de con­
+       sola o se reportarán a través del servicio  de  syslog(3).
+       Se  producirán mensajes de error si el argumento puerto no
+       especifica un dispositivo  de  terminal;  si  no  hay  una
+       entrada  en  el  utmp para el proceso actual (solo Sistema
+       V); y por el estilo.
+
+AUTOR(ES)
+       W.Z. Venema <wietse@wzv.win.tue.nl>
+       Universidad de Tecnología de Eindhoven
+       Departmento de Matemáticas Ciencias Informática
+       Den Dolech 2, P.O. Box 513, 5600 MB Eindhoven, The Netherlands
+
+       Peter Orbaek <poe@daimi.aau.dk>
+       Portado a Linux y más opciones. Todavía mantiene el código.
+
+       Eric Rasmussen <ear@usfirst.org>
+       Añadido de la opción -f para mostrar mensajes de login
+       configurados en distintas terminales.
+
+
+FECHA DE CREACIÓN
+       Sab Nov 25 22:51:05 MET 1989
+
+ÚLTIMA MODIFICACIÓN
+       96/07/20
+
+
+
+                                                        AGETTY(8)

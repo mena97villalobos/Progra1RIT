@@ -1,0 +1,25 @@
+OD(1)                   System General Commands Manual                   OD(1)
+
+NAME
+     od - volcados en código ascii, octal, decimal y hexadecimal
+
+SYNOPSIS
+     od [-aBbcDdeFfHhIiLlOovXx] [[+]posición[.][Bb]]archivo
+
+DESCRIPCIÓN
+     Odha sido desaprobado para favorecer a hexdump(1).
+
+     Hexdump,si es llamado como od,proporciona compatibilidad para las
+     opciones arriba mencionadas.
+
+     No existe compatibilidad para la opción -s(ver strings(1))ni para las
+     opciones -P,-p,o -w.Tampoco para el componente ``etiqueta'' dentro de la
+     síntaxis de la posición en el archivo.
+
+VÉASETAMBIÉN
+     hexdump(1),strings(1)
+
+FALLOS(BUGS)
+     Un buen número.
+
+BSD                            February 15, 2003                           BSD

@@ -1,0 +1,40 @@
+UNAME(2)         Manual del programador de Linux         UNAME(2)
+
+
+
+NOMBRE
+       uname - obtiene el nombre e información del núcleo actual
+
+SINOPSIS
+       #include <sys/utsname.h>
+
+       int uname(struct utsname *buf);
+
+DESCRIPCIÓN
+       uname devuelve información del sistema en buf.  La estruc­
+       tura utsname es tal como se define en <sys/utsname.h>:
+       struct utsname {
+                      char sysname[SYS_NMLN];
+                      char nodename[SYS_NMLN];
+                      char release[SYS_NMLN];
+                      char version[SYS_NMLN];
+                      char machine[SYS_NMLN];
+                      char domainname[SYS_NMLN];
+                      };
+
+VALOR REGRESADO
+       En caso de éxito, se devuelve cero. En caso de  error,  se
+       devuelve -1 y se establece el errno apropiado.
+
+ERRORES
+       EFAULT  buf no es válido.
+
+CONFORME A
+       SVr4, SVID, POSIX, X/OPEN
+
+VÉASE TAMBIÉN
+       uname(1), getdomainname(2), gethostname(2)
+
+
+
+Linux 0.99.11          24 de julio de 1993               UNAME(2)

@@ -1,0 +1,408 @@
+SOCKET(7)        Manual del Programador de Linux        SOCKET(7)
+
+
+
+NOMBRE
+       socket - Interfaz de conectores (sockets) de Linux
+
+SINOPSIS
+       #include <sys/socket.h>
+       mysocket  = socket(int socket_family, int socket_type, int
+       protocol);
+
+
+DESCRIPCIÓN
+       Esta página de manual describe la interfaz de  usuario  de
+       la capa de conectores de red de Linux. Los conectores com­
+       patibles con BSD son la interfaz uniforme entre el proceso
+       de  usuario  y  las  pilas de protocolos de red dentro del
+       núcleo.  Los módulos de protocolo se agrupan  en  familias
+       de protocolos como PF_INET, PF_IPX y PF_PACKET, y tipos de
+       conectores como SOCK_STREAM o SOCK_DGRAM.   Vea  socket(2)
+       para  obtener  más  información  sobre  las familias y los
+       tipos.
+
+
+FUNCIONES DE LA CAPA DE CONECTORES
+       Estas funciones las usa el proceso de usuario para  enviar
+       o  recibir  paquetes y para realizar otras operaciones con
+       conectores. Para más información vea sus páginas de manual
+       respectivas.
+
+       socket(2) crea un conector, connect(2) conecta un conector
+       a una dirección de conector  remota,  la  función  bind(2)
+       enlaza un conector a una dirección de conector local, lis­
+       ten(2) indica al conector que se aceptarán  nuevas  conex­
+       iones  y  accept(2)  se usa para obtener un nuevo conector
+       con una nueva conexión de entrada.  socketpair(2) devuelve
+       dos conectores anónimos conectados (sólo implementado para
+       unas pocas familias locales como PF_UNIX)
+
+       send(2), sendto(2) y sendmsg(2) envían datos a  través  de
+       un  conector  y  recv(2), recvfrom(2) y recvmsg(2) reciben
+       datos de un conector.  poll(2) y select(2) esperan la lle­
+       gada  de  datos o la posibilidad de enviar datos.  Además,
+       se pueden usar las  operaciones  estándares  de  E/S  como
+       write(2),  writev(2), sendfile(2), read(2) y readv(2) para
+       leer y escribir datos.
+
+       getsockname(2) devuelve la dirección de un conector  local
+       y  getpeername(2)  devuelve  la  dirección  de un conector
+       remoto.  getsockopt(2) y setsockopt(2) se usan  para  con­
+       figurar  o  consultar  opciones  de  los  protocolos o las
+       capas.  ioctl(2) se puede usar para configurar o consultar
+       otras opciones determinadas.
+
+       close(2)  se  usa  para  cerrar  un conector.  shutdown(2)
+       cierra partes de una conexión bidireccional  entre  conec­
+       tores.
+
+       Las  búsquedas  o  las llamadas a pread(2) o pwrite(2) con
+       una posición distinta de  cero,  no  están  soportadas  en
+       conectores.
+
+       Es posible realizar E/S no bloqueante con conectores acti­
+       vando la opción O_NONBLOCK sobre el descriptor de  fichero
+       de  un  conector  usando  fcntl(2).   O_NONBLOCK se hereda
+       durante una llamada a accept.  A continuación,  todas  las
+       operaciones  que  normalmente  se  bloquearían  devolverán
+       (usualmente) el  error  EAGAIN.   connect(2)  devuelve  un
+       error  EINPROGRESS  en  este  caso.  Más tarde, el usuario
+       puede  esperar  diferentes  eventos  mediante  poll(2)   o
+       select(2).   Una  conexión  de  entrada en un conector que
+       está escuchando se indica como un  evento  legible  y  una
+       conexión  de  salida  finalizada  se indica como un evento
+       escribible.   Una  alternativa  es  dejar  al  núcleo  que
+       informe  a  la aplicación de los eventos mediante la señal
+       SIGIO.  Para ello, se debe activar la opción FASYNC en  el
+       descriptor  de  fichero de un conector mediante fcntl(2) y
+       se debe instalar un manejador de señales válido para SIGIO
+       mediante  sigaction(2).  Para más información, vea la dis­
+       cusión sobre SEÑALES más abajo.
+
+OPCIONES DE LOS CONECTORES
+       Estas opciones de conector  se  pueden  configurar  usando
+       setsockopt(2)  y  consultar con getsockopt(2) con el nivel
+       de conectores fijado a SOL_SOCKET para  todos  los  conec­
+       tores:
+
+       SO_KEEPALIVE
+              Habilita  el  envío de mensajes "sigue vivo" (keep-
+              alive) en conectores orientados a conexión.  Espera
+              una opción booleana entera.
+
+       SO_OOBINLINE
+              Si  se  habilita  esta  opción,  los datos fuera de
+              orden se colocan directamente en el flujo de recep­
+              ción  de  datos.  En  otro caso, los datos fuera de
+              orden sólo se pasan  cuando  se  activa  la  opción
+              MSG_OOB durante la recepción.
+
+       SO_RCVLOWAT y SO_SNDLOWAT
+              Especifican  el número mínimo de bytes en el buffer
+              para que la capa de conectores pase  los  datos  al
+              protocolo  (SO_SNDLOWAT)  o  al  usuario durante la
+              recepción (SO_RCVLOWAT).  Estos dos valores  no  se
+              pueden  cambiar en Linux y sus argumentos de tamaño
+              siempre tienen el valor de 1 byte.   getsockopt  es
+              capaz  de  leerlos.   setsockopt  siempre devolverá
+              ENOPROTOOPT.
+
+       SO_RCVTIMEO y SO_SNDTIMEO
+              Especifica los plazos  de  tiempo  (timeouts)  para
+              enviar  y recibir antes de informar de un error. En
+              Linux el valor de ambos es fijo y  viene  dado  por
+              una  configuración específica del protocolo y no se
+              pueden ni leer ni modificar.  Su  funcionalidad  se
+              puede emular usando alarm(2) o setitimer(2).
+
+       SO_BSDCOMPAT
+              Habilita  la  compatibilidad fallo a fallo con BSD.
+              Esto lo usa sólo el módulo del protocolo UDP y está
+              previsto  que  se elimine en el futuro. Cuando está
+              activa, los errores ICMP recibidos por un  conector
+              UDP  no  se pasan al programa de usuario. Linux 2.0
+              también habilitaba las opciones  de  compatibilidad
+              fallo  a  fallo  con  BSD  (cambio aleatorio de las
+              cabeceras, omisión de la opción de  difusión)  para
+              los  conectores directos con esta opción, pero esto
+              se ha eliminado en la  versión  2.2  de  Linux.  Es
+              mejor corregir los programas de usuario que habili­
+              tar esta opción.
+
+       SO_PASSCRED
+              Habilita o deshabilita la recepción del mensaje  de
+              control SCM_CREDENTIALS.  Para más información, vea
+              unix(7).
+
+       SO_PEERCRED
+              Devuelve  las  credenciales  del  proceso   externo
+              conectado  a  este conector.  Sólo útil para conec­
+              tores PF_UNIX.  Vea unix(7).  El argumento  es  una
+              estructura  ucred.  Esta opción sólo es válida para
+              getsockopt.
+
+       SO_BINDTODEVICE
+              Enlaza este conector a un  dispositivo  particular,
+              como  "eth0", especificado en el nombre de inferfaz
+              pasado. Si el nombre es una cadena vacía o la  lon­
+              gitud  de  las  opciones  es  cero, no se enlaza el
+              conector. La opción pasada es una cadena de  longi­
+              tud  variable  con el nombre de la interfaz (con un
+              tamaño máximo de IFNAMSIZ).  Si  el  conector  está
+              ligado  a una interfaz, sólo los paquetes recibidos
+              desde la interfaz asociada se pasarán al usuario.
+
+       SO_DEBUG
+              Activa la depuración de los conectores. Sólo permi­
+              tida   para   los   procesos   con   la   capacidad
+              CAP_NET_ADMIN o un identificador de  usuario  efec­
+              tivo 0.
+
+       SO_REUSEADDR
+              Indica  que  las  reglas  usadas  para  validar las
+              direcciones proporcionadas en una  llamada  bind(2)
+              deben  permitir la reutilización de las direcciones
+              locales. Para los conectores PF_INET esto significa
+              que  un  conector se puede enlazar a una dirección,
+              excepto cuando hay un  conector  activo  escuchando
+              asociado  a  la  dirección.  Cuando el conector que
+              está escuchando está asociado a INADDR_ANY  con  un
+              puerto  específico, entonces no es posible realizar
+              enlaces a este puerto para ninguna dirección local.
+
+       SO_TYPE
+              Obtiene  el  tipo  de conector como un valor entero
+              (como SOCK_STREAM).  Sólo puede ser leído con  get­
+              sockopt.
+
+       SO_DONTROUTE
+              Omite la tabla de enrutamiento y envía directamente
+              a la interfaz especificada por la parte de  red  de
+              la  dirección  de  destino.  Se  puede conseguir el
+              mismo efecto activando la opción  MSG_DONTROUTE  en
+              una operación send(2) sobre un conector. Espera una
+              opción booleana entera.
+
+       SO_BROADCAST
+              Establece o consulta la opción de difusión.  Cuando
+              está  activa,  los conectores de datagramas reciben
+              los paquetes enviados a una dirección de difusión y
+              se  les  permite enviar paquetes a una dirección de
+              difusión. Esta opción no tiene efecto en conectores
+              orientados a conexión.
+
+       SO_SNDBUF
+              Establece  u obtiene, en bytes, el máximo buffer de
+              envío de un conector. El valor por defecto se  con­
+              figura con la sysctl wmem_default y el máximo valor
+              permitido se establece con la sysctl wmem_max.
+
+       SO_RCVBUF
+              Establece u obtiene, en bytes, el máximo buffer  de
+              recepción  de un conector.  El valor por defecto se
+              configura con la sysctl rmem_default  y  el  máximo
+              valor   permitido   se   establece  con  la  sysctl
+              rmem_max.
+
+       SO_LINGER
+              Establece u obtiene la opción SO_LINGER.  El  argu­
+              mento es una estructura linger.
+
+              struct linger {
+                  int   l_onoff;    /* activar/desactivar demora */
+                  int   l_linger;   /* segundos de demora */
+              };
+
+              Cuando esta opción está activa, un close(2) o shut­
+              down(2) no regresarán hasta que todos los  mensajes
+              encolados  para el conector hayan sido enviados con
+              éxito o se haya alcanzado el  plazo  de  tiempo  de
+              demora.   En  otro caso, la llamada regresa inmedi­
+              atamente y el cierre se realiza en  segundo  plano.
+              Cuando el conector se cierra como parte de una lla­
+              mada exit(2), siempre se demora en segundo plano.
+
+       SO_PRIORITY
+              Asigna a todos los paquetes a enviar  a  través  de
+              este  conector  la prioridad definida por el proto­
+              colo. Linux usa este valor para ordenar  las  colas
+              de  red:  los  paquetes  con una prioridad mayor se
+              pueden procesar primero dependiendo  de  la  disci­
+              plina de encolamiento del dispositivo seleccionado.
+              Para ip(7), esto también establece el  campo  "tipo
+              de  servicio IP" (TOS) para los paquetes de salida.
+
+       SO_ERROR
+              Obtiene y borra el  error  de  conector  pendiente.
+              Sólo válida para getsockopt.  Espera un entero.
+
+SEÑALES
+       Cuando  se escribe en un conector orientado a conexión que
+       ha sido cerrado (por el extremo local o remoto)  se  envía
+       una  señal  SIGPIPE  al  proceso escritor y se devuelve el
+       valor de error EPIPE.  No se envía la señal cuando la lla­
+       mada para escritura especifica la opción MSG_NOSIGNAL.
+
+       Cuando  se  solicita  con  la  fcntl FIOCSETOWN o la ioctl
+       SIOCSPGRP, la  señal SIGIO se envía cuando se  produce  un
+       evento  de  E/S. Es posible usar poll(2) o select(2) en el
+       manejador de la señal para averigurar sobre  qué  conector
+       se  produjo  el  evento. Una alternativa (en Linux 2.2) es
+       configurar una señal de tiempo real usando la fcntl F_SET­
+       SIG.   Se  llamará al manejador de la señal de tiempo real
+       con el descriptor de fichero  en  el  campo  si_fd  de  su
+       estructura  siginfo_t.  Vea fcntl(2) para más información.
+
+
+
+
+
+
+
+
+
+       +--------------------------------------------------------+
+       |                    Eventos de E/S                      |
+       +------------------+-------------------------------------+
+       |Evento            | Ocurrencia                          |
+       +------------------+-------------------------------------+
+       |Lectura           | Han llegado nuevos datos. El buffer |
+       |                  | de  envío  del conector tiene sufi­ |
+       |                  | ciente espacio para encolar  nuevos |
+       |                  | datos.                              |
+       +------------------+-------------------------------------+
+       |Lectura           | Se  ha completado una nueva solici­ |
+       |                  | tud de  conexión  (para  conectores |
+       |                  | orientados a conexión).             |
+       +------------------+-------------------------------------+
+       |Lectura           | El  otro  extremo  ha  iniciado una |
+       |                  | solicitud de desconexión.           |
+       +------------------+-------------------------------------+
+       |Lectura           | Se ha roto una conexión (sólo  para |
+       |                  | protocolos  orientados a conexión). |
+       |                  | En  este  caso  también  se  podría |
+       |                  | enviar la señal SIGPIPE.            |
+       +------------------+-------------------------------------+
+       |Lectura/Escritura | Se ha producido un error asíncrono. |
+       +------------------+-------------------------------------+
+       |Lectura/Escritura | El  otro  extremo  ha  cerrado  una |
+       |                  | dirección de la conexión.           |
+       +------------------+-------------------------------------+
+       |Excepción         | Han llegado datos fuera  de  orden, |
+       |                  | lo  que  hace que se envíe la señal |
+       |                  | SIGURG.                             |
+       +------------------+-------------------------------------+
+       Bajo determinadas circunstancias (por ejemplo, varios pro­
+       cesos accediendo a un único conector), la condición que ha
+       provocado la  señal  SIGIO  puede  haber  desaparecido  ya
+       cuando el proceso reaccione a la señal. Si esto ocurre, el
+       proceso debería esperar de nuevo ya que Linux reenviará la
+       señal SIGIO más tarde.
+
+SYSCTLS
+       Se puede acceder a las sysctls fundamentales de red de los
+       conectores  usando  los  ficheros  /proc/sys/net/core/*  o
+       mediante la interfaz sysctl(2).
+
+       rmem_default
+              contiene el valor por defecto, en bytes, del buffer
+              de recepción de un conector.
+
+       rmem_max
+              contiene el tamaño máximo, en bytes, del buffer  de
+              recepción  de  un  conector  que  el  usuario puede
+              establecer usando la opción de conector  SO_RCVBUF.
+
+       wmem_default
+              contiene el valor por defecto, en bytes, del buffer
+              de envío de un conector.
+
+       wmem_max
+              contiene el tamaño máximo, en bytes, del buffer  de
+              envío  de un conector que un usuario puede configu­
+              rar usando la opción de conector SO_SNDBUF.
+
+       message_cost y message_burst
+              configuran el filtro de cubetas de fichas usado  to
+              load  limit warning messages provocados por eventos
+              de red externos.
+
+       netdev_max_backlog
+              Número máximo de paquetes en  la  cola  de  entrada
+              global.
+
+       optmem_max
+              Longitud  máxima  de los  datos auxiliares y de los
+              datos de control del usuario, como los  iovecs  por
+              conector.
+
+IOCTLS
+       Se puede acceder a estas ioctls usando ioctl(2):
+
+              error = ioctl(ip_socket, ioctl_type, &value_result);
+
+
+       SIOCGSTAMP
+              Devuelve  una struct timeval con la marca de tiempo
+              recibida del último paquete pasado al usuario. Esto
+              es  útil para realizar medidas exacta del tiempo de
+              ida y vuelta o tiempo de  viaje.  Vea  setitimer(2)
+              para una descripción de struct timeval.
+
+       SIOCSPGRP
+              Configura  el  proceso  o  grupo de procesos al que
+              enviar la señal SIGIO o SIGURG cuando  termina  una
+              operación  de E/S asíncrona o hay disponibles datos
+              urgentes. El argumento es un puntero  a  un  pid_t.
+              Si  el argumento es positivo, las señales se envian
+              a ese proceso.  Si  es  negativo,  las  señales  se
+              envían  al  grupo de procesos cuyo identificador es
+              el valor absoluto del argumento.  El  proceso  sólo
+              puede seleccionar a él mismo o a su propio grupo de
+              procesos para que reciban las señales, a menos  que
+              posea  la  capacidad CAP_KILL o un identificador de
+              usuario efectivo 0.
+
+       FIOASYNC
+              Modifica la opción O_ASYNC para habilitar o  desha­
+              bilitar  el  modo de E/S asíncrona del conector. El
+              modo de E/S asíncrona significa  que  se  producirá
+              una  señal SIGIO cuando se produzca un nuevo evento
+              de E/S.
+
+              El argumento es una opción booleana entera.
+
+       SIOCGPGRP
+              Obtiene el proceso o grupo de procesos  actual  que
+              recibe  las señal SIGIO o SIGURG, o 0 cuando no hay
+              ningúno.
+
+       Fcntls válidas:
+
+       FIOCGETOWN
+              Idéntica a la ioctl SIOCGPGRP.
+
+       FIOCSETOWN
+              Idéntica a la ioctl SIOCSPGRP.
+
+FALLOS
+       No  se  han   documentado   las   opciones   de   conector
+       SO_ATTACH_FILTER  y SO_DETACH_FILTER de CONFIG_FILTER.  La
+       interfaz sugerida para usarlas es la biblioteca libpcap.
+
+VERSIONES
+       SO_BINDTODEVICE se  introdujo  en  la  versión  2.0.30  de
+       Linux.  SO_PASSCRED es nueva en la versión 2.2 del núcleo.
+       Las sysctls son nuevas en Linux 2.2.
+
+AUTORES
+       Esta página de manual fue escrita por Andi Kleen.
+
+VÉASE TAMBIÉN
+       socket(2), ip(7), setsockopt(2), getsockopt(2), packet(7),
+       ddp(7)
+
+
+
+Página man de Linux        7 mayo 1999                  SOCKET(7)

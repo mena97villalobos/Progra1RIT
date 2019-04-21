@@ -1,0 +1,209 @@
+nm(1)           Herramientas de Desarrollo de GNU           nm(1)
+
+
+
+NOMBRE
+       nm - lista símbolos de ficheros objeto.
+
+
+SINOPSIS
+       nm     [-a|--debug-syms] [-g|--extern-only] [-B]
+              [-C|--demangle] [-D|--dynamic] [-s|--print-armap]
+              [-o|--print-file-name] [-n|--numeric-sort]
+              [-p|--no-sort] [-r|--reverse-sort] [--size-sort]
+              [-u|--undefined-only] [-l|--line-numbers] [--help]
+              [--version] [-t raíz|--radix=raíz]
+              [-P|--portability] [-f format|--format=formato]
+              [--target=nombrebfd] [fichobj...]
+
+DESCRIPCIÓN
+       GNU nm lista los símbolos de los ficheros objeto  fichobj.
+       Si no se da ninguno como argumento, nm supone `a.out'.
+
+
+OPCIONES
+       Las  formas  larga y corta de las opciones, mostradas aquí
+       como alternativas, son equivalentes.
+
+
+       -A
+
+       -o
+
+       --print-file-name
+              Precede cada símbolo por el nombre del  fichero  de
+              entrada donde se encontró, en vez de identificar al
+              fichero de entrada una sola vez antes de todos  sus
+              símbolos.
+
+
+       -a
+
+       --debug-syms
+              Muestra  los símbolos de sólo el depurador; normal­
+              mente, éstos no se listan.
+
+
+       -B     Lo mismo que --format=bsd (por  compatibilidad  con
+              el nm de MIPS).
+
+
+       -C
+
+       --demangle
+              Descodifica  (reconvierte)  nombres  de símbolos de
+              bajo nivel  a  nombres  `de  usuario'.   Aparte  de
+              quitar  cualesquier  subrayados  insertados  por el
+              sistema al principio de los nombres, esto hace leg­
+              ibles los nombres de las funciones en C++.
+
+
+       -D
+
+       --dynamic
+              Muestra  los  símbolos dinámicos en vez de los nor­
+              males. Esto sólo tiene sentido para objetos dinámi­
+              cos, como ciertos tipos de bibliotecas compartidas.
+
+
+       -f formato
+              Emplea el formato de salida formato, que puede  ser
+              ``bsd'', ``sysv'' o ``posix''. El predeterminado es
+              ``bsd''.  Sólo el primer  carácter  de  formato  es
+              significativo; puede estar en mayúscula o en minús­
+              cula.
+
+
+       -g
+
+       --extern-only
+              Sólo muestra símbolos externos.
+
+
+       -n
+
+       -v
+
+       --numeric-sort
+              Clasifica los símbolos numéricamente por sus direc­
+              ciones, no alfabéticamente por sus nombres.
+
+
+       -p
+
+       --no-sort
+              No se preocupa en clasificar los símbolos en ningún
+              orden; simplemente los muestra tal como los encuen­
+              tra.
+
+
+       -P
+
+       --portability
+              Emplea el formato de salida estándar POSIX.2 en vez
+              del predeterminado. Equivale a ``-f posix''.
+
+
+       -s
+
+       --print-armap
+              Cuando liste símbolos de miembros de  archivo,  in­
+              cluir  el  índice:  una  asociación (guardada en el
+              archivo por ar o ranlib) de qué  módulos  contienen
+              definiciones para qué nombres.
+
+
+       -r
+
+       --reverse-sort
+              Invierte  el  sentido  de  la  clasificación (tanto
+              numérica como alfabética); deja que el último  vaya
+              el primero.
+
+
+       --size-sort
+              Clasifica  los  símbolos  por  tamaño. El tamaño se
+              calcula como la diferencia entre el valor del  sím­
+              bolo  y el valor del símbolo con el siguiente valor
+              más alto. Se muestra el tamaño del símbolo, en  vez
+              de su valor.
+
+
+       -t raíz
+
+       --radix=raíz
+              Emplea  raíz  como la base para la impresión de los
+              valores de los símbolos. Debe ser ``d'' para  deci­
+              mal, ``o'' para octal, o ``x'' para hexadecimal.
+
+
+       --target=nombrebfd
+              Especifica un formato de código objeto distinto del
+              predeterminado de su sistema. Consulte  objdump(1),
+              para  información  sobre  cómo  listar los formatos
+              disponibles.
+
+
+       -u
+
+       --undefined-only
+              Muestra sólo símbolos indefinidos (aquéllos  exter­
+              nos a cada fichero objeto).
+
+
+       -l
+
+       --line-numbers
+              Para cada símbolo, emplea información de depuración
+              para intentar encontrar  un  nombre  de  fichero  y
+              número de línea. Para un símbolo definido, busca el
+              número de línea de la dirección del  símbolo.  Para
+              un  símbolo indefinido, busca el número de línea de
+              una entrada de reubicación que se refiera al símbo­
+              lo.  Si  la  información  sobre  el número de línea
+              puede encontrarse, la muestra tras la otra informa­
+              ción del símbolo.
+
+
+       -V
+
+       --version
+              Muestra el número de versión de nm y acaba.
+
+
+       --help Muestra un resumen de las opciones de nm y acaba.
+
+
+VÉASE TAMBIÉN
+       La  entrada `binutils' en Info; Las Utilidades de Binarios
+       de GNU, Roland H. Pesch (Octubre  de  1991);  ar(1),  obj­
+       dump(1), ranlib(1).
+
+
+
+DERECHOS DE COPIA
+       Copyright (c) 1991 Free Software Foundation, Inc.
+
+       Permission  is  granted  to  make  and distribute verbatim
+       copies of this manual provided the  copyright  notice  and
+       this permission notice are preserved on all copies.
+
+       Permission is granted to copy and distribute modified ver­
+       sions of this manual under  the  conditions  for  verbatim
+       copying,  provided  that the entire resulting derived work
+       is distributed under the  terms  of  a  permission  notice
+       identical to this one.
+
+       Permission  is granted to copy and distribute translations
+       of this manual into another language, under the above con­
+       ditions for modified versions, except that this permission
+       notice may be included in  translations  approved  by  the
+       Free  Software  Foundation  instead of in the original En­
+       glish.
+
+       N. del T.: Sólo tiene validez legal el aviso de  copyright
+       original.
+
+
+
+Cygnus support        5 de Noviembre de 1991                nm(1)

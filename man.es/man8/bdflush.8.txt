@@ -1,0 +1,132 @@
+bdflush(8)      Manual del administrador de Linux      bdflush(8)
+
+
+
+NOMBRE
+       bdflush - demonio del núcleo para vaciar buffers sucios al
+       disco.
+
+SINOPSIS
+       update [opt]
+
+DESCRIPCIÓN
+       bdflush se usa para iniciar el  demonio  del  núcleo  para
+       vaciar  buffers  sucios  hacia  el disco. El trabajo sucio
+       real está en una función del núcleo  y  bdflush  realmente
+       desdobla un nuevo proceso que entonces llama a una función
+       del núcleo que nunca regresa en núcleos antiguos. Bajo los
+       nuevos núcleos  (2.0+) esto ya  no se necesita y este com­
+       portamiento se puede desactivar con la  opción  de  compi­
+       lación del núcleo NEWKERNEL.
+
+       bdflush actualmente desdobla un segundo demonio también, y
+       este actúa como un proceso  de  actualización  más  tradi­
+       cional, salvo que los búferes no se consideran listos para
+       ser escritos hasta que envejezcan un  poco.  El  reloj  se
+       inicia cuando el buffer se marca con el bit de sucio, y el
+       buffer no se escribe  hasta  que  pase  un  intervalo.  El
+       intervalo es distinto para un buffer  de datos o un buffer
+       de metadatos (como  directorios,  mapas  de  bits,  boques
+       indirectos,  etc)  y  la  configuración  actual se muestra
+       mediante bdflush cuando se ejecuta con  argumentos  en  la
+       línea de comando. Por defecto son treinta segundos para un
+       buffer de  datos  y  cinco  segundos  para  un  buffer  de
+       metadatos.
+
+       Los  dos demonios se inician normalmente en /etc/rc con un
+       comando:
+
+       /sbin/update
+
+       Observe que necesita tener los dos demonios  en  ejecución
+       ya que cada uno sirve para un propósito diferente. Observe
+       también que este comando  se  debería  ejecutar  antes  de
+       relizar  cuaquier  operación grande de E/S. En particular,
+       update se debería llamar antes de que cualquier sistema de
+       archivo sea verificado o montado como lectura/escritura.
+
+       Cuando  bdflush se llama por un usuario sin privilegios de
+       superusuario, se llama a flush() y sync() y  termina.   No
+       deben  haber más de 20 demonios de actualización corriendo
+       a la vez.
+
+
+OPCIONES DE lÍNEA DE COMANDO
+       -d   Muestra parámetros del núcleo. El uso de esta  opción
+            previene el inicio del demonio.
+
+       -h   Imprime el mensaje de uso (help).
+
+       -s   Si  los  valores  por  defecto de bdflush al anterior
+            comportamiento, llama a sync con esta  frecuencia.  (
+            En segundos ) Por defecto: 30.
+
+       -f   Llama  flush con esta frecuencia. ( En segundos ) Por
+            defecto: 5.
+
+       -0   Fracción máxima de lista LRU para examinar para  blo­
+            ques sucios.
+
+       -1   Máximo  número  de bloques sucios a escribir cada vez
+            que se active bdflush.
+
+       -2   Número de búferes limpios para cargarse en  la  lista
+            de libres por refill_freelist
+
+       -3   Umbral  de  bloque  sucio  para  activar  bdflush  en
+            refill_freelist
+
+       -4   Percentaje de caché a buscar para clusters libres.
+
+       -5   Tiempo de envejecimiento  de  los  datos  del  buffer
+            antes de vaciarlos.
+
+       -6   Tiempo  de  envejecimiento  de los búferes que no son
+            datos (dir, bitmaps, etc) antes de vaciarlos.
+
+       -7   Constante de tiempo promedio de  carga  de  caché  de
+            buffer.
+
+       -8   Razón LAV (usada para determinar el umbral de fratri­
+            cidio del buffer)
+
+       -v   Muestra información de la versión
+
+       -n   Duerme  tras  este  tiempo,  activa  spindown.   (Por
+            defecto:  spindown  desactivado).  Tras un tiempo sin
+            leer un disco (de acuerdo con /proc/stat), se llama a
+            /etc/rc/rc.spindown  ,  y la actualización en segundo
+            plano se para. Tras terminar /etc/rc/rc.spindown,  la
+            primera  lectura del disco hará que crea que el disco
+            está  actualizado,  llama   a   /etc/rc/rc.spinup   y
+            comienza a escribir los búfferes modificados regular­
+            mente al disco. Si se envía la señal  1  al  demonio,
+            forzará  los  discos ahora al estado de reposo (spin-
+            down).
+
+
+AUTOR
+       bdflush se escribió como un ardid rápido por  Eric  Young­
+       dale  <ericy@gnu.ai.mit.edu>.   El  principal objetivo fue
+       mejorar las prestaciones del núcleo realizando un  vaciado
+       de  los  búfferes  sucios  de una forma más inteligente, y
+       añadir soporte para la agrupación de  búfferes.  Es  libre
+       para  mejorarlo.  Otros varios ardides son de Phil Bostley
+       <bostley@cs.colorado.edu>   y   Daniel   Quinlan    <quin­
+       lan@yggdrasil.com>. El soporte Sleep fue añadido por Pavel
+       Machek <pavel@atrey.karlin.mff.cuni.cz>.
+
+FALLOS(BUGS)
+       Si hay, es más probable que sean del código del núcleo. El
+       soporte Sleep sólo se preocupa de las lecturas de los dis­
+       cos, así pues, si no hay  RAM  suficiente  para  escritura
+       (write-back),  puede  ralentizar  los discos en un momento
+       equivocado. El soporte Sleep también tiene en cuenta  sólo
+       el  primer disco duro, por tanto ...  Hay una pequeña con­
+       fusión entre los dos nombres "bdflush" y "update". Actual­
+       mente  el  ejecutable  se llama update, pero se compila de
+       bdflush.c y los autores se refieren a él como bdflush.
+
+
+
+Linux                       Marzo 1997                 bdflush(8)

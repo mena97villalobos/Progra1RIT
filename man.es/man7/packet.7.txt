@@ -1,0 +1,270 @@
+PACKET(7)        Manual del Porgramador de Linux        PACKET(7)
+
+
+
+NONBRE
+       packet,  PF_PACKET  - Interfaz de paquetes a nivel de dis­
+       positivo.
+
+SINOPSIS
+       #include <sys/socket.h>
+       #include <features.h>    /* para el número de versión de glibc */
+       #if __GLIBC__ >= 2 && __GLIBC_MINOR >= 1
+       #include <netpacket/packet.h>
+       #include <net/ethernet.h>     /* los protocolos de nivel 2 */
+       #else
+       #include <asm/types.h>
+       #include <linux/if_packet.h>
+       #include <linux/if_ether.h>   /* los protocolos de nivel 2 */
+       #endif
+
+
+       packet_socket = socket(PF_PACKET, int socket_type, int protocol);
+
+DESCRIPCIÓN
+       Los conectores de paquetes (packet sockets) se  usan  para
+       recibir  o  enviar paquetes directos (raw) en el nivel del
+       manejador de dispositivo (Nivel 2  de  OSI).  Permiten  al
+       usuario  implementar módulos de protocolo en el espacio de
+       usuario por encima de la capa física.
+
+       socket_type es o  bien  SOCK_RAW  para  paquetes  directos
+       incluyendo   la  cabecera  del  nivel  de  enlace  o  bien
+       SOCK_DGRAM para paquetes preparados  con  la  cabecer  del
+       nivel  de  enlace eliminada. La información de la cabecera
+       del nivel de enlace está disponible en un formato común en
+       una estructura sockaddr_ll.  protocol es el protocolo IEEE
+       802.3 con los bytes  en  orden  de  red.  Vea  el  fichero
+       cabecera <linux/if_ether.h> para una lista de los protoco­
+       los permitidos. Cuando  se  asigna  a  protocol  el  valor
+       htons(ETH_P_ALL),  se reciben todos los protocolos.  Todos
+       los paquetes de entrada con el tipo de protocolo  indicado
+       se pasarán al conector de paquetes antes de que sean pasa­
+       dos a los protocolos implementados dentro del núcleo.
+
+       Sólo los procesos  con  uid  efectivo  0  o  la  capacidad
+       CAP_NET_RAW pueden abrir conectores de paquetes.
+
+       Los  paquetes  SOCK_RAW se pasan a y desde el manejador de
+       dispositivo sin ningún cambio en los  datos  del  paquete.
+       Cuando se recibe un paquete, la dirección todavía se anal­
+       iza y se pasa en una estructura de  dirección  sockaddr_ll
+       estándar.  Cuando  se transmite un paquete, el buffer pro­
+       porcionado por el usuario debe contener la cabecera de  la
+       capa  física.  A  continuación,  ese paquete se encola sin
+       modificar en la tarjeta de red de la interfaz definida por
+       la dirección de destino.  SOCK_RAW es similar pero no com­
+       patible con el obsoleto SOCK_PACKET de la versión  2.0  de
+       Linux.
+
+       SOCK_DGRAM  opera  en  un  nivel  ligeramente superior. Se
+       elimina la cabecera física antes de que el paquete se pase
+       al  usuario. Los paquetes enviados a través de un conector
+       de paquetes SOCK_DGRAM obtienen una cabecera  adecuada  de
+       la  capa  física  según  la información de la dirección de
+       destino sockaddr_ll, antes de ser encolados.
+
+       Por defecto, todos los  paquetes  del  tipo  de  protocolo
+       especificado  se  pasan  a  un  conector de paquetes. Para
+       obtener sólo los paquetes de una interfaz específica,  use
+       bind(2)  especificando  una  dirección  en  una estructura
+       struct sockaddr_ll para enlazar el conector de paquetes  a
+       una interfaz.
+
+
+
+TIPOS DE DIRECCIONES
+       sockaddr_ll  es una dirección de la capa física independi­
+       ente del dispositivo.
+
+              struct sockaddr_ll
+              {
+                  unsigned short  sll_family;    /* Siempre es AF_PACKET */
+                  unsigned short  sll_protocol;  /* Protocolo de la capa física */
+                  int             sll_ifindex;   /* Número de la interfaz */
+                  unsigned short  sll_hatype;    /* Tipo de cabecera */
+                  unsigned char   sll_pkttype;   /* Tipo de paquete */
+                  unsigned char   sll_halen;     /* Longitud de la dirección */
+                  unsigned char   sll_addr[8];   /* Dirección de la capa física */
+              };
+
+       sll_protocol es el tipo del  protocolo  ethernet  estándar
+       dado  en  orden  de  red  definido  en el fichero cabecera
+       linux/if_ether.h.   sll_hatype  es  un  tipo  ARP  de  los
+       definidos en el fichero cabecera linux/if_arp.h.  sll_pkt­
+       type contiene el tipo del paquete. Los tipos  válidos  son
+       PACKET_HOST  para  un paquete aplicado al anfitrión (host)
+       local, PACKET_BROADCAST para un paquete de difusión de  la
+       capa  física,  PACKET_MULTICAST  para un paquete enviado a
+       una dirección multidestino de la capa física,  PACKET_OTH­
+       ERHOST  para  un paquete destinado a otros anfitriones que
+       ha sido capturado por el manejador del dispositivo en modo
+       promiscuo  y  PACKET_OUTGOING  para  un  paquete originado
+       desde el anfitrión local que es devuelto de regreso  a  un
+       conector  de  paquetes.  sll_addr y sll_halen contienen la
+       dirección de la capa física (por ejemplo, IEEE 802.3) y su
+       longitud.  La  interpretación  exacta depende del disposi­
+       tivo.
+
+
+OPCIONES DE LOS CONECTORES
+       Los conectores de paquetes sólo se pueden usar  para  con­
+       figurar  el envío multidestino de la capa física y el modo
+       promíscuo. Esto  funciona  llamando  a  setsockopt(2)  con
+       SOL_PACKET,  para  un  conector  de paquetes, y una de las
+       opciones PACKET_ADD_MEMBERSHIP para  añadir  un  enlace  o
+       PACKET_DROP_MEMBERSHIP para eliminarlo.  Ambas esperan una
+       estructura packet_mreq como argumento:
+
+              struct packet_mreq
+              {
+                  int             mr_ifindex;    /* índice de la interfaz */
+                  unsigned short  mr_type;       /* acción */
+                  unsigned short  mr_alen;       /* longitud de la dirección */
+                  unsigned char   mr_address[8]; /* dirección de la capa física */
+              };
+
+       mr_ifindex contien el índice de la  interfaz  cuyo  estado
+       debe  cambiarse.   El parámetro mr_type indica la acción a
+       realizar.   PACKET_MR_PROMISC  habilita  la  recepción  de
+       todos  los  paquetes  sobre  un medio compartido (conocido
+       normalmente como ``modo promiscuo''),  PACKET_MR_MULTICAST
+       enlaza el conector al grupo multidestino de la capa física
+       indicado en mr_address  y  mr_alen,  y  PACKET_MR_ALLMULTI
+       configura el conector para recibir todos los paquetes mul­
+       tidestino que lleguen a la interfaz.
+
+       Además, se pueden usar las ioctls tradicionales,  SIOCSIF­
+       FLAGS,   SIOCADDMULTI   y   SIOCDELMULTI,  para  el  mismo
+       propósito.
+
+
+
+IOCTLS
+       SIOCGSTAMP se puede usar para recibir la marca  de  tiempo
+       del último paquete recibido.  El argumento es una esctruc­
+       tura struct timeval.
+
+       Además, todas las ioctls estándares  definidas  en  netde­
+       vice(7)  y  socket(7)  son  válidas  en  los conectores de
+       paquetes.
+
+
+MANEJO DE ERRORES
+       Los conectores de paquetes no manejan  otros  errores  que
+       los ocurridos al pasar el paquete al manejador del dispos­
+       itivo. No poseen el concepto de error pendiente.
+
+
+COMPATIBILIDAD
+       En la versión 2.0 de Linux, la única forma de  obtener  un
+       conector   de  paquetes  era  llamando  a  socket(PF_INET,
+       SOCK_PACKET, protocol).  Esto todavía está soportado  pero
+       se  desaprueba fuertemente.  La principal diferencia entre
+       los dos métodos es que SOCK_PACKET, para  especificar  una
+       interfaz,  usa  la antigua struct sockaddr_pkt que no pro­
+       porciona independencia de la capa física.
+
+              struct sockaddr_pkt
+              {
+                  unsigned short  spkt_family;
+                  unsigned char   spkt_device[14];
+                  unsigned short  spkt_protocol;
+              };
+
+       spkt_family contiene el tipo del dispositivo,  spkt_proto­
+       col  es  el tipo del protocolo IEEE 802.3 de los definidos
+       en <sys/if_ether.h> y spkt_device es el nombre del dispos­
+       itivo dado como una cadena terminada en un nulo, por ejem­
+       plo, eth0.
+
+       Esta estructura está  obsoleta  y  no  debería  usarse  en
+       código nuevo.
+
+
+NOTAS
+       Se sugiere que los programas transportables usen PF_PACKET
+       a través de pcap(3), aunque esto sólo cubre un subconjunto
+       de las características de PF_PACKET.
+
+
+ERRORES
+       ENETDOWN
+              La interfaz no está activa.
+
+
+       ENOTCONN
+              No se ha pasado una dirección de interfaz.
+
+
+       ENODEV Nombre de dispositivo o índice de interfaz, especi­
+              ficados en la dirección de interfaz,  desconocidos.
+
+
+       EMSGSIZE
+              El paquete es más grande que la MTU de la interfaz.
+
+
+       ENOBUFS
+              No hay suficiente memoria para colocar el  paquete.
+
+
+       EFAULT El  usuario  ha  pasado  una  dirección  de memoria
+              inválida.
+
+
+       EINVAL Argumento inválido.
+
+
+       ENXIO  La dirección de  interfaz  contiene  un  índice  de
+              interfaz ilegal.
+
+
+       EPERM  El  usuario  no  tiene privilegios suficientes para
+              llevar a cabo esta operación.
+
+
+       EADDRNOTAVAIL
+              Se ha pasado una  dirección  desconocida  de  grupo
+              multidestino.
+
+
+       ENOENT No se ha recibido ningún paquete.
+
+
+VERSIONES
+       PF_PACKET es una nueva característica de la versión 2.2 de
+       Linux. Las primeras versiones  de  Linux  sólo  soportaban
+       SOCK_PACKET.
+
+
+FALLOS
+       glibc 2.1 no posee una macro "define" para SOL_PACKET.  La
+       solución sugerida es usar
+              #ifndef SOL_PACKET
+              #define SOL_PACKET 263
+              #endif
+       Esto se soluciona en versiones posteriores de glibc.  Este
+       problema tampoco se produce en sistemas libc5.
+
+       No se han documentado los filtros de los conectores.
+
+
+CREDITOS
+       Esta  página  de  manual fue escrita por Andi Kleen con la
+       ayuda de Matthew Wilcox.
+
+       Alexey Kuznetsov implementó la característica PF_PACKET de
+       la versión 2.2 de Linux basándose en el código de Alan Cox
+       y otros.
+
+
+VÉASE TAMBIÉN
+       ip(7), socket(7), socket(2), raw(7), pcap(3)
+
+       El fichero cabecera linux/if_ether.h para  los  protocolos
+       de la capa física.
+
+
+
+Página man de Linux       29 abril 1999                 PACKET(7)

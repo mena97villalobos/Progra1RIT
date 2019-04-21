@@ -1,0 +1,99 @@
+SETTERM(1)       Manual del Programador de Linux       SETTERM(1)
+
+
+
+NOMBRE
+       setterm - establece atributos de la terminal
+
+SINOPSIS
+       setterm [ -term nombre_de_la_terminal ]
+       setterm [ -reset ]
+       setterm [ -initialize ]
+       setterm [ -cursor [on|off] ]
+       setterm [ -keyboard pc|olivetti|dutch|extended ]
+       setterm [ -repeat [on|off] ]
+       setterm [ -appcursorkeys [on|off] ]
+       setterm [ -linewrap [on|off] ]
+       setterm [ -snow [on|off] ]
+       setterm [ -softscroll [on|off] ]
+       setterm [ -defaults ]
+       setterm [ -foreground black|red|green|yellow|blue|magenta|cyan|white|default ]
+       setterm [ -background black|red|green|yellow|blue|magenta|cyan|white|default ]
+       setterm [ -ulcolor black|grey|red|green|yellow|blue|magenta|cyan|white ]
+       setterm [ -ulcolor bright red|green|yellow|blue|magenta|cyan|white ]
+       setterm [ -hbcolor black|grey|red|green|yellow|blue|magenta|cyan|white ]
+       setterm [ -hbcolor bright red|green|yellow|blue|magenta|cyan|white ]
+       setterm [ -inversescreen [on|off] ]
+       setterm [ -bold [on|off] ]
+       setterm [ -half-bright [on|off] ]
+       setterm [ -blink [on|off] ]
+       setterm [ -reverse [on|off] ]
+       setterm [ -underline [on|off] ]
+       setterm [ -store ]
+       setterm [ -clear [ all|rest ] ]
+       setterm [ -tabs [tab1 tab2 tab3 ... ] ] donde (tabn = 1-160)
+       setterm [ -clrtabs [ tab1 tab2 tab3 ... ] donde (tabn = 1-160)
+       setterm [ -regtabs [ 1-160 ] ]
+       setterm [ -blank [ 0-60 ] ]
+       setterm [ -powersave [ on|vsync|hsync|powerdown|off ] ]
+       setterm [ -powerdown [ 0-60 ] ]
+       setterm [ -dump [ 1-NR_CONS ] ]
+       setterm [ -append [ 1-NR_CONS ] ]
+       setterm [ -file dumpfilename ]
+       setterm [ -standout [ attr ] ]
+       setterm [ -blength [ 0-2000 ] ]
+       setterm [ -bfreq freqnumber ]
+
+DESCRIPCIÓN
+       setterm escribe en la salida estándar una cadena de carac­
+       teres que activará las  capacidades  especificadas  de  la
+       terminal. Donde sea posible, se consultará a terminfo para
+       encontrar  la  cadena  a  emplear.  Sin  embargo,  algunas
+       opciones  no  corresponden a una capacidad de terminfo(5).
+       En ese caso, si el tipo de terminal es "con" o "linux", se
+       saca  por  la  salida la cadena que active las capacidades
+       especificadas en el  controlador  de  consola  virtual  de
+       Minix  de PC. Las opciones que la terminal no tenga imple­
+       mentadas no son tenidas en consideración.
+
+OPCIONES
+       La mayoría de las opciones se explican por sí mismas.  Las
+       menos obvias son como sigue:
+
+       -term  se  puede  emplear  para  sustituir  el valor de la
+              variable de entorno TERM.
+
+       -reset muestra la cadena de puesta a cero de la  terminal,
+              que  normalmente  pone  la terminal en el estado en
+              que está recién encendida.
+
+       -initialize
+              muestra la cadena de iniciación de la terminal, que
+              típicamente pone las opciones de vídeo de la termi­
+              nal y otros atributos a sus  valores  predetermina­
+              dos.
+
+       -default
+              pone  las  opciones  de  vídeo de la terminal a los
+              valores predeterminados.
+
+       -store guarda las opciones actuales de vídeo de la  termi­
+              nal como los valores predeterminados.
+
+VÉASE TAMBIÉN
+       tput(1), stty(1), terminfo(5), tty(4)
+
+FALLOS
+       Las diferencias entre las versiones de Minix y de Linux no
+       están documentadas.
+
+AUTORES
+       Gordon Irlam (gordoni@cs.ua.oz.au).
+       Adaptación a Linux por Peter MacDonald.
+       Mejoras por Mika Liljeberg (liljeber@cs.Helsinki.FI).
+       Parche   del   pitido   por   Christophe    Jolif    (cjo­
+       lif@storm.gatelink.fr.net).
+
+
+
+Util-Linux 2.6             2 Julio 1996                SETTERM(1)

@@ -1,0 +1,32 @@
+MESG(1)            Manual del Usuario de Linux            MESG(1)
+
+
+
+NOMBRE
+       mesg - controla el acceso de escritura a tu terminal
+
+SINOPSIS
+       mesg [y|n]
+
+DESCRIPCIÓN
+       Mesg  controla el acceso a tu terminal por otros. General­
+       mente es usado para permitir o negar a otros  usuarios  la
+       escritura en el terminal (vea write(1)).
+
+OPCIONES
+       y      Permite el acceso a escritura al terminal.
+
+       n      Niega el acceso a escritura al terminal.
+
+       Si  no  se indica ninguna opción, mesg imprimirá el estado
+       actual del terminal.
+
+AUTOR
+       Miquel van Smoorenburg (miquels@cistron.nl)
+
+VÉASE TAMBIÉN
+       talk(1), write(1), wall(1)
+
+
+
+Linux                      27 mayo 1997                   MESG(1)

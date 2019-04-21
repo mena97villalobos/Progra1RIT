@@ -1,0 +1,47 @@
+GETDOMAINNAME(2) Manual del Programador de Linux GETDOMAINNAME(2)
+
+
+
+NOMBRE
+       getdomainname,  setdomainname  -  obtiene/asigna el nombre
+       del dominio
+
+SINOPSIS
+       #include <unistd.h>
+
+       int getdomainname(char *name, size_t len);
+       int setdomainname(const char *name, size_t len);
+
+DESCRIPCIÓN
+       Estas funciones se usan para acceder o cambiar  el  nombre
+       de  dominio  del  procesador  actual.   Si  el  nombre del
+       dominio  es  de  longitud  mayor  que  len,  getdomainname
+       devuelve los primeros len bytes.
+
+VALOR DEVUELTO
+       En  caso  de  éxito se devuelve 0. En caso de error, -1, y
+       errno toma un valor adecuado.
+
+ERRORES
+       EPERM  Para setdomainname, el llamador  no  era  el  supe­
+              rusuario.
+
+       EINVAL Para  setdomainname,  len  era  demasiado  grande o
+              menor que 0.
+
+       EFAULT Para setdomainname, name apuntaba afuera del  espa­
+              cio de direcciones del usuario.
+
+CONFORME A
+       POSIX no especifica estas llamadas.
+
+NOTAS
+       En  Linux, getdomainname está implementada en el ámbito de
+       bibliotecas mediante la llamada uname(2).
+
+VÉASE TAMBIÉN
+       gethostname(2), sethostname(2), uname(2).
+
+
+
+Linux 2.0                 25 Agosto 1997         GETDOMAINNAME(2)

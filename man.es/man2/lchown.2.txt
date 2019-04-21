@@ -1,0 +1,133 @@
+CHOWN(2)         Manual del Programador de Linux         CHOWN(2)
+
+
+
+NOMBRE
+       chown,  fchown,  lchown  -  cambian  el  propietario de un
+       fichero
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <unistd.h>
+
+       int chown(const char *path, uid_t owner, gid_t group);
+       int fchown(int fd, uid_t owner, gid_t group);
+       int lchown(const char *path, uid_t owner, gid_t group);
+
+DESCRIPCIÓN
+       Cambia el propietario del fichero especificado por path  o
+       fd.   Solamente  el  superusuario  puede cambiar el propi­
+       etario de un fichero.  El propietario de un fichero  puede
+       cambiar el grupo de dicho fichero a cualquier grupo al que
+       dicho usuario pertenezca. El superusuario puede cambiar el
+       grupo arbitrariamente.
+
+       Si  a  owner o group se asigna -1, entonces dicho ID no se
+       altera.
+
+       Cuando un no superusuario cambia el propietario o grupo de
+       un fichero ejecutable, se limpian los bits de modo S_ISUID
+       y S_ISGID. POSIX no especifica si esto también debe  ocur­
+       rir  cuando  el  superusuario realiza un chown; el compor­
+       tamiento de Linux depende de la versión del núcleo. En  el
+       caso de un fichero no ejecutable para el grupo (con el bit
+       S_IXGRP limpio) el bit S_ISGID indica un bloqueo obligato­
+       rio y no se limpia al ejecutar chown.
+
+
+VALOR DEVUELTO
+       En caso de éxito, devuelve 0. Si se encuentra algún error,
+       devuelve -1, y a errno se le asigna un valor apropiado.
+
+ERRORES
+       Dependiendo del sistema de  ficheros,  se  pueden  generar
+       otros errores.  Los errores más generales para chown son:
+
+
+       EPERM   El UID efectivo no coincide con el propietario del
+               fichero, y no es cero; o el propietario (owner)  o
+               grupo  (group)  han sido especificados incorrecta­
+               mente.
+
+       EROFS   El fichero en cuestión reside  en  un  sistema  de
+               ficheros de sólo lectura.
+
+       EFAULT  path  apunta  fuera  de  su espacio de direcciones
+               accesible.
+
+       ENAMETOOLONG
+               path es demasiado largo.
+
+       ENOENT  El fichero no existe.
+
+       ENOMEM  No  había  suficiente  memoria  disponible  en  el
+               núcleo.
+
+       ENOTDIR Un componente del camino path no es un directorio.
+
+       EACCES  Permiso de busqueda denegado en un componente  del
+               camino (path).
+
+       ELOOP   Se  encontraron  demasiados  enlaces simbólicos al
+               resolver path.
+
+       Los errores comunes para fchown se listan a continuación:
+
+       EBADF   El descriptor no es válido.
+
+       ENOENT  Lea nota anterior.
+
+       EPERM   Lea nota anterior.
+
+       EROFS   Lea nota anterior.
+
+       EIO     Ocurrió un error de E/S de bajo nivel mientras  se
+               modificaba el nodo-i.
+
+NOTAS
+       En  las  versiones de Linux anteriores a la 2.1.81 (y dis­
+       tintas de la 2.1.46), chown no seguía los enlaces simbóli­
+       cos.   Desde  la  versión  2.1.81 de Linux chown sigue los
+       enlaces simbólicos y existe una nueva llamada al  sistema,
+       lchown,  que  no  sigue  los enlaces simbólicos.  Desde la
+       versión 2.1.86 de Linux, esta nueva llamada (que tiene  la
+       misma  semántica  que  la  antigua  chown)  tiene el mismo
+       número de llamada al sistema y  chown  obtiene  el  número
+       recién introducido.
+
+       El  prototipo  para  fchown  sólo está disponible si se ha
+       definido __USE_BSD.
+
+CONFORME A
+       La llamada chown es conforme a SVr4, SVID, POSIX y X/OPEN.
+       La  versión de esta llamada en 4.4BSD sólo puede ser usada
+       por el superusuario (es decir, los usuarios ordinarios  no
+       pueden  dar  ficheros  a  otros usuarios).  SVr4 documenta
+       otras condiciones de error como EINVAL, EINTR,  ENOLINK  y
+       EMULTIHOP, pero no ENOMEM.  POSIX.1 no documenta las codi­
+       ciones de error ENOMEM ni ELOOP.
+
+       La llamada fchown es conforme a 4.4BSD y SVr4.  SVr4 docu­
+       menta además las condiciones de error EINVAL, EIO, EINTR y
+       ENOLINK.
+
+RESTRICCIONES
+       La semántica de chown() es violada deliberadamente en  los
+       sistemas  de ficheros NFS que han habilitado la asociación
+       del UID. Además, se viola la semántica de todas  las  lla­
+       madas  al  sistema  que  acceden  a  los contenidos de los
+       ficheros ya que chown() pueden producir la  revocación  de
+       acceso inmediata sobre ficheros ya abiertos. La ocultación
+       (caching) en los clientes puede producir retrasos entre el
+       instante  en que la propiedad ha sido cambiada para permi­
+       tir el acceso de un  usuario  y  el  instante  en  que  el
+       fichero  puede  realmente  ser  accedido por el usuario en
+       otros clientes.
+
+
+VÉASE TAMBIÉN
+       chmod(2), flock(2).
+
+
+
+Linux 2.1.81               18 Mayo 1997                  CHOWN(2)

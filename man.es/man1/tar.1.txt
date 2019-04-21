@@ -1,0 +1,249 @@
+TAR(1)                                                     TAR(1)
+
+
+
+NOMBRE
+       tar - La versión de GNU de la utilidad tar para archivar
+
+SINOPSIS
+       tar  [  -  ]  A  --catenate --concatenate | c --create | d
+       --diff --compare | r --append | t --list | u --update |  x
+       -extract --get [ --atime-preserve ] [ -b, --block-size N ]
+       [ -B, --read-full-blocks ]  [  -C,  --directory  DIR  ]  [
+       --checkpoint  ]  [  -f,  --file [ANFITRIÓN:]F ] [ --force-
+       local ] [ -F, --info-script F --new-volume-script  F  ]  [
+       -G,  --incremental  ] [ -g, --listed-incremental F ] [ -h,
+       --dereference ] [ -i, --ignore-zeros ] [  --ignore-failed-
+       read  ] [ -k, --keep-old-files ] [ -K, --starting-file F ]
+       [ -l, --one-file-system ] [ -L, --tape-length N  ]  [  -m,
+       --modification-time   ]  [  -M,  --multi-volume  ]  [  -N,
+       --after-date FECHA, --newer FECHA ] [  -o,  --old-archive,
+       --portability  ]  [ -O, --to-stdout ] [ -p, --same-permis­
+       sions, --preserve-permissions ] [ -P, --absolute-paths ] [
+       --preserve  ] [ -R, --record-number ] [ --remove-files ] [
+       -s, --same-order, --preserve-order ] [  --same-owner  ]  [
+       -S,  --sparse  ]  [  -T,  --files-from  F  ]  [ --null ] [
+       --totals ] [ -v, --verbose ] [  -V,  --label  NOMBRE  ]  [
+       --version  ]  [  -w, --interactive, --confirmation ] [ -W,
+       --verify ] [ --exclude  FICHERO  ]  [  -X,  --exclude-from
+       FICHERO  ]  [ -Z, --compress, --uncompress ] [ -z, --gzip,
+       --ungzip ] [ --use-compress-program PROG ] [  --block-com­
+       press ] [ -[0-7][lmh] ]
+
+       nombre-fichero1 [ nombre-fichero2, ... nombre-ficheroN ]
+
+       directorio1 [ directorio2, ...directorioN ]
+
+DESCRIPCIÓN
+       Esta página del Manual documenta la versión de GNU de tar,
+       un programa archivador diseñado para almacenar  y  extraer
+       ficheros  de  un fichero archivo conocido como un archivo-
+       tar.
+
+       Esta página no  es  más  que  un  simple  resumen  de  las
+       opciones de tar, análogo a lo que se obtiene con la opción
+       --help.  La información más precisa y completa se  encuen­
+       tra accesible mediante el sistema Info.
+
+       Un  archivo-tar  puede  crearse  sobre una unidad de cinta
+       magnética; sin embargo, también es  común  en  estos  días
+       escribir  un  archivo-tar en un archivo normal.  El primer
+       argumento de tar debe ser una de  las  opciones:  Acdrtux,
+       seguido por cualesquiera argumentos opcionales que modifi­
+       can el comportamiento predeterminado.  Los  últimos  argu­
+       mentos  de  tar son los nombres de los ficheros o directo­
+       rios que deberán ser archivados. El empleo de un nombre de
+       directorio  siempre  implica  que  los  subdirectorios por
+       debajo de él deben incluirse en el archivo.
+
+LETRAS DE FUNCIÓN
+       Debe emplearse sólo una de las siguientes opciones:
+
+       -A, --catenate, --concatenate
+              añade ficheros tar a un archivo
+
+       -c, --create
+              crea un nuevo archivo
+
+       -d, --diff, --compare
+              busca diferencias entre el archivo y el sistema  de
+              ficheros
+
+       --delete
+              borra del archivo (¡no para cintas magnéticas!)
+
+       -r, --append
+              añade ficheros al final del archivo
+
+       -t, --list
+              lista los contenidos de un archivo
+
+       -u, --update
+              sólo  añade  ficheros  que son más recientes que la
+              copia en el archivo
+
+       -x, --extract, --get
+              extrae ficheros de un archivo
+
+OTRAS OPCIONES
+       --atime-preserve
+              no cambia los tiempos de acceso en ficheros  volca­
+              dos en un archivo
+
+       -b, --block-size N
+              tamaño de bloque de N×512 bytes (por omisión, N=20)
+
+       -B, --read-full-blocks
+              agrupa en bloques la  lectura  mientras  lee  (para
+              leer tuberías 4.2BSD)
+
+       -C, --directory DIR
+              cambia al directorio DIR
+
+       --checkpoint
+              muestra  los  nombres de directorio mientras lee el
+              archivo
+
+       -f, --file [ANFITRIÓN:]F
+              emplea el archivo o dispositivo F en el  computador
+              ANFITRIÓN   (el   valor  predeterminado  suele  ser
+              /dev/rmt0, la cinta magnética, pero en  el  tar  de
+              GNU es la entrada estándar). Si F es `-', significa
+              la entrada o salida estándar.
+
+       --force-local
+              el archivo es local incluso si tiene dos puntos
+
+       -F, --info-script F --new-volume-script F
+              ejecuta el guión F al final de cada cinta  (implica
+              -M)
+
+       -G, --incremental
+              crea/lista/extrae  una copia incremental en el for­
+              mato antiguo de GNU
+
+       -g, --listed-incremental
+              crea/lista/extrae una copia incremental en el  for­
+              mato nuevo de GNU
+
+       -h, --dereference
+              no  vuelca  enlaces  simbólicos,  sino los ficheros
+              reales a los que apunten
+
+       -i, --ignore-zeros
+              no hace caso de bloques  de  ceros  en  el  archivo
+              (normalmente significan EOF)
+
+       --ignore-failed-read
+              no  sale  con estado distinto de cero (error) en el
+              caso de encontrar ficheros que no pueda leer
+
+       -k, --keep-old-files
+              mantiene los ficheros existentes;  no  los  sobree­
+              scribe en el archivo
+
+       -K, --starting-file F
+              empieza en el fichero F en el archivo
+
+       -l, --one-file-system
+              se  queda  en  un  sistema de ficheros local cuando
+              crea un archivo
+
+       -L, --tape-length N
+              pide cambio de cintas tras leer N×1024 bytes
+
+       -m, --modification-time
+              no extrae el tiempo modificado del fichero
+
+       -M, --multi-volume
+              crea/lista/extrae un archivo multi-volumen
+
+       -N, --after-date FECHA, --newer FECHA
+              sólo almacena ficheros más recientes que FECHA
+
+       -o, --old-archive, --portability
+              escribe un archivo en el formato de V7, en vez  del
+              ANSI
+
+       -O, --to-stdout
+              extrae ficheros a la salida estándar
+
+       -p, --same-permissions, --preserve-permissions
+              extrae  toda  la información de protecciones o per­
+              misos
+
+       -P, --absolute-paths
+              no quita las  '/'s  del  principio  de  nombres  de
+              ficheros
+
+       --preserve
+              como -p -s
+
+       -R, --record-number
+              muestra  el  número  de registro dentro del archivo
+              con cada mensaje
+
+       --remove-files
+              borra ficheros tras añadirlos al archivo
+
+       -s, --same-order, --preserve-order
+              la lista de nombres a extraer se ordena  para  con­
+              cordar con el archivo
+
+       --same-owner
+              crea  los  ficheros  extraídos  con el mismo propi­
+              etario
+
+       -S, --sparse
+              maneja los ficheros dispersos eficientemente
+
+       -T, --files-from F
+              obtiene los nombres a extraer o crear del fichero F
+
+       --null -T lee nombres terminados en cero, anula -C
+
+       --totals
+              muestra  el  número  total  de  bytes  escritos con
+              --create
+
+       -v, --verbose
+              lista prolijamente los ficheros procesados
+
+       -V, --label NOMBRE
+              crea un arcico con el nombre de volumen NOMBRE
+
+       --version
+              muestra el número de versión del programa tar
+
+       -w, --interactive, --confirmation
+              pide confirmación para cada acción
+
+       -W, --verify
+              intenta verificar el archivo tras escribirlo
+
+       --exclude FICHERO
+              excluye el fichero FICHERO
+
+       -X, --exclude-from FICHERO
+              excluye ficheros listados en FICHERO
+
+       -Z, --compress, --uncompress
+              filtra el archivo a través de compress
+
+       -z, --gzip, --ungzip
+              filtra el archivo a través de gzip
+
+       --use-compress-program PROG
+              filtra el archivo a través del programa  PROG  (que
+              debe aceptar -d)
+
+       --block-compress
+              agrupa en bloques la salida del programa de compre­
+              sión para cintas
+
+       -[0-7][lmh]
+              especifica la unidad de cinta y la densidad
+
+
+
+                        22 Septiembre 1993                 TAR(1)

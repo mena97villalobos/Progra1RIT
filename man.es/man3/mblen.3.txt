@@ -1,0 +1,35 @@
+MBLEN(3)         Manual del Programador de Linux         MBLEN(3)
+
+
+
+NOMBRE
+       mblen - determina el número de bytes de un carácter
+
+SINOPSIS
+       #include <stdlib.h>
+
+       int mblen(const char *s, size_t n);
+
+DESCRIPCIÓN
+       La  función  mblen()  recorre  los  primeros n bytes de la
+       cadena de caracteres s y devuelve el número de bytes en un
+       carácter. La función mblen()  es equivalente a
+
+              mbtowc((wchat_t *)0, s, n);
+
+       salvo en que el estado de cambio de la función mbtowc() no
+       es afectado.
+
+VALOR DEVUELTO
+       La función mblen() devuelve  el  número  de  bytes  en  un
+       carácter,  -1 si el carácter es inválido ó 0 si s es NULL.
+
+CONFORME A
+       SVID 3, ISO 9899
+
+VÉASE TAMBIÉN
+       mbstowcs(3), mbtowc(3), wcstombs(3), wctomb(3)
+
+
+
+GNU                        3 Marzo 1998                  MBLEN(3)

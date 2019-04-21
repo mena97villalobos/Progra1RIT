@@ -1,0 +1,45 @@
+ISSUE.NET(5)     Manual del Programador de Linux     ISSUE.NET(5)
+
+
+
+NOMBRE
+       issue.net - fichero de identificación para las sesiones de
+       telnet
+
+DESCRIPCIÓN
+       El fichero /etc/issue.net es un fichero de texto que  con­
+       tiene un mensaje o una identificación del sistema que será
+       impreso justo antes de que aparezca el indicador de coman­
+       dos  (prompt)  de  una  sesión  de  telnet. Puede contener
+       varias secuencias %carácter Las siguientes secuencias  son
+       soportadas por telnetd:
+
+       %t     - muestra el tty actual
+
+       %h     - muestra el nombre del nodo (FQDN)
+
+       %D     - muestra el nombre de dominio NIS
+
+       %d     - muestra la hora y fecha actual
+
+       %s     - muestra el nombre del sistema operativo
+
+       %m     - muestra el tipo de máquina (hardware)
+
+       %r     -  muestra  el  número  de liberación (release) del
+              sistema operativo
+
+       %v     - muestra la versión del sistema operativo
+
+       %%     - muestra el carácter '%'
+
+
+FICHEROS
+       /etc/issue.net
+
+VÉASE TAMBIÉN
+       telnetd(8)
+
+
+
+Linux                      22 Mayo 1994              ISSUE.NET(5)

@@ -1,0 +1,53 @@
+LLSEEK(2)        Manual de Programacion de Linux        LLSEEK(2)
+
+
+
+NOMBRE
+       _llseek - reposiciona el puntero de lectura/escritura
+
+SINOPSIS
+       #include <unistd.h>
+
+       #include <linux/unistd.h>
+
+       _syscall5(int,  _llseek,  uint,  fd, ulong, hi, ulong, lo,
+       loff_t *, res, uint, wh);
+
+       int _llseek(unsigned int fd,  unsigned  long  offset_high,
+       unsigned  long  offset_low,  loff_t * result, unsigned int
+       whence);
+
+DESCRIPCIÓN
+       La función _llseek reposiciona el puntero  del  descriptor
+       de  fichero  fd hasta (offset_high<<32) | offset_low bytes
+       respecto al inicio del fichero,  la  posición  actual  del
+       puntero, o del final del fichero, dependiendo de si whence
+       es  SEEK_SET,  SEEK_CUR,  o   SEEK_END,   respectivamente.
+       Devuelve la posición resultante en el argumento result.
+
+
+VALOR DEVUELTO
+       Si  no  se produce ningun error, _llseek devuelve 0. Si se
+       produce, se devuelve el valor -1 y se asigna  a  errno  un
+       valor que indica el tipo de error que se ha producido.
+
+ERRORES
+       EBADF  fd no es un descriptor de fichero abierto.
+
+       EINVAL whence no es válido.
+
+CONFORME A
+       Esta  función  es específica de Linux, y no debería usarse
+       por programas que deban de ser portables.
+
+FALLOS
+       El sistema de ficheros ext2 no  soporta  ficheros  con  un
+       tamaño de 2 GB o más.
+
+VÉASE TAMBIÉN
+       lseek(2)
+
+
+
+
+Linux 1.2.9               10 Junio 1995                 LLSEEK(2)

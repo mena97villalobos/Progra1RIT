@@ -1,0 +1,109 @@
+PASSWD(5)              Formatos de Fichero              PASSWD(5)
+
+
+
+NOMBRE
+       passwd - fichero de contraseñas
+
+DESCRIPCIÓN
+       Passwd  es  un  fichero de texto que contiene una lista de
+       las cuentas del sistema, proporcionando para  cada  cuenta
+       cierta  información  útil  como  el  identificador (ID) de
+       usuario, el ID de grupo, el directorio `home',  el  intér­
+       prete  de comandos, etc.  Con frecuencia, también contiene
+       la contraseña cifrada de cada cuenta.  Este  fichero  debe
+       tener  permiso  de  lectura para todos (muchas utilidades,
+       como ls(1), lo usan para traducir el número  de  identifi­
+       cador  de  usuario (UID) al nombre del usuario), pero sólo
+       el superusuario debe poder escribirlo.
+
+       En los buenos viejos tiempos no  había  grandes  problemas
+       con  estos permisos generales de lectura. Cualquiera podía
+       leer contraseñas cifradas, ya que el hardware era  demasi­
+       ado lento para descifrar una clave bien elegida y, además,
+       la suposición básica solía ser que la comunidad de  usuar­
+       ios era bastante amigable. Hoy en día, mucha gente utiliza
+       alguna versión  del  paquete  shadow  password,  donde  en
+       /etc/passwd   encontramos  *'s  en  lugar  de  las  claves
+       cifradas; éstas se encuentran en el  fichero  /etc/shadow,
+       el cual sólo lo puede leer el superusuario.
+
+       Sin  tener  en  cuenta  si  se utilizan o no `shadow pass­
+       words', muchos administradores de sistemas usan un  aster­
+       isco  en  el  campo  de  contraseña para asegurarse de que
+       dicho usuario no se puede autenticar a sí mismo usando una
+       contraseña. (No obstante, vea la sección Notas más abajo).
+
+       Si crea una nueva cuenta, coloque primero un asterisco  en
+       el campo de contraseña y a continuación use passwd(1) para
+       asignarla.
+
+       Hay una entrada por línea, cada línea tiene  el  siguiente
+       formato:
+
+              cuenta:contraseña:UID:GID:GECOS:directorio:intér­
+              prete
+
+       Las descripciones de los campos son las siguientes:
+
+
+              cuenta    el nombre del usuario en el  sistema.  No
+                        debe contener letras mayúsculas.
+
+              contraseña
+                        la  contraseña  cifrada  del usuario o un
+                        asterisco.
+
+              UID       el número del ID de usuario.
+
+              GID       el número del ID de grupo  primario  para
+                        este usuario.
+
+              GECOS     Este campo es opcional y sólo se usa para
+                        propósitos de información.   Normalmente,
+                        contiene  el nombre completo del usuario.
+                        GECOS significa General Electric  Compre­
+                        hensive Operating System, que se renombró
+                        a GCOS cuando la división de grandes sis­
+                        temas  de GE se vendió a Honeywell.  Den­
+                        nis  Ritchie  ha  dicho:  "Algunas  veces
+                        enviábamos una salida de impresora o unos
+                        trabajos por lotes a la máquina GCOS.  El
+                        campo  gcos en el fichero password era el
+                        lugar para esconder la información de  la
+                        $IDENTcard. No era elegante."
+
+              directorio
+                        el directorio base del usuario ($HOME).
+
+              intérprete
+                        el  programa  que se debe ejecutar cuando
+                        el usuario ingresa  (si  está  vacío,  se
+                        utiliza  /bin/sh).   Si se establece a un
+                        ejecutable que no existe, el usuario será
+                        incapaz  de entrar al sistema a través de
+                        login(1).
+
+NOTAS
+       Para crear un  grupo  de  usuarios,  sus  GIDs  deben  ser
+       iguales y debe haber una entrada en /etc/group, de lo con­
+       trario no existirá ningún grupo.
+
+       Si la contraseña cifrada es un asterisco, el usuario  será
+       incapaz de entrar al sistema usando login(1), pero todavía
+       podrá entrar utilizando rlogin(1), ejecutar procesos exis­
+       tentes  e  iniciar  nuevos  procesos  a  través de rsh(1),
+       cron(1), at(1), filtros de correo,  etc.  Intentar  cerrar
+       una  cuenta  cambiando simplemente el campo del intérprete
+       de comandos produce el mismo resultado y permite además el
+       uso de su(1).
+
+FICHEROS
+       /etc/passwd
+
+VÉASE TAMBIÉN
+       passwd(1), login(1), su(1), group(5), shadow(5)
+
+
+
+Linux                      5 Enero 1998                 PASSWD(5)

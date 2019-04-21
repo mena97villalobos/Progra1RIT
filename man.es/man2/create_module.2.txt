@@ -1,0 +1,43 @@
+CREATE_MODULE(2)   Soporte de Módulos en Linux   CREATE_MODULE(2)
+
+
+
+NOMBRE
+       create_module - crea una entrada para un módulo cargable
+
+SINOPSIS
+       #include <linux/module.h>
+
+       caddr_t create_module(const char *nombre, size_t tam);
+
+DESCRIPCIÓN
+       create_module intenta crear una entrada de módulo cargable
+       y reserva la memoria del núcleo  que  se  necesitará  para
+       alojar  el  módulo.  Esta  llamada  al  sistema  sólo está
+       abierta al superusuario.
+
+VALOR DEVUELTO
+       En caso de éxito, devuelve la dirección del núcleo  en  la
+       que  residirá el módulo. En caso de error se devuelve -1 y
+       errno toma un valor apropiado.
+
+ERRORES
+       EPERM  El usuario no es el superusuario.
+
+       EEXIST Ya existe un módulo con ese nombre.
+
+       EINVAL El tamaño pedido es demasiado pequeño incluso  para
+              la información de la cabecera del módulo.
+
+       ENOMEM El  núcleo  no  pudo reservar un bloque contiguo de
+              memoria lo suficientemente grande para el módulo.
+
+       EFAULT nombre está afuera del espacio de direcciones acce­
+              sible por el programa.
+
+VÉASE TAMBIÉN
+       init_module(2), delete_module(2), query_module(2).
+
+
+
+Linux                   26 Diciembre 1996        CREATE_MODULE(2)

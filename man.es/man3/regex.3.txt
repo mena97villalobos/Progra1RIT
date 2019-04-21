@@ -1,0 +1,218 @@
+REGCOMP(3)       Manual del Programador de Linux       REGCOMP(3)
+
+
+
+NOMBRE
+       regcomp,  regexec,  regerror,  regfree  -  funciones  para
+       expresiones regulares POSIX
+
+SINOPSIS
+       #include <regex.h>
+
+       int regcomp(regex_t *preg, const char *regex, int cflags);
+       int regexec(const   regex_t  *preg,  const  char  *string,
+                   size_t  nmatch,   regmatch_t   pmatch[],   int
+                   eflags);
+       size_t regerror(int  errcode,  const  regex_t  *preg, char
+                       *errbuf, size_t errbuf_size);
+       void regfree(regex_t *preg);
+
+COMPILACIÓN DE EXPRESIONES REGULARES POSIX
+       regcomp se utiliza para compilar una expresión regular  en
+       un  formato  apropiado  para  ser  usado  por  regexec  en
+       búsquedas posteriores.
+
+       A regcomp se le pasan como parámetros preg, un  puntero  a
+       un  área de almacenamiento temporal de patrones, regex, un
+       puntero a una cadena  terminada  en  un  carácter  nulo  y
+       cflags,  banderas  utilizadas  para  determinar el tipo de
+       compilación.
+
+       Toda búsqueda con expresiones regulares se  debe  realizar
+       mediante  un  buffer  de patrones compilados, por tanto, a
+       regexec siempre se le debe proporcionar la dirección de un
+       buffer de patrones inicializado mediante regcomp.
+
+       cflags  debe  ser un O-lógico a nivel de bits de una o más
+       de las siguientes opciones:
+
+       REG_EXTENDED
+              Utilizar el tipo  de  sintaxis  'Expresión  Regular
+              Extendida POSIX' cuando se interprete regex.  Si no
+              se activa esta opción, se utiliza el tipo  de  sin­
+              taxis 'Expresión Regular Básica POSIX'.
+
+       REG_ICASE
+              No  distinguir  entre  mayúsculas y minúsculas. Las
+              siguientes búsquedas regexec que usen  este  buffer
+              de  patrones  no  distinguirán  entre  mayúsculas y
+              minúsculas.
+
+       REG_NOSUB
+              No se necesita soporte para obtener las  posiciones
+              de subcadenas coincidentes. Los parámetros nmatch y
+              pmatch de  regexec  se  ignoran  si  el  buffer  de
+              patrones  proporcionado se compiló con esta opción.
+
+       REG_NEWLINE
+              Los operadores "coincidir con  cualquier  carácter"
+              no coinciden con un carácter "nueva línea".
+
+              Una  lista de no-coincidencia ([^...])  que no con­
+              tenga un carácter "nueva línea" no  coincidirá  con
+              una "nueva línea".
+
+              Un  operador  "coincidir al principio de línea" (^)
+              coincide  con  la   cadena   vacía   inmediatamente
+              posterior a un carácter "nueva línea", sin tener en
+              cuenta  si  eflags,  la  bandera  de  ejecución  de
+              regexec, contiene REG_NOTBOL o no.
+
+              Un operador "coincidir al final de línea" ($) coin­
+              cide con la cadena vacía inmediatamente anterior  a
+              un  carácter  "nueva línea", sin tener en cuenta si
+              eflags contiene REG_NOTEOL o no.
+
+COINCIDENCIAS EN LAS EXPRESIONES REGULARES POSIX
+       regexec se utiliza para comprobar si  una  cadena  string,
+       terminada  en un carácter nulo, coincide con alguno de los
+       patrones precompilados del buffer preg.  nmatch  y  pmatch
+       se  utilizan  para  informar respecto a la localización de
+       cualquier coincidencia.  eflags  puede  ser  REG_NOTBOL  o
+       REG_NOTEOL  o  un O-lógico de ambos valores, lo que cambia
+       el  comportamiento  en  las  coincidencias  tal  como   se
+       describe a continuación.
+
+       REG_NOTBOL
+              El operador "coincidir al principio de línea" siem­
+              pre falla en las coincidencias (pero vea la  opción
+              de  compilación REG_NEWLINE más arriba).  Esta ban­
+              dera se puede utilizar cuando se  pasan  diferentes
+              porciones  de una cadena a regexec y el comienzo de
+              la cadena no se debe interpretar como el  principio
+              de una línea.
+
+       REG_NOTEOL
+              El  operador  "coincidir al final de línea" siempre
+              falla en la coincidencias (pero vea  la  opción  de
+              compilación REG_NEWLINE más arriba).
+
+   DESPLAZAMIENTOS DE BYTES
+       A  menos  que  se especificara REG_NOSUB en la compilación
+       del buffer de patrones,  es  posible  obtener  información
+       sobre la posición de subcadenas coincidentes.  pmatch debe
+       tener un tamaño de al menos nmatch  elementos.   Estos  se
+       rellenan al ejecutar regexec con las posiciones de cadenas
+       coincidentes. Cualquier elemento de la estructura no  uti­
+       lizado contendrá el valor -1.
+
+       La  estructura  regmatch_t,  que  es el tipo de pmatch, se
+       define en regex.h.
+
+              typedef struct
+              {
+                regoff_t rm_so;
+                regoff_t rm_eo;
+              } regmatch_t;
+
+       Cada elemento rm_so que no es -1 indica el principio de la
+       siguiente mayor subcadena coincidente dentro de la cadena.
+       El elemento relativo rm_eo indica el final de  la  coinci­
+       dencia.
+
+INFORMES DE ERROR POSIX
+       regerror  se  utiliza  para convertir los códigos de error
+       que pueden devolver tanto regcomp como regexec en  cadenas
+       de mensaje de error.
+
+       A  regerror  se  le  pasa  el código de error, errcode, el
+       buffer de patrones preg,  un  puntero  al  buffer  de  una
+       cadena de caracteres, errbuf, y el tamaño del buffer de la
+       cadena, errbuf_size.  Devuelve el tamaño de  errbuf  nece­
+       sario  para  contener  la  cadena  con el mensaje de error
+       terminada en  un  carácter  nulo.  Si  tanto  errbuf  como
+       errbuf_size  no  son  cero,  errbuf  se  rellena  con  los
+       primeros errbuf_size - 1 caracteres del mensaje de error y
+       un carácter nulo terminador.
+
+LIBERACIÓN DE BUFFERS DE PATRONES POSIX
+       Si  a regfree se le pasa un buffer de patrones precompila­
+       dos, preg, liberará la memoria   del  buffer  de  patrones
+       reservada por el proceso de compilación, regcomp.
+
+VALOR DEVUELTO
+       regcomp  devuelve  cero si la compilación tiene éxito y un
+       código de error si falla.
+
+       regexec devuelve cero si hay coincidencia y REG_NOMATCH en
+       caso de fallo.
+
+ERRORES
+       regcomp puede devolver los siguientes errores:
+
+       REG_BADRPT
+              Uso incorrecto de operadores de repetición, como el
+              uso de `*' como primer carácter.
+
+       REG_BADBR
+              Uso incorrecto del operador de referencia  inversa.
+
+       REG_EBRACE
+              Existe  una  llave  de  un operador de intervalo no
+              emparejada.
+
+       REG_EBRACK
+              Existe un corchete  de  un  operador  de  lista  no
+              emparejado.
+
+       REG_ERANGE
+              Uso  incorrecto  de un operador de rango; por ejem­
+              plo, el límite superior del rango ocurre antes  que
+              el límite inferior.
+
+       REG_ECTYPE
+              Nombre de clase de caracteres desconocido.
+
+       REG_ECOLLATE
+              Elemento de comparación inválido.
+
+       REG_EPAREN
+              Existe  un  paréntesis  de  un operador de grupo no
+              emparejado.
+
+       REG_ESUBREG
+              Referencia inversa incorrecta a una subexpresión.
+
+       REG_EEND
+              Error indefinido. No definido por POSIX.2.
+
+       REG_EESCAPE
+              Barra invertida (\) al final.
+
+       REG_BADPAT
+              Uso incorrecto de operadores de patrón  tales  como
+              grupo o lista.
+
+       REG_ESIZE
+              La  expresión  regular compilada necesita un buffer
+              de  patrones  mayor  que  64Kb.  No  definido   por
+              POSIX.2.
+
+       REG_ESPACE
+              Las  rutinas de expresiones regulares se ejecutaron
+              fuera de sus límites de memoria.
+
+CONFORME A
+       POSIX.2
+
+FALLOS
+       Actualmente (GNU libc al día 980503), GNU libc no  soporta
+       elementos de comparación en las expresiones regulares.
+
+VÉASE TAMBIÉN
+       regex(7), El manual de expresiones regulares de GNU
+
+
+
+
+GNU                        8 Mayo 1998                 REGCOMP(3)

@@ -1,0 +1,54 @@
+LONGJMP(3)           Funciones de biblioteca           LONGJMP(3)
+
+
+
+NOMBRE
+       longjmp, siglongjmp - salto no local a un contexto de pila
+       salvaguardado
+
+SINOPSIS
+       #include <setjmp.h>
+
+       void longjmp(jmp_buf env, int val);
+       void siglongjmp(sigjmp_buf env, int val);
+
+DESCRIPCIÓN
+       longjmp() y setjmp() son útiles para tratar con errores  e
+       interrupciones  encontrados en una subrutina de bajo nivel
+       de un programa.   longjmp()  restaura  el  entorno  salva­
+       guardado por la última llamada a setjmp() con el argumento
+       env  correspondiente.   Después  de  que  longjmp()   haya
+       acabado,  la  ejecución  del  programa continúa como si la
+       llamada correspondiente  a  setjmp()  simplemente  hubiera
+       devuelto  el  valor  val.  longjmp() no puede hacer que se
+       devuelva 0.  Si se llama a longjmp() con un segundo  argu­
+       mento de valor 0, se devuelve 1 en su lugar.
+
+
+       siglongjmp()  es similar a longjmp() excepto en el tipo de
+       su  argumento  env.   Si  la  llamada  a  sigsetjmp()  que
+       establece  este env empleó una opción savesigs distinta de
+       cero,  siglongjmp()   también  restaura  el  conjunto   de
+       señales bloqueadas.
+
+VALOR DEVUELTO
+       Estas funciones nunca regresan.
+
+CONFORMES CON
+       POSIX. longjmp también está definida por C ANSI/ISO.
+
+OBSERVACIONES
+       POSIX  no  especifica si longjmp restaurará el contexto de
+       señal.  Si quiere salvaguardar  y  restaurar  máscaras  de
+       señales, emplee siglongjmp.
+
+       longjmp() y siglongjmp() hace que los programas sean difí­
+       ciles de entender y mantener. Si  es  posible  se  debería
+       emplear algún mecanismo alternativo.
+
+VÉASE TAMBIÉN
+       setjmp(3), sigsetjmp(3)
+
+
+
+                           2 Marzo 1998                LONGJMP(3)

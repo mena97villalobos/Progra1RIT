@@ -1,0 +1,25 @@
+FABS(3)          Manual del Programador de Linux          FABS(3)
+
+
+
+NOMBRE
+       fabs - valor absoluto de un número en coma flotante
+
+SINOPSIS
+       #include <math.h>
+
+       double fabs(double x);
+
+DESCRIPCIÓN
+       La función fabs() devuelve el valor absoluto del número en
+       coma flotante x.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       abs(3), ceil(3), floor(3), labs(3), rint(3)
+
+
+
+                        9 de Enero de 1998                FABS(3)

@@ -1,0 +1,140 @@
+MEV(1)                                                     MEV(1)
+
+
+
+NOMBRE
+            mev  -  un  programa para informar de los eventos del
+       ratón
+
+SINOPSIS
+            mev [ opciones ]
+
+DESCRIPCIÓN
+       El programa ``mev'' es parte del paquete gpm. La  informa­
+       ción  de  más  abajo está extraída del fichero texinfo, la
+       cual es la fuente de información preferida.
+
+
+       El programa mev se ha realizado tomando como  modelo  xev.
+       Imprime  en  la salida estándar (stdout) de la consola los
+       eventos que recibe, tanto del telclado como del ratón.
+
+
+       El comportamiento por defecto de mev es capturar cualquier
+       cosa,  pero  se  pueden  usar  las opciones de la línea de
+       comandos para establecer diferentes campos en  la  estruc­
+       tura  Gpm_Connect, para personalizar el comportamiento del
+       programa.  Estoy usando mev para manejar los  eventos  del
+       ratón en emacs.
+
+
+       Las  opciones  de  la  línea  de comandos para mev son las
+       siguientes:
+
+       -C número
+              Selecciona una consola virtual desde la que recibir
+              eventos.   Esto  está  pensado  para ser usado para
+              depuración
+
+       -d número
+              Selecciona una máscara por defecto. Por defecto  el
+              servidor recibe cualquier evento no perteneciente a
+              la máscara de eventos. La máscara puede ser  sumin­
+              istrada  bien  como  un número decimal o una cadena
+              simbólica.
+
+       -e número
+              Selecciona  la  máscara  de  eventos.  Por  defecto
+              cualquier  evento es recibido. La máscara puede ser
+              suministrada bien como  un  número  decimal  o  una
+              cadena simbólica
+
+       -E     Pasa  a  modo  emacs. En modo emacs los eventos son
+              informados en formato lisp  en  lugar  de  números.
+              Este  es  el  formato  usado por el paquete t-mouse
+              dentro de emacs.
+
+       -f     Adapta eventos  dentro  de  la  pantalla  antes  de
+              informar  de  ellos.   Estas opciones readaptan los
+              eventos de arrastre, los cuales  están  autorizados
+              para salir del borde de la pantalla, márgenes.
+
+       -i     Modo  interactivo. Acepta entradas desde la entrada
+              estándar para cambiar parámetros de conexión.
+
+       -m número
+              Selecciona la  máscara  de  modificadores  mínimos.
+              Cualquier evento menos modificadores de los indica­
+              dos no serán informado a mev. Por defecto es 0.  La
+              máscara  debe  ser suministrada bien como un número
+              decimal o una cadena simbólica.
+
+       -M número
+              Selecciona la  máscara  de  modificadores  máximos.
+              Cualquier  evento  con  más  modificadores  que los
+              indicados  no será informado a mev.  Por defecto es
+              0, es decir, todos los eventos serán recibidos.  La
+              máscara debe ser suministrada bien como  un  número
+              decimal o una cadena simbólica.
+
+       -p     Solicita  dibujar  el puntero mientras se arrastra.
+              Esta opción es usada por emacs para evitar  invocar
+              a ioctl() desde el código lisp.
+
+
+       Cuando los argumento no son decimales enteros, son consid­
+       erados listas de caracteres alfanuméricos,  separados  por
+       un  único  carácter no alfanumérico. Yo uso la coma ``,'',
+       pero cualquier otro funcionará.
+
+
+       Los nombres permitidos para eventos son move, drag, down o
+       press,  up  o  release,  motion (el cual es move y drag) y
+       hard.
+
+
+       Los nombres permitidos para modificadores son shift, left­
+       Alt, rightAlt, anyAlt (uno o el otro) y control.
+
+
+       Cuando se especificada la opción -i, mev mira a su entrada
+       estándar como una línea de comandos en lugar  de  eventos.
+       Las  líneas de entrada son analizadas, y los comandos push
+       y pop son reconocidos.
+
+
+       El comando push, entonces, acepta las opciones -d, -e,  -m
+       y -M, con el mismo significado descrito anteriormente. Las
+       opciones no especificadas mantienen los valores previos  y
+       las  máscaras resultante son usadas para reabrir la conex­
+       ión con el servidor.  pop es usado para  desapilar  de  la
+       pila  la  conexión.  Si  se  intenta desapilar de una pila
+       vacía, el programa terminará.
+
+
+       Otros comandos reconocidos son info, usado  para  devolver
+       el  tamaño de la pila, y quit para terminar prematuramente
+       el programa
+
+
+
+AUTOR
+       Alessandro Rubini <rubini@ipvvis.unipv.it>
+
+
+
+FICHEROS
+       /var/run/gpmctl En enchufe (socket) usado para conectarse a gpm.
+
+
+
+VÉASE TAMBIÉN
+       gpm(1)      El servidor del ratón
+       gpm-root(1) Un manejador de eventos para Control-Mouse.
+
+       El fichero info sobre  `gpm',  el  cual  da  una  completa
+       información y explica como escribir un cliente gpm.
+
+
+
+                           Febrero 1995                    MEV(1)

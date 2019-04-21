@@ -1,0 +1,85 @@
+TRUNCATE(2)      Manual del programador de Linux      TRUNCATE(2)
+
+
+
+NOMBRE
+       truncate,  ftruncate  -  trunca  un fichero a una longitud
+       especificada
+
+SINOPSIS
+       #include <unistd.h>
+
+       int truncate(const char *path, off_t length);
+       int ftruncate(int fd, off_t length);
+
+DESCRIPCIÓN
+       truncate hace que el fichero nombrado por path o  referido
+       por fd sea truncado a una longitud máxima de length bytes.
+       Si el fichero era mayor  que  dicha  longitud,  los  datos
+       extra  se  perderán.  Con ftruncate, el fichero debe estar
+       abierto para escritura.
+
+VALOR DEVUELTO
+       En caso de éxito, se devuelve cero. En caso de  error,  se
+       devuelve -1 y se establece el errno apropiado.
+
+ERRORES
+       Para truncate:
+
+       ENOTDIR Un componente de la ruta no es un directorio.
+
+       ENAMETOOLONG
+               Un  componente  de  la  ruta excede los 255 carac­
+               teres, o la ruta completa excede los  1023  carac­
+               teres.
+
+       ENOENT  El fichero no existe.
+
+       EACCES  No  se tiene permiso de búsqueda para algún compo­
+               nente de la ruta.
+
+       EACCES  El usuario no tiene permiso de escritura sobre  el
+               fichero.
+
+       ELOOP   Se  encontraron  demasiados  enlaces simbólicos al
+               traducir la ruta.
+
+       EISDIR  El fichero es en realidad un directorio.
+
+       EROFS   El fichero reside en un  sistema  de  ficheros  de
+               sólo lectura.
+
+       ETXTBSY El  fichero  es un fichero de procedimientos puros
+               (código compartido) que se está ejecutando.
+
+       EIO     Ocurrió un error de E/S al actualizar el inodo.
+
+       EFAULT  path apunta fuera del espacio de direcciones asig­
+               nado al proceso.
+
+       Para ftruncate:
+
+       EBADF   fd no es un descriptor válido.
+
+       EINVAL  fd hace referencia a un socket, no a un fichero.
+
+       EINVAL  fd no está abierto para escritura.
+
+CONFORME A
+       4.4BSD,  SVr4 (estas funciones aparecieron por primera vez
+       en BSD 4.2).  SVr4 documenta las condiciones de error adi­
+       cionales  EINTR,  EMFILE,  EMULTIHP, ENAMETOOLONG, ENFILE,
+       ENOLINK y ENOTDIR   para  truncate.   SVr4  documenta  las
+       condiciones  de  error  adicionales  EAGAIN  y  EINTR para
+       ftruncate.  POSIX posee ftruncate pero no truncate.
+
+FALLOS
+       Estas  llamadas  deberían  ser  ampliadas  para   permitir
+       descartar rangos de bytes de un fichero.
+
+VÉASE TAMBIÉN
+       open(2)
+
+
+
+Linux                   21 Diciembre 1998             TRUNCATE(2)

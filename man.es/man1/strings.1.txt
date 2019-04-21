@@ -1,0 +1,126 @@
+strings(1)      Herramientas de Desarrollo de GNU      strings(1)
+
+
+
+NOMBRE
+       strings  -  muestra  las cadenas de caracteres imprimibles
+       que haya en ficheros
+
+
+SINOPSIS
+       strings
+              [-a|-|--all] [-f|--print-file-name] [-o] [--help]
+              [-v|--version] [-n
+              lon-mín|-lon-mín|--bytes=lon-mín] [-t
+              {o,x,d}[--target=nombrebfd] |--radix={o,x,d}]
+              fichero ...
+
+DESCRIPCIÓN
+       Para cada fichero dado, strings de GNU muestra las secuen­
+       cias de caracteres imprimibles que sean de al menos 4 car­
+       acteres de largo (o del número dado con  las  opciones  de
+       más  abajo) y que vayan seguidas por algún carácter no im­
+       primible. De forma predeterminada, sólo muestra las  cade­
+       nas  de las secciones inicializadas y cargadas de ficheros
+       objeto; para otros tipos de ficheros, muestra las  cadenas
+       de todo el fichero entero.
+
+
+       strings  es  útil  principalmente para determinar los con­
+       tenidos de ficheros que no sean de texto.
+
+
+OPTCIONES
+       Las formas larga y corta de las opciones,  mostradas  aquí
+       como alternativas, son equivalentes.
+
+
+       -a
+
+       --all
+
+       -      No  busca sólo en las secciones inicializada y car­
+              gada de los ficheros objeto;  busca  en  todos  los
+              contenidos de los ficheros.
+
+
+       -f
+
+       --print-file-name
+              Muestra el nombre del fichero antes de cada cadena.
+
+
+       --help Muestra un sumario de las opciones de strings en la
+              salida estándar y acaba.
+
+
+       -v
+
+       --version
+              Muestra el número de versión de strings en la sali­
+              da estándar y acaba.
+
+
+       -n lon-mín
+
+       -lon-mín
+
+       -bytes=lon-mín
+              Muestra secuencias de caracteres  que  sean  de  al
+              menos lon-mín caracteres de largo, en vez de 4, que
+              es el valor predeterminado.
+
+
+       -t {o,x,d}
+
+       --radix={o,x,d}
+              Muestra la posición dentro del fichero antes de ca­
+              da cadena. El argumento que es un solo carácter es­
+              pecifica la base de la posición: o: octal, x:  hex­
+              adecimal, o d: decimal (base diez).
+
+
+       --target=nombrebfd
+              Especifica un formato de código objeto distinto del
+              predeterminado del  sistema.  Consulte  objdump(1),
+              para  información  sobre  cómo  listar los formatos
+              disponibles.
+
+
+       -o     Como -t o.
+
+
+
+
+VÉASE TAMBIÉN
+       La entrada de menú `binutils' en Info; Las  Utilidades  de
+       Binarios de GNU, Roland H. Pesch (Octubre de 1991); ar(1),
+       nm(1), objdump(1), ranlib(1).
+
+
+DERECHOS DE COPIA
+       Copyright (c) 1993 Free Software Foundation, Inc.
+
+       Permission is granted  to  make  and  distribute  verbatim
+       copies  of  this  manual provided the copyright notice and
+       this permission notice are preserved on all copies.
+
+       Permission is granted to copy and distribute modified ver­
+       sions  of  this  manual  under the conditions for verbatim
+       copying, provided that the entire resulting  derived  work
+       is  distributed  under  the  terms  of a permission notice
+       identical to this one.
+
+       Permission is granted to copy and distribute  translations
+       of this manual into another language, under the above con­
+       ditions for modified versions, except that this permission
+       notice  may  be  included  in translations approved by the
+       Free Software Foundation instead of in  the  original  En­
+       glish.
+
+       N.  del T.: Sólo tiene validez legal el aviso de copyright
+       original.
+
+
+
+Cygnus support         25 de Junio de 1993             strings(1)

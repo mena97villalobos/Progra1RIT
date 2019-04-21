@@ -1,0 +1,84 @@
+MDIR(1)                                                   MDIR(1)
+
+
+
+NOMBRE
+       mdir - Lista un directorio de MS-DOS
+
+
+NOTA
+       Esta  página  de manual ha sido generada automáticamente a
+       partir de la documentación texinfo de mtools. Sin embargo,
+       el  proceso  es sólo aproximado, y algunos elementos tales
+       como referencias cruzadas, notas  al  pie  e  índices,  se
+       pierden  en  este  proceso de traducción.  De hecho, estos
+       elementos no tienen una representación adecuada en el for­
+       mato  de  las  páginas del manual. Por otra parte, sólo se
+       han traducido los elemntos específicos de cada comando,  y
+       se  ha  desechado de la versión de la página del manual la
+       información general de mtools. Por este motivo,  le  aviso
+       encarecidamente que use el documento texinfo original.
+
+       *      Para generar un copia imprimible del documento tex­
+       info use los siguientes comandos:
+
+                     ./configure; make dvi; dvips mtools.dvi
+
+
+
+       *      Para generar una copia html, ejecute:
+
+                     ./configure; make html
+
+              Puede   encontrar   un  html  preconfeccionado  en:
+              `http://linux.wauug.org/pub/knaff/mtools'
+
+       *      Para generar un copia info (visualizable usando  el
+              modo info de emacs), ejecute:
+
+                     ./configure; make info
+
+
+
+       El documento texinfo parece más bonito en html o cuando se
+       imprime. De hecho, la versión info contiene ciertos ejemp­
+       los que son difíciles de leer debido a las convenciones de
+       notación usadas en info.
+
+
+DESCRIPCIÓN
+       El comando mdir es usado para ver un directorio MS-DOS. Su
+       síntaxis es:
+
+
+       mdir [-w] directorio-msdos
+
+       mdir [-f] [-w] [-a]fichero-msdos [ ficheros-msdosfR...]
+
+       Mdir lista los contenidos de directorios MS-DOS.
+
+       Mdir soporta las siguientes opciones en línea de comandos:
+
+       w      Salida por columnas.Con esta opción, mdir lista los
+              nombre  de fichero sobre la pantalla sin incluir el
+              tamaño ni la fecha de creación.
+
+       a      Incluye los ficheros ocultos al listar.
+
+       f      Rápido. No intenta mirar cuanto espacio libre  hay.
+              En  discos  grandes,  mirar  el espacio libre puede
+              llevar un tiempo no despreciable,  ya  que  la  FAT
+              entera debe ser leída al mirar el espacio libre. La
+              opción -f salta este paso. Esta opción no es  nece­
+              saria  en  sistemas  de ficheros FAT32 ya que estos
+              guardan explícitamente el tamaño.
+
+       Ocurrirá un error si algún componente del camino no es  un
+       directorio.
+
+VÉASE TAMBIÉN
+       El documento en formato info de mtools.
+
+
+
+mtools-3.7                28 Junio 1997                   MDIR(1)

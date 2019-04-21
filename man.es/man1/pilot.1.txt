@@ -1,0 +1,106 @@
+pilot(1)                                                 pilot(1)
+
+
+
+Nombre
+       pilot  -  sencillo  navegador de sistema de ficheros en el
+       estilo del Pine Composer
+
+Sintaxis
+       pilot [ opciones ] [ directorio ]
+
+Descripción
+       Pilot es un sencillo navegador  de  sistemas  de  ficheros
+       basado en el editor del sistema de mensajes Pine. Al igual
+       que en Pine, los comandos  son  desplegados  en  la  parte
+       inferior  de  la pantalla, y se proporciona ayuda sensible
+       al contexto.
+
+       Pilot despliega el directorio  de  trabajo  actual  en  la
+       parte superior de la pantalla. El contenido del directorio
+       se despliega en columnas formadas por pares de  nombre  de
+       fichero  y tamaño. Lo nombres de directorio se indican con
+       "(dir)" en lugar del tamaño  del  fichero.  El  padre  del
+       directorio  de trabajo actual se indica con el nombre ".."
+       y un tamaño de "(parent dir)". Los nombres de fichero  que
+       son  enlaces  simbólicos a otros ficheros se presentan con
+       un tamaño de "--".
+
+       Se proporcionan varios comandos básicos de manipulación de
+       ficheros:  Borrar  (Delete),  Renombrar  (Rename),  Copiar
+       (Copy),  Visualizar  (View),  Lanzar  (Launch)  y   Editar
+       (Edit).  Los  comandos  "View"  y "Edit" operan únicamente
+       sobre ficheros de texto. Por defecto,  el  comando  "View"
+       despliega   los   ficheros   utilizando  "pine  -F",  pero
+       respetará la variable de ambiente PAGER si  está  estable­
+       cida.   El  comando "Edit" simplemente invoca a "pico". El
+       comando "Launch" provee una  forma  conveniente  tanto  de
+       ejecutar un fichero seleccionado o ejecutar una aplicación
+       sobre él.
+
+       Ayuda más específica está  disponible  en  el  sistema  de
+       ayuda en línea de pilot.
+
+Opciones
+       -a     Despliega  todos  los  ficheros incluyendo aquellos
+              que comiencen con un punto (.).
+
+       -f     Utilizar las teclas de función para  los  comandos.
+              Esta   opción es soportada únicamente en conjunción
+              con el  UW Enhanced NCSA telnet.
+
+       -g     Habilita el modo "Show Cursor". Provoca que el cur­
+              sor  sea  colocado  antes de la selección actual en
+              lugar  de  ser  colocado  en  la  esquina  inferior
+              izquierda del despliegue.
+
+       -j     Habilita el comando "Goto". Esto permite al comando
+              indicar explícitamente a pilot que directorio visi­
+              tar.
+
+       -m     Habilita la funcionalidad del ratón. Esto solo fun­
+              ciona cuando pilot se ejecuta desde una venta xterm
+              del sistema X Window.
+
+       -nn    La  opción  -nn  habilita  la notificación de nuevo
+              correo. El argumento n  es  opcional  y  especifica
+              cada  cuanto,  en segundos, se verifica el buzón en
+              busca de nuevo correo. Por ejemplo, -n60  hace  que
+              pilot busque nuevos mensajes de correo cada minuto.
+              El intervalo por defecto es 180 segundos,  mientras
+              que  el  mínimo  permitido es 30. (Nota: no se debe
+              dejar espacio entre "n" y el numero)
+
+       -o dir Establece el directorio  de  operación.  Únicamente
+              los  ficheros dentro de este directorio son accesi­
+              bles y la navegación de ficheros se limita al  sub-
+              árbol de directorios del directorio especificado.
+
+       -v     Habilita  el  despliegue en una sola columna verti­
+              cal.
+
+       -x     Inhabilitar el menú de teclas en la parte  inferior
+              de la pantalla.
+
+       -z     Habilitar la suspensión de pilot con ^Z
+
+       -q     Las  definiciones termcap o terminfo para la intro­
+              ducción de secuencias de escape se utiliza en pref­
+              erencia  de  las  secuencias definidas por defecto.
+              Esta opción solo está disponible si pilot  se  com­
+              piló con TERMCAP_WINS habilitado.
+
+Autores
+       Michael Seibel <mikes@cac.washington.edu>
+       Copyright 1994-1996 por la Universidad de Washington.
+
+Véase también
+       pine(1)
+       Distribución fuente (parte del Sistema de Mensajes Pine):
+          ftp://ftp.cac.washington.edu/mail/pine.tar.Z
+
+       96.02.17
+
+
+
+                           Versión 1.1                   pilot(1)

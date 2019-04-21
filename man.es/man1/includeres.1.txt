@@ -1,0 +1,51 @@
+INCLUDERES(1)                                       INCLUDERES(1)
+
+
+
+NOMBRE
+       includeres  -  filtro  para  incluir recursos dentro de un
+       documento PostScript
+
+SINOPSIS
+       includeres < document.ps > output.ps
+
+DESCRIPCIÓN
+       Includeres incluye recursos (fuentes, procsets,  patrones,
+       ficheros, etc) en el lugar de los comentarios %%IncludeRe­
+       source en un documento PostScript. Los recursos se  buscan
+       en el directorio actual y en el directorio por defecto del
+       sistema bajo el nombre del recurso, y  con  una  extensión
+       apropiada.  La tubería
+
+                extractres file.ps | includeres >out.ps
+
+       mueve  al  prólogo  todos  los recursos que aparecen en el
+       documento, quitando copias redundantes. De esta manera  el
+       archivo  de  salida  se puede meter a través de filtros de
+       reordenación de páginas tales como psnup o pstops  de  una
+       manera segura.
+
+ARCHIVOS
+       /usr/lib/psutils - directorio de recurso del sistema.
+
+AUTOR
+       Copyright (C) Angus J. C. Duggan 1991-1995
+
+VÉASE TAMBIÉN
+       psbook(1),  psselect(1),  pstops(1), epsffit(1), psnup(1),
+       psresize(1), psmerge(1), fixscribeps(1), getafm(1), fixdl­
+       srps(1),  fixfmps(1),  fixmacps(1),  fixpsditps(1),  fixp­
+       spps(1), fixtpps(1), fixwfwps(1), fixwpps(1),  fixwwps(1),
+       extractres(1), includeres(1)
+
+MARCAS REGISTRADAS
+       PostScript es una marca registrada de Adobe Systems Incor­
+       porated.
+
+FALLOS
+       includeres  no  altera  los  comentarios  %%DocumentNeede­
+       dResources.
+
+
+
+                 PSUtils Release 1 Patchlevel 17    INCLUDERES(1)

@@ -1,0 +1,31 @@
+LDIV(3)          Manual del Programador de Linux          LDIV(3)
+
+
+
+NOMBRE
+       ldiv  -  calcula el cociente y resto de una división entre
+       enteros largos
+
+SINOPSIS
+       #include <stdlib.h>
+
+       ldiv_t ldiv(long int numer, long int denom);
+
+DESCRIPCIÓN
+       La función ldiv() computa el valor numer÷denom y  devuelve
+       el  cociente  y  el resto en una estructura llamada ldiv_t
+       que contiene dos miembros que son enteros largos y que  se
+       llaman quot y rem.
+
+VALOR DEVUELTO
+       La estructura ldiv_t.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       div(3)
+
+
+
+GNU                        2 Marzo 1998                   LDIV(3)

@@ -1,0 +1,225 @@
+SOCKET(2)        Manual del Programador de Linux        SOCKET(2)
+
+
+
+NOMBRE
+       socket - crea un extremo de una comunicación
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <sys/socket.h>
+
+       int socket(int dominio, int tipo, int protocolo);
+
+DESCRIPCIÓN
+       Socket  crea  un extremo de una comunicación y devuelve un
+       descriptor.
+
+       El parámetro dominio especifica un  dominio  de  comunica­
+       ciones.  Esto  selecciona  la  familia  de protocol que se
+       usará para la comunicación. Estas familias se  definen  en
+       <sys/socket.h>.    Los  formatos  actualmente  reconocidos
+       incluyen:
+
+       PF_UNIX, PF_LOCAL
+              Protocolos UNIX para comunicación local
+
+       PF_INET
+              Protocolos de Internet IPv4. Vea ip(7)
+
+       PF_INET6
+              Protocolos de Internet IPv6
+
+       PF_IPX Protocolos IPX - Novell
+
+       PF_NETLINK
+              Dispositivo de la intefaz de usuario del núcleo
+
+       PF_X25 Protocolo ITU-T X.25 / ISO-8208
+
+       PF_AX25
+              Protocolo AX.25 de radio para aficionados
+
+       PF_ATMPVC
+              Acceso directo a PVCs ATM
+
+       PF_APPLETALK
+              Appletalk. Vea ddp(7)
+
+       PF_PACKET
+              Interfaz de paquetes de bajo nivel. Vea packet(7)
+
+       El conector tiene el  tipo  indicado,  que  especifica  la
+       semántica  de  la  comunicación. Los tipos definidos en la
+       actualidad son:
+
+       SOCK_STREAM
+              Proporciona flujos de bytes basados en una conexión
+              bidireccional   secuenciada,  confiable.  Se  puede
+              admitir un mecanismo de transmisión de datos fuera-
+              de-banda.
+
+       SOCK_DGRAM
+              Admite  datagramas  (mensajes  no  confiables,  sin
+              conexión, de una longitud máxima fija).
+
+       SOCK_SEQPACKET
+              Proporciona  un  camino  de  transmisión  de  datos
+              basado  en conexión bidireccional secuenciado, con­
+              fiable, para datagramas de longitud máxima fija; se
+              requiere  un consumidor para leer un paquete entero
+              con cada llamada al sistema de lectura.
+
+       SOCK_RAW
+              Proporciona acceso directo a los protocolos de red.
+
+       SOCK_RDM
+              Proporciona  una  capa de datagramas fiables que no
+              garantiza el orden.
+
+       SOCK_PACKET
+              Obsoleto  y  no  debería  utilizarse  en  programas
+              nuevos. Vea packet(7).
+
+       Algunos  tipos  de  conectores pueden no ser implementados
+       por  todas  las  familias  de  protocolos.  Por   ejemplo,
+       SOCK_SEQPACKET  no  está actualmente implementado en Linux
+       para AF_INET.
+
+       El protocolo especifica un protocolo particular  para  ser
+       usado  con  el conector. Normalmente sólo existe un proto­
+       colo que admita un tipo particular de conector  dentro  de
+       una  familia  de  protocolos dada. Sin embargo, es posible
+       que puedan existir varios protocolos, en cuyo caso un pro­
+       tocolo  particular  puede especificarse de esta manera. El
+       número de protocolo a emplear es específico al "dominio de
+       comunicación"  en el que la comunicación va a tener lugar;
+       vea protocols(5).  Consulte getprotoent(3) para  ver  cómo
+       asociar  una  cadenas  con  el nombre de un protocolo a un
+       número de protocolo.
+
+       Los conectores del tipo SOCK_STREAM son  flujos  de  bytes
+       bidireccionales,  similar a tuberías. Un conector de flujo
+       debe estar en un estado conectado antes de  que  cualquier
+       dato  pueda  ser  enviado  o  recibido  en él. Se crea una
+       conexión con otro conector mediante la llamada connect(2).
+       Una  vez  hecha la conexión, los datos pueden transferirse
+       utilizando llamadas read(2) y write(2) o  alguna  variante
+       de  las  llamadas send(2) y recv(2).  Cuando una sesión se
+       ha completado, se puede efectuar un close(2).   Los  datos
+       fuera-de-banda   pueden   transmitirse   también  como  se
+       describe en send(2)  y  recibirse  según  se  describe  en
+       recv(2).
+
+       Los   protocolos  de  comunicaciones  que  implementan  un
+       SOCK_STREAM aseguran que los datos no  se  pierden  ni  se
+       duplican. Si un trozo de dato para el cual el protocolo de
+       la pareja tiene espacio de búfer no puede ser  transmitido
+       satisfactoriamente  en  un  período  razonable  de tiempo,
+       entonces la conexión se considera muerta. Cuando se activa
+       SO_KEEPALIVE  en el conector el protocolo comprueba de una
+       manera específica del protocolo si el otro extremo todavía
+       está  vivo. Se lanza una señal SIGPIPE si un proceso envía
+       o recibe en un flujo roto; esto provoca que procesos  sim­
+       ples,  que  no  manejan  la señal, acaben.  Los conectores
+       SOCK_SEQPACKET emplean las mismas llamadas al sistema  que
+       los  SOCK_STREAM.  La única diferencia es que las llamadas
+       a read(2) devolverán solamente la cantidad de datos  pedi­
+       dos, y los que queden en el paquete que llega se perderán.
+       También se conservarán todos los límites de mensaje en los
+       datagramas que lleguen.
+
+       Los  conectores SOCK_DGRAM y SOCK_RAW permiten el envío de
+       datagramas a los correspondientes nombrados en llamadas  a
+       send(2).   Los  datagramas  se  reciben  generalmente  con
+       recvfrom(2), que devuelve el siguiente  datagrama  con  su
+       dirección de retorno.
+
+       SOCK_PACKET  es  un tipo de conector obsoleto para recibir
+       paquetes crudos directamente desde el manejador de dispos­
+       itivo. Use packet(7) en su lugar.
+
+       Una  llamada  a  fcntl(2)  con el argumento F_SETOWN puede
+       utilizarse para especificar que un grupo de proceso reciba
+       una señal SIGURG cuando lleguen los datos fuera-de-banda o
+       la señal SIGPIPE cuando una conexión SOCK_STREAM se  rompa
+       inesperadamente.  También  puede usarse para configurar el
+       proceso o grupo de procesos que  recibirán  la  E/S  y  la
+       notificación  asíncrona  de los eventos de E/S a través de
+       SIGIO.  Usar F_SETOWN  es  equivalente  a  una  llamada  a
+       ioctl(2) con el argumento SIOSETOWN.
+
+       Cuando  la red señala una condición de error al módulo del
+       protocolo (por ejemplo, usando un mensaje ICMP para IP) se
+       activa  la bandera de error pendiente para el conector. La
+       siguiente operación sobre ese conector devolverá el código
+       de  error  del error pendiente. Para algunos protocolos es
+       posible habilitar una cola  de  error  por  conector  para
+       obtener información detallada del error. Vea IP_RECVERR en
+       ip(7).
+
+       La operación de los conectores se controla por opciones en
+       el  nivel de los conectores.  Estas opciones se definen en
+       <sys/socket.h>.  Setsockopt(2) y getsockopt(2) se  emplean
+       para establecer y obtener opciones, respectivamente.
+
+VALOR DEVUELTO
+       Se  devuelve  un  -1  si  ocurre un error; en otro caso el
+       valor devuelto es un descriptor para referenciar el conec­
+       tor.
+
+ERRORES
+       EPROTONOSUPPORT
+               El tipo de protocolo, o el protocolo especificado,
+               no es reconocido dentro de este dominio.
+
+       ENFILE  No hay suficiente memoria en el núcleo para reser­
+               var una nueva estructura de conector.
+
+       EMFILE  Se ha desbordado la tabla de ficheros del proceso.
+
+       EACCES  Se deniega el permiso para crear un  conector  del
+               tipo o protocolo especificado.
+
+       ENOBUFS  o  ENOMEM
+               No  hay suficiente memoria disponible. El conector
+               no puede crearse hasta que no  queden  libres  los
+               recursos suficientes.
+
+       EINVAL  Protocolo  desconocido  o  familia de protocolo no
+               disponible.
+
+       Los módulos de los protocolos subyacentes  pueden  generar
+       otros errores.
+
+CONFORME A
+       4.4BSD  (la  llamada a función socket apareció en 4.2BSD).
+       Generalmente transportable a o desde sistemas no  BSD  que
+       admitan clones de la capa de conectores de BSD (incluyendo
+       variantes System V).
+
+NOTA
+       Las constantes evidentes usadas en BSD 4.* para las famil­
+       ias de protocolos son PF_UNIX, PF_INET, etc., mientras que
+       AF_UNIX, etc. se usan para las  familias  de  direcciones.
+       Sin  embargo,  ya  la  página  de  manual BSD promete: "La
+       familia de protocolos generalmente  es  la  misma  que  la
+       familia  de  direcciones"  y  los estándares subsiguientes
+       usan AF_* en todas partes.
+
+VÉASE TAMBIÉN
+       accept(2), bind(2), connect(2),  getprotoent(3),  getsock­
+       name(2),   getsockopt(2),  ioctl(2),  listen(2),  read(2),
+       recv(2), select(2), send(2),  shutdown(2),  socketpair(2),
+       write(2)
+
+       "An  Introductory 4.3 BSD Interprocess Communication Tuto­
+       rial" está reimpreso en  UNIX  Programmer's  Supplementary
+       Documents Volume 1.
+
+       "BSD  Interprocess  Communication Tutorial" está reimpreso
+       en UNIX Programmer's Supplementary Documents Volume 1.
+
+
+
+Página man de Linux       24 abril 1999                 SOCKET(2)

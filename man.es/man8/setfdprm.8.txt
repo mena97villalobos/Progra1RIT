@@ -1,0 +1,64 @@
+SETFDPRM(8)      Manual del Programador de Linux      SETFDPRM(8)
+
+
+
+NOMBRE
+       setfdprm  -  establece parámetros del disco flexible dados
+       por el usuario
+
+SINOPSIS
+       setfdprm [ -p ] dispositivo nombre
+       setfdprm [ -p ] dispositivo tamaño sectores cabezas pistas
+       extensión hueco proporción espec1 hueco_fmt
+       setfdprm [ -c ] dispositivo
+       setfdprm [ -y ] dispositivo
+       setfdprm [ -n ] dispositivo
+
+DESCRIPCIÓN
+       setfdprm  es  una utilidad que puede emplearse para cargar
+       parámetros de disco en los dispositivos de disco  flexible
+       auto-detectables,   para   borrar  antiguos  conjuntos  de
+       parámetros y para deshabilitar  o  habilitar  mensajes  de
+       diagnósticos.
+
+       Sin  ninguna opción, setfdprm carga el dispositivo (usual­
+       mente /dev/fd0  o  /dev/fd1)  con  un  nuevo  conjunto  de
+       parámetros  con la entrada nombre encontrada en /etc/fdprm
+       (normalmente nombrada 360/360,  etc.).   Estos  parámetros
+       permanecen en efecto hasta que el disco se cambie.
+
+OPCIONES
+       -p dispositivo nombre
+              Carga permanentemente un nuevo conjunto de parámet­
+              ros para el dispositivo de disco flexible auto-con­
+              figurable  especificado  para la configuración cuyo
+              nombre aparezca en  /etc/fdprm.   Alternativamente,
+              los  parámetros  pueden  darse  directamente  en la
+              línea de órdenes.
+
+       -c dispositivo
+              Borra el conjunto de parámetros del dispositivo  de
+              disco flexible auto-configurable especificado.
+
+       -y dispositivo
+              Habilita  mensajes  de detección de formato para el
+              dispositivo  de  disco  flexible  auto-configurable
+              especificado.
+
+       -n dispositivo
+              Deshabilita  mensajes  de detección de formato para
+              el dispositivo de disco flexible  auto-configurable
+              especificado.
+
+FALLOS
+       Esta documentación está enormemente incompleta.
+
+FICHEROS
+       /etc/fdprm
+
+AUTOR
+       Werner Almesberger (almesber@nessie.cs.id.ethz.ch)
+
+
+
+Linux 0.99              20 Noviembre 1993             SETFDPRM(8)

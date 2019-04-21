@@ -1,0 +1,37 @@
+UNIMPLEMENTED(2) Manual del Programador de Linux UNIMPLEMENTED(2)
+
+
+
+NOMBRE
+       afs_syscall,  break,  ftime,  gtty, lock, mpx, phys, prof,
+       profil, stty, ulimit - Llamadas al sistema sin implementar
+
+SINOPSIS
+       Llamadas al sistema sin implementar.
+
+DESCRIPCIÓN
+       Estas  llamadas  al  sistema  no están implementadas en la
+       versión 2.0 del núcleo de Linux.
+
+VALOR DEVUELTO
+       Estas llamadas al sistema siempre devuelven -1 y asignan a
+       la variable errno el valor ENOSYS.
+
+NOTAS
+       Dése  cuenta que ftime(3), profil(3) y ulimit(3) se imple­
+       mentan como funciones de biblioteca.
+
+       Algunas llamadas  al  sistema,  como  ioperm(2),  iopl(2),
+       ptrace(2) y vm86(2) sólo existen en ciertas arquitecturas.
+
+
+       Algunas  llamadas  al  sistema,  como   ipc(2)   y   {cre­
+       ate,init,delete}_module(2)  sólo  existen cuando el núcleo
+       de Linux se construyó con soporte para ellas.
+
+VÉASE TAMBIÉN
+       obsolete(2), undocumented(2).
+
+
+
+Linux 2.0                 12 Junio 1998          UNIMPLEMENTED(2)

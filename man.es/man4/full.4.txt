@@ -1,0 +1,40 @@
+FULL(4)          Manual del Programador de Linux          FULL(4)
+
+
+
+NOMBRE
+       full - dispositivo siempre lleno
+
+
+DESCRIPCIÓN
+       El  fichero  /dev/full tiene como número mayor de disposi­
+       tivo el 1, y como número menor de dispositivo el 7.
+
+       Las escrituras en el dispositivo /dev/full fallarán con un
+       error ENOSPC.
+
+       Las  lecturas  desde  el  dispositivo /dev/full devolverán
+       caracteres nulos (\0).
+
+       Las búsquedas en /dev/full siempre tendrán éxito.
+
+
+CONFIGURACIÓN
+       Si  su  sistema  no  tiene  creado  aún  el   dispositivo.
+       /dev/full  , éste se puede crear con los siguientes coman­
+       dos:
+               mknod -m 666 /dev/full c 1 7
+               chown root:root /dev/full
+
+
+FICHEROS
+       /dev/full
+
+
+VÉASE TAMBIÉN
+       mknod(1), null(4), zero(4)
+
+
+
+
+Linux                     2 Agosto 1997                   FULL(4)

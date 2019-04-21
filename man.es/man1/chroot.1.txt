@@ -1,0 +1,38 @@
+CHROOT(1L)                                             CHROOT(1L)
+
+
+
+NOMBRE
+       chroot  -  ejecuta  comandos  o shells interactivos con un
+       directorio raíz especial.
+
+SINOPSIS
+       chroot [--help] [--version] directorio [command...]
+
+DESCRIPCIÓN
+       Esta documentación no será mantenida y puede ser  inexacta
+       o incompleta.  La documentación Texinfo es ahora la fuente
+       autorizada.
+
+       Esta página de manual documenta la versión GNU de  chroot.
+       chroot  ejecuta  un  comando  con un directorio específico
+       como directorio raíz para  la  traducción  de  nombres  de
+       ficheros.   Si no especificamos comando chroot ejecuta una
+       shell interactiva. La variable de entorno `SHELL'  especi­
+       fica el programa shell; por defecto es /bin/sh.
+
+   OPCIONES
+       --help  Imprime  un mensaje de uso en la salida estándar y
+       termina correctamente.
+
+       --version
+              Imprime información sobre la versión en  la  salida
+              estándar y termina correctamente.
+
+   NOTAS
+       En  muchos  sistemas sólo el superusuario puede cambiar el
+       directorio raíz.
+
+
+
+FSF                    Utilidades Shell GNU            CHROOT(1L)

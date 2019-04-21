@@ -1,0 +1,37 @@
+GETUID(2)        Manual del Programador de Linux        GETUID(2)
+
+
+
+NOMBRE
+       getuid, geteuid - devuelve la identidad del usuario
+
+SINOPSIS
+       #include <unistd.h>
+       #include <sys/types.h>
+
+       uid_t getuid(void);
+       uid_t geteuid(void);
+
+DESCRIPCIÓN
+       getuid  devuelve el identificador de usuario real del pro­
+       ceso actual.
+
+       geteuid devuelve el identificador de usuario efectivo  del
+       proceso actual.
+
+       El identificador real corresponde con el del proceso invo­
+       cador. El efectivo se corresponde con el identificador  de
+       usuario ("sticky bit") del fichero que se está ejecutando.
+
+ERRORES
+       Estas funciones siempre funcionan.
+
+CONFORME A
+       POSIX, BSD 4.3.
+
+VÉASE TAMBIÉN
+       setreuid(2), setuid(2)
+
+
+
+Linux 0.99.11             23 Julio 1993                 GETUID(2)

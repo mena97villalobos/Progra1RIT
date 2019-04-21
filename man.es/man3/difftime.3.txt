@@ -1,0 +1,29 @@
+DIFFTIME(3)      Manual del Programador de Linux      DIFFTIME(3)
+
+
+
+NOMBRE
+       difftime - calcula la diferencia entre dos tiempos
+
+SINOPSIS
+       #include <time.h>
+
+       double difftime(time_t time1, time_t time0);
+
+DESCRIPCIÓN
+       La función difftime() devuelve el número de segundos tran­
+       scurridos entre time1 y time0.  Los  dos  tiempos  se  dan
+       como  tiempo de calendario, que representa el tiempo tran­
+       scurrido desde las 00:00:00 h del  1  de  Enero  de  1970,
+       Tiempo Universal Coordinado (UTC).
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       date(1),  gettimeofday(2),  time(2),  ctime(3), gmtime(3),
+       localtime(3)
+
+
+
+GNU                       15 Enero 1995               DIFFTIME(3)

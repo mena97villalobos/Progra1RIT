@@ -1,0 +1,25 @@
+COSH(3)          Manual del Programador de Linux          COSH(3)
+
+
+
+NOMBRE
+       cosh - función coseno hiperbólico
+
+SINOPSIS
+       #include <math.h>
+
+       double cosh(double x);
+
+DESCRIPCIÓN
+       La función cosh() devuelve el coseno hiperbólico de x, que
+       está definido matemáticamente como exp(x) + exp(-x) / 2.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       acosh(3), asinh(3), atanh(3), sinh(3), tanh(3)
+
+
+
+                           9 Enero 1995                   COSH(3)

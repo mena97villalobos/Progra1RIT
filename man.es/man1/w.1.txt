@@ -1,0 +1,80 @@
+W(1)             Manual del Programador de Linux             W(1)
+
+
+
+NOMBRE
+       w - Muestra quienes están conectados y qué están haciendo.
+
+SINOPSIS
+       w - [husfV] [usuario]
+
+DESCRIPCIÓN
+       w muestra información sobre los usuarios que están  conec­
+       tados  en  ese  momento a la máquina y sobre sus procesos.
+       La cabecera muestra, en  este  orden,  el  tiempo  actual,
+       cuanto  lleva  el  sistema  funcionando,  cuantos usuarios
+       están conectados y las cargas medias en los anteriores  1,
+       5 y 15 minutos.
+
+       Para cada usuario se muestran los siguientes datos: nombre
+       de login, nombre de tty, nodo remoto, tiempo de  conexión,
+       tiempo inactivo, JCPU, PCPU y la línea de comando del pro­
+       ceso en curso.
+
+       JCPU es el tiempo usado por todos  los  procesos  bajo  el
+       terminal tty.  No incluye los procesos en segundo plano ya
+       finalizados, aunque incluye los procesos de segundo  plano
+       en curso.
+
+       PCPU  es el tiempo usado por el proceso en curso, nombrado
+       en el campo "what".
+
+
+
+OPCIONES DE LÍNEA DE COMANDO
+       -h   No escribe la cabecera.
+
+       -u   No tiene en cuenta el nombre  de  usuario  cuando  se
+            comprueba el tiempo del proceso actual y de cpu. Para
+            mostrar esto, haga un "su" y haga un "w" y un "w -u".
+
+       -s   Usa el formato corto.  No escribe el tiempo de conex­
+            ión, ni JCPU, ni PCPU.
+
+       -f   Cambia la escritura del campo from (nombre  del  nodo
+            remoto).  El  comportamiento  por  defecto  es que el
+            campo from no se escriba, pero el administrador de su
+            sistema  o  el  supervisor  de  la distribución puede
+            haber compilado una versión en la que el  campo  from
+            se muestre por defecto.
+
+       -V   Muestra información sobre la versión.
+
+       usuario
+            Muestra   solamente   información  sobre  el  usuario
+            especificado.
+
+
+ARCHIVOS
+       /etc/utmp información sobre quien  está  conectado  en  el
+       momento
+
+       /proc información sobre procesos
+
+
+VÉASE TAMBIÉN
+       free(1), ps(1), top(1), uptime(1), utmp(5), who(1)
+
+
+AUTORES
+       w  ha  sido re-escrito casi enteramente por Charles Blake,
+       basándose  en  la  versión  de  Larry  Greenfield  <green­
+       fie@gauss.rutgers.edu>   and  Michael  K.  Johnson  <john­
+       sonm@redhat.com>.
+
+       Por favor, notifique cualquier error  a  <procps-bugs@red­
+       hat.com>
+
+
+
+Linux                       8 Dic 1993                       W(1)

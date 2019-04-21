@@ -1,0 +1,39 @@
+GROUP(5)           Manual del Programador Linux          GROUP(5)
+
+
+
+NOMBRE
+       group - Fichero de grupos de usuarios
+
+DESCRIPCIÓN
+       /etc/group es un fichero ASCII el cuál define los grupos a
+       los cuáles pertenecen los usuarios del  sistema.  Hay  una
+       entrada  por  línea,  y cada línea tiene el siguiente for­
+       mato:
+
+              nombre_grupo:contraseña:GID:lista_usuarios
+
+       Las descripciones de los campos son:
+
+       nombre_grupo
+              el nombre del grupo.
+
+       contraseña
+              la contraseña del grupo (encriptada). Si este campo
+              está vacío, no se utiliza ninguna contraseña.
+
+       GID    el número de ID del grupo.
+
+       lista_usuarios
+              los  nombres  de  usuario de todos los miembros del
+              grupo, separados por comas.
+
+FICHEROS
+       /etc/group
+
+VÉASE TAMBIÉN
+       login(1), newgrp(1), passwd(5)
+
+
+
+Linux                   29 Diciembre 1992                GROUP(5)

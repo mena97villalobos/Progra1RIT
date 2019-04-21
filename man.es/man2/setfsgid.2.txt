@@ -1,0 +1,51 @@
+SETFSGID(2)      Manual del programador de Linux      SETFSGID(2)
+
+
+
+NOMBRE
+       setfsgid  - establece la identidad del grupo que accede al
+       sistema de ficheros
+
+SINOPSIS
+       int setfsgid(uid_t fsgid)
+
+DESCRIPCIÓN
+       setfsgid establece  el  identificativo  de  grupo  que  el
+       núcleo  de  Linux  usa para comprobar todos los accesos al
+       sistema de ficheros. Normalmente, el valor de  fsgid  cam­
+       biará  según  el  valor del grupo efectivo. De hecho, cada
+       vez que el grupo efectivo cambie, fsgid  también  cambiará
+       al nuevo valor del grupo efectivo.
+
+       Las  llamadas  explícitas  a  setfsgid normalmente sólo se
+       usan en programas como el servidor NFS de Linux, que nece­
+       sitan cambiar el identificativo de grupo para acceder a un
+       fichero, pero sin cambiar los identificativos real y efec­
+       tivo.  Un  cambio en el identificativo real del grupo para
+       un programa como el servidor NFS supondría un  agujero  de
+       seguridad,  al quedar expuesto a otras señales no deseadas
+       desde otros identificativos de grupo.
+
+       setfsgid sólo tendrá éxito si quien lo invoca es el  supe­
+       rusuario  o  si fsgid coincide con el identificativo real,
+       efectivo o grabado, o con el valor actual de fsgid.
+
+VALOR REGRESADO
+       En caso de éxito, se devolverá el valor anterior de fsgid.
+       En caso de error, se devolverá el valor actual de fsgid.
+
+CONFORME A
+       setfsgid  es  específico  de  Linux y no debería usarse en
+       programas que se pretende sean portables.
+
+ERRORES
+       No se devuelve ningún mensaje de error a quien lo  invoca.
+       Al  menos,  debería devolverse EPERM cuando todas las lla­
+       madas fallen.
+
+VÉASE TAMBIÉN
+       setfsuid(2)
+
+
+
+Linux 1.3.15           6 de agosto de 1995            SETFSGID(2)

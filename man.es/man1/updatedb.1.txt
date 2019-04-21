@@ -1,0 +1,90 @@
+UPDATEDB(1L)                                         UPDATEDB(1L)
+
+
+
+NOMBRE
+       updatedb  -  actualiza  una  base  de  datos de nombres de
+       ficheros
+
+SINOPSIS
+       updatedb [opciones]
+
+DESCRIPCIÓN
+       Esta página del Manual documenta  la  versión  de  GNU  de
+       updatedb,  que  actualiza las bases de datos de nombres de
+       ficheros empleadas por el programa  de  GNU  locate.   Las
+       bases  de datos de nombres de ficheros contienen listas de
+       ficheros que estaban en árboles  de  directorios  particu­
+       lares  la  última  vez que se actualizaron.  El nombre del
+       archivo de la base  de  datos  por  omisión  se  determinó
+       cuando  locate y updatedb se configuraron e instalaron. La
+       frecuencia con la que las bases de datos se  actualizan  y
+       los  directorios  para los que contienen entradas dependen
+       de cuán a menudo se ejecute updatedb, y con  qué  argumen­
+       tos.
+
+       En  entornos  de red, a menudo tiene sentido construir una
+       base de datos en la raíz de cada sistema de ficheros, con­
+       teniendo  las  entradas  para  dicho  sistema de ficheros.
+       updatedb se ejecuta entonces para cada sistema de ficheros
+       en  el  servidor  de  ficheros donde resida tal sistema de
+       ficheros en un disco local, para prevenir la congestión  y
+       colapso  de  la  red.  Los usuarios pueden seleccionar qué
+       bases de datos escudriñará locate mediante una variable de
+       ambiente  o  una  opción  de  la  línea  de  órdenes;  vea
+       locate(1L).  Las bases de datos no pueden concatenarse.
+
+       El formato de la base de datos de nombres de ficheros cam­
+       bió a partir de las versiones de los programas de GNU find
+       y locate números 4.0 para permitir que máquinas con difer­
+       ente  ordenamiento  de  bytes  compartieran  las  bases de
+       datos. El nuevo locate de GNU  puede  leer  las  bases  de
+       datos  en los formatos viejo y nuevo indistintamente.  Sin
+       embargo, las versiones viejas de locate  y  find  producen
+       resultados  incorrectos con las bases de datos en el nuevo
+       formato.
+
+OPCIONES
+       --localpaths='camino1 camino2...'
+              Directorios no de red para  poner  en  la  base  de
+              datos.  El predeterminado es /.
+
+       --netpaths='camino1 camino2...'
+              Directorios de red (NFS, AFS, RFS, etc.) para poner
+              en la base de datos.  No  hay  ninguno  predetermi­
+              nado.
+
+       --prunepaths='camino1 camino2...'
+              Directorios  que  no  se han de poner en la base de
+              datos, y se pondrían de no  ser  por  esta  opción.
+              Los  predeterminados  son  /tmp  /usr/tmp  /var/tmp
+              /afs.
+
+       --output=ficherodb
+              El archivo de base de datos a construir.  El prede­
+              terminado  depende del sistema, pero normalmente es
+              /usr/local/var/locatedb.
+
+       --netuser=usuario
+              El usuario empleado para la búsqueda de directorios
+              de  red, mediante su(1).  El predeterminado es dae­
+              mon.
+
+       --old-format
+              Crea la base de datos en el formato antiguo en  vez
+              de en el nuevo.
+
+       --version
+              Muestra el número de versión de updatedb y acaba.
+
+       --help Muestra  un  sumario  de las opciones de updatedb y
+              acaba.
+
+VÉASE TAMBIÉN
+       find(1L),  locate(1L),  locatedb(5L),  xargs(1L)   Finding
+       Files (``Buscando Ficheros''; en pantalla mediante el sis­
+       tema Info, o impreso en papel).
+
+
+
+                                                     UPDATEDB(1L)

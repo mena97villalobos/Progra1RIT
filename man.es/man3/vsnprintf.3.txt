@@ -1,0 +1,73 @@
+SNPRINTF(3)      Manual del Programador de Linux      SNPRINTF(3)
+
+
+
+NOMBRE
+       snprintf, vsnprintf - conversión de salida con formato
+
+SINOPSIS
+       #define _GNU_SOURCE
+       #include <stdio.h>
+
+       int snprintf ( char *str, size_t n,
+                                const char *format, ... );
+
+       #include <stdarg.h>
+
+       int vsnprintf ( char *str, size_t n,
+                                const char *format, va_list ap );
+
+DESCRIPCIÓN
+       snprintf escribe en la cadena de caracteres str,  bajo  el
+       control  de  la cadena de caracteres format que especifica
+       cómo se convertirán los siguientes argumentos en  la  sal­
+       ida. Es similar a sprintf(3), salvo en que n especifica el
+       máximo número de caracteres que se producirán. El carácter
+       cero terminador se cuenta en este límite, así que Ud. debe
+       alojar como poco n caracteres para la cadena str.
+
+       vsnprintf es el equivalente de snprintf con la lista vari­
+       able  de  argumentos  especificados  directamente  como en
+       vprintf.
+
+VALOR DEVUELTO
+       Si la salida se ha truncado, el valor de retorno es -1; si
+       no,  es  el  número de caracteres guardados, sin contar el
+       cero terminador.
+
+EJEMPLOS
+       Aquí se  presenta  un  programa  de  ejemplo  que  expande
+       dinámicamente su búfer de salida.
+
+           /* Construye un mensaje describiendo el valor de una
+              variable cuyo nombre es NOMBRE y cuyo valor es
+              VALOR. */
+           char *
+           construir_mensaje (char *nombre, char *valor)
+           {
+             /* Suponemos que basta con 100 caracteres */
+             int tam = 100;
+             char *bufer = (char *) xmalloc (tam);
+             while (1)
+               {
+                 /* Intenta mostrar el espacio reservado. */
+                 int nchars = snprintf (bufer, tam,
+                               "El valor de %s es %s\n", nombre, valor);
+                 /* Si funcionó, devuelve la cadena */
+                 if (nchars > -1)
+                   return bufer;
+                 /* Si no, se intenta de nuevo con el doble de espacio. */
+                 tam *= 2;
+                 bufer = (char *) xrealloc (bufer, tam);
+               }
+           }
+
+CONFORME A
+       Éstas son extensiones de GNU.
+
+VÉASE TAMBIÉN
+       printf(3), sprintf(3), vsprintf(3), stdarg(3)
+
+
+
+GNU                        9 Marzo 1998               SNPRINTF(3)

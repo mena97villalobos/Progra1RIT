@@ -1,0 +1,50 @@
+STRCPY(3)        Manual del Programador de Linux        STRCPY(3)
+
+
+
+NOMBRE
+       strcpy, strncpy - copian una cadena de caracteres
+
+SINOPSIS
+       #include <string.h>
+
+       char *strcpy(char *dest, const char *orig);
+
+       char *strncpy(char *dest, const char *orig, size_t n);
+
+DESCRIPCIÓN
+       La función strcpy() copia la cadena de caracteres apuntada
+       por orig (incluyendo el carácter terminador '\0') al  vec­
+       tor  apuntado por dest.  Las cadenas no deben solaparse, y
+       la de destino, dest, debe ser suficientemente grande  como
+       para alojar la copia.
+
+       La  función  strncpy() es similar, pero no se copiarán más
+       de n bytes de orig. Así, si el byte cero no está entre los
+       primeros  n bytes de orig, el resultado no será una cadena
+       terminada en cero.
+
+       En el caso en que la longitud de orig sea menor que la  de
+       n, el resto de dest se rellenará con ceros.
+
+VALOR DEVUELTO
+       Las  funciones strcpy() y strncpy() devuelven un puntero a
+       la cadena destino dest.
+
+FALLOS
+       Si la cadena destino de un strcpy() no es bastante  grande
+       (esto  es, si el programador fue estúpido o perezoso, y no
+       comprobó el tamaño antes de la copia) entonces puede ocur­
+       rir cualquier cosa.  Provocar el desbordamiento de cadenas
+       de caracteres de longitud fija es una técnica favorita  de
+       los piratas informáticos.
+
+CONFORMES CON
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       bcopy(3), memccpy(3), memcpy(3), memmove(3)
+
+
+
+GNU                       11 Marzo 1998                 STRCPY(3)

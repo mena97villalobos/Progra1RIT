@@ -1,0 +1,43 @@
+VM86(2)          Manual del Programador de Linux          VM86(2)
+
+
+
+NOMBRE
+       vm86old, vm86 - entra en el modo virtual del 8086
+
+SINOPSIS
+       #include <sys/vm86.h>
+
+       int vm86old(struct vm86_struct * info);
+
+       int vm86(unsigned long fn, struct vm86plus_struct * v86);
+
+DESCRIPCIÓN
+       La  llamada  al  sistema  vm86  fue  introducida  en Linux
+       0.97p2. En Linux 2.1.15 y 2.0.28 se renombró como vm86old,
+       y  se  introdujo  una  nueva  vm86.   La  definición de la
+       `struct vm86_struct' se cambió en 1.1.8 y 1.1.9.
+
+       Estas llamadas hacen que el proceso entre en el modo VM86,
+       y las emplea dosemu (dos(1)).
+
+VALOR DEVUELTO
+       En  caso  de éxito, se devuelve cero. En caso de error, se
+       devuelve -1 y se pone en errno un valor apropiado.
+
+ERRORES
+       (para vm86old)
+
+       EPERM   Existe la pila del núcleo salvaguardada. (Ésta  es
+               una  comprobación  prudencial  del núcleo; la pila
+               salvaguardada sólo existe dentro del  propio  modo
+               vm86.)
+
+CONFORME A
+       Esta  llamada  es  específica  de Linux en procesadores de
+       Intel, y no debería emplearse en programas pretendidamente
+       transportables.
+
+
+
+Linux 2.1.15             13 Febrero 1998                  VM86(2)

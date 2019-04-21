@@ -1,0 +1,62 @@
+USTAT(2)         Manual del Programador de Linux         USTAT(2)
+
+
+
+NOMBRE
+       ustat - obtiene datos del sistema de ficheros
+
+SINOPSIS
+       #include <sys/types.h>
+
+       int ustat(dev_t dev, struct ustat * ubuf);
+
+DESCRIPCIÓN
+       ustat  devuelve  información  sobre un sistema de ficheros
+       montado.  dev es un número de dispositivo que identifica a
+       uno  que contiene un sistema de ficheros montado.  ubuf es
+       un puntero a una estructura ustat que contiene  los  sigu­
+       ientes miembros:
+
+
+              daddr_t f_tfree;                /* Bloques libres en total */
+              ino_t   f_tinode;               /* Número de nodos-í libres */
+              char    f_fname[6];             /* Nombre del sist. de fichs. */
+              char    f_fpack[6];             /* Nombre del pack del s.f. */
+
+
+       Los dos últimos campos, f_fname y f_fpack, no están imple­
+       mentados y siempre  se  rellenarán  con  caracteres  nulos
+       (ceros).
+
+
+VALOR DEVUELTO
+       En caso de éxito, se devuelve cero y la estructura ustat a
+       la que apunta ubuf se rellenará.  En  caso  de  error,  se
+       devuelve -1 y se pone en errno un valor apropiado.
+
+ERRORES
+       EINVAL dev  no se refiere a un dispositivo que contiene un
+              sistema de ficheros montado.
+
+       EFAULT ubuf apunta afuera del espacio de direcciones acce­
+              sible.
+
+       ENOSYS EL sistema de ficheros montado referenciado por dev
+              no admite esta operación, o  cualquier  versión  de
+              Linux anterior a la 1.3.16.
+
+OBSERVACIONES
+       ustat  sólo  se  proporciona por compatibilidad. Todos los
+       nuevos programas deberían emplear statfs(2) en su lugar.
+
+CONFORME A
+       SVr4.  SVr4 documenta condiciones  de  error  adicionales:
+       ENOLINK, ECOMM y EINTR, pero no tiene la condición ENOSYS.
+
+VÉASE TAMBIÉN
+       statfs(2), stat(2)
+
+
+
+
+Linux 1.3.16              9 Febrero 1998                 USTAT(2)

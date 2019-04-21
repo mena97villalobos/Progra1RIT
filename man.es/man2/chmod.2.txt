@@ -1,0 +1,143 @@
+CHMOD(2)         Manual del Programador de Linux         CHMOD(2)
+
+
+
+NOMBRE
+       chmod, fchmod - cambia los permisos de un fichero
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <sys/stat.h>
+
+       int chmod(const char *path, mode_t mode);
+       int fchmod(int fildes, mode_t mode);
+
+DESCRIPCIÓN
+       Cambia  el  modo del fichero dado mediante path o referido
+       por fildes
+
+       Los modos se especifican mediante un O lógico de los sigu­
+       ientes valores:
+
+
+              S_ISUID   04000 asignar ID de usuario al ejecutar
+
+              S_ISGID   02000 asignar ID de group al ejecutar
+
+              S_ISVTX   01000 bit pegajoso (sticky bit)
+
+              S_IRUSR (S_IREAD)
+                        00400 lectura para el propietario
+
+              S_IWUSR (S_IWRITE)
+                        00200 escritura para el propietario
+
+              S_IXUSR (S_IEXEC)
+                        00100  ejecución/busqueda  para el propi­
+                        etario
+
+              S_IRGRP   00040 lectura para el grupo
+
+              S_IWGRP   00020 escritura para el grupo
+
+              S_IXGRP   00010 ejecución/busqueda para el grupo
+
+              S_IROTH   00004 lectura para otros
+
+              S_IWOTH   00002 escritura para otros
+
+              S_IXOTH   00001 ejecución/busqueda para otros
+
+
+       El UID efectivo del proceso debe ser cero o debe coincidir
+       con el propietario del fichero.
+
+       Si  el  UID efectivo del proceso no es cero y el grupo del
+       fichero no coincide con el ID de grupo efectivo  del  pro­
+       ceso o con uno de sus IDs de grupo sumplementarios, el bit
+       S_ISGID se desactivará, aunque esto no  provocará  que  se
+       devuelva un error.
+
+       Dependiendo  del  sistema  de ficheros, los bits S_ISUID y
+       S_ISGID podrían desactivarse si el fichero es escrito.  En
+       algunos  sistemas  de ficheros, solo el superusuario puede
+       asignar el bit pegajoso, lo cual puede tener  un  signifi­
+       cado  especial  (por ejemplo, para directorios, un fichero
+       solo  puede  ser  borrado  por   el   propietario   o   el
+       superusuario).
+
+       En  sistemas  de  ficheros NFS, la restricción de permisos
+       influirá inmediatamente en los ficheros  ya  abiertos,  ya
+       que el control de acceso se hacen en el servidor, pero los
+       ficheros  abiertos  son  mantenidos  por  el  cliente.  La
+       ampliación  de  permisos  puede verse retrasada para otros
+       clientes  si  en  ellos  está  habilitada  la   ocultación
+       (caching) de atributos.
+
+
+VALOR DEVUELTO
+       En  caso  de  éxito, devuelve 0. En caso de error, -1 y se
+       asigna a la variable errno un valor adecuado.
+
+ERRORES
+       Dependiendo del sistema de ficheros,  se  pueden  devolver
+       otros errores. Los más generales para chmod están listados
+       a continuación:
+
+
+       EPERM   El UID efectivo no coincide con el propietario del
+               fichero, o no es cero.
+
+       EROFS   El  fichero  nombrado  reside  en  un  sistema  de
+               ficheros de sólo lectura.
+
+       EFAULT  path apunta fuera del espacio de direcciones acce­
+               sible.
+
+       ENAMETOOLONG
+               path es demasiado largo.
+
+       ENOENT  El fichero no existe.
+
+       ENOMEM  No hubo suficiente memoria en el núcleo.
+
+       ENOTDIR Un componente del camino path no es un directorio.
+
+       EACCES  Se ha denegado el permiso de búsqueda para uno  de
+               los componentes del camino.
+
+       ELOOP   Se han encontrado demasiados enlaces simbólicos al
+               resolver path.
+
+       EIO     Ha ocurrido un error de E/S.
+
+       Los errores comunes para fchmod son:
+
+       EBADF   El descriptor de fichero fildes no es válido.
+
+       EROFS   Lea nota anterior.
+
+       EPERM   Lea nota anterior.
+
+       EIO     Lea nota anterior.
+
+CONFORME A
+       La llamada chmod conforma con SVr4, SVID,  POSIX,  X/OPEN,
+       4.4BSD.   SVr4  documenta  además las condiciones de error
+       EINTR, ENOLINK y EMULTIHOP, pero no  ENOMEM.   POSIX.1  no
+       documenta las condiciones de error EFAULT, ENOMEM, ELOOP y
+       EIO, ni las macros S_IREAD, S_IWRITE y S_IEXEC.
+
+       La llamada fchmod conforma con 4.4BSD y SVr4.  SVr4  docu­
+       menta además las condiciones de error EINTR y ENOLINK.  Si
+       se define al menos una de la variables _POSIX_MAPPED_FILES
+       o  _POSIX_SHARED_MEMORY_OBJECTS,  POSIX  exige  la función
+       fchmod y documenta las condiciones  de  error  adicionales
+       ENOSYS y EINVAL, pero no documenta EIO.
+
+VÉASE TAMBIÉN
+       open(2), chown(2), stat(2)
+
+
+
+Linux 2.0.32            10 Diciembre 1997                CHMOD(2)

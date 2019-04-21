@@ -1,0 +1,67 @@
+MTOOLSTEST(1)                                       MTOOLSTEST(1)
+
+
+
+NOMBRE
+       mtoolstest - verifica y muestra la configuración
+
+
+
+NOTA
+       Esta  página  de manual ha sido generada automáticamente a
+       partir de la documentación texinfo de mtools. Sin embargo,
+       el  proceso  es sólo aproximado, y algunos elementos tales
+       como referencias cruzadas, notas  al  pie  e  índices,  se
+       pierden  en  este  proceso de traducción.  De hecho, estos
+       elementos no tienen una representación adecuada en el for­
+       mato  de  las  páginas del manual. Por otra parte, sólo se
+       han traducido los elemntos específicos de cada comando,  y
+       se  ha  desechado de la versión de la página del manual la
+       información general de mtools. Por este motivo,  le  aviso
+       encarecidamente que use el documento texinfo original.
+
+       *      Para generar un copia imprimible del documento tex­
+       info use los siguientes comandos:
+
+                     ./configure; make dvi; dvips mtools.dvi
+
+
+
+       *      Para generar una copia html, ejecute:
+
+                     ./configure; make html
+
+              Puede   encontrar   un  html  preconfeccionado  en:
+              `http://linux.wauug.org/pub/knaff/mtools'
+
+       *      Para generar un copia info (visualizable usando  el
+              modo info de emacs), ejecute:
+
+                     ./configure; make info
+
+
+
+       El documento texinfo parece más bonito en html o cuando se
+       imprime. De hecho, la versión info contiene ciertos ejemp­
+       los que son difíciles de leer debido a las convenciones de
+       notación usadas en info.
+
+
+DESCRIPCIÓN
+       El comando mtoolstest se usa para comprobar  los  ficheros
+       de   configuración.   Para  llamarlo,  simplemente  teclee
+       mtoolstest  sin  ningún  argumento.   Mtoolstest  lee  los
+       ficheros  de configuración de mtools y muestra la configu­
+       ración acumulada en la  salida  estándar.   La  salida  se
+       puede  usar como fichero de configuración (aunque le puede
+       interesar eliminar cláusulas redundantes). Puede usar este
+       programa para convertir el estilo antiguo de configuración
+       a los ficheros del nuevo estilo.
+
+VÉASE TAMBIÉN
+       La documentación texinfo de Mtools
+
+
+
+
+mtools-3.7                29 Junio 1997             MTOOLSTEST(1)

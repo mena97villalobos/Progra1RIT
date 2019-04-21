@@ -1,0 +1,173 @@
+DF(1)                                                       DF(1)
+
+
+
+NOMBRE
+       df  -  informa  de  la utilización del espacio de disco en
+       sistemas de ficheros
+
+SINOPSIS
+       df [opciones] [fichero...]
+
+       Opciones de POSIX: [-kP]
+
+       Opciones de GNU (en la forma más  corta):  [-ahikmPv]  [-t
+       tipo-sf]  [-x tipo-sf] [--print-type] [--no-sync] [--sync]
+       [--help] [--version] [--]
+
+DESCRIPCIÓN
+       df informa de la cantidad de espacio de disco usada  y  de
+       la disponible en sistemas de ficheros.
+
+       Sin  argumentos,  df  informa  del  espacio  usado  y  del
+       disponible en todos  los  sistemas  de  ficheros  montados
+       actualmente  (de  todos  los  tipos).   De  otro  modo, df
+       informa sólo del sistema de ficheros donde esté cada argu­
+       mento fichero.
+
+DETALLES DE POSIX
+       La salida es en unidades de 512 bytes por omisión, si bien
+       si se da la opción -k lo es en unidades de 1024 bytes.  El
+       formato  de  salida  es  indefinido,  a menos que se dé la
+       opción -P.  Si fichero no es un fichero regular, un direc­
+       torio o un FIFO, el resultado es indeterminado.
+
+DETALLES DE GNU
+       La  salida  es  en  unidades  de 1024 bytes (cuando en las
+       opciones no se especifiquen otras unidades), a  menos  que
+       la  variable  de entorno POSIXLY_CORRECT esté definida, en
+       cuyo caso se sigue el comportamiento POSIX.
+
+       Si un argumento fichero es un fichero  de  dispositivo  de
+       disco  que  contiene  un  sistema  de ficheros montado, df
+       muestra el espacio disponible en ese sistema  de  ficheros
+       en  lugar  de  el  del sistema de ficheros que contiene el
+       nodo o fichero especial de dispositivo.
+
+OPCIONES DE POSIX
+       -k     Emplea unidades de 1024 bytes (1 kB)  en  lugar  de
+              las predeterminadas de 512 bytes.
+
+       -P     La  salida  es  en  6 columnas, con cabecera (en la
+              localización "C") `Filesystem N-blocks Used  Avail­
+              able  Capacity Mounted on' (con N=512, o N=1024 con
+              la opción -k). En español, la cabecera sería  `Sis­
+              tema   de   Ficheros   Bloques  de  N  bytes  Usado
+              Disponible Capacidad Montado en'.
+
+OPCIONES DE GNU
+       -a, --all
+              Incluye en el  listado  sistemas  de  ficheros  que
+              tienen  un  tamaño  de  0 bloques, los que de forma
+              predeterminada  se  omiten.   Tales   sistemas   de
+              ficheros   son   típicamente   pseudo-sistemas   de
+              ficheros de propósitos  especiales,  como  entradas
+              del auto-montador. También, sistemas de ficheros de
+              tipo "ignore"  o  "auto",  soportados  por  algunos
+              sistemas  operativos,  se  incluyen solamente si se
+              especifica esta opción.
+
+       -h, --human-readable
+              Añade una letra indicativa de tamaño, como  M  para
+              megabytes, a cada tamaño.
+
+       -i, --inodes
+              Lista  información  sobre la utilización de nodos-í
+              en lugar de la de bloques. Un  nodo-í  (abreviatura
+              de  nodo  índice)  contiene  información  sobre  un
+              fichero como por ejemplo su propietario,  permisos,
+              marcas de tiempos, y localización de sus bloques de
+              datos en el disco.
+
+       -k, --kilobytes
+              Muestra los tamaños en bloques de 1024 bytes.
+
+       -m, --megabytes
+              Muestra los tamaños en bloques de  megabytes  (esto
+              es, de 1.0408.576 bytes).
+
+       --no-sync
+              No  llama  a  la  primitiva  sync  antes de obtener
+              cualquier dato de  utilización  de  espacio.   Esto
+              puede  hacer que df se ejecute bastante más rápido,
+              pero en algunos sistemas  (notablemente  en  SunOS)
+              los  resultados  pueden estar algo desfasados. Esto
+              es el comportamiento predeterminado.
+
+       -P, --portability
+              Emplea el formato de salida de POSIX.  Éste es como
+              el  formato predeterminado salvo que la información
+              sobre cada sistema de ficheros se  imprime  siempre
+              en exactamente una línea; un dispositivo de montaje
+              nunca se pone en una línea solo. Esto significa que
+              si  el  nombre del dispositivo de montaje es de más
+              de 20 caracteres de largo (p.ej. esto puede ocurrir
+              en montajes de red), las columnas se alinearán mal.
+
+       --sync Llama  a  la  primitiva  sync  antes   de   obtener
+              cualquier   dato  de  utilización  de  espacio.  En
+              algunos  sistemas  (notablemente  en  SunOS),  esto
+              lleva a resultados más al día, pero en general esta
+              opción hace a df  mucho  más  lento,  especialmente
+              cuando  hay muchos sistemas de ficheros o están muy
+              ocupados, activos.
+
+       -t tipo-sf, --type=tipo-sf
+              Limita el listado a sistemas de  ficheros  de  tipo
+              tipo-sf.   Se  pueden  especificar  varios tipos de
+              sistemas de ficheros dando varias opciones -t.   De
+              forma predeterminada, ninguno se omite.
+
+       -T, --print-type
+              Muestra  cada  tipo  de  sistema  de ficheros.  Los
+              tipos dados son aquéllos de los que informa el sis­
+              tema  (y se encuentran en una forma dependiente del
+              sistema, por ejemplo leyendo /etc/mtab).   Consulte
+              también mount(8).
+
+       -x tipo-sf, --exclude-type=tipo-sf
+              Limita el listado a los sistemas de ficheros que no
+              sean de tipo tipo-sf.  Se  pueden  eliminar  varios
+              tipos de sistemas de ficheros dando varias opciones
+              -x.  De forma predeterminada, no  se  omite  ningún
+              tipo de sistema de ficheros.
+
+       -v     No hace nada; se acepta por compatibilidad con ver­
+              siones de df de System V.
+
+OPCIONES ESTÁNDARES DE GNU
+       --help Muestra un mensaje en la salida estándar  sobre  el
+              modo de empleo y acaba con código de éxito.
+
+       --version
+              Muestra  en la salida estándar información sobre la
+              versión, y luego acaba con código de éxito.
+
+       --     Termina la lista de opciones.
+
+ENTORNO
+       La variable POSIXLY_CORRECT determina la  elección  de  la
+       unidad.   Si  no  está  definida,  y la variable BLOCKSIZE
+       tiene un valor que empiece por `HUMAN', entonces  el  com­
+       portamiento  es como el que se obtiene con la opción -h, a
+       menos que se hayan dado las opciones -k o -m.   Las  vari­
+       ables LANG, LC_ALL, LC_CTYPE y LC_MESSAGES tienen los sig­
+       nificados usuales.
+
+CONFORME A
+       POSIX 1003.2.
+
+VÉASE TAMBIÉN
+       mount(8)
+
+OBSERVACIONES
+       Esta página describe df como se encuentra  en  el  paquete
+       fileutils-3.16; otras versiones pueden diferir algo. Envíe
+       por correo electrónico sus correcciones  y  sugerencias  a
+       aeb@cwi.nl,   a  aw@mail1.bet1.puv.fi  y  a  ragnar@light­
+       side.ddns.org.  Envíe los informes de fallos  en  el  pro­
+       grama a fileutils-bugs@gnu.ai.mit.edu.
+
+
+
+GNU fileutils 3.16        Agosto de 1998                    DF(1)

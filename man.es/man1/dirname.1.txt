@@ -1,0 +1,34 @@
+DIRNAME(1)                                             DIRNAME(1)
+
+
+
+NOMBRE
+       dirname  -  elimina los sufijos no directorio de un nombre
+       de fichero
+
+SINOPSIS
+       dirname nombre_fichero
+       dirname {--help,--version}
+
+DESCRIPCIÓN
+       Esta documentación no será mantenida y puede ser  inexacta
+       o incompleta.  La documentación Texinfo es ahora la fuente
+       autorizada.
+
+       Esta página de manual documenta la versión GNU de dirname.
+       dirname  imprime todos los componentes salvo los delimita­
+       dos  por  la  barra  fina  de  nombre_fichero.   Si   nom­
+       bre_fichero tiene un compnente simple, dirname imprime `.'
+       (que significa directorio actual).
+
+   OPCIONES
+       --help Imprime un mensaje de uso en la salida  estándar  y
+              termina correctamente.
+
+       --version
+              Imprime  información  sobre la versión en la salida
+              estándar y termina correctamente.
+
+
+
+FSF                    Utilidades Shell GNU            DIRNAME(1)

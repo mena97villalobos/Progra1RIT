@@ -1,0 +1,25 @@
+TANH(3)          Manual del Programador de Linux          TANH(3)
+
+
+
+NOMBRE
+       tanh - función tangente hiperbólica
+
+SINOPSIS
+       #include <math.h>
+
+       double tanh(double x);
+
+DESCRIPCIÓN
+       La  función  tanh() devuelve la tangente hiperbólica de x,
+       que se define matemáticamente como sinh(x) / cosh(x).
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       acosh(3), asinh(3), atanh(3), cosh(3), sinh(3)
+
+
+
+GNU                       12 Marzo 1998                   TANH(3)

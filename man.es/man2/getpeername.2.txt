@@ -1,0 +1,59 @@
+GETPEERNAME(2)   Manual del Programador de Linux   GETPEERNAME(2)
+
+
+
+NOMBRE
+       getpeername - obtiene el nombre de la pareja conectada
+
+SINOPSIS
+       #include <sys/socket.h>
+
+       int  getpeername(int s, struct sockaddr *nombre, socklen_t
+       *longinom);
+
+DESCRIPCIÓN
+       Getpeername devuelve el nombre de la pareja  conectada  al
+       zócalo  s.  El parámetro longinom debería inicializarse de
+       forma que indicara la cantidad de espacio a la  que  apun­
+       tara  nombre.  Al regresar la función, contendrá el tamaño
+       real del nombre devuelto (en bytes). El nombre  se  trunca
+       si el búfer provisto es demasiado pequeño.
+
+VALOR DEVUELTO
+       En  caso  de éxito, se devuelve cero. En caso de error, se
+       devuelve -1 y se pone en errno un valor apropiado.
+
+ERRORES
+       EBADF   El argumento s no es un descriptor válido.
+
+       ENOTSOCK
+               El argumento s es un fichero, no un zócalo.
+
+       ENOTCONN
+               El zócalo no está conectado.
+
+       ENOBUFS No había en el sistema suficientes  recursos  como
+               para efectuarse la operación.
+
+       EFAULT  El  parámetro  nombre apunta a memoria que no está
+               en una zona válida del espacio de direcciones  del
+               proceso.
+
+CONFORME A
+       SVr4,  4.4BSD  (la llamada al sistema getpeername apareció
+       por vez 1ª en 4.2BSD).
+
+NOTA
+       El tercer argumento  de  getpeername  es  en  realidad  un
+       entero  (y  esto es lo que tienen BSD 4.*, libc4 y libc5).
+       Cierta confusión en POSIX dio  como  resultado  el  actual
+       socklen_t.  El estándar propuesto todavía no ha sido adop­
+       tado pero glibc2 ya lo sigue y  también  tiene  socklen_t.
+       Vea también accept(2).
+
+VÉASE TAMBIÉN
+       accept(2), bind(2), getsockname(2)
+
+
+
+BSD                       30 Julio 1993            GETPEERNAME(2)

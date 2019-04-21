@@ -1,0 +1,61 @@
+GETPWNAM(3)      Manual del Programador de Linux      GETPWNAM(3)
+
+
+
+NOMBRE
+       getpwnam,  getpwuid -  obtienen una entrada del fichero de
+       cuentas de usuario
+
+SINOPSIS
+       #include <pwd.h>
+       #include <sys/types.h>
+
+       struct passwd *getpwnam(const char * nombre);
+
+       struct passwd *getpwuid(uid_t uid);
+
+DESCRIPCIÓN
+       La función getpwnam()  devuelve un puntero a  una  estruc­
+       tura  que  contiene los campos de una línea de /etc/passwd
+       para la entrada que concuerda con  el  nombre  de  usuario
+       nombre.
+
+       La  función  getpwuid()  devuelve un puntero a una estruc­
+       tura que contiene los campos de una línea  de  /etc/passwd
+       para  la entrada que concuerda con el uid del usuario uid.
+
+       La estructura passwd se define en <pwd.h> así:
+
+              struct passwd {
+                      char    *pw_name;       /* nombre de usuario */
+                      char    *pw_passwd;     /* contraseña cifrada */
+                      uid_t   pw_uid;         /* id. del usuario */
+                      gid_t   pw_gid;         /* id. del grupo primario */
+                      char    *pw_gecos;      /* nombre real */
+                      char    *pw_dir;        /* directorio de inicio */
+                      char    *pw_shell;      /* programa caparazón */
+              };
+
+VALOR DEVUELTO
+       Las funciones getpwnam() y getpwuid() devuelven la estruc­
+       tura  passwd, o NULL si la entrada buscada no se encuentra
+       u ocurre un error.
+
+ERRORES
+       ENOMEM Memoria  insuficiente  para  alojar  la  estructura
+              passwd.
+
+FICHEROS
+       /etc/passwd
+              fichero con los datos de las cuentas de usuario
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3
+
+VÉASE TAMBIÉN
+       fgetpwent(3),   getpwent(3),   setpwent(3),   endpwent(3),
+       getpw(3), putpwent(3), passwd(5).
+
+
+
+GNU                       30 Enero 1998               GETPWNAM(3)

@@ -1,0 +1,197 @@
+SHMGET(2)        Manual del programador de Linux        SHMGET(2)
+
+
+
+NOMBRE
+       shmget - asigna un segmento de memoria compartida
+
+SINOPSIS
+       #include <sys/ipc.h>
+
+       #include <sys/shm.h>
+
+       int shmget(key_t key, int size, int shmflg);
+
+DESCRIPCIÓN
+       shmget()  devuelve el identificativo del segmento de memo­
+       ria compartida asociado al valor del  argumento  key.   Se
+       crea  un  nuevo  segmento de memoria compartida, de tamaño
+       igual al múltiplo de PAGE_SIZE más aproximado (por exceso)
+       a  size,  si  key  tiene  el valor IPC_PRIVATE o key no es
+       IPC_PRIVATE, no hay ningún segmento de memoria  compartida
+       asociado  a  key, y IPC_CREAT está declarado en shmflg (es
+       decir, shmflg&IPC_CREAT es distinto de cero).  La  presen­
+       cia en
+
+       shmflg está compuesta de:
+
+       IPC_CREAT   para  crear  un  nuevo segmento. Si este indi­
+                   cador no se usa, shmget() encontrará  el  seg­
+                   mento  asociado  con  key,  comprobará  que el
+                   usuario tenga permiso para  recibir  el  shmid
+                   asociado  con  el  segmento, y se asegurará de
+                   que el segmento no esté marcado para  destruc­
+                   ción.
+
+       IPC_EXCL    usado  con IPC_CREAT para asegurar el fallo si
+                   el segmento existe.
+
+       mode_flags (9 bits más bajos)
+                   especifican los permisos otorgados  al  dueño,
+                   grupo  y resto del mundo.  Actualmente el sis­
+                   tema no usa los permisos de ejecución.
+
+       Si se crea un nuevo segmento, los permisos  de  acceso  de
+       shmflg  son  copiados al miembro shm_perm de la estructura
+       shmid_ds que define el segmento. La estructura shmid_ds:
+
+            struct shmid_ds {
+                 struct    ipc_perm shm_perm;  /* permisos de operación */
+                 int  shm_segsz;          /* tamaño del segmento (bytes) */
+                 time_t    shm_atime;          /* tiempo de la última unión */
+                 time_t    shm_dtime;          /* tiempo de la última separación */
+                 time_t    shm_ctime;          /* tiempo del último cambio */
+                 unsigned short shm_cpid; /* pid del creador */
+                 unsigned short shm_lpid; /* pid del último operador */
+                 short     shm_nattch;         /* nº de uniones actuales */
+            };
+
+            struct ipc_perm
+            {
+              key_t  key;
+              ushort uid;   /* euid y egid del dueño */
+              ushort gid;
+              ushort cuid;  /* euid y egid del creador */
+              ushort cgid;
+              ushort mode;  /* 9 bits más bajos de shmflg */
+              ushort seq;   /* número de secuencia */
+            };
+
+       Además, mientras se crea, la llamada del sistema  inicial­
+       iza  la estructura de datos shmid_ds del segmento de memo­
+       ria compartida del sistema como sigue:
+
+              shm_perm.cuid y shm_perm.uid son asignados al iden­
+              tificativo  de  usuario efectivo (euid) del proceso
+              creador.
+
+              shm_perm.cgid y shm_perm.gid son asignados al iden­
+              tificativo  de  grupo  efectivo  (egid) del proceso
+              creador.
+
+              Los 9 bits más  bajos  de  shm_perm.mode  toman  el
+              valor de los 9 bits más bajos de shmflg.
+
+              shm_segsz toma el valor de size.
+
+              shm_lpid,  shm_nattch,  shm_atime  y  shm_dtime son
+              puestos a 0.
+
+              shm_ctime toma el valor del tiempo actual.
+
+       Si el segmento de memoria compartida ya existe, se verifi­
+       can los permisos de acceso, y se comprueba si está marcado
+       para destrucción.
+
+
+LLAMADAS DEL SISTEMA
+       fork()  Después de un fork() el hijo hereda los  segmentos
+               de memoria compartida unidos.
+
+       exec()  Después  de un exec() todos los segmentos de memo­
+               ria compartida unidos son separados  (no  destrui­
+               dos).
+
+       exit()  A  través de exit() todos los segmentos de memoria
+               compartida unidos son separados (no destruidos).
+
+
+VALOR REGRESADO
+       En caso de éxito se devuelve el identificativo  válido  de
+       segmento shmid.  En caso de error se devuelve -1.
+
+ERRORES
+       En  caso de error, errno tomará uno de los siguientes val­
+       ores:
+
+       EINVAL      se devuelve si SHMMIN > size o size >  SHMMAX,
+                   o size es mayor que el tamaño del segmento.
+
+       EEXIST      se  devuelve  si  se  especificó  IPC_CREAT  |
+                   IPC_EXCL y el segmento existe.
+
+       EIDRM       se devuelve si el segmento está  marcado  como
+                   destruido o fue borrado.
+
+       ENOSPC      se  devuelve si se han usado todos los identi­
+                   ficativos  posibles  de   memoria   compartida
+                   (SHMMNI),  o si asignar un segmento del tamaño
+                   (size) solicitado causaría al sistema  exceder
+                   su   propio   límite   de  memoria  compartida
+                   (SHMALL).
+
+       ENOENT      se devuelve si no existe segmento para el  key
+                   dado, y no se especificó IPC_CREAT.
+
+       EACCES      se  devuelve  si  el  usuario no tiene permiso
+                   para acceder al segmento  de  memoria  compar­
+                   tida.
+
+       ENOMEM      se  devuelve  si  no pudo asignarse suficiente
+                   memoria para el segmento requerido.
+
+NOTAS
+       IPC_PRIVATE no es un indicador, sino un tipo key_t.  Si se
+       usa  este  valor especial para key, la llamada del sistema
+       ignora todos menos los 9 bits más bajos de shmflg  y  crea
+       un  nuevo  segmento  de  memoria  compartida  (en  caso de
+       éxito).
+
+       Los siguientes son los límites de los recursos de un  seg­
+       mento  de  memoria  compartida  afectados  por una llamada
+       shmget:
+
+       SHMALL     Máximo número de páginas de memoria  compartida
+                  de  todo  el  sistema. Dependiente del criterio
+                  que se use.
+
+       SHMMAX     Máximo tamaño en bytes de un segmento de  memo­
+                  ria   compartida.   Dependiente  de  la  imple­
+                  mentación (actualmente 4M).
+
+       SHMMIN     Mínimo tamaño en bytes de un segmento de  memo­
+                  ria   compartida.   Dependiente  de  la  imple­
+                  mentación (actualmente 1 byte, aunque PAGE_SIZE
+                  es el tamaño mínimo efectivo).
+
+       SHMMNI     Máximo  número  de segmentos de memoria compar­
+                  tida de todo el  sistema.   Dependiente  de  la
+                  implementación (actualmente 4096).
+
+       La implementación no tiene límites específicos respecto al
+       máximo número de segmentos de memoria compartida por  pro­
+       ceso (SHMSEG).
+
+FALLOS
+       El uso de IPC_PRIVATE no impide a otros procesos el acceso
+       al segmento de memoria compartida asignado.
+
+       Del mismo modo que ocurre con los ficheros, actualmente no
+       hay  ningún  modo  intrínseco  por el que un proceso pueda
+       asegurarse acceso exclusivo a un segmento de memoria  com­
+       partida.  Declarar tanto IPC_CREAT como IPC_EXCL en shmflg
+       sólo asegura, en caso de éxito, que  se  creará  un  nuevo
+       segmento  de  memoria compartida. No implica acesso exclu­
+       sivo a dicho segmento.
+
+CONFORME A
+       SVr4, SVID.  SVr4 documenta la  condición  de  error  adi­
+       cional  EEXIST.   Ni SVr4 ni SVID documentan una condición
+       EIDRM.
+
+VÉASE TAMBIÉN
+       ftok(3), ipc(5), shmctl(2), shmat(2), shmdt(2).
+
+
+
+Linux 0.99.11        28 de noviembre de 1993            SHMGET(2)

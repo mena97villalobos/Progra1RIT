@@ -1,0 +1,66 @@
+
+NOMBRE
+     column - encolumna listas
+
+SINOPSIS
+     column [-tx] [-c columns] [-s sep] [file ...]
+
+DESCRIPCIÓN
+     La utilidad column formatea su entrada en múltiples columnas.  Las filas
+     se rellenan antes que las columnas.  La entrada se toma de un fichero de
+     operandos, o, por defecto, de la entrada estándar.  Las líneas vacías se
+     ignoran.
+
+     Las opciones son las siguientes:
+
+     -c      La salida se formatea para un dispositivo de visualización de un
+             ancho de columns columnas.
+
+     -s      Especifica un conjunto de caracteres que se usarán para delimitar
+             las columnas para la opción -t.
+
+     -t      Determina el número de columnas que contiene la entrada y crea
+             una tabla.  Las columnas se delimitan, por defecto, con espacios
+             en blanco, o con los caracteres que se suministren usando la
+             opción -s.  De uso adecuado para dispositivos de visualización de
+             buena calidad.
+
+     -x      Rellena las columnas antes que las filas.
+
+     Column termina con un código 0 si se ha ejecutado normalmente, >0 si ha
+     ocurrido algún error.
+
+ENTORNO
+     COLUMNS  La variable de entorno COLUMNS se usa para determinar el tamaño
+              de la pantalla si no existe otra información disponible.
+
+EJEMPLOS
+           (printf "PERM LINKS OWNER SIZE MONTH DAY HH:MM/YEAR NAME\n" ; \
+           ls -l | sed 1d) | column -t
+
+VÉASE TAMBIÉN
+     colrm(1), ls(1), paste(1), sort(1)
+
+HISTORIA
+     El comando column aparece por primera vez en la 4.3BSD-Reno.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

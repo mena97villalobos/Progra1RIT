@@ -1,0 +1,29 @@
+BCOPY(3)         Manual del Programador de Linux         BCOPY(3)
+
+
+
+NOMBRE
+       bcopy - copia cadenas de bytes
+
+SINOPSIS
+       #include <string.h>
+
+       void bcopy (const void *src, void *dest, int n);
+
+DESCRIPCIÓN
+       La función bcopy() copia los primeros n bytes de la cadena
+       fuente src a la cadena destino dest. Si n es cero,  no  se
+       copia ningún byte.
+
+VALOR DEVUELTO
+       La función bcopy() no devuelve ningún valor.
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       memccpy(3), memcpy(3), memmove(3), strcpy(3), strncpy(3)
+
+
+
+GNU                     23 Diciembre 1995                BCOPY(3)

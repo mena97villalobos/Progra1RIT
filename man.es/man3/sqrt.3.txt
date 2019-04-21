@@ -1,0 +1,28 @@
+SQRT(3)          Manual del Programador de Linux          SQRT(3)
+
+
+
+NOMBRE
+       sqrt - función de la raíz cuadrada
+
+SINOPSIS
+       #include <math.h>
+
+       double sqrt(double x);
+
+DESCRIPCIÓN
+       La función sqrt() devuelve la raíz cuadrada no negativa de
+       x.  Falla y pone EDOM en errno si x es negativo.
+
+ERRORES
+       EDOM   x es negativo.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       hypot(3)
+
+
+
+Linux                      9 Marzo 1998                   SQRT(3)

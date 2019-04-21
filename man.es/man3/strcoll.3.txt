@@ -1,0 +1,42 @@
+STRCOLL(3)       Manual del Programador de Linux       STRCOLL(3)
+
+
+
+NOMBRE
+       strcoll  -  compara  dos  cadenas según la localización en
+       curso
+
+SINOPSIS
+       #include <string.h>
+
+       int strcoll(const char *s1, const char *s2);
+
+DESCRIPCIÓN
+       La función strcoll() compara las dos cadenas de caracteres
+       s1 y s2.  Devuelve un entero menor, igual o mayor que cero
+       si se encuentra que s1 es menor, igual o mayor que s2.  La
+       comparación  se basa en la interpretación apropiada de los
+       caracteres de las cadenas según la actual localización del
+       programa   para  la  categoría  LC_COLLATE.   (Vea  setlo­
+       cale(3)).
+
+VALOR DEVUELTO
+       La función strcoll() devuelve un  entero  menor,  igual  o
+       mayor que cero si se encuentra, respectivamente, que s1 es
+       menor, igual o mayor que s2, donde ambas cadenas se inter­
+       pretan de la forma adecuada para la localización en curso.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+OBSERVACIONES
+       En las localizaciones "POSIX" o "C", strcoll() es  equiva­
+       lente a strcmp().
+
+VÉASE TAMBIÉN
+       bcmp(3),  memcmp(3), strcasecmp(3), strcmp(3), strxfrm(3),
+       setlocale(3)
+
+
+
+GNU                       12 Abril 1993                STRCOLL(3)

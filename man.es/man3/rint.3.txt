@@ -1,0 +1,31 @@
+RINT(3)          Manual del Programador de Linux          RINT(3)
+
+
+
+NOMBRE
+       rint - redondea al entero más cercano
+
+SINOPSIS
+       #include <math.h>
+
+       double rint(double x);
+
+DESCRIPCIÓN
+       La  función rint() redondea x a un valor entero de acuerdo
+       con el modo prevaleciente de redondeo. El modo de redondeo
+       por defecto es redondear al entero más cercano.
+
+VALOR REGRESADO
+       La  función rint() devuelve el valor entero como un número
+       en coma flotante.
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       abs(3), ceil(3), fabs(3), floor(3), labs(3)
+
+
+
+
+                            6 Jun 1993                    RINT(3)

@@ -1,0 +1,38 @@
+RUNLEVEL(8)    Manual del Administrador de Sistemas   RUNLEVEL(8)
+
+
+
+NOMBRE
+       runlevel -- busca el nivel de ejecución previo y actual.
+
+SINOPSIS
+       runlevel [utmp]
+
+DESCRIPCIÓN
+       Runlevel  lee  el  archivo  de  sistema utmp (generalmente
+       /var/run/utmp) para localizar el nivel salvado e  imprimir
+       el estado actual y el anterior en la salida estándar, sep­
+       arados por un simple espacio. Si no hay  sistema  anterior
+       la letra N será imprimida.
+
+       Si no existe utmp o si no se encuentran los datos de nivel
+       salvados, runlevel imprimirá la palabra unknown  (descono­
+       cido) y finalizará con un error.
+
+       Runlevel  puede usarse en guiones rc y como sustituto para
+       el comando who -r de System-V.  Sin embargo, en  recientes
+       versiones  de  init(8)  esta información también está pre­
+       sente en las variables de entorno RUNLEVEL y PREVLEVEL.
+
+OPCIONES
+       utmp   El nombre del fichero de lectura utmp.
+
+VÉASE TAMBIÉN
+       init(8), utmp(5)
+
+AUTOR
+       Miquel van Smoorenburg, miquels@cistron.nl
+
+
+
+Linux                      27 mayo 1997               RUNLEVEL(8)

@@ -1,0 +1,255 @@
+RECV(2)          Manual del Programador de Linux          RECV(2)
+
+
+
+NOMBRE
+       recv,  recvfrom,  recvmsg  -  reciben  un mensaje desde un
+       conector
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <sys/socket.h>
+
+       int recv(int s, void *buf, size_t lon, int flags);
+
+       int recvfrom(int s, void  *buf,  size_t  lon,  int  flags,
+       struct sockaddr *desde, socklen_t *londesde);
+
+       int recvmsg(int s, struct msghdr *msg, int flags);
+
+DESCRIPCIÓN
+       Las  llamadas  recvfrom  y recvmsg se emplean para recibir
+       mensajes desde un conector  (``socket''),  y  pueden  uti­
+       lizarse  para recibir datos de un conector sea orientado a
+       conexión o no.
+
+       Si desde no es NULL y el conector no es orientado a conex­
+       ión,  la  dirección fuente del mensaje se llena.  El argu­
+       mento londesde es un parámetro  por  referencia,  inicial­
+       izado al tamaño del búfer asociado con desde, y modificado
+       cuando la función regresa para indicar el tamaño  real  de
+       la dirección guardada ahí.
+
+       La llamada a recv se utiliza normalmente sólo en un conec­
+       tor conectado (vea connect(2)) y es  idéntica  a  recvfrom
+       con un parámetro desde con valor NULL.
+
+       Las  tres rutinas devuelven la longitud del mensaje cuando
+       terminan bien.  Si un mensaje es demasiado largo como para
+       caber  en  el  búfer  suministrado,  los  bytes que sobran
+       pueden descartarse dependiendo del tipo  de  conector  del
+       que se reciba el mensaje (vea socket(2)).
+
+       Si  no  hay  mensajes disponibles en el conector, las lla­
+       madas de recepción esperan que llegue un mensaje, a  menos
+       que  el  conector sea no bloqueante (vea fcntl(2)) en cuyo
+       caso se devuelve el valor -1 y la variable  externa  errno
+       toma el valor EAGAIN.  Las llamadas de recepción devuelven
+       normalmente cualquier dato disponible, hasta  la  cantidad
+       pedida,  en  vez  de  esperar  la recepción de la cantidad
+       pedida completa; este comportamiento se  ve  afectado  por
+       las opciones del nivel de conectores SO_RCVLOWAT y SO_RCV­
+       TIMEO descritas en socket(7).
+
+       Las llamadas select(2) o  poll(2)  pueden  emplearse  para
+       determinar cuándo llegan más datos.
+
+       El  argumento  flags  de una llamada a recv se forma apli­
+       cando el operador de bits O-lógico a uno o más de los val­
+       ores siguientes:
+
+       MSG_OOB
+              Esta  opción  pide  la recepción de datos fuera-de-
+              banda que no se recibirían en  el  flujo  de  datos
+              normal.  Algunos protocolos ponen datos despachados
+              con prontitud en la cabeza de la cola de datos nor­
+              males,  y  así,  esta opción no puede emplearse con
+              tales protocolos.
+
+       MSG_PEEK
+              Esta opción hace  que  la  operación  de  recepción
+              devuelva  datos  del principio de la cola de recep­
+              ción sin quitarlos de allí. Así, una  próxima  lla­
+              mada de recepción devolverá los mismos datos.
+
+       MSG_WAITALL
+              Esta  opción hace que la operación se bloquee hasta
+              que se satisfaga  la  petición  completamente.  Sin
+              embargo,  la llamada puede aún devolver menos datos
+              de los pedidos si se captura una señal,  si  ocurre
+              un error o una desconexión, o si los próximos datos
+              que se van a recibir son de un tipo  diferente  del
+              que se ha devuelto.
+
+       MSG_ERRQUEUE
+              Recibir paquete de la cola de errores
+
+       MSG_NOSIGNAL
+              Esta  opción desactiva el que se produzca una señal
+              SIGPIPE sobre los conectores orientados a  conexión
+              cuando el otro extremo desaparece.
+
+       MSG_ERRQUEUE
+              Esta  opción indica que los errores encolados deben
+              recibirse desde la cola de errores  de  conectores.
+              El error se pasa en un mensaje auxiliar con un tipo
+              dependiente  del  protocolo  (para   IP   éste   es
+              IP_RECVERR).  El error se suministra en una estruc­
+              tura sock_extended_err:
+
+              #define SO_EE_ORIGIN_NONE     0
+              #define SO_EE_ORIGIN_LOCAL    1
+              #define SO_EE_ORIGIN_ICMP     2
+              #define SO_EE_ORIGIN_ICMP6    3
+
+              struct sock_extended_err
+              {
+                    __u32   ee_errno;       /* número de error */
+                    __u8    ee_origin;      /* origen del error */
+                    __u8    ee_type;        /* tipo */
+                    __u8    ee_code;        /* código */
+                    __u8    ee_pad;
+                    __u32   ee_info;        /* información adicional */
+                    __u32   ee_data;        /* otros datos */
+              };
+
+              struct sockaddr *SOCK_EE_OFFENDER(struct sock_extended_err *);
+
+              ee_errno contiene el número errno del  error  enco­
+              lado.   ee_origin  es el código del origen en donde
+              se ha originado el error.   Los  otros  campos  son
+              específicos    del   protocolo.    SOCK_EE_OFFENDER
+              devuelve un puntero a la dirección  del  objeto  de
+              red  desde  donde se ha originado el error. Si esta
+              dirección se desconoce,  el  miembro  sa_family  de
+              sockaddr  contiene  AF_UNSPEC y los otros campos de
+              sockaddr quedan indefinidos. El contenido útil  del
+              paquete  que  ha  producido  el  error se pasa como
+              datos normales.
+
+              Para los errores locales no se pasa ninguna  direc­
+              ción  (esto  se  puede  comprobar  con  el  miembro
+              cmsg_len de cmsghdr).  Para los errores  recibidos,
+              se asigna MSG_ERRQUEUE a msghdr.  Después de que se
+              haya pasado un error, el error de  conector  pendi­
+              ente  se  regenera  basándose en el siguiente error
+              encolado y se pasará en la siguiente  operación  de
+              conectores.
+
+       La llamada recvmsg utiliza una estructura msghdr para min­
+       imizar el número de parámetros suministrados directamente.
+       Esta  estructura tiene la forma siguiente, según se define
+       en <sys/socket.h>:
+
+              struct msghdr {
+                  void         * msg_name;     /* dirección opcional */
+                  socklen_t    msg_namelen;    /* tamaño de la dirección */
+                  struct iovec * msg_iov;      /* vector dispersar/agrupar */
+                  size_t       msg_iovlen;     /* nº de elementos en msg_iov */
+                  void         * msg_control;  /* datos auxiliares, ver más abajo */
+                  socklen_t    msg_controllen; /* long buffer datos auxiliares */
+                  int          msg_flags;      /* opciones en mensaje recibido */
+              };
+
+       Aquí msg_name y msg_namelen especifican  la  dirección  de
+       destino  si  el conector está desconectado; msg_name puede
+       darse como un puntero nulo si no  se  desean  o  requieren
+       nombres.  Los campos msg_iov y msg_iovlen describen local­
+       izaciones dispersar/agrupar, como se discute en  readv(2).
+       El  campo  msg_control,  que  tiene  de  longitud msg_con­
+       trollen, apunta a un búfer para otros mensajes  relaciona­
+       dos  con  control  de  protocolo  o  para datos auxiliares
+       diversos. Cuando se llama a recvmsg,  msg_controllen  debe
+       contener la longitud del buffer disponible en msg_control;
+       a la vuelta de una llamada con éxito contendrá la longitud
+       de la secuencia de mensajes de control.
+
+       Los mensajes son de la forma:
+
+              struct cmsghdr {
+                  socklen_t   cmsg_len;   /* Nº de byte de datos, incluye cab. */
+                  int         cmsg_level; /* protocolo originante */
+                  int         cmsg_type;  /* tipo específico del protocolo */
+                                          /* seguido por
+                  u_char      cmsg_data[]; */
+              };
+
+       Los  datos auxiliares sólo deberían ser accedidos mediante
+       las macros definidas en cmsg(3).
+
+       Como ejemplo, Linux usa este mecanismo de datos auxiliares
+       para  pasar  errores ampliados, opciones IP o descriptores
+       de fichero mediante conectores Unix.
+
+       El campo msg_flags toma un valor al  regresar  dependiendo
+       del mensaje recibido.  MSG_EOR indica fin-de-registro; los
+       datos  devueltos  completaron  un  registro  (generalmente
+       empleado   con   conectores   del   tipo  SOCK_SEQPACKET).
+       MSG_TRUNC indica que la porción trasera de un datagrama ha
+       sido  descartada porque el datagrama era más grande que el
+       búfer suministrado.  MSG_CTRUNC indica que algún  dato  de
+       control ha sido descartado debido a la falta de espacio en
+       el búfer para datos auxiliares.  MSG_OOB se devuelve  para
+       indicar  que se han recibido datos despachados prontamente
+       o  fuera-de-banda.   MSG_ERRQUEUE  indica  que  no  se  ha
+       recibido  ningún dato sino un error ampliado de la cola de
+       errores de conectores.
+
+VALOR DEVUELTO
+       Estas llamadas devuelven el número de bytes  recibidos,  o
+       bien -1 en caso de que ocurriera un error.
+
+ERRORES
+       Estos son algunos errores estándares generados por la capa
+       de conectores.  Los modulos de los protocolos  subyacentes
+       pueden  generar  y  devolver errores adicionales. Consulte
+       sus páginas de manual.
+
+       EBADF   El argumento s es un descriptor inválido.
+
+       ENOTCONN
+               El conector está asociado con un protocolo  orien­
+               tado  a  la  conexión  y no ha sido conectado (vea
+               connect(2) y accept(2)).
+
+       ENOTSOCK
+               El argumento s no se refiere a un conector.
+
+       EAGAIN  El conector está marcado como no-bloqueante, y  la
+               operación de recepción produciría un bloqueo, o se
+               ha puesto un límite de tiempo en la recepción, que
+               ha expirado antes de que se recibieran datos.
+
+       EINTR   La  recepción  ha sido interrumpida por la llegada
+               de una señal  antes  de  que  hubiera  algún  dato
+               disponible.
+
+       EFAULT  El  puntero  a  búfer  de  recepción  (o punteros)
+               apunta afuera del espacio de direcciones del  pro­
+               ceso.
+
+       EINVAL  Se ha pasado un argumento inválido.
+
+CONFORME A
+       4.4BSD  (estas  funciones  aparecieron  por primera vez en
+       4.2BSD).
+
+NOTA
+       Los prototipos datos anteriormente siguen a  glibc2.   The
+       Single  Unix Specification coincide en todo excepto en que
+       el tipo de los valores devueltos  es  `ssize_t'  (mientras
+       que  BSD  4.*,  libc4 y libc5 tienen `int').  El argumento
+       flags es un `int' en BSD 4.* pero es un `unsigned int'  en
+       libc4  y  libc5.   El argumento lon es un `int' en BSD 4.*
+       pero es un `size_t' en libc4 y libc5.  El  argumento  lon­
+       desde  es  un  `int' en BSD 4.*, libc4 y libc5.  El actual
+       `socklen_t  *'  fue  inventado  por  POSIX.   Vea  también
+       accept(2).
+
+VÉASE TAMBIÉN
+       fcntl(2),  read(2),  select(2),  getsockopt(2), socket(2),
+       cmsg(3)
+
+
+
+Página man de Linux         Abril 1999                    RECV(2)

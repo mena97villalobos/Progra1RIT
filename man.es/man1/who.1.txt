@@ -1,0 +1,83 @@
+WHO(1)                                                     WHO(1)
+
+
+
+NOMBRE
+       who - muestra quién está conectado al sistema
+
+SINOPSIS
+       who  [-imqsuwHT]  [--count]  [--idle] [--heading] [--help]
+       [--message] [--mesg] [--version] [--writable]  [file]  [am
+       i]
+
+DESCRIPCIÓN
+       Esta documentación no va a ser mantenida a partir de ahora
+       y puede ser inexacta o incompleta. La  documentación  Tex­
+       info es ahora la fuente autorizada.
+
+       Esta  página de manual documenta la versión de GNU de who.
+       Si no se da ningún argumento,  who  imprime  la  siguiente
+       información  por  cada usuario que actualmente está conec­
+       tado al sistema:
+              nombre de la cuenta (login name)
+              terminal
+              tiempo que dura el ingreso
+              nombre de ordenador remoto o terminal X
+
+       Si se da un argumento que no es una opción, who usa ese en
+       vez  de  /etc/utmp como el nombre del fichero que contiene
+       el registro de los usuarios conectados. Con frecuencia, se
+       da  /etc/wtmp  como  argumento  de  who  para ver aquellos
+       usuarios que previamente se conectaron al sistema.
+
+       Si se dan dos argumentos que no son opciones, who  imprime
+       solo la entrada del usuario que lo está ejecutando (deter­
+       minado por la entrada estándar), precedido por  el  nombre
+       del ordenador.  Tradicionalmente, los dos argumentos dados
+       son `am i', como en `who am i' (N.  del  T.-  literalmente
+       `quién soy yo')
+
+   OPCIONES
+       -m     Igual que `who am i'.
+
+       -q, --count
+              Imprime  solo  los nombres de cuenta y el número de
+              usuarios que están conectados  actualmente.  Ignora
+              las otras opciones.
+
+       -s     Ignorado; por compatibilidad con otras versiones de
+              who.
+
+       -i, -u, --idle
+              Después del tiempo que dura el ingreso, imprime  el
+              número  de horas y minutos que el usuario ha estado
+              ocioso.  `.' significa que el usuario estuvo activo
+              en  el  último  minuto.   `old'  significa  que  el
+              usuario ha estado ocioso durante más de 24 horas.
+
+       -H, --heading
+              Imprimir una línea con las cabeceras de las  colum­
+              nas.
+
+       -w, -T, --mesg, --message, --writable
+              Como  -s,  pero además después del nombre de cuenta
+              imprime un carácter indicando el estado de mensajes
+              del usuario:
+
+              +      permite mensajes de escritura
+
+              -      no permite mensajes de escritura
+
+              ?      no se pudo encontrar el dispositivo del ter­
+                     minal
+
+       --help Imprime un mensaje en la salida estándar y  termina
+              satisfactoriamente.
+
+       --version
+              Imprime  información  sobre la versión en la salida
+              estándar y termina satisfactoriamente.
+
+
+
+FSF                  Utilidades Shell de GNU               WHO(1)

@@ -1,0 +1,73 @@
+FLOCK(2)         Manual del Programador de Linux         FLOCK(2)
+
+
+
+NOMBRE
+       flock - impone o elimina un candado de recomendación en un
+       fichero abierto.
+
+SINOPSIS
+       #include <sys/file.h>
+
+       int flock(int fd, int operation)
+
+DESCRIPCIÓN
+       Impone o elimina un  candado  de  recomendación  (advisory
+       lock) en un fichero abierto.  El fichero está especificado
+       por fd.  Las operaciones válidas son:
+
+
+              LOCK_SH   Candado compartido.  Más  de  un  proceso
+                        puede tener un candado compartido para un
+                        fichero en un momento dado.
+
+              LOCK_EX   Candado exclusivo.  Solamente un  proceso
+                        puede  tener un candado exclusivo para un
+                        fichero en un momento dado.
+
+              LOCK_UN   Desbloqueo.
+
+              LOCK_NB   No bloquear cuando se cierre el  candado.
+                        Puede    especificarse     (mediante   la
+                        operación  OR)  junto  con  otra  de  las
+                        operaciones.
+
+
+       Un fichero no puede tener simultaneamente candados compar­
+       tido y exclusivo.
+
+       Es un fichero el que está encadenado  (i.e.,  el  nodo-i),
+       no  el  descriptor de fichero. Por tanto, dup(2) y fork(2)
+       no crean múltiples casos de un candado.
+
+VALOR DEVUELTO
+       En caso de éxito, cero, En caso de error, -1 , y  se  pone
+       en errno un código apropiado.
+
+ERRORES
+       EWOULDBLOCK
+              El fichero está encadenado  y la bandera LOCK_NB ha
+              sido elegida.
+
+CONFORME A
+       4.4BSD  (la  llamada  al  sistema  flock(2)  apareció  por
+       primera vez en 4.2BSD).
+
+NOTAS
+       flock(2)  no  impone  candados  en ficheros sobre NFS. Use
+       fcntl(2) en su lugar: funcionará sobre NFS, dada una  ver­
+       sión  suficientemente  reciente de Linux y un servidor que
+       soporte candados.
+
+       Los candados de  flock(2)  y  fcntl(2)  tienen  semánticas
+       diferentes  con respecto a los procesos creados con fork y
+       con respecto a dup(2).
+
+VÉASE TAMBIÉN
+       open(2), close(2), dup(2), execve(2),  fcntl(2),  fork(2).
+       También     están    locks.txt    y    mandatory.txt    en
+       /usr/src/linux/Documentation.
+
+
+
+Linux                   11 Diciembre 1998                FLOCK(2)

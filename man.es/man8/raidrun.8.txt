@@ -1,0 +1,17 @@
+raidrun(8)                                             raidrun(8)
+
+
+
+NAME
+       raidrun, - Orden RAID obsoleta
+
+SINOPSIS
+       raidrun
+
+
+VÉASE TAMBIÉN
+       raidtab(5), raidstart(8), mkraid(8)
+
+
+
+raidtools-0.90                                         raidrun(8)

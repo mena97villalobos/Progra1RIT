@@ -1,0 +1,73 @@
+LISTEN(2)        Manual del Programador de Linux        LISTEN(2)
+
+
+
+NOMBRE
+       listen - espera conexiones en un conector (socket)
+
+SINOPSIS
+       #include <sys/socket.h>
+
+       int listen(int s, int backlog);
+
+DESCRIPCIÓN
+       Para  aceptar  conexiones, primero se crea un conector con
+       socket(2), luego se especifica  con  listen  el  deseo  de
+       aceptar  conexiones  entrantes y un límite de la cola para
+       dichas conexiones, y por último las conexiones  son  acep­
+       tadas  mediante  accept(2).   La  llamada listen se aplica
+       solamente a conectores de  tipo  SOCK_STREAM  o  SOCK_SEQ­
+       PACKET.
+
+       El  parámetro  backlog  define la longitud máxima a la que
+       puede llegar la cola  de  conexiones  pendientes.  Si  una
+       petición  de  conexión  llega  estando  la  cola llena, el
+       cliente puede recibir un error con una indicación de ECON­
+       NREFUSED  o,  si el protocolo subyacente acepta retransmi­
+       siones, la petición puede no  ser  tenida  en  cuenta,  de
+       forma que un reintento tenga éxito.
+
+NOTAS
+       El  comportamiento  del parámetro backlog sobre conectores
+       TCP ha cambiado con la versión 2.2 de Linux.  Ahora indica
+       la  longitud  de la cola para conectores establecidos com­
+       pletamente que esperan ser aceptados, en lugar del  número
+       de  peticiones de conexión incompletas. La longitud máxima
+       de la cola para conectores incompletos se puede configurar
+       con  la  sysctl tcp_max_syn_backlog.  Cuando los "syncook­
+       ies" están activos, no existe una longitud máxima lógica y
+       la  configuración  de  esta  sysctl se ignora.  Vea tcp(7)
+       para más información.
+
+
+VALOR DEVUELTO
+       En caso de éxito, se devuelve cero. En caso de  error,  se
+       devuelve -1 y se pone en errno un valor apropiado.
+
+ERRORS
+       EBADF   El argumento s no es un descriptor válido.
+
+       ENOTSOCK
+               El argumento s no es un conector.
+
+       EOPNOTSUPP
+               El  conector  no  es  de  un  tipo  que  admita la
+               operación listen.
+
+CONFORME A
+       Single Unix, 4.4BSD, borrador POSIX 1003.1g. La llamada  a
+       función listen apareció por 1ª vez en 4.2BSD.
+
+FALLOS
+       Si  el  conector es de tipo AF_INET y el argumento backlog
+       es mayor que la constante SOMAXCONN (128 en 2.0 y 2.2), se
+       trunca  silenciosamente  a  SOMAXCONN.   Para aplicaciones
+       transportables, no confíe en este valor puesto que BSD  (y
+       algunos sistemas derivados de BSD) limitan backlog a 5.
+
+VÉASE TAMBIÉN
+       accept(2), connect(2), socket(2)
+
+
+
+BSD                      22 Octubre 1996                LISTEN(2)

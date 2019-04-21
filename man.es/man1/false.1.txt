@@ -1,0 +1,36 @@
+FALSE(1)                                                 FALSE(1)
+
+
+
+NOMBRE
+       false - no hace nada, fallo
+
+SINOPSIS
+       false
+       false {--help,--version}
+
+DESCRIPCIÓN
+       Esta  documentación no será mantenida y puede ser inexacta
+       o incompleta.  La documentación Texinfo es ahora la fuente
+       autorizada.
+
+       Esta página de manual documenta la versión GNU de false (y
+       probablemente cualquier otra versión también).   false  no
+       hace  nada  salvo devolver un estado de terminación 1, que
+       significa ``fallo''. Se puede usar en  los  guiones  shell
+       donde se necesite un comando que falle.
+
+   OPCIONES
+       Cuando  GNU false se llama con sólo un argumento, reconoce
+       las siguientes opciones:
+
+       --help Imprime un mensaje de uso en la salida  estándar  y
+              termina correctamente.
+
+       --version
+              Imprime  información  sobre la versión en la salida
+              estándar y termina correctamente.
+
+
+
+FSF                    Utilidades Shell GNU              FALSE(1)

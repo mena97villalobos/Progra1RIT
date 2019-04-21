@@ -1,0 +1,35 @@
+ISINF(3)         Manual del Programador de Linux         ISINF(3)
+
+
+
+NOMBRE
+       isinf,  isnan, finite - pruebas para la infinitud o no-es-
+       un-número (NaN)
+
+SINOPSIS
+       #include <math.h>
+
+       int isinf(double valor);
+
+       int isnan(double valor);
+
+       int finite(double valor);
+
+DESCRIPCIÓN
+       La  función  isinf()  devuelve  -1  si  valor   representa
+       infinito  negativo,  1  si valor representa infinito posi­
+       tivo, y 0 en otro caso.
+
+       La función isnan() devuelve un valor distinto de  cero  si
+       valor es "no-un-número" (NaN), y 0 en otro caso.
+
+       La  función finite() devuelve un valor distinto de cero si
+       valor no es ni infinito ni "no-un-número" (NaN),  y  0  en
+       otro caso.
+
+CONFORME A
+       BSD 4.3
+
+
+
+GNU                        2 Marzo 1998                  ISINF(3)

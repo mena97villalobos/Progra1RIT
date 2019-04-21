@@ -1,0 +1,44 @@
+TEE(1)                                                     TEE(1)
+
+
+
+NOMBRE
+       tee  -  lee  de la entrada estándar y escribe en la salida
+       estándar y en ficheros
+
+SINOPSIS
+       tee  [-ai]   [--append]   [--ignore-interrupts]   [--help]
+       [--version] [fich...]
+
+DESCRIPCIÓN
+       Este  documento ya no es mantenido y puede ser impreciso o
+       incompleto. La documentación de Texinfo es ahora la fuente
+       de información recomendada.
+
+       Esta  página  del  manual documenta la versión GNU de tee.
+       El comando tee copia  su  entrada  estándar  a  su  salida
+       estándar y a todos los ficheros pasados como argumentos.
+
+       Si  alguno  de  los ficheros a escribir no existe todavía,
+       será es creado. Si alguno de los ficheros  a  escribir  ya
+       existe,  los  datos  que  éste  contenía son sobreescritos
+       almenos que la opción -a sea usada.
+
+   OPCIONES
+       -a, --append
+              Añade la entrada estándar a los ficheros pasados en
+              vez de sobreescribirlos.
+
+       --help Escribe un mensaje sobre el uso en la salida están­
+              dar y acaba sin provocar error.
+
+       -i, --ignore-interrupts
+              Ignora las señales de interrupción.
+
+       --version
+              Escribe información sobre la versión en  la  salida
+              estándar y acaba sin provocar error.
+
+
+
+FSF                  Utilidades Shell de GNU               TEE(1)

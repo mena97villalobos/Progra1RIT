@@ -1,0 +1,65 @@
+UTIME(2)         Manual del Programador de Linux         UTIME(2)
+
+
+
+NOMBRE
+       utime,  utimes  -  cambian los tiempos de acceso o modifi­
+       cación de un nodo-í
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <utime.h>
+
+       int utime(const char *nombrefichero, struct utimbuf *buf);
+
+
+       #include <sys/time.h>
+
+       int utimes(char *nombrefichero, struct timeval *tvp);
+
+DESCRIPCIÓN
+       utime  cambia  los  tiempos  de  acceso y modificación del
+       nodo-í especificado por nombrefichero a los campos  actime
+       y  modtime  de  buf  respectivamente.   Si  buf  es  NULL,
+       entonces los tiempos de acceso y modificación del  fichero
+       se ponen al tiempo actual. La estructura utimbuf es:
+
+              struct utimbuf {
+                      time_t actime;  /* tiempo de acceso */
+                      time_t modtime; /* tiempo de modificación */
+              };
+
+       En  las  bibliotecas DLL 4.4.1 de Linux, utimes es simple­
+       mente un envoltorio para utime: tvp[0].tv_sec es actime, y
+       tvp[1].tv_sec es modtime.  La estructura timeval es:
+
+              struct timeval {
+                      long    tv_sec;         /* segundos */
+                      long    tv_usec;        /* microsegundos */
+              };
+
+VALOR DEVUELTO
+       En  caso  de  éxito  se devuelve cero. En caso de error se
+       devuelve -1 y se pone en errno un valor apropiado.
+
+ERRORES
+       Pueden ocurrir otros errores.
+
+
+       EACCES  Permiso denegado para escribir en el fichero.
+
+       ENOENT  nombrefichero no existe.
+
+CONFORME A
+       utime: SVr4, SVID, POSIX.  SVr4 documenta las  condiciones
+       de  error  adicionales  EFAULT,  EINTR,  ELOOP, EMULTIHOP,
+       ENAMETOOLONG, ENOLINK, ENOTDIR, ENOLINK, ENOTDIR, EPERM  y
+       EROFS.
+       utimes: BSD 4.3
+
+VÉASE TAMBIÉN
+       stat(2)
+
+
+
+Linux                     9 Febrero 1998                 UTIME(2)

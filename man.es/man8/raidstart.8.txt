@@ -1,0 +1,100 @@
+raidstart(8)                                         raidstart(8)
+
+
+
+NOMBRE
+       raidstart,  raidstop, - conjunto de órdenes para gestionar
+       dispositivos md.
+
+SINOPSIS
+       raidstart [opciones] <dispositivoRAID>*
+
+       raidstop [opciones] <dispositivoRAID>*
+
+
+DESCRIPCIÓN
+       Los dispositivos RAID son dispositivos virtuales creados a
+       partir  de  2  o  más dispositivos de bloques reales. Esto
+       permite combinar varios discos  en  un  único  sistema  de
+       ficheros,  posiblemente con mecanismos de copia de seguri­
+       dad y recuperación automáticos. Los dispositivos  RAID  de
+       Linux  se  implementan  a través del manejador (driver) de
+       dispositivos RAID.
+
+       Si  usa  el  sistema  de  ficheros   /proc,   el   fichero
+       /proc/mdstat   le  proporcionará  información  acerca  del
+       estado de los dispositivos md.
+
+       Actualmente, Linux soporta dispositivos md lineales, RAID0
+       (striping),  RAID1  (mirroring),  y  RAID4  y  RAID5. Para
+       obtener información sobre los diferentes niveles de  RAID,
+       consulte la página http://linas.org/linux/raid.html.
+
+       Las órdenes disponibles son:
+
+       raidstart:   configura  los  dispositivos  md  (RAID)  del
+       núcleo, juntando varios dispositivos en uno.
+
+       raidstart: activa un dispositivo md.
+
+       raidstop: desactiva un dispositivo md y lo desconfigura.
+
+       Por defecto,  la  configuración  de  un  sistema  RAID  se
+       mantiene en el fichero /etc/raidtab, que puede contener la
+       configuración de varios dispositivos RAID.
+
+       Todas estas herramientas trabajan de forma similar. Si  se
+       especifica la opción -a (o --all) la operación indicada se
+       realizará sobre todos los dispositivos RAID mencionados en
+       el  fichero  de configuración. En caso contrario, se deben
+       especificar uno o más dispositivos RAID  en  la  línea  de
+       órdenes. Por ejemplo:
+
+       raidstart -a
+
+       configura  todos  los  dispositivos  RAID especificados en
+       /etc/raidtab.  Si sólo se debe configurar  el  dispositivo
+       /dev/md1, se debe usar la siguiente orden en su lugar:
+
+       raidstart /dev/md1
+
+
+
+OPCIONES
+       -a, --all
+              Aplica la orden a todas las configuraciones especi­
+              ficadas en el fichero de configuración.
+
+
+       -c, --configfile nombrefichero
+              Usa nombrefichero  como  fichero  de  configuración
+              (por defecto se usa /etc/raidtab).
+
+
+       -h, --help
+              Muestra  un  breve  mensaje de uso y a continuación
+              termina.
+
+
+       -V, --version
+              Muestra un breve mensaje de  versión  y  a  contin­
+              uación termina.
+
+
+NOTAS
+       El  paquete  raidtools  deriva  de los paquetes md-tools y
+       raidtools, que originalmente fueron escritos por Marc Zyn­
+       gier,  Miguel  de  Icaza, Gadi Oxman, Bradley Ward Allen e
+       Ingo Molnar.
+
+
+FALLOS (BUGS)
+       Posiblemente muchos.
+
+
+VÉASE TAMBIÉN
+       raidtab(5), ckraid(8), mkraid(8)
+
+
+
+raidtools-0.90                                       raidstart(8)

@@ -1,0 +1,523 @@
+RTNETLINK(7)     Manual del Programador de Linux     RTNETLINK(7)
+
+
+
+NOMBRE
+       rtnetlink,  NETLINK_ROUTE  - Conector de enrutamiento IPv4
+       de Linux.
+
+SINOPSIS
+       #include <asm/types.h>
+       #include <linux/netlink.h>
+       #include <linux/rtnetlink.h>
+       #include <sys/socket.h>
+
+       rtnetlink_socket  =  socket(PF_NETLINK,  int  socket_type,
+       NETLINK_ROUTE);
+
+
+DESCRIPCIÓN
+       Rtnetlink   permite   leer   y   alterar   las  tablas  de
+       enrutamiento del núcleo.  Se usa dentro  del  núcleo  para
+       comunicar  entre sí varios subsistemas (aunque este uso no
+       se documenta aquí) y para la comunicación con programas en
+       el  espacio de usuario.  Las rutas de red, las direcciones
+       IP, los parámetros de enlace, las configuraciones de veci­
+       nos, las disciplinas de encolamiento, las clases de inter­
+       cambio y los clasificadores de paquetes pueden controlarse
+       a  través  de conectores NETLINK_ROUTE.  Todo esto se basa
+       en mensajes netlink. Vea netlink(7) para más  información.
+
+
+
+ATRIBUTOS DE ENRUTAMIENTO
+       Algunos  mensajes  rtnetlink  poseen  atributos opcionales
+       después de la cabecera inicial:
+
+       struct rtattr
+       {
+           unsigned short rta_len;     /* Longitud de la opción */
+           unsigned short rta_type;    /* Tipo de opción */
+           /* Los datos vienen a continuación */
+       };
+
+       Estos  atributos  sólo  deberían  manipularse  usando  las
+       macros RTA_* o la librería libnetlink. Vea rtnetlink(3).
+
+
+MENSAJES
+       Rtnetlink  está  formado  por los siguientes tipos de men­
+       sajes (además de los mensajes netlink estándares):
+
+
+       RTM_NEWLINK, RTM_DELLINK, RTM_GETLINK
+              Crea, borra u obtiene información de  una  interfaz
+              de  red  específica.  Estos  mensajes contienen una
+              estructura  ifinfomsg  seguida  por  una  serie  de
+              estructuras rtattr.
+
+              struct ifinfomsg
+              {
+                  unsigned char  ifi_family;  /* AF_UNSPEC */
+                  unsigned char  __ifi_pad;   /* Sin usar */
+                  unsigned short ifi_type;    /* Tipo del dispositivo */
+                  int            ifi_index;   /* Índice de la interfaz   */
+                  unsigned int   ifi_flags;   /* Opciones del dispositivo  */
+                  unsigned int   ifi_change;  /* Máscara de cambios */
+              };
+
+              ifi_flags  contiene  las  opciones del dispositivo.
+              Vea netdevice(7).  ifi_index es  el  índice  de  la
+              interfaz.   ifi_change se reserva para uso futuro y
+              siempre debe valer 0xFFFFFFFF.
+
+
+              +-------------------------------------------------------------+
+              |                 Atributos de enrutamiento                   |
+              +---------------+--------------------+------------------------+
+              |rta_type       | Tipo de valor      | Descripción            |
+              +---------------+--------------------+------------------------+
+              |IFLA_UNSPEC    | -                  | sin especificar.       |
+              +---------------+--------------------+------------------------+
+              |IFLA_ADDRESS   | dirección hardware | dirección del Nivel  2 |
+              |               |                    | de la interfaz         |
+              +---------------+--------------------+------------------------+
+              |IFLA_BROADCAST | dirección hardware | dirección  de difusión |
+              |               |                    | del Nivel 2            |
+              +---------------+--------------------+------------------------+
+              |IFLA_IFNAME    | cadena   terminada | nombre del dispositivo |
+              |               | en cero            |                        |
+              +---------------+--------------------+------------------------+
+              |IFLA_MTU       | entero sin signo   | MTU del dispositivo    |
+              +---------------+--------------------+------------------------+
+              |IFLA_LINK      | entero             | tipo de enlace         |
+              +---------------+--------------------+------------------------+
+              |IFLA_QDISC     | cadena   terminada | disciplina  de   enco­ |
+              |               | en cero            | lamiento               |
+              +---------------+--------------------+------------------------+
+              |IFLA_STATS     | estructura         | estadísticas   de   la |
+              |               | net_device_stats   | interfaz               |
+              +---------------+--------------------+------------------------+
+
+       RTM_NEWADDR, RTM_DELADDR, RTM_GETADDR
+              Añade, elmina o recibe información de una dirección
+              IP asociada con una  interfaz.  En  Linux  2.2  una
+              interfaz  puede  acarrear  varias  direcciones  IP.
+              Esto reemplaza el concepto de dispositivo alias  de
+              la  versión 2.0. En Linux 2.2 estos mensajes sopor­
+              tan direcciones  IPv4 e IPv6. Contienen una estruc­
+              tura  ifaddrmsg seguida opcionalmente por atributos
+              de enrutamiento rtaddr.
+
+              struct ifaddrmsg
+              {
+                  unsigned char  ifa_family;    /* Tipo de dirección */
+                  unsigned char  ifa_prefixlen; /* Longitud del prefijo de
+                                                   la dirección */
+                  unsigned char  ifa_flags;     /* Opciones de la dirección */
+                  unsigned char  ifa_scope;     /* Ámbito de la dirección */
+                  int            ifa_index;     /* Índice de la interfaz */
+              };
+
+              ifa_family es el tipo de la familia de  direcciones
+              (actualmente  AF_INET o AF_INET6), ifa_prefixlen es
+              la longitud de la máscara de la dirección  si  ésta
+              está  definida  para  la  familia  (como ocurre con
+              IPv4), ifa_scope es  el  ámbito  de  la  dirección,
+              ifa_index es el índice de la interfaz con la que la
+              dirección está asociada.  ifa_flags es una  palabra
+              de  opciones  que contiene IFA_F_SECONDARY para una
+              dirección  secundaria  (antiguo  interfaz   alias),
+              IFA_F_PERMANENT  para una dirección permanente con­
+              figurada por  el  usuario,  y  otras  opciones  sin
+              documentar.
+
+              +----------------------------------------------------+
+              |                     Atributos                      |
+              +--------------+------------------+------------------+
+              |rta_type      | Tipo de valor    | Descripción      |
+              +--------------+------------------+------------------+
+              |IFA_UNSPEC    | -                | sin especificar. |
+              +--------------+------------------+------------------+
+              |IFA_ADDRESS   | dirección     de | dirección de  la |
+              |              | protocolo        | interfaz         |
+              +--------------+------------------+------------------+
+              |IFA_LOCAL     | dirección     de | dirección local  |
+              |              | protocolo        |                  |
+              +--------------+------------------+------------------+
+              |IFA_LABEL     | cadena terminada | nombre   de   la |
+              |              | en cero          | interfaz         |
+              +--------------+------------------+------------------+
+              |IFA_BROADCAST | dirección     de | dirección     de |
+              |              | protocolo        | difusión         |
+              +--------------+------------------+------------------+
+              |IFA_ANYCAST   | dirección     de | dirección     de |
+              |              | protocolo        | "cualquier  des­ |
+              |              |                  | tino"            |
+              +--------------+------------------+------------------+
+              |IFA_CACHEINFO | estructura       | información   de |
+              |              | ifa_cacheinfo    | la dirección     |
+              +--------------+------------------+------------------+
+
+
+       RTM_NEWROUTE, RTM_DELROUTE, RTM_GETROUTE
+              Crea,  borra  o  recibe  información de una ruta de
+              red.  Estos mensajes contienen una estructura rtmsg
+              con   una  secuencia  opcional  a  continuación  de
+              estructuras rtattr.
+
+              struct rtmsg
+              {
+                  unsigned char  rtm_family;    /* Familia de direcciones de
+                                                   la ruta */
+                  unsigned char  rtm_dst_len;   /* Longitud del destino */
+                  unsigned char  rtm_src_len;   /* Longitud del origen */
+                  unsigned char  rtm_tos;       /* Filtro TOS */
+
+                  unsigned char  rtm_table;     /* Identificador de la tabla de
+                                                   enrutamiento */
+                  unsigned char  rtm_protocol;  /* Protocolo de enrutamiento.
+                                                   Ver más abajo */
+                  unsigned char  rtm_scope;     /* Ver más abajo */
+                  unsigned char  rtm_type;      /* Ver más abajo */
+
+                  unsigned int   rtm_flags;
+              };
+
+
+
+
+
+
+
+
+
+
+
+
+
+              +----------------+-----------------------------------------------+
+              |rtm_type        | Tipo de ruta                                  |
+              +----------------+-----------------------------------------------+
+              |RTN_UNSPEC      | ruta desconocida                              |
+              +----------------+-----------------------------------------------+
+              |RTN_UNICAST     | una pasarela (gateway) o ruta directa         |
+              +----------------+-----------------------------------------------+
+              |RTN_LOCAL       | una ruta de la interfaz local                 |
+              +----------------+-----------------------------------------------+
+              |RTN_BROADCAST   | una ruta de difusión local  (enviada  en  una |
+              |                | difusión)                                     |
+              +----------------+-----------------------------------------------+
+              |RTN_ANYCAST     | una  ruta  de  difusión  local (enviada en un |
+              |                | unidestino)                                   |
+              +----------------+-----------------------------------------------+
+              |RTN_MULTICAST   | una ruta multidestino                         |
+              +----------------+-----------------------------------------------+
+              |RTN_BLACKHOLE   | una ruta para la pérdida de paquetes          |
+              +----------------+-----------------------------------------------+
+              |RTN_UNREACHABLE | un destino inalcanzable                       |
+              +----------------+-----------------------------------------------+
+              |RTN_PROHIBIT    | una ruta de rechazo de paquetes               |
+              +----------------+-----------------------------------------------+
+              |RTN_THROW       | continuar la búsqueda de rutas en otra tabla  |
+              +----------------+-----------------------------------------------+
+              |RTN_NAT         | una regla de traducción de direcciones de red |
+              +----------------+-----------------------------------------------+
+              |RTN_XRESOLVE    | remitir a una entidad de  resolución  externa |
+              |                | (no implementado)                             |
+              +----------------+-----------------------------------------------+
+              +----------------+------------------------+
+              |rtm_protocol    | Ruta original          |
+              +----------------+------------------------+
+              |RTPROT_UNSPEC   | desconocido            |
+              +----------------+------------------------+
+              |RTPROT_REDIRECT | por   una  redirección |
+              |                | ICMP (no usado actual­ |
+              |                | mente)                 |
+              +----------------+------------------------+
+              |RTPROT_KERNEL   | por el núcleo          |
+              +----------------+------------------------+
+              |RTPROT_BOOT     | durante el arranque    |
+              +----------------+------------------------+
+              |RTPROT_STATIC   | por el administrador   |
+              +----------------+------------------------+
+              Los valores mayores que RTPROT_STATIC no son inter­
+              pretados por el núcleo, sólo son  para  información
+              de  usuario.  Se  pueden  usar  para identificar la
+              fuente de una información de  enrutamiento  o  para
+              distinguir  entre  varios demonios de enrutamiento.
+              Vea <linux/rtnetlink.h> para  los  indentificadores
+              de  los demonios de enrutamiento que ya están asig­
+              nados.
+
+              rtm_scope es la distancia al destino:
+
+
+
+
+
+
+
+
+
+
+
+              +------------------+----------------------------+
+              |RT_SCOPE_UNIVERSE | ruta global                |
+              +------------------+----------------------------+
+              |RT_SCOPE_SITE     | ruta interior en  el  sis­ |
+              |                  | tema autónomo local        |
+              +------------------+----------------------------+
+              |RT_SCOPE_LINK     | ruta en este enlace        |
+              +------------------+----------------------------+
+              |RT_SCOPE_HOST     | ruta en el anfitrión local |
+              +------------------+----------------------------+
+              |RT_SCOPE_NOWHERE  | el destino no existe       |
+              +------------------+----------------------------+
+              Los valores entre RT_SCOPE_UNIVERSE y RT_SCOPE_SITE
+              están disponibles para el usuario.
+
+              rtm_flags tiene los siguientes significados:
+
+              +---------------+--------------------------------------+
+              |RTM_F_NOTIFY   | si  la  ruta  cambia,  informar   al |
+              |               | usuario mediante rtnetlink           |
+              +---------------+--------------------------------------+
+              |RTM_F_CLONED   | la ruta es un duplicado de otra ruta |
+              +---------------+--------------------------------------+
+              |RTM_F_EQUALIZE | un   equalizador   multidestino  (no |
+              |               | implementado todavía)                |
+              +---------------+--------------------------------------+
+              rtm_table especifica la tabla de enrutamiento
+
+              +-----------------+-------------------------------------------+
+              |RT_TABLE_UNSPEC  | una tabla de enrutamiento sin especificar |
+              +-----------------+-------------------------------------------+
+              |RT_TABLE_DEFAULT | la tabla por defecto                      |
+              +-----------------+-------------------------------------------+
+              |RT_TABLE_MAIN    | la tabla principal                        |
+              +-----------------+-------------------------------------------+
+              |RT_TABLE_LOCAL   | la tabla local                            |
+              +-----------------+-------------------------------------------+
+              El usuario puede asignar valores arbitrarios  entre
+              RT_TABLE_UNSPEC y RT_TABLE_DEFAULT.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              +--------------------------------------------------------+
+              |                       Atributos                        |
+              +--------------+------------------+----------------------+
+              |rta_type      | Tipo de valor    | Descripción          |
+              +--------------+------------------+----------------------+
+              |RTA_UNSPEC    | -                | ignorado             |
+              +--------------+------------------+----------------------+
+              |RTA_DST       | dirección     de | dirección de destino |
+              |              | protocolo        | de la ruta           |
+              +--------------+------------------+----------------------+
+              |RTA_SRC       | dirección     de | dirección de  origen |
+              |              | protocolo        | de la ruta           |
+              +--------------+------------------+----------------------+
+              |RTA_IIF       | entero           | índice  de la inter­ |
+              |              |                  | faz de entrada       |
+              +--------------+------------------+----------------------+
+              |RTA_OIF       | entero           | índice de la  inter­ |
+              |              |                  | faz de salida        |
+              +--------------+------------------+----------------------+
+              |RTA_GATEWAY   | dirección     de | la  pasarela  (gate­ |
+              |              | protocolo        | way) de la ruta      |
+              +--------------+------------------+----------------------+
+              |RTA_PRIORITY  | entero           | prioridad de la ruta |
+              +--------------+------------------+----------------------+
+              |RTA_PREFSRC   |                  |                      |
+              +--------------+------------------+----------------------+
+              |RTA_METRICS   | entero           | métrica de la ruta   |
+              +--------------+------------------+----------------------+
+              |RTA_MULTIPATH |                  |                      |
+              +--------------+------------------+----------------------+
+              |RTA_PROTOINFO |                  |                      |
+              +--------------+------------------+----------------------+
+              |RTA_FLOW      |                  |                      |
+              +--------------+------------------+----------------------+
+              |RTA_CACHEINFO |                  |                      |
+              +--------------+------------------+----------------------+
+              ¡Esta tabla está incompleta!
+
+
+       RTM_NEWNEIGH, RTM_DELNEIGH, RTM_GETNEIGH
+              Añade, borra o recibe información de una entrada de
+              la tabla de vecinos (por ejemplo, una entrada ARP).
+              El mensaje contiene una estructura ndmsg.
+
+              struct ndmsg
+              {
+                  unsigned char  ndm_family;
+                  unsigned char  ndm_pad1;
+                  unsigned short ndm_pad2;
+                  int            ndm_ifindex; /* Índice de la interfaz */
+                  __u16          ndm_state;   /* Estado */
+                  __u8           ndm_flags;   /* Opciones */
+                  __u8           ndm_type;
+              };
+
+              struct nda_cacheinfo
+              {
+                  __u32          ndm_confirmed;
+                  __u32          ndm_used;
+                  __u32          ndm_updated;
+                  __u32          ndm_refcnt;
+              };
+
+              ndm_state  es una máscara de bits de los siguientes
+              estados:
+
+              +---------------+----------------------------------------+
+              |NUD_INCOMPLETE | una entrada de la cache  que  se  está |
+              |               | resolviendo actualmente                |
+              +---------------+----------------------------------------+
+              |NUD_REACHABLE  | una  entrada  de la cache que ya se ha |
+              |               | confirmado como operativa              |
+              +---------------+----------------------------------------+
+              |NUD_STALE      | una entrada de la cache caduca         |
+              +---------------+----------------------------------------+
+              |NUD_DELAY      | una entrada que espera a un cronómetro |
+              +---------------+----------------------------------------+
+              |NUD_PROBE      | una entrada de la cache  que  se  está |
+              |               | sondeando de nuevo actualmente         |
+              +---------------+----------------------------------------+
+              |NUD_FAILED     | una entrada de la cache inválida       |
+              +---------------+----------------------------------------+
+              |NUD_NOARP      | un dispositivo sin cache de destinos   |
+              +---------------+----------------------------------------+
+              |NUD_PERMANENT  | una entrada estática                   |
+              +---------------+----------------------------------------+
+              Los ndm_flags válidos son:
+
+              +-----------+-----------------------+
+              |NTF_PROXY  | una entrada proxy arp |
+              +-----------+-----------------------+
+              |NTF_ROUTER | un enrutador IPv6     |
+              +-----------+-----------------------+
+              Hay que documentar mejor los miembros de la estruc­
+              tura.
+
+              La estructura rtaddr tiene los siguientes  signifi­
+              cados para el campo rta_type:
+
+              +--------------+--------------------------+
+              |NDA_UNSPEC    | tipo desconocido         |
+              +--------------+--------------------------+
+              |NDA_DST       | una dirección de destino |
+              |              | de la capa de red de  la |
+              |              | cache de vecinos         |
+              +--------------+--------------------------+
+              |NDA_LLADDR    | una dirección de la capa |
+              |              | de enlace de la cache de |
+              |              | vecinos                  |
+              +--------------+--------------------------+
+              |NDA_CACHEINFO | estadísticas de la cache |
+              +--------------+--------------------------+
+              Si  el  campo  rta_type es NDA_CACHEINFO, a contin­
+              uación viene una cabecera struct nda_cacheinfo.
+
+
+       RTM_NEWRULE, RTM_DELRULE, RTM_GETRULE
+              Añade, borra o recupera una regla de  enrutamiento.
+              Lleva asociada una struct rtmsg.
+
+
+       RTM_NEWQDISC, RTM_DELQDISC, RTM_GETQDISC
+              Añade,  borra  u  obtiene  una  disciplina de enco­
+              lamiento. El mensaje contiene una struct tcmsg  que
+              puede ir seguida por una serie de atributos.
+
+              struct tcmsg
+              {
+                  unsigned char  tcm_family;
+                  unsigned char  tcm__pad1;
+                  unsigned short tcm__pad2;
+                  int            tcm_ifindex; /* Índice de la interfaz */
+                  __u32          tcm_handle;  /* Descriptor qdisc */
+                  __u32          tcm_parent;  /* Qdisc del padre*/
+                  __u32          tcm_info;
+              };
+
+              +-----------------------------------------------------------+
+              |                        Atributos                          |
+              +------------+-------------------------+--------------------+
+              |rta_type    | Tipo de valor           | Descripción        |
+              +------------+-------------------------+--------------------+
+              |TCA_UNSPEC  | -                       | sin especificar    |
+              +------------+-------------------------+--------------------+
+              |TCA_KIND    | cadena   terminada   en | nombre de la  dis­ |
+              |            | cero                    | ciplina  de  enco­ |
+              |            |                         | lamiento           |
+              +------------+-------------------------+--------------------+
+              |TCA_OPTIONS | secuencia de bytes      | opciones específi­ |
+              |            |                         | cas  de  Qdisc que |
+              |            |                         | vienen  a  contin­ |
+              |            |                         | uación             |
+              +------------+-------------------------+--------------------+
+              |TCA_STATS   | estructura tc_stats     | estadísticas qdisc |
+              +------------+-------------------------+--------------------+
+              |TCA_XSTATS  | específico de qdisc     | estadísticas       |
+              |            |                         | específicas    del |
+              |            |                         | módulo             |
+              +------------+-------------------------+--------------------+
+              |TCA_RATE    | estructura tc_estimator | límite de la tasa  |
+              +------------+-------------------------+--------------------+
+              Además,  se  permiten  otros  atributos  diferentes
+              específicos del módulo qdisc.   Para  más  informa­
+              ción, vea los ficheros cabecera adecuados.
+
+
+       RTM_NEWTCLASS, RTM_DELTCLASS, RTM_GETTCLASS
+              Añade,  borra  u  obtiene una clase de intercambio.
+              Estos mensajes contienen una struct tcmsg  como  la
+              descrita anteriormente.
+
+
+       RTM_NEWTFILTER, RTM_DELTFILTER, RTM_GETTFILTER
+              Añade,  borra o recibe información de una filtro de
+              tráfico. Estos mensajes contienen una struct  tcmsg
+              como la descrita anteriormente.
+
+
+VERSIONES
+       rtnetlink es una nueva característica de la versión 2.2 de
+       Linux.
+
+
+FALLOS
+       Esta página de manual es deficiente y está incompleta.
+
+
+VÉASE TAMBIÉN
+       netlink(7), cmsg(3), ip(7), rtnetlink(3)
+
+
+
+Página man de Linux       30 abril 1999              RTNETLINK(7)

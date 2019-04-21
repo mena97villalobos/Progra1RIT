@@ -1,0 +1,371 @@
+CPIO(1L)                                                 CPIO(1L)
+
+
+
+NOMBRE
+       cpio - copia ficheros a y desde archivos
+
+SINOPSIS
+       cpio {-o|--create} [-0acvABLV] [-C bytes] [-H formato] [-M
+       mensaje]    [-O     [[usuario@]anfitrión:]archivo]     [-F
+       [[usuario@]anfitrión:]archivo]
+       [--file=[[usuario@]anfitrión:]archivo]  [--format=formato]
+       [--message=mensaje] [--null] [--reset-access-time] [--ver­
+       bose] [--dot] [--append] [--block-size=bloques]  [--deref­
+       erence]    [--io-size=bytes]   [--quiet]   [--force-local]
+       [--help] [--version] < lista-nombres [> archivo]
+
+       cpio {-i|--extract} [-bcdfmnrtsuvBSV] [-C bytes] [-E file]
+       [-H  formato]  [-M  mensaje] [-R [usuario][:.][grupo]] [-I
+       [[usuario@]anfitrión:]archivo]                         [-F
+       [[usuario@]anfitrión:]archivo]
+       [--file=[[usuario@]anfitrión:]archivo]    [--make-directo­
+       ries]    [--nonmatching]    [--preserve-modification-time]
+       [--numeric-uid-gid]  [--rename]  [--list]   [--swap-bytes]
+       [--swap]  [--dot]  [--unconditional] [--verbose] [--block-
+       size=bloques] [--swap-halfwords] [--io-size=bytes] [--pat­
+       tern-file=fichero]                      [--format=formato]
+       [--owner=[usuario][:.][grupo]]       [--no-preserve-owner]
+       [--message=mensaje]  [--force-local]  [--no-absolute-file­
+       names] [--sparse] [--only-verify-crc]  [--quiet]  [--help]
+       [--version] [patrón...] [< archivo]
+
+       cpio       {-p|--pass-through}       [-0adlmuvLV]      [-R
+       [usuario][:.][grupo]]    [--null]    [--reset-access-time]
+       [--make-directories]  [--link] [--quiet] [--preserve-modi­
+       fication-time]   [--unconditional]   [--verbose]   [--dot]
+       [--dereference]  [--owner=[usuario][:.][grupo]] [--no-pre­
+       serve-owner] [--sparse] [--help]  [--version]  directorio-
+       destino < lista-nombres
+
+DESCRIPCIÓN
+       Esta  página  del  Manual  documenta  la versión de GNU de
+       cpio.  cpio copia ficheros en o desde  un  archivo  tar  o
+       cpio,  que  es  un fichero que contiene otros ficheros más
+       información sobre ellos, como sus nombres de fichero orig­
+       inales,  propietario,  marcas  de  tiempo  y  permisos  de
+       acceso. El archivo puede ser otro fichero  en  disco,  una
+       cinta  magnética,  o  una  interconexión  o tubería.  cpio
+       tiene tres modos de operación.
+
+       En el modo de copia-afuera, cpio copia ficheros  hacia  un
+       archivo.  Lee  una  lista  de nombres de ficheros, uno por
+       línea, de la entrada estándar, y escribe el archivo en  la
+       salida  estándar.  Una forma típica de generar la lista de
+       nombres de ficheros es con la orden find; se debería dar a
+       find  la  opción  -depth para minimizar problemas con per­
+       misos en directorios que no son modificables  o  para  los
+       que no se tiene permiso de paso.
+
+       En  el modo de copia-adentro, cpio copia ficheros desde un
+       archivo o lista los contenidos del archivo. Lee el archivo
+       desde  la  entrada  estándar. Cualesquier argumentos de la
+       línea de órdenes son patrones del shell de concordancia de
+       nombres  de  ficheros;  sólo  se  copian  desde el archivo
+       aquéllos ficheros en él cuyos nombres concuerden con uno o
+       más de tales patrones. Al contrario de lo que ocurre en el
+       shell, un `.'  inicial en un nombre  de  fichero  sí  con­
+       cuerda con un comodín al principio de un patrón, y una `/'
+       en un nombre de fichero puede concordar con comodines.  Si
+       no se dan patrones, se extraen todos los ficheros.
+
+       En  el  modo  de  copia-de-paso, cpio copia ficheros de un
+       árbol de directorio a otro, combinando los pasos de copia-
+       afuera  y  copia-adentro  sin  utilizar  ningún archivo en
+       realidad. Lee  desde  la  entrada  estándar  la  lista  de
+       ficheros  a  copiar; el directorio dentro del cual copiará
+       esos ficheros se da  como  un  argumento  que  no  es  una
+       opción.
+
+       cpio  admite  los siguientes formatos de archivo: binario,
+       ASCII antiguo, ASCII  nuevo,  crc,  binario  HP/UX,  ASCII
+       antiguo  de  HP/UX,  tar antiguo y tar POSIX.1. El formato
+       binario está obsoleto porque codifica la información sobre
+       los  ficheros  en  una forma que no es transportable entre
+       diferentes arquitecturas  de  máquina.  El  formato  ASCII
+       antiguo  es  transportable entre diferentes arquitecturas,
+       pero no debería emplearse en sistemas de ficheros con  más
+       de  65536 nodos-í. El formato ASCII nuevo es transportable
+       entre  diferentes  arquitecturas  y  puede  emplearse   en
+       cualquier   sistema  de  ficheros  independientemente  del
+       tamaño, pero no se acepta en todas las versiones de  cpio;
+       actualmente,  sólo se admite en GNU y en Unix System V R4.
+       El formato crc es como el formato ASCII nuevo,  pero  tam­
+       bién  contiene  una suma de comprobación para cada fichero
+       que cpio calcula cuando crea un archivo y verifica  cuando
+       el  fichero  se extrae del archivo.  Los formatos de HP/UX
+       se proporcionan por compatibilidad con el cpio  de  HP/UX,
+       que  almacena  los ficheros de dispositivo de forma difer­
+       ente.
+
+       El formato tar se proporciona por  compatiiblidad  con  el
+       programa  tar.   No  puede  usarse  para archivar ficheros
+       cuyos nombres tengan más de  100  caracteres,  ni  tampoco
+       para   archivar  ficheros  "especiales"  (dispositivos  de
+       bloque o caracteres).  El formato  tar  POSIX.1  no  puede
+       emplearse para archivar ficheros con nombres de más de 255
+       caracteres (menos a no ser que tengan una "/" justo en  el
+       sitio adecuado).
+
+       De  forma  predeterminada,  cpio  crea archivos en formato
+       binario,  por  compatibilidad  con  programas   cpio   más
+       antiguos.    Cuando  extrae  de  archivos,  cpio  reconoce
+       automáticamente qué clase de archivo está leyendo y  puede
+       leer  archivos  creados  en  máquinas con un orden de byte
+       diferente.
+
+       Algunas de las opciones de cpio se aplican sólo a  ciertos
+       modos de operación; vea la sección SINOPSIS para una lista
+       de qué opciones se permiten en qué modos.
+
+   OPCIONES
+       -0, --null
+              En los modos de copia-afuera y  copia-de-paso,  lee
+              una  lista de nombres de ficheros terminados por un
+              carácter nulo en vez de por un salto de  línea,  de
+              modo  que se puedan archivar ficheros cuyos nombres
+              contengan saltos de línea. Una  forma  de  producir
+              tal lista de nombres de ficheros terminados en nulo
+              es con el programa find de GNU.
+
+       -a, --reset-access-time
+              Reestablece los tiempos de acceso de ficheros  tras
+              leerlos,  de forma que no parezca que acaban de ser
+              leídos.
+
+       -A, --append
+              Añade a un archivo existente. Sólo funciona  en  el
+              modo  de  copia-afuera.  El  archivo  debe  ser  un
+              fichero de disco especificado con la opción -O o -F
+              (--file).
+
+       -b, --swap
+              En  el  modo  de  copia-adentro, intercambia en los
+              datos tanto las medias palabras  de  palabras  como
+              los  bytes  de las medias palabras. Equivale a -sS.
+              Emplee esta opción para  convertir  enteros  de  32
+              bits entre máquinas de sexo opuesto: "big-endian" y
+              "little-endian".
+
+       -B     Establece el bloque de E/S a 5120  bytes.  Inicial­
+              mente el tamaño del bloque es de 512 bytes.
+
+       --block-size=TAMAÑO-BLOQUE
+              Establece  el  tamaño  del  bloque de E/S a TAMAÑO-
+              BLOQUE × 512 bytes.
+
+       -c     Emplea el viejo formato  de  archivo  transportable
+              (ASCII).
+
+       -C TAMAÑO-E/S, --io-size=TAMAÑO-E/S
+              Establece  el tamaño del bloque de E/S a TAMAÑO-E/S
+              bytes.
+
+       -d, --make-directories
+              Crea directorios iniciales donde se necesiten.
+
+       -E FICHERO, --pattern-file=FICHERO
+              En el modo  de  copia-adentro,  lee  patrones  adi­
+              cionales   especificando   nombres  de  ficheros  a
+              extraer o listar  desde  el  fichero  FICHERO.  Las
+              líneas de FICHERO se tratan como si fueran argumen­
+              tos no-opciones de cpio.
+
+       -f, --nonmatching
+              Solamente copia  ficheros  que  no  concuerden  con
+              ninguno de los patrones dados.
+
+       -F, --file=archivo
+              Nombre  de  fichero del archivo a emplear en vez de
+              la entrada o salida estándares.  Para  emplear  una
+              unidad  de  cinta  magnética  en  otra máquina como
+              archivo, utilice un nombre de fichero  que  empiece
+              por   `ANFITRIÓN:'.   El   nombre   del  computador
+              anfitrión puede  ir  precedido  por  un  nombre  de
+              usuario  y  un signo arroba, `@', para acceder a la
+              unidad de cinta remota como  ese  usuario,  si  Ud.
+              tiene permiso para hacerlo (típicamente una entrada
+              en el fichero `~/.rhosts' de ese usuario).
+
+       --force-local
+              Con -F, -I, o -O, toma el nombre del  archivo  como
+              un fichero local incluso si contiene dos puntos, lo
+              que ordinariamente indicaría un nombre de  computa­
+              dor anfitrión remoto.
+
+       -H FORMATO, --format=FORMATO
+              Emplea  el formato de archivo FORMATO. Los formatos
+              válidos se listan más abajo; los mismos nombres  se
+              reconocen  con  todas  las letras en mayúsculas. El
+              formato predeterminado en el modo de  copia-adentro
+              es  automáticamente detectarlo del archivo, y en el
+              modo de copia-afuera es "bin".
+
+              bin    El formato binario obsoleto.
+
+              odc    El viejo formato transportable (POSIX.1).
+
+              newc   El nuevo formato transportable  (SVR4),  que
+                     admite sistemas de ficheros con más de 65536
+                     nodos-í.
+
+              crc    El nuevo formato  transportable  (SVR4)  con
+                     una suma de comprobación añadida.
+
+              tar    El viejo formato tar.
+
+              ustar  El  formato  tar  POSIX.1.  También reconoce
+                     archivos tar de GNU, que son similares  pero
+                     no idénticos.
+
+              hpbin  El  formato binario obsoleto empleado por el
+                     cpio de HP/UX (que almacena los ficheros  de
+                     dispositivo de forma diferente).
+
+              hpodc  El  formato  transportable  empleado  por el
+                     cpio de HP/UX (que almacena los ficheros  de
+                     dispositivo de forma diferente).
+
+       -i, --extract
+              Se ejecuta en modo de copia-adentro.
+
+       -I archivo
+              Nombre  de  archivo  a emplear en vez de la entrada
+              estándar.  Para emplear una unidad  de  cinta  mag­
+              nética  en  otra  máquina  como archivo, utilice un
+              nombre de fichero que empiece por `ANFITRIÓN:'.  El
+              nombre  del computador anfitrión puede ir precedido
+              por un nombre de usuario y un  signo  arroba,  `@',
+              para  acceder  a la unidad de cinta remota como ese
+              usuario, si Ud. tiene permiso para hacerlo (típica­
+              mente  una entrada en el fichero `~/.rhosts' de ese
+              usuario).
+
+       -k     No se tiene en cuenta; se admite por compatibilidad
+              con otras versiones de cpio.
+
+       -l, --link
+              Enlaza  ficheros  en  vez  de  copiarlos, cuando es
+              posible.
+
+       -L, --dereference
+              Desreferencia los  enlaces  simbólicos  (copia  los
+              ficheros  a  los  que  apunten en vez de copiar los
+              enlaces).
+
+       -m, --preserve-modification-time
+              Retiene los tiempos de modificación anteriores  del
+              fichero cuando crea ficheros.
+
+       -M MENSAJE, --message=MENSAJE
+              Muestra MENSAJE cuando se llega al final de un vol­
+              umen del medio de almacenamiento  de  la  copia  de
+              respaldo  (como  una  cinta  o  un  disquete), para
+              indicar al usuario que inserte un nuevo volumen. Si
+              MENSAJE  contiene  la cadena "%d", se reemplaza por
+              el número actual del volumen (empezando por 1).
+
+       -n, --numeric-uid-gid
+              En el listado prolijo de la  tabla  de  contenidos,
+              muestra los UID y GID numéricos en vez de traducir­
+              los a nombres.
+
+        --no-absolute-filenames
+              En  el  modo  de  copia-adentro,  crea  todos   los
+              ficheros  relativos al directorio en curso, incluso
+              si tienen un  nombre  de  fichero  absoluto  en  el
+              archivo.
+
+        --no-preserve-owner
+              En  los  modos de copia-adentro y copia-de-paso, no
+              cambia el propietario de los ficheros; los deja  en
+              la propiedad del usuario que los extrae. Éste es el
+              comportamiento predeterminado para usuarios distin­
+              tos  de  root, de modo que los usuarios en System V
+              no donen sus ficheros inadvertidamente.
+
+       -o, --create
+              Se ejecuta en el modo de copia-afuera.
+
+       -O archivo
+              Nombre de archivo a emplear en vez  de  la  entrada
+              estándar.   Para  emplear  una unidad de cinta mag­
+              nética en otra máquina  como  archivo,  utilice  un
+              nombre  de fichero que empiece por `ANFITRIÓN:'. El
+              nombre del computador anfitrión puede ir  precedido
+              por  un  nombre  de usuario y un signo arroba, `@',
+              para acceder a la unidad de cinta remota  como  ese
+              usuario, si Ud. tiene permiso para hacerlo (típica­
+              mente una entrada en el fichero `~/.rhosts' de  ese
+              usuario).
+
+        --only-verify-crc
+              Cuando  se lee un archivo en formato CRC en el modo
+              de copia-adentro, sólo se  verifican  los  CRCs  de
+              cada  fichero del archivo, pero no se extraen éstos
+              realmente.
+
+       -p, --pass-through
+              Se ejecuta en el modo de copia-de-paso.
+
+       --quiet
+              No muestra el número de bloques copiados.
+
+       -r, --rename
+              Renombra ficheros interactivamente.
+
+       -R [usuario][:.][grupo], --owner [usuario][:.][grupo]
+              En  los  modos  de  copia-afuera  y  copia-de-paso,
+              establece  la  propietariedad de todos los ficheros
+              creados al usuario o  grupo  especificados.  Pueden
+              estar presentes tanto el usuario como el grupo como
+              ambos. Si se omite el grupo pero se da el separador
+              "."  o  ":",  se  emplea  el  grupo  de entrada del
+              usuario dado. Sólo el superusuario puede cambiar el
+              propietario de los ficheros.
+
+       --sparse
+              En  los  modos  de  copia-afuera  y  copia-de-paso,
+              escribe ficheros con grandes bloques de ceros  como
+              ficheros dispersos.
+
+       -s, --swap-bytes
+              En  el modo de copia-adentro, intercambia los bytes
+              de  cada  media  palabra  (par  de  bytes)  en  los
+              ficheros.
+
+       -S, --swap-halfwords
+              En el modo de copia-adentro, intercambia las medias
+              palabras de cada palabra (4 bytes) en los ficheros.
+
+       -t, --list
+              Muestra una tabla de contenidos de la entrada.
+
+       -u, --unconditional
+              Reemplaza  todos  los  ficheros,  sin  preguntar si
+              reemplazar los ficheros  existentes  más  recientes
+              con los más viejos.
+
+       -v, --verbose
+              Lista  los ficheros procesados, o con -t da un lis­
+              tado de la tabla de contenidos  al  estilo  de  `ls
+              -l'.  En  un  listado  prolijo  de la tabla de con­
+              tenidos de un archivo ustar, los nombres de usuario
+              y  grupo en el archivo que no existan en el sistema
+              local se reemplazan por los nombres que  correspon­
+              dan  localmente a los UID y GID numéricos almacena­
+              dos en el archivo.
+
+       -V --dot
+              Muestra un "." por cada fichero procesado.
+
+       --version
+              Muestra el número de versión del  programa  cpio  y
+              acaba.
+
+       --help Muestra  una ayuda sobre el modo de empleo del pro­
+              grama y acaba.
+
+
+
+GNU                                                      CPIO(1L)

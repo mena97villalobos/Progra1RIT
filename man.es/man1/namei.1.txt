@@ -1,0 +1,64 @@
+NAMEI(1)                                                 NAMEI(1)
+
+
+
+NOMBRE
+       namei  -  seguir  una trayectoria hasta encontrar un punto
+       terminal
+
+SINOPSIS
+       namei [-mx] pathname [ pathname ... ]
+
+DESCRIPCIÓN
+       Namei usa sus argumentos como trayectorias hacia cualquier
+       tipo de fichero Unix (enlaces simbólicos, ficheros, direc­
+       torios, y el resto).   Namei  a  continuación  sigue  cada
+       trayectoria hasta encontrar un punto terminal (un fichero,
+       directorio, dispositivo de caracteres, etc). Si  encuentra
+       un  enlace simbólico, se muestra el enlace y se comienza a
+       seguirlo, indentando la salida para mostrar el contexto.
+
+       Este programa es útil para encontrar  problemas  del  tipo
+       "too  many  levels of symbolic links" ("demasiados niveles
+       de enlaces simbólicos").
+
+       Para cada línea de la salida, namei muestra los siguientes
+       caracteres  para identificar el tipo de ficheros encontra­
+       dos:
+
+          f: = la trayectoria que estamos intentando resolver
+           d = directorio
+           l = enlace simbólico (se muestran tanto el enlace como su contenido)
+           s = socket
+           b = dispositivo de bloque
+           c = dispositivo de caracteres
+           - = fichero regular
+           ? = un error de algún tipo
+
+       Namei imprime un mensaje informativo cuando el número máx­
+       imo de enlaces simbólicos de ese sistema se ha excedido.
+
+OPCIONES
+       -x      Mostrar  directorios que son puntos de montaje con
+               una 'D', en vez de con una 'd'.
+
+       -m      Mostrar los  bits  de  modo  para  cada   tipo  de
+               fichero  en el estilo de ls(1), por ejemplo 'rwxr-
+               xr-x'.
+
+AUTOR
+       Roger Southwick  (rogers@amadeus.wr.tek.com)
+
+FALLOS
+       A ser descubiertos.
+
+NOTAS
+       Namei seguirá los bucles infinitos de  enlaces  simbólicos
+       por siempre. Para escapar, use SIGINT (normalmente ^C).
+
+VÉASE TAMBIÉN
+       ls(1), stat(1)
+
+
+
+                              Local                      NAMEI(1)

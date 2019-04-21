@@ -1,0 +1,107 @@
+SIGNAL(7)        Manual del Programador de Linux        SIGNAL(7)
+
+
+
+NOMBRE
+       signal - lista de las señales disponibles
+
+DESCRIPCIÓN
+       Linux  permite el uso de las señales dadas a continuación.
+       Los números de varias de las señales dependen de la arqui­
+       tectura  del  sistema.  Primero,  las señales descritas en
+       POSIX.1.
+
+
+       Señal      Valor     Acción   Comentario
+       ----------------------------------------------------------------------
+       SIGHUP        1        A      Cuelgue detectado en la terminal de
+                                     control o muerte del proceso de control
+       SIGINT        2        A      Interrupción procedente del teclado
+       SIGQUIT       3        A      Terminación procedente del teclado
+       SIGILL        4        A      Instrucción ilegal
+       SIGABRT       6        C      Señal de aborto procedente de abort(3)
+       SIGFPE        8        C      Excepción de coma flotante
+       SIGKILL       9       AEF     Señal de matar
+       SIGSEGV      11        C      Referencia inválida a memoria
+       SIGPIPE      13        A      Tubería rota: escritura sin lectores
+       SIGALRM      14        A      Señal de alarma de alarm(2)
+       SIGTERM      15        A      Señal de terminación
+       SIGUSR1   30,10,16     A      Señal definida por usuario 1
+       SIGUSR2   31,12,17     A      Señal definida por usuario 2
+       SIGCHLD   20,17,18     B      Proceso hijo terminado o parado
+       SIGCONT   19,18,25            Continuar si estaba parado
+       SIGSTOP   17,19,23    DEF     Parar proceso
+       SIGTSTP   18,20,24     D      Parada escrita en la tty
+       SIGTTIN   21,21,26     D      E. de la tty para un proc. de fondo
+       SIGTTOU   22,22,27     D      S. a la tty para un proc. de fondo
+
+       A continuación otras señales.
+
+
+       Señal        Valor     Acción   Comentario
+       -------------------------------------------------------------------------
+       SIGTRAP        5         CG     Trampa para rastreo/punto de ruptura
+       SIGIOT         6         CG     Trampa IOT. Un sinónimo de SIGABRT
+       SIGEMT       7,-,7       G
+       SIGBUS      10,7,10      AG     Error del bus.
+       SIGSYS      12,-,12      G      Argumento incorrecto para función (SVID)
+       SIGSTKFLT    -,16,-      AG     Fallo de la pila en el coprocesador
+       SIGURG      16,23,21     BG     Condición urgente en zócalo (socket)
+                                       (4.2 BSD)
+       SIGIO       23,29,22     AG     E/S permitida ya (4.2 BSD)
+       SIGPOLL                  AG     Un sinónimo de SIGIO (System V)
+       SIGCLD       -,-,18      G      Un sinónimo de SIGCHLD
+       SIGXCPU     24,24,30     AG     Tiempo límite de la CPU excedido
+                                       (4.2 BSD)
+       SIGXFSZ     25,25,31     AG     Tamaño límite de fichero excedido
+                                       (4.2 BSD)
+       SIGVTALRM   26,26,28     AG     Reloj-despertador virtual
+                                       (4.2 BSD)
+       SIGPROF     27,27,29     AG     Perfilar Reloj-despertador
+       SIGPWR      29,30,19     AG     Fallo de corriente eléctrica (System V)
+       SIGINFO      29,-,-      G      Un sinónimo para SIGPWR
+       SIGLOST      -,-,-       AG     Fichero de bloqueo perdido.
+       SIGWINCH    28,28,20     BG     Señal de reescalado de la ventana
+                                       (4.3 BSD, Sun)
+
+       SIGUNUSED    -,31,-      AG     Señal no usada.
+
+       (Aquí, - denota que una señal está ausente; allí donde  se
+       indican tres valores, el primero es comúnmente válido para
+       alpha y sparc, el segundo para i386 y  ppc,  y  el  último
+       para mips. La señal 29 es SIGINFO /SIGPWR en un alpha pero
+       SIGLOST en una sparc.)
+
+       Las letras en la columna "Acción"  tienen  los  siguientes
+       significados:
+
+       A      La acción por omisión es terminar el proceso.
+
+       B      La acción por omisión es no hacer caso de la señal.
+
+       C      La acción por omisión es hacer un volcado de  memo­
+              ria.
+
+       D      La acción por omisión es parar el proceso.
+
+       E      La señal no puede ser capturada.
+
+       F      La señal no puede ser pasada por alto.
+
+       G      Señal no conforme con POSIX.1.
+
+CONFORME A
+       POSIX.1
+
+ERRORES
+       SIGIO  y  SIGLOST tienen el mismo valor.  Este último está
+       comentado en las fuentes del núcleo, pero  el  proceso  de
+       construcción  de algunos programas aún piensa que la señal
+       29 es SIGLOST.
+
+VÉASE TAMBIÉN
+       kill(1), kill(2), setitimer(2)
+
+
+
+Linux 1.3.88              13 Junio 1996                 SIGNAL(7)

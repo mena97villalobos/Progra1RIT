@@ -1,0 +1,52 @@
+FREE(1)          Manual del Programador de Linux          FREE(1)
+
+
+
+NOMBRE
+       free - Muestara la cantidad de memoria libre y usada en el
+       sistema
+
+SINOPSIS
+       free [-b | -k | -m] [-o] [-s retardo ] [-t] [-V]
+
+DESCRIPCIÓN
+       free muestra la cantidad total  de  memoria  fisica  y  de
+       intercambio  presente  en  el sistema, asi como la memoria
+       compartida y los buffers usados por el nucleo
+
+   Opciones
+       El modificador -b muestra la cantidad de memoria en bytes;
+       el modificador -k (puesto por defecto) la muestra en kilo­
+       bytes; el modificador -m la muestra en megabytes.
+
+       El modificador -t muestra en una linea los totales.
+
+       El modificador -o desactiva el mostrar la linea de "ajuste
+       de  buffer".  Hasta  q  no se especifique free quita/anade
+       memoria  buffer  desde/hacia   el   informe   de   memoria
+       usada/libre (¡respectivamente!)
+
+       El  modificador  -s  activa  el refresco de la informacion
+       cada retardo segundos. Es  posible  especificar  cualquier
+       numero  en  coma flotante para retardo, usleep(3) es usado
+       para una precision  de  milisegundos  en  los  tiempos  de
+       retardo.
+
+       El  modificador  -V  muestra la informacion referente a la
+       version.
+
+FICHEROS
+       /proc/meminfo-- informacion acerca de la memoria
+
+VÉASE TAMBIÉN
+       ps(1), top(1)
+
+AUTORES
+       Escrito por Brian Edmonds.
+
+       Enviar avisos de fallos a <procps-bugs@redhat.com>
+
+
+
+
+Cohesive Systems          20 Marzo 1993                   FREE(1)

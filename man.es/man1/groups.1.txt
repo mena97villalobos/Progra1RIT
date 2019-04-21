@@ -1,0 +1,40 @@
+GROUPS(1)                                               GROUPS(1)
+
+
+
+NOMBRE
+       groups - imprime los grupos en los que está un usuario
+
+SINOPSIS
+       groups [nombre-usuario...]
+       groups {--help,--version}
+
+DESCRIPCIÓN
+       Esta  documentación no será mantenida y puede ser inexacta
+       o incompleta.  La documentación Texinfo es ahora la fuente
+       autorizada.
+
+       Esta  página de manual documenta la versión GNU de groups.
+       groups imprime los nombres de los grupos suplementarios en
+       los que está cada nombre-usuario, dado o el proceso actual
+       si no se especifica nada. Si se dan nombres  de  usuarios,
+       el  nombre de cada usuario se imprime antes de la lista de
+       los grupos del usuario.
+
+       Las listas de grupos son  equivalentes  a  la  salida  del
+       comando `id -Gn'.
+
+   OPCIONES
+       Cuando  GNU  groups  se  llama  con  un solo argumento, se
+       reconocen las siguientes opciones:
+
+       --help Imprime un mensaje de uso en la salida  estándar  y
+              termina correctamente.
+
+       --version
+              Imprime  información  sobre la versión en la salida
+              estándar y termina correctamente.
+
+
+
+FSF                    Utilidades Shell GNU             GROUPS(1)

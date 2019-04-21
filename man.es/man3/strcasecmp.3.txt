@@ -1,0 +1,39 @@
+STRCASECMP(3)    Manual del Programador de Linux    STRCASECMP(3)
+
+
+
+NOMBRE
+       strcasecmp,  strncasecmp  - comparan dos cadenas ignorando
+       si son mayúsculas o minúsculas.
+
+SINOPSIS
+       #include <string.h>
+
+       int strcasecmp(const char *s1, const char *s2);
+
+       int strncasecmp(const char *s1, const char *s2, size_t n);
+
+DESCRIPCIÓN
+       La función strcasecmp() compara las dos cadenas s1  y  s2,
+       ignorando  mayúsculas  y  minúsculas.   Devuelve un entero
+       menor , igual , o mayor que  cero  si  s1  es  encontrado,
+       respectivamente, es menor, igual, o mayor que s2.
+
+       La función strncasecmp() es similar, excepto que sólo com­
+       para los primeros caracteres n de s1.
+
+VALOR DEVUELTO
+       Las funciones strcasecmp() y  strncasecmp()  devuelven  un
+       entero  menor, igual, o mayor que cero si s1 es encontrada
+       (o los primeros n bytes de la misma), respectivamente, son
+       menor, igual, o mayor que s2.
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       bcmp(3), memcmp(3), strcmp(3), strcoll(3), strncmp(3)
+
+
+
+                          11 Abril 1993             STRCASECMP(3)

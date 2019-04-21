@@ -1,0 +1,25 @@
+CEIL(3)          Manual del Programador de Linux          CEIL(3)
+
+
+
+NOMBRE
+       ceil - el valor más pequeño entero no menor que x
+
+SINOPSIS
+       #include <math.h>
+
+       double ceil(double x);
+
+DESCRIPCIÓN
+       La  función  ceil()  redondea x hacia arriba al entero más
+       cercano, devolviendo el valor como un double.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       abs(3), fabs(3), floor(3), labs(3), rint(3)
+
+
+
+GNU                        6 Junio 1993                   CEIL(3)

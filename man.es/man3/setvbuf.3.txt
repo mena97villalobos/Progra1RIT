@@ -1,0 +1,106 @@
+SETBUF(3)        Manual del Programador de Linux        SETBUF(3)
+
+
+
+NOMBRE
+       setbuf, setbuffer, setlinebuf, setvbuf - operaciones sobre
+       búferes de flujos
+
+SINOPSIS
+       #include <stdio.h>
+
+       void setbuf(FILE *flujo, char *buf);
+       void setbuffer(FILE *flujo, char *buf, size_ttam);
+       void setlinebuf(FILE *flujo);
+       int setvbuf(FILE *flujo, char *buf, int modo , size_t
+       tam);
+
+DESCRIPCIÓN
+       Los tres tipos disponibles de estrategias de asignación de
+       búferes son sin búfer, con búfer de bloque, y con búfer de
+       línea. Cuando un flujo de salida está sin búfer, la infor­
+       mación aparece en el fichero de destino o en  la  terminal
+       tan  pronto  como  se  escribe;  cuando  está con búfer de
+       bloque se guardan y escriben  muchos  caracteres  como  un
+       bloque;  cuando  está con búfer de línea los caracteres se
+       van guardando hasta que se da un salto de línea  o  si  la
+       entrada  se  lee de cualquier flujo asociado a un disposi­
+       tivo de terminal (normalmente la entrada estándar  stdin).
+       Se  puede  emplear  la  función  fflush(3)  para forzar la
+       escritura del  bloque  más  pronto  de  la  cuenta.   (Vea
+       fclose(3).)   Normalmente  todos los ficheros son de búfer
+       de bloque. Cuando ocurre la primera operación de E/S en un
+       fichero, se llama a malloc(3) y se obtiene un búfer. Si un
+       flujo se refiere a una  terminal  (como  hace  normalmente
+       stdout)  es  de  búfer  de  línea.  La  salida estándar de
+       errores stderr siempre es sin búfer por defecto.
+
+       La función setvbuf puede emplearse en cualquier momento en
+       cualquier   flujo  abierto  para  cambiar  su  búfer.   El
+       parámetro modo debe ser una de las tres macros siguientes:
+
+              _IONBF sin búfer
+
+              _IOLBF búfer de línea
+
+              _IOFBF búfer completo
+
+       Salvo  para  ficheros  sin búfer, el argumento buf debería
+       apuntar a un búfer de al menos tam bytes de  grande;  este
+       búfer  se  utilizará  en lugar del actual. Si el argumento
+       buf es NULL, sólo el modo se ve afectado; se  obtendrá  un
+       nuevo búfer en la siguiente operación de lectura o escrit­
+       ura. La  función  setvbuf  puede  emplearse  en  cualquier
+       momento,  pero solamente puede cambiar el modo de un flujo
+       cuando no esté ``activo''; esto  es,  antes  de  cualquier
+       E/S, o inmediatamente tras una llamada a fflush.
+
+       Las otras tres funciones son, en efecto, simplemente otras
+       formas simplificadas de llamar a setvbuf.  La función set­
+       buf es exactamente equivalente a la llamada
+
+              setvbuf(flujo, buf, buf ? _IOFBF : _IONBF, BUFSIZ);
+
+       La función setbuffer es lo mismo, excepto en que el tamaño
+       del  búfer  se deja a la discreción del usuario, en vez de
+       estar determinado por el valor  por  omisión  BUFSIZ.   La
+       función  setlinebuf  es  exactamente equivalente a la lla­
+       mada:
+
+              setvbuf(flujo, (char *)NULL, _IOLBF, 0);
+
+VÉASE TAMBIÉN
+       fopen(3),  fclose(3),  fflush(3),   fread(3),   malloc(3),
+       puts(3), printf(3)
+
+CONFORME A
+       Las  funciones  setbuf y setvbuf son conformes al estándar
+       ANSI C3.159-1989 (``C ANSI'').
+
+FALLOS
+       Las funciones setbuffer y setlinebuf no son transportables
+       a  versiones de BSD anteriores a 4.2BSD, y pueden no estar
+       disponibles bajo Linux. En sistemas 4.2BSD y 4.3BSD,  set­
+       buf  siempre  emplea  un  tamaño  de  búfer por debajo del
+       óptimo, y debe ser evitada.
+
+       Ud. debe asegurarse de que tanto buf como  el  espacio  al
+       que  apunte  todavía  existan  cuando flujo se cierre, que
+       también ocurre al acabarse el programa.
+
+       Por ejemplo, lo siguiente está mal:
+
+       #include <stdio.h>
+       int main()
+       {
+           auto char buf[BUFSIZ];
+
+           setbuf(stdin, buf);
+           printf("¡Hola a todos!\n");
+           return 0; /* Se destruye buf, se cierra stdin */
+       }
+
+
+
+
+BSD                     29 Noviembre 1993               SETBUF(3)

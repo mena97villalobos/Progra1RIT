@@ -1,0 +1,73 @@
+TEMPNAM(3)       Manual del Programador de Linux       TEMPNAM(3)
+
+
+
+NOMBRE
+       tempnam - crea un nombre para un fichero temporal
+
+SINOPSIS
+       #include <stdio.h>
+
+       char *tempnam(const char *dir, const char *pfj);
+
+DESCRIPCIÓN
+       La  función tempnam() devuelve un puntero a una cadena que
+       es un nombre válido  de  fichero  tal  que  no  existe  un
+       fichero con este nombre cuando tempnam() lo comprueba.  El
+       sufijo del nombre de fichero de la ruta generada comenzará
+       con  pfj  en el caso de que pfj sea una cadena distinta de
+       NULL con al menos 5 bytes.  La parte  de  directorios  del
+       prefijo  de la ruta generada necesita ser `adecuada' (nor­
+       malmente, esto implica que al menos  se  pueda  escribir).
+       Los  pasos que se siguen para intentar encontrar un direc­
+       torio adecuado son los siguientes: (i) En el caso  de  que
+       la  variable de entorno TMPDIR exista y contenga el nombre
+       de un directorio apropiado, se utiliza ese.  (ii) En  caso
+       contrario,  si  el  argumento  dir  es  distinto de NULL y
+       apropiado, se usa.  (iii) En caso contrario, P_tmpdir (tal
+       y  como  se  define en <stdio.h>) se usa cuando sea conve­
+       niente.  (iv) Finalmente,  se  puede  usar  un  directorio
+       definido por la implementación.
+
+VALOR DEVUELTO
+       La  función  tempnam()  devuelve  un  puntero al nombre de
+       fichero único en el sistema o NULL si no se puede  generar
+       el nombre.
+
+ERRORES
+       ENOMEM Ha fallado la reserva de memoria.
+
+
+NOTAS
+       SUSv2  no  menciona  el uso de TMPDIR. glibc lo usará sólo
+       cuando el programa no sea suid.  SVID2 especifica  que  el
+       directorio  usado  en el caso (iv) es /tmp.  SVID2 especi­
+       fica que la  cadena  que  devuelve  tempnam()  se  reservó
+       usando  malloc(3) y que, por tanto, puede ser liberada con
+       free(3).
+
+       La función tempnam() genera una cadena diferente cada  vez
+       que se llama, hasta TMP_MAX veces (definida en <stdio.h>).
+       Si se  llama  más  de  TMP_MAX  veces,  el  comportamiento
+       depende de la implementación.
+
+       En  el  caso  de  que  el argumento pfj tenga una longitud
+       mayor de 5, glibc usará los primeros 5 bytes. En  el  caso
+       de  que  la  búsqueda  de  un  nombre  único  falle, glibc
+       devolverá EEXIST.
+
+FALLOS
+       El significado preciso de  `adecuado'  no  está  definido.
+       Está sin especificar cómo se determina la accesibilidad de
+       un directorio.  Nunca use esta función. En su  lugar,  use
+       mkstemp(3).
+
+CONFORME A
+       SVID 2, BSD 4.3
+
+VÉASE TAMBIÉN
+       mktemp(3), mkstemp(3), tmpfile(3), tmpnam(3)
+
+
+
+                          14 junio 1999                TEMPNAM(3)

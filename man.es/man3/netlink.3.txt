@@ -1,0 +1,81 @@
+NETLINK(3)       Manual del Programador de Linux       NETLINK(3)
+
+
+
+NOMBRE
+       netlink - macros netlink
+
+SINOPSIS
+       #include <asm/types.h>
+       #include <linux/netlink.h>
+       int NLMSG_ALIGN(size_t len);
+       int NLMSG_LENGTH(size_t len);
+       int NLMSG_SPACE(size_t len);
+       void *NLMSG_DATA(struct nlmsghdr *nlh);
+       struct nlmsghdr *NLMSG_NEXT(struct nlmsghdr *nlh, int len);
+       int NLMSG_OK(struct nlmsghdr *nlh, int len);
+       int NLMSG_PAYLOAD(struct nlmsghdr *nlh, int len);
+
+DESCRIPCIÓN
+       netlink.h  define  varias macros estándares para acceder o
+       crear un datagrama netlink.  En esencia  son  similares  a
+       las macros definidas en cmsg(3) para los datos auxiliares.
+       Se debería acceder al buffer pasado a y desde un  conector
+       netlink usando únicamente estas macros.
+
+
+       NLMSG_ALIGN
+               Redondea  la longitud de un mensaje netlink
+               hasta alinearlo adecuadamente.
+
+       NLMSG_LENGTH
+               Toma como argumento la  longitud  del  con­
+               tenido útil y devuelve la longitud alineada
+               para almacenarlo en el campo  nlmsg_len  de
+               nlmsghdr.
+
+       NLMSG_SPACE
+               Devuelve el número de bytes que ocuparía un
+               mensaje netlink con un contenido útil de la
+               longitud pasada.
+
+       NLMSG_DATA
+               Devuelve  un puntero al contenido útil aso­
+               ciado con el nlmsghdr pasado.
+
+       NLMSG_NEXT
+               Obtiene el siguiente nlmsghdr en un mensaje
+               multiparte.  El invocador debe comprobar si
+               el  nlmsghdr  actual  no  tenía  activa  la
+               opción NLMSG_DONE (esta función no devuelve
+               NULL al final). El parámetro longitud es un
+               valor  izquierdo  (lvalue)  que contiene la
+               longitud restante del buffer  del  mensaje.
+               Esta  macro lo decrementa en la longitud de
+               la cabecera del mensaje.
+
+       NLMSG_OK
+               Devuelve verdadero si el mensaje netlink no
+               está  truncado  y es correcto para se anal­
+               izado.
+
+       NLMSG_PAYLOAD
+               Devuelve la  longitud  del  contenido  útil
+               asociado con nlmsghdr.
+
+
+NOTAS
+       Normalmente  es mejor usar netlink a través de lib­
+       netlink que mediante la interfaz de bajo nivel  del
+       núcleo.
+
+
+VÉASE TAMBIÉN
+       netlink(7)
+
+       ftp://ftp.inr.ac.ru/ip-routing/iproute2*  para lib­
+       netlink
+
+
+
+Página man de Linux        14 mayo 1999                NETLINK(3)

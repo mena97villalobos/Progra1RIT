@@ -1,0 +1,52 @@
+EXP(3)           Manual del Programador de Linux           EXP(3)
+
+
+
+NOMBRE
+       exp, log, log10, pow - funciones exponenciales, logarítmi­
+       cas y potencia
+
+SINOPSIS
+       #include <math.h>
+
+       double exp(double x);
+
+       double log(double x);
+
+       double log10(double x);
+
+       double pow(double x, double y);
+
+DESCRIPCIÓN
+       La función exp() devuelve el valor de e (la  base  de  los
+       logaritmos naturales) elevado a la potencia x.
+
+       La función log() devuelve el logaritmo neperiano de x.
+
+       La función log10() devuelve el logaritmo decimal de x.
+
+       La función pow() devuelve el valor de x elevado a y.
+
+ERRORES
+       Las  funciones  log()  y log10() pueden devolver los sigu­
+       ientes errores:
+
+       EDOM   El argumento x es negativo.
+
+       ERANGE El argumento x es cero. El  logaritmo  de  cero  no
+              está definido.
+
+       La función pow() puede devolver el siguiente error:
+
+       EDOM   El  argumento  x  es  negativo  e  y no es un valor
+              entero.  Esto daría un número complejo.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       sqrt(3), cbrt(3)
+
+
+
+GNU                     9 de Enero de 1998                 EXP(3)

@@ -1,0 +1,66 @@
+
+NOMBRE
+     rev - invierte las lineas de un fichero
+
+SINOPSIS
+     rev [file]
+
+DESCRIPCIÓN
+     La utilidad rev copia los ficheros especificados a la salida estándar,
+     invirtiendo el orden de los caracteres de cada línea.  Si no se especifi­
+     can ficheros, se lee de la entrada estándar.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

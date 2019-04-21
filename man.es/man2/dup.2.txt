@@ -1,0 +1,63 @@
+DUP(2)           Manual del Programador de Linux           DUP(2)
+
+
+
+NOMBRE
+       dup, dup2 - duplica un descriptor de fichero
+
+SINOPSIS
+       #include <unistd.h>
+
+       int dup(int oldfd);
+       int dup2(int oldfd, int newfd);
+
+DESCRIPCIÓN
+       dup  y  dup2  crean  una  copia  del descriptor de fichero
+       oldfd.
+
+       Los descriptores antiguo y nuevo  pueden  usarse  indifer­
+       entemente.  Comparten  candados  (locks),  indicadores  de
+       posición de fichero y banderas (flags); por ejemplo, si la
+       posición  del  fichero  se modifica usando lseek en uno de
+       los descriptores, la posición en el otro también cambia.
+
+       Sin embargo  los  descriptores  no  comparten  la  bandera
+       close-on-exec, (cerrar-al-ejecutar).
+
+       dup  usa  el descriptor libre con menor numeración posible
+       como nuevo descriptor.
+
+       dup2 hace que  newfd  sea  la  copia  de  oldfd,  cerrando
+       primero newfd si es necesario.
+
+VALOR DEVUELTO
+       dup  y  dup2 devuelven el valor del nuevo descriptor, ó -1
+       si ocurre algún error, en cuyo caso errno  toma  un  valor
+       apropiado.
+
+ERRORES
+       EBADF  oldfd  no  es  un  descriptor de fichero abierto, o
+              newfd está fuera del rango permitido para  descrip­
+              tores de ficheros.
+
+       EMFILE El  proceso  ya  tiene el máximo número de descrip­
+              tores de fichero abiertos y se ha  intentado  abrir
+              uno nuevo.
+
+ADVERTENCIA
+       El  error  devuelto por dup2 es diferente del devuelto por
+       fcntl(...,F_DUPFD,...)  cuando newfd está fuera de  rango.
+       En  algunos  sistemas  dup2  a  veces devuelve EINVAL como
+       F_DUPFD.
+
+CONFORME A
+       SVID, AT&T, POSIX, X/OPEN, BSD  4.3.  SVr4  documenta  las
+       condiciones  de error adicionales EINTR y ENOLINK. POSIX.1
+       añade EINTR.
+
+VÉASE TAMBIÉN
+        fcntl (2), open (2), close (2).
+
+
+
+Linux 1.1.46               1 Julio 1996                    DUP(2)

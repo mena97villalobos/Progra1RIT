@@ -1,0 +1,46 @@
+GETUSERSHELL(3)  Manual del Programador de Linux  GETUSERSHELL(3)
+
+
+
+NOMBRE
+       getusershell,  setusershell, endusershell - obtener shells
+       de usuario legales
+
+SINOPSIS
+       #include <unistd.h>
+
+       char *getusershell(void);
+
+       void setusershell(void);
+
+       void endusershell(void);
+
+DESCRIPCIÓN
+       La función getusershell() devuelve la siguiente línea  del
+       fichero /etc/shells, abriéndolo si es necesario.  La línea
+       debería contener la ruta de una shell de  usuario  válida.
+       Si  /etc/shells  no  existe  o  no se puede leer, getuser­
+       shell() se comporta como si en el fichero  se  encontraran
+       las shells /bin/sh y /bin/csh.
+
+       La función setusershell() reinicializa /etc/shells.
+
+       La función endusershell() cierra /etc/shells.
+
+VALOR DEVUELTO
+       La  función  getusershell() devuelve un puntero NULL si se
+       llega al fin de fichero.
+
+FICHEROS
+       /etc/shells
+              Fichero de base datos de shells
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       shells(5)
+
+
+
+BSD                        4-Julio-1993           GETUSERSHELL(3)

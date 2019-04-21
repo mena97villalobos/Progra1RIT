@@ -1,0 +1,87 @@
+LSEEK(2)         Manual del Programador de Linux         LSEEK(2)
+
+
+
+NOMBRE
+       lseek  - reposiciona el puntero de lectura/escritura de un
+       fichero
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <unistd.h>
+
+       off_t lseek(int fildes, off_t offset, int whence);
+
+DESCRIPCIÓN
+       La función lseek reposiciona el puntero del descriptor  de
+       fichero  fildes  con el argumento offset de acuerdo con la
+       directiva whence as follows:
+
+       SEEK_SET
+              El puntero se coloca a offset bytes.
+
+       SEEK_CUR
+              El número de bytes indicado en offset se suma a  la
+              dirección  actual  y  el  puntero  se  coloca en la
+              dirección resultante.
+
+       SEEK_END
+              El puntero se coloca al final del fichero más  off­
+              set bytes.
+
+       La  función  lseek  permite  colocar el puntero de fichero
+       después del final de  fichero.   Si  después  se  escriben
+       datos en este punto, las lecturas siguientes de datos den­
+       tro del hueco que se  forma  devuelven  ceros  (hasta  que
+       realmente se escriban datos dentro de ese hueco).
+
+VALOR DEVUELTO
+       En  el  caso  de una ejecución correcta, lseek devuelve la
+       posición del puntero resultante medida en bytes  desde  el
+       principio del fichero. Si se produce un error, se devuelve
+       el valor (off_t)-1 y en errno se coloca el tipo de  error.
+
+ERRORES
+       EBADF  fildes no es un descriptor de fichero abierto.
+
+       ESPIPE fildes está asociado a una tubería, socket, o FIFO.
+
+       EINVAL whence no es un valor adecuado.
+
+CONFORME A
+       SVr4, POSIX, BSD 4.3
+
+RESTRICCIONES
+       Algunos dispositivos son incapaces de buscar  y  POSIX  no
+       especifica qué dispositivos deben soportar la búsqueda.
+
+       Restricciones  específicas de Linux: el uso de lseek sobre
+       un dispositivo tty (terminal) devuelve ESPIPE. Otros  sis­
+       temas  devuelven  el número de caracteres escritos, usando
+       SEEK_SET para establecer  el  contador.  Algunos  disposi­
+       tivos,  como  por  ejemplo /dev/null, no provocan el error
+       ESPIPE,  pero  devuelven  un   puntero   cuyo   valor   es
+       indefinido.
+
+NOTAS
+       La  utilización  de whence en este documento es incorrecta
+       en inglés, pero se usa  por  motivos  históricos.   Cuando
+       convierta  código  antiguo,  sustituya  los  valores  para
+       whence con las siguientes macros:
+
+       antiguo    nuevo
+       0         SEEK_SET
+       1         SEEK_CUR
+       2         SEEK_END
+       L_SET     SEEK_SET
+       L_INCR    SEEK_CUR
+       L_XTND    SEEK_END
+
+       SVR1-3 devuelve long en lugar de off_t, BSD devuelve  int.
+
+VÉASE TAMBIÉN
+       dup(2), open(2), fseek(3)
+
+
+
+Linux                     17 Enero 1998                  LSEEK(2)

@@ -1,0 +1,63 @@
+GETCWD(3)        Manual del Programador de Linux        GETCWD(3)
+
+
+
+NOMBRE
+       getcwd, get_current_dir_name, getwd - Obtienen el directo­
+       rio de trabajo en curso
+
+SINOPSIS
+       #include <unistd.h>
+
+       char *getcwd(char *buf, size_t tam);
+       char *get_current_dir_name(void);
+       char *getwd(char *buf);
+
+DESCRIPCIÓN
+       La función getcwd() copia el nombre de camino absoluto del
+       directorio de trabajo en curso al vector apuntado por buf,
+       que tiene de longitud tam.
+
+       Si el nombre de camino absoluto  antedicho  requiriera  un
+       búfer  mayor  de tam elementos, se devolvería NULL y errno
+       tomaría el valor ERANGE; una aplicación debería  comprobar
+       si  ha ocurrido este error, y reservar un búfer más grande
+       si fuera necesario.
+
+       Como una extensión al estándar POSIX.1,  getcwd()  reserva
+       el búfer dinámicamente empleando para ello malloc() si buf
+       es NULL a la hora de la llamada. En este  caso,  el  búfer
+       reservado  tiene  la  longitud  tam a menos que tam no sea
+       mayor que cero, situación en la que buf se  reservará  con
+       un  tamaño  tan  grande como sea necesario. Es posible (e,
+       incluso, recomendable) liberar con free() los  búferes  si
+       han sido obtenidos por esta vía.
+
+       get_current_dir_name,  cuyo  prototipo sólo existe si está
+       definida la macro __USE_GNU,  obtendrá  memoria  con  mal­
+       loc(3)  para un vector lo bastante grande como para alojar
+       el nombre del directorio en curso. Si la variable de ambi­
+       ente  PWD  existe  y  tiene un valor correcto, se devuelve
+       este valor.
+
+       getwd, cuyo prototipo sólo  existe  si  está  definida  la
+       macro  __USE_BSD,  no obtendrá memoria con malloc(3) ni de
+       ninguna otra forma. El argumento buf deberá ser un puntero
+       a  un  vector  de al menos PATH_MAX bytes de largo.  getwd
+       solamente devuelve los primeros PATH_MAX bytes del  nombre
+       de camino real.
+
+VALOR DEVUELTO
+       NULL  en  caso  de fallo (por ejemplo, si el directorio en
+       curso no es legible), con un valor apropiado en  errno,  y
+       buf en caso de acabar con éxito.
+
+CONFORME A
+       POSIX.1
+
+VÉASE TAMBIÉN
+       chdir(2), free(3), malloc(3).
+
+
+
+GNU                       21 Julio 1993                 GETCWD(3)

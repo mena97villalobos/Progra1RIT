@@ -1,0 +1,35 @@
+FREXP(3)         Manual del Programador de Linux         FREXP(3)
+
+
+
+NOMBRE
+       frexp  - descompone un número en coma flotante en sus com­
+       ponentes entero y fraccional
+
+SINOPSIS
+       #include <math.h>
+
+       double frexp(double x, int *exp);
+
+DESCRIPCIÓN
+       La función frexp() se emplea para dividir el número  x  en
+       una  fracción  normalizada y un exponente que se guarda en
+       *exp.
+
+VALOR DEVUELTO
+       La función frexp() devuelve la fracción normalizada. Si el
+       argumento x no es cero, la fracción normalizada es x veces
+       una potencia de dos, y siempre  está  en  el  intervalo  ½
+       (incluido) a 1 (excluido). Si x es cero, entonces la frac­
+       ción normalizada es cero y  cero  es  también  lo  que  se
+       guarda en *exp.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       ldexp(3), modf(3)
+
+
+
+GNU                       21 Enero 1998                  FREXP(3)

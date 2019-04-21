@@ -1,0 +1,30 @@
+DIV(3)           Manual del Programador de Linux           DIV(3)
+
+
+
+NOMBRE
+       div  -  calcula  el  cociente  y  el resto de una división
+       entera
+
+SINOPSIS
+       #include <stdlib.h>
+
+       div_t div(int numer, int denom);
+
+DESCRIPCIÓN
+       La función div() calcula el valor numer/denom  y  devuelve
+       el cociente y el resto en una estructura llamada div_t que
+       contiene dos miembros llamados quot y rem.
+
+VALOR DEVUELTO
+       La estructura div_t.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       ldiv(3)
+
+
+
+                          15 Enero 1995                    DIV(3)

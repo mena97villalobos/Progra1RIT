@@ -1,0 +1,29 @@
+TTYS(4)          Manual del Programador de Linux          TTYS(4)
+
+
+
+NOMBRE
+       ttys - líneas serie de terminales
+
+DESCRIPCIÓN
+       ttyS[0-3] son los dispositivos de carácter para las líneas
+       serie de terminales.
+
+       Normalmente se crean con:
+
+              mknod -m 660 /dev/ttyS0 c 4 64 # dir. base 0x03f8
+              mknod -m 660 /dev/ttyS1 c 4 65 # dir. base 0x02f8
+              mknod -m 660 /dev/ttyS2 c 4 66 # dir. base 0x03e8
+              mknod -m 660 /dev/ttyS3 c 4 67 # dir. base 0x02e8
+              chown root:tty /dev/ttyS[0-3]
+
+
+FICHEROS
+       /dev/ttyS[0-3]
+
+VÉASE TAMBIÉN
+       mknod(1), chown(1), getty(1), tty(4).
+
+
+
+Linux                     30 Junio 1996                   TTYS(4)

@@ -1,0 +1,399 @@
+TERMIOS(3)       Manual del Programador de Linux       TERMIOS(3)
+
+
+
+NOMBRE
+       termios,   tcgetattr,   tcsetattr,  tcsendbreak,  tcdrain,
+       tcflush,  tcflow,  cfmakeraw,  cfgetospeed,   cfgetispeed,
+       cfsetispeed, cfsetospeed, tcgetpgrp, tcsetpgrp - obtiene y
+       pone atributos de la terminal, controla  la  línea  de  la
+       terminal, obtiene y pone la velocidad de la línea, obtiene
+       y pone la ID. de grupo de procesos en primer plano  de  la
+       terminal
+
+SINOPSIS
+       #include <termios.h>
+       #include <unistd.h>
+
+       int tcgetattr ( int fd, struct termios *termios_p );
+
+       int tcsetattr ( int fd, int optional_actions, struct
+       termios *termios_p );
+
+       int tcsendbreak ( int fd, int duration );
+
+       int tcdrain ( int fd );
+
+       int tcflush ( int fd, int queue_selector );
+
+       int tcflow ( int fd, int action );
+
+       int cfmakeraw ( struct termios *termios_p );
+
+       speed_t cfgetospeed ( struct termios *termios_p );
+
+       int cfsetospeed ( struct termios *termios_p, speed_t speed
+       );
+
+       speed_t cfgetispeed ( struct termios *termios_p );
+
+       int cfsetispeed ( struct termios *termios_p, speed_t speed
+       );
+
+       pid_t tcgetpgrp ( int fd );
+
+       int tcsetpgrp ( int fd, pid_t pgrpid );
+
+DESCRIPCIÓN
+       Las funciones termios describen una interfaz general  para
+       las  terminales  que  sirve  para controlar los puertos de
+       comunicaciones asícronas.
+
+       Muchas de las funciones que aquí se  describen  poseen  un
+       argumento  termios_p  que  es  un puntero a una estructura
+       termios.  Esta  estructura  contiene  los  miembros  sigu­
+       ientes:
+
+              tcflag_t c_iflag;      /* modos de entrada */
+              tcflag_t c_oflag;      /* modos de salida */
+              tcflag_t c_cflag;      /* modos de control */
+              tcflag_t c_lflag;      /* modos locales */
+              cc_t c_cc[NCCS];       /* caracts. de control */
+
+
+       Constantes indicadoras c_iflag:
+
+       IGNBRK no hacer caso de la condición BREAK en la entrada
+
+       BRKINT si IGNBRK no está activo, generar SIGINT en caso de
+              condición BREAK, si no leer el BREAK como el carác­
+              ter \0.
+
+       IGNPAR No hacer caso de errores de marco y paridad.
+
+       PARMRK si  IGNPAR  no está activo, prefijar con \377 \0 un
+              carácter con un error de paridad  o  marco.  Si  ni
+              IGNPAR  ni  PARMRK  están activos, leer un carácter
+              con un error de paridad o marco como \0.
+
+       INPCK  permitir la comprobación de paridad en la entrada
+
+       ISTRIP quitar o poner a cero el 8º bit
+
+       INLCR  traducir NL a CR en la entrada
+
+       IGNCR  no hacer caso del retorno de carro en la entrada
+
+       ICRNL  traducir retorno de carro a salto de  línea  en  la
+              entrada (a menos que IGNCR esté activado)
+
+       IUCLC  convertir letras mayúsculas a las minúsculas corre­
+              spondientes en la entrada
+
+       IXON   activar el control de flujo XON/XOFF en la salida
+
+       IXANY  activar que cualquier carácter reinicie la salida
+
+       IXOFF  activar el control de flujo XON/XOFF en la entrada
+
+       IMAXBEL
+              hacer sonar el pitido cuando  la  cola  de  entrada
+              esté llena
+
+       Constantes indicadoras c_oflag:
+
+       OPOST  activar  el  procesamiento  definido  por la imple­
+              mentación de la salida
+
+       OLCUC  convertir las letras minúsculas en las correspondi­
+              entes mayúsculas en la salida
+
+       ONLCR  convertir NL a CR-NL en la salida
+
+       OCRNL  convertir CR a NL en la salida
+
+       ONOCR  no sacar CR en la columna 0
+
+       ONLRET no sacar CR
+
+       OFILL  enviar  caracteres  de  relleno para un retardo, en
+              vez de usar un retardo de tiempo
+
+       OFDEL  el carácter de relleno es el ASCII DEL. Si no  está
+              activado, el carácter de relleno es el ASCII NUL
+
+       NLDLY  máscara  de retardo del salto de línea. Los valores
+              son NL0 y NL1.
+
+       CRDLY  máscara de retardo del retorno de carro.  Los  val­
+              ores son CR0, CR1, CR2, o CR3.
+
+       TABDLY máscara  de  retardo  del tabulador horizontal. Los
+              valores son TAB0, TAB1, TAB2, TAB3,  o  XTABS.   Un
+              valor  de XTABS expande tabuladores a espacios (con
+              paradas del tabulador cada 8 columnas).
+
+       BSDLY  máscara de retardo del espacio atrás.  Los  valores
+              son BS0 o BS1.
+
+       VTDLY  máscara de retardo del tabulador vertical. Los val­
+              ores son VT0 o VT1.
+
+       FFDLY  máscara de retardo del salto de página. Los valores
+              son FF0 o FF1.
+
+       Constantes indicadoras c_cflag:
+
+       CSIZE  máscara de tamaño de carácter. Los valores son CS5,
+              CS6, CS7, o CS8.
+
+       CSTOPB pone dos bits de parada, en vez de uno.
+
+       CREAD  habilita receptor.
+
+       PARENB activa la generación de paridad en la salida y com­
+              probación de paridad para la entrada.
+
+       PARODD la paridad para la entrada y la salida es impar.
+
+       HUPCL  las  líneas  de control de módem inferiores tras el
+              último proceso cierran el dispositivo (cuelgan).
+
+       CLOCAL no hace caso de las líneas de control del módem
+
+       CIBAUD máscara para las velocidades de entrada (sin  uso).
+
+       CRTSCTS
+              control de flujo.
+
+       Constantes indicadoras c_lflag:
+
+       ISIG   cuando se reciba cualquiera de los caracteres INTR,
+              QUIT, SUSP, o DSUSP, generar la señal  correspondi­
+              ente.
+
+       ICANON activar  el modo canónico. Esto habilita los carac­
+              teres  especiales  EOF,  EOL,  EOL2,  ERASE,  KILL,
+              REPRINT, STATUS, y WERASE, y búferes por líneas.
+
+       XCASE  si  ICANON también está activo, la terminal es sólo
+              de letras mayúsculas.  La entrada  se  convierte  a
+              minúsculas,  salvo para caracteres precedidos de \.
+              En la salida, las letras mayúsculas salen  precedi­
+              das  por \ y las minúsculas convertidas en mayúscu­
+              las.
+
+       ECHO   muestra caracteres de entrada.
+
+       ECHOE  si ICANON está también activo,  el  carácter  ERASE
+              borra  el  carácter  anterior  de  la entrada, y el
+              WERASE borra la palabra anterior.
+
+       ECHOK  si ICANON también está  activo,  el  carácter  KILL
+              borra la línea en curso.
+
+       ECHONL si  ICANON está también activo, muestra el carácter
+              NL incluso si no está activado ECHO.
+
+       ECHOCTL
+              si ECHO también está activo, las señales de control
+              ASCII  distintas de TAB, NL, START y STOP, se mues­
+              tran como ^X, donde X es el  carácter  cuyo  código
+              ASCII  es  0x40  más el de la señal de control. Por
+              ejemplo, el carácter 0x08 (BS) se muestra como  ^H.
+
+       ECHOPRT
+              si ICANON y IECHO están también activos, los carac­
+              teres se muestran mientras están siendo borrados.
+
+       ECHOKE si ICANON también está activo, KILL se muestra bor­
+              rando cada carácter de la línea, como se especifica
+              por  ECHOE y ECHOPRT.
+
+       FLUSHO la salida se está volcando al dispositivo  de  sal­
+              ida.  Esta  opción se cambia al teclear el carácter
+              DISCARD.
+
+       NOFLSH inhabilita el volcado de las  colas  de  entrada  y
+              salida cuando se estén generando las señales SIGINT
+              y SIGQUIT, y el de la cola  de  entrada  cuando  se
+              genere la señal SIGSUSP.
+
+       TOSTOP envía  la  señal  SIGTTOU al grupo de proceso de un
+              proceso en segundo plano que trata de escribir a su
+              terminal controladora.
+
+       PENDIN todos los caracteres de la cola de entrada se reim­
+              primen cuando se lee el  siguiente  carácter  (bash
+              maneja el typeahead así.)
+
+       IEXTEN habilita  el  procesado  de entrada definido por la
+              implementación.
+
+       tcgetattr() obtiene los parámetros asociados con el objeto
+       referido por fd y los guarda en la estructura termios ref­
+       erenciada por  termios_p.   Esta  función  puede  llamarse
+       desde un proceso en segundo plano; sin embargo, los atrib­
+       utos de terminal pueden ser  modificados  subsecuentemente
+       por un proceso en primer plano.
+
+       tcsetattr() establece los parámetros asociados con la ter­
+       minal (a menos que se requiera soporte del hardware subya­
+       cente  que no esté disponible) desde la estructura termios
+       referenciada por termios_p.   optional_actions  especifica
+       cuándo los cambios tienen efecto:
+
+       TCSANOW
+              el cambio ocurre inmediatamente.
+
+       TCSADRAIN
+              el  cambio  ocurre  después  de que  toda la salida
+              escrita a fd haya sido  transmitida.  Esta  función
+              debería  emplearse cuando se cambien parámetros que
+              afecten a la salida.
+
+       TCSAFLUSH
+              el cambio ocurre después  de  que  toda  la  salida
+              escrita  al  objeto  referenciado  por fd haya sido
+              transmitida, y toda la entrada que se haya recibido
+              pero  no leído será descartada antes de que se haga
+              el cambio.
+
+       tcsendbreak() transmite un flujo continuo de bits  a  cero
+       durante  un  tiempo  determinado,  si  la  terminal emplea
+       transmisión de datos en serie asíncrona.  Si  duration  es
+       cero,  transmite bits ceros durante al menos ¼ de segundo,
+       y no más de ½ segundo. Si duration no es  cero,  transmite
+       bits  cero  durante  duration*N  segundos, donde N es como
+       poco 0,25 s y no más de 0,5 s.
+
+       Si la terminal no está utilizando la transmisión asíncrona
+       de datos en serie, tcsendbreak() regresa sin tomar ninguna
+       acción.
+
+       tcdrain() espera hasta  que  toda  la  salida  escrita  al
+       objeto referido por fd haya sido transmitida.
+
+       tcflush()  descarta  datos escritos al objeto referido por
+       fd pero no transmitidos, o datos recibidos pero no leídos,
+       dependiendo del valor de queue_selector:
+
+       TCIFLUSH
+              vuelca datos recibidos pero no leídos.
+
+       TCOFLUSH
+              vuelca datos escritos pero no transmitidos.
+
+       TCIOFLUSH
+              vuelca  tanto  los  datos recibidos pero no leídos,
+              como los escritos pero no transmitidos.
+
+       tcflow() suspende la transmisión o recepción de  datos  en
+       el  objeto  referido  por  fd,  dependiendo  del  valor de
+       action:
+
+       TCOOFF suspende la salida.
+
+       TCOON  reanuda la salida suspendida.
+
+       TCIOFF transmite un carácter STOP, que hace que el dispos­
+              itivo  de terminal deje de transmitir datos al sis­
+              tema.
+
+       TCION  transmite un carácter START, que hace que  el  dis­
+              positivo de terminal empiece a transmitir datos del
+              sistema.
+
+       El comportamiento predeterminado al abrir  un  fichero  de
+       terminal es que ni su entrada ni su salida están suspendi­
+       das.
+
+       Las funciones de velocidad se proporcionan para obtener  y
+       poner  los  valores de las velocidades de entrada y salida
+       en la estructura termios.  Los  nuevos  valores  no  hacen
+       efecto hasta que se llame con éxito a tcsetattr().
+
+       Poner  la  velocidad  a  B0 significa decirle al módem que
+       "cuelgue".  La velocidad de bits  real  correspondiente  a
+       B38400 puede alterarse con setserial(8).
+
+       Las  velocidades  de  entrada  y  salida  se guardan en la
+       estructura termios.
+
+       cfmakeraw establece los atributos de terminal como sigue:
+                   termios_p->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP
+                                   |INLCR|IGNCR|ICRNL|IXON);
+                   termios_p->c_oflag &= ~OPOST;
+                   termios_p->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
+                   termios_p->c_cflag &= ~(CSIZE|PARENB);
+                   termios_p->c_cflag |= CS8;
+
+       cfgetospeed() devuelve la velocidad de salida guardada  en
+       la estructura termios apuntada por termios_p.
+
+       cfsetospeed()  establece  la velocidad de salida, guardada
+       en la estructura termios apuntada por termios_p, a  speed,
+       que debe ser una de estas constantes:
+            B0
+            B50
+            B75
+            B110
+            B134
+            B150
+            B200
+            B300
+            B600
+            B1200
+            B1800
+            B2400
+            B4800
+            B9600
+            B19200
+            B38400
+            B57600
+            B115200
+            B230400
+       La  velocidad de cero baudios, B0, se emplea para terminar
+       la conexión. Si se especifica B0, las  lineas  de  control
+       del  módem no serán reconocidas como activas más.  Normal­
+       mente, esto desconectará la línea.  CBAUDEX es una máscara
+       para  las  velocidades  tras aquéllas definidas en POSIX.1
+       (57600 y más).  Así, B57600 & CBAUDEX es distinto de cero.
+
+       cfgetispeed() devuelve la velocidad de entrada guardada en
+       la estructura termios.
+
+       cfsetispeed() establece la velocidad de  entrada  guardada
+       en  la  estructura  termios  a  speed.  Si la velocidad de
+       entrada se pone a cero, la velocidad de entrada será igual
+       a la de salida.
+
+       tcgetpgrp()  devuelve la ID. de grupo de proceso del grupo
+       de proceso en segundo plano, ó -1 en caso de error.
+
+       tcsetpgrp() establece la ID. de grupo de proceso a pgrpid.
+       pgrpid  debe  ser el ID de un grupo de proceso en la misma
+       sesión.
+
+VALOR DEVUELTO
+       cfgetispeed() devuelve la velocidad de entrada guardada en
+       la estructura termios.
+
+       cfgetospeed()  devuelve la velocidad de salida guardada en
+       la estructura termios.
+
+       tcgetpgrp() devuelve la ID. de grupo de proceso del  grupo
+       de proceso en primer plano, ó -1 en caso de error.
+
+       Todas las otras funciones devuelven:
+
+       0      en caso de éxito,
+
+       -1     en  caso  de  fallo, y ponen un valor en errno para
+              indicar el error.
+
+VÉASE TAMBIÉN
+       setserial(8)
+
+
+

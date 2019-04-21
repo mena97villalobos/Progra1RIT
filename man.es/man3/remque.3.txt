@@ -1,0 +1,54 @@
+INSQUE(3)        Manual del Programador de Linux        INSQUE(3)
+
+
+
+NOMBRE
+       insque, remque - inserta/quita un elemento de una cola
+
+SINOPSIS
+       #include <stdlib.h>
+
+       void insque(struct qelem *elem, struct qelem *prev);
+       void remque(struct qelem *elem);
+
+DESCRIPCIÓN
+       insque()  y  remque()  son  funciones para manipular colas
+       hechas a partir de listas doblemente enlazadas. Cada  ele­
+       mento en esta lista es de tipo struct qelem.
+
+       La estructura qelem se define como
+
+              struct qelem {
+                  struct    qelem *q_forw;
+                  struct    qelem *q_back;
+                  char      q_data[1];
+              };
+
+       insque()  inserta el elemento apuntado por elem inmediata­
+       mente detrás del elemento apuntado por prev, que  NO  debe
+       ser NULL.
+
+       remque()  quita  el elemento apuntado por elem de la lista
+       doblemente enlazada.
+
+CONFORME A
+       SVR4
+
+FALLOS
+       El campo q_data se define algunas veces como de tipo  char
+       *, y en Solaris 2.x no parece que exista en absoluto.
+
+       La  localización  de  los  prototipos  de  estas funciones
+       difiere según las diversas versiones de UNIX. Algunos sis­
+       temas  las ponen en <search.h>, otros en <string.h>. Linux
+       las pone en <stdlib.h> puesto que es el sitio donde  pare­
+       cen tener mayor sentido.
+
+       Algunas versiones de UNIX (como HP-UX 10.x) no definen una
+       struct qelem, sino que los argumentos  de  insque()  y  de
+       remque() son de tipo void *.
+
+
+
+
+GNU                      27 Febrero 1998                INSQUE(3)

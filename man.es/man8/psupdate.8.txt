@@ -1,0 +1,66 @@
+PSUPDATE(8)      Manual del Programador de Linux      PSUPDATE(8)
+
+
+
+NOMBRE
+       psupdate  -  actualiza la base de datos de desplazamientos
+       de kernel de ps
+
+SINOPSIS
+       psupdate [path a la imagen descomprimida del kernel]
+
+DESCRIPCIÓN
+       psupdate actualiza el  fichero  /etc/psdatabase  para  que
+       corresponda  al  mapa  del  sistema del kernel actual, por
+       defecto /usr/src/linux/vmlinux.
+
+   Opciones
+       Si   su   fichero   de   mapa   del    sistema    no    es
+       /usr/src/linux/vmlinux,  debe  especificar el nombre de un
+       fichero de mapa alternativo en la línea de comandos.  Este
+       es el único argumento actualmente soportado.
+
+
+FICHEROS
+       /etc/psdatabase
+       /usr/src/linux/vmlinux
+
+
+NOTA
+       La base de datos producida por esta versión de psupdate no
+       es compatible con la que produce  el  psupdate  basado  en
+       kmem.  La  versión procps no necesita algunas de las cosas
+       que contiene la base de datos kmemps, por lo que  la  base
+       de  datos  procps  es ligeramente menor y tiene una cadena
+       "mágica" ("magic" string) diferente.  Además,  la  versión
+       basada en kmem (v1.2.9) no está tan actualizada en algunos
+       aspectos.  Si, por alguna oscura  razón,  quiere  utilizar
+       ambas  versiones  (basada en proc y basada en kmem) de ps,
+       debe mantener dos bases de datos diferentes  y  actualizar
+       ambas  al  arrancar (o al compilar el kernel). (Por favor,
+       note que kmemps, por defecto, pone su base de datos en  un
+       directorio diferente: /var/run).
+
+       El   comando   ps  no  necesita  en  absoluto  el  fichero
+       /etc/psdatabase. Si no lo encuentra, entonces ps examinará
+       el fichero System.map, si puede encontrarlo (véase ps(1)).
+       Si no puede encontrar ni psdatabase  ni  el  fichero  Sys­
+       tem.map,  simplemente no podrá poner información simbólica
+       en el campo WCHAN.
+
+
+VÉASE TAMBIÉN
+       ps(1)
+
+
+AUTORES
+       Código original escrito por  Branko  Lankaster,  horrible­
+       mente  trastocado  por  Michael  L.  Johnson en un intento
+       desesperado para añadir  soporte  WCHAN  a  procps.   Jeff
+       Uphoff  añadió el código para manipular kernels compilados
+       con formato ELF y reescribió mucho  del  código  restante.
+       David Mossberger-Tang escribió el soporte para BFD.
+
+
+
+Cohesive Systems & NRAO   6 Enero 1996                PSUPDATE(8)

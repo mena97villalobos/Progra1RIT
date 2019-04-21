@@ -1,0 +1,39 @@
+PIPE(2)          Manual del Programador de Linux          PIPE(2)
+
+
+
+NOMBRE
+       pipe - crea una tubería o interconexión
+
+SINOPSIS
+       #include <unistd.h>
+
+       int pipe(int descf[2]);
+
+DESCRIPCIÓN
+       pipe  crea un par de descriptores de ficheros, que apuntan
+       a un nodo-í de una tubería, y los pone en el vector de dos
+       elementos  apuntado  por descf.  descf[0] es para lectura,
+       descf[1] es para escritura.
+
+VALOR DEVUELTO
+       En caso de éxito, se devuelve cero. En caso  de  error  se
+       devuelve -1 y se pone un valor apropiado en errno.
+
+ERRORES
+       EMFILE  El proceso tiene en uso demasiados descriptores de
+               ficheros.
+
+       ENFILE  La tabla de ficheros del sistema está llena.
+
+       EFAULT  descf no es válido.
+
+CONFORME A
+       SVr4, SVID, AT&T, POSIX, X/OPEN, BSD 4.3
+
+VÉASE TAMBIÉN
+       read(2), write(2), fork(2), socketpair(2)
+
+
+
+Linux 0.99.11            22 Octubre 1996                  PIPE(2)

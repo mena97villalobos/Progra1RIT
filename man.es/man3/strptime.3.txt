@@ -1,0 +1,142 @@
+STRPTIME(3)      Manual del Programador de Linux      STRPTIME(3)
+
+
+
+NOMBRE
+       strptime  -  convierte una cadena de caracteres que repre­
+       senta un tiempo a una estructura tm
+
+SINOPSIS
+       #include <time.h>
+
+       char *strptime(char *buf, const char *format, const struct
+       tm *tm);
+
+DESCRIPCIÓN
+       strptime()  es  la  función complementaria de strftime() y
+       convierte la cadena de caracteres a la que apunte buf a un
+       valor  de  tiempo,  que se guarda en la estructura tm a la
+       que apunte tm, utilizando el formato especificado por for­
+       mat.   format  es una cadena de caracteres que consiste en
+       descriptores de campos y caracteres de texto, una reminis­
+       cencia  de scanf(3).  Cada descriptor de campo consiste en
+       un carácter de porcentaje % seguido por otro carácter  que
+       especifica  el  reemplazo  para  el  descriptor  de campo.
+       Todos los otros caracteres se copian tal cuales desde for­
+       mat  al resultado.  Se admiten los siguientes descriptores
+       de campo:
+
+              %%     lo mismo que %
+
+              %a
+              %A     día de la semana, empleando los  nombres  de
+                     los  días de la semana correspondientes a la
+                     localización; puede especificarse el  nombre
+                     abreviado o el completo
+
+              %b
+              %B
+              %h     mes,  empleando  los nombres de meses corre­
+                     spondientes a la localización; puede especi­
+                     ficarse el nombre abreviado o el completo.
+
+              %c     fecha y hora como %x %X
+
+              %C     fecha  y hora, en la representación local de
+                     la fecha y hora en formato largo
+
+              %d
+              %e     día del mes (1--31; se permiten pero  no  se
+                     requieren ceros iniciales)
+
+              %D     fecha como %m/%d/%y
+
+              %H
+              %k     hora   (0--23;    se  permiten  pero  no  se
+                     requieren ceros iniciales)
+
+              %I
+              %l     hora  (0--12;   se  permiten  pero   no   se
+                     requieren ceros iniciales)
+
+              %j     día  juliano (número del día del año, de 001
+                     a 366)
+
+              %m     número del mes (1--12; se permiten  pero  no
+                     se requieren ceros iniciales)
+
+              %M     minuto   (0-59;   se  permiten  pero  no  se
+                     requieren ceros iniciales)
+
+              %p     el equivalente local de AM o de PM
+
+              %r     hora como %I:%M:%S %p
+
+              %R     hora como %H:%M
+
+              %S     segundos (0--61;  se  permiten  pero  no  se
+                     requieren  ceros iniciales. El segundo extra
+                     es para años bisiestos)
+
+              %T     hora como %H:%M:%S
+
+              %w     número de día de la  semana  (0--6)  con  el
+                     Domingo como primer día de la semana
+
+              %x     fecha,  empleando  el  formato local para la
+                     fecha
+
+              %X     hora, empleando el formato local
+
+              %y     año dentro de la centuria  (0--99;  se  per­
+                     miten  pero no se requieren ceros iniciales.
+                     Desafortunadamente esto presume que  estamos
+                     atascados  en el siglo XX puesto que se suma
+                     1900 automáticamente a este número  para  el
+                     campo tm_year)
+
+              %Y     año,  incluyendo  la  centuria (por ejemplo,
+                     1998)
+
+       No se distinguen mayúsculas de minúsculas en la concordan­
+       cia  de  elementos como nombres de meses o días de la sem­
+       ana.
+
+       La estructura de  tiempo  descompuesto  tm  se  define  en
+       <time.h> como sigue:
+
+              struct tm
+              {
+                      int     tm_sec;         /* segundos */
+                      int     tm_min;         /* minutos */
+                      int     tm_hour;        /* horas */
+                      int     tm_mday;        /* día del mes */
+                      int     tm_mon;         /* mes */
+                      int     tm_year;        /* año */
+                      int     tm_wday;        /* día de la semana */
+                      int     tm_yday;        /* día del año */
+                      int     tm_isdst;       /* ¿cambio horario? */
+              };
+
+VALOR DEVUELTO
+       La función strptime() devuelve un puntero al carácter tras
+       el último de la cadena apuntada por buf
+
+VÉASE TAMBIÉN
+       strftime(3), time(2), setlocale(3), scanf(3)
+
+FALLOS
+       Los valores devueltos apuntan  a  datos  estáticos,  cuyos
+       contenidos son sobreescritos en cada llamada.
+
+OBSERVACIONES
+       Esta  función  sólo  está  disponible  en  bibliotecas más
+       nuevas que la versión 4.6.5.
+
+       La función sólo admite aquellas  localizaciones  especifi­
+       cadas en locale(7)
+
+
+
+
+GNU                       11 Marzo 1998               STRPTIME(3)

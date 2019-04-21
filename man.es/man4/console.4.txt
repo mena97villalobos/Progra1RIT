@@ -1,0 +1,65 @@
+CONSOLE(4)       Manual del Programador de Linux       CONSOLE(4)
+
+
+
+NOMBRE
+       console - terminal de consola y consolas virtuales.
+
+DESCRIPCIÓN
+       Un  sistema  Linux tiene hasta 63 consolas virtuales (dis­
+       positivos de carácter de número mayor 4 y  menor  de  1  a
+       63),  denominadas  habitualmente /dev/ttyn donde 1 <= n <=
+       63.  La consola actual se designa también por /dev/console
+       o /dev/tty0, el dispositivo de carácter con número mayor 4
+       y menor 0.  Los ficheros de dispositivo  /dev/*  se  crean
+       normalmente con el guión MAKEDEV o con mknod(1), habitual­
+       mente con el modo 0622 y propietario/grupo root.tty.
+
+       Anteriormente a la versión 1.1.54 del núcleo, el número de
+       consolas  virtuales  se  compilaba en el propio núcleo (en
+       tty.h: #define NR_CONSOLES 8) y sólo se podía cambiar edi­
+       tando  y  recompilando. A partir de la versión 1.1.54, las
+       consolas virtuales se crean sobre la marcha, en el momento
+       en que se necesiten.
+
+       Las  formas  habituales de arrancar un proceso en una con­
+       sola son: (a) decir a init(8) (en inittab(5)) que arranque
+       un  getty(8)  en  la  consola;  (b)  pedir  a  open(1) que
+       arranque un proceso en la consola;  (c)  arrancar  X,  que
+       buscará  la  primera  consola  libre y visualizará allí su
+       salida.  (También está el viejo doshell(8).)
+
+       Para conmutar de consola podemos:  (a)  teclear  Alt+Fn  o
+       Ctrl+Alt+Fn  para  conmutar a la consola n; AltGr+Fn puede
+       llevarnos a la consola n+12 [aquí Alt y AltGr se  refieren
+       a las teclas Alt izquierda y derecha respectivamente]; (b)
+       usar Alt+CursorDerecha o Alt+CursorIzquierda para hacer un
+       ciclo  a  través  de las consolas en uso; (c) usar el pro­
+       grama  chvt(1).   (Las   combinaciones   de   teclas   son
+       definibles por el usuario, véase loadkeys(1). Las combina­
+       ciones mencionadas arriba son los valores por omisión).
+
+       El programa deallocvt(1) (anteriormente  disalloc)  libera
+       la memoria reservada por los tampones de pantalla de aque­
+       llas consolas que no tengan ningún proceso asociado.
+
+PROPIEDADES
+       Las consolas conllevan un montón de estado.  Espero  docu­
+       mentarlo  alguna  vez.  El hecho más importante es que las
+       consolas simulan terminales vt100. En  particular,  si  se
+       imprimen  dos  caracteres  ESC  c,  la consola vuelve a su
+       estado inicial.
+
+
+FICHEROS
+       /dev/console
+       /dev/tty*
+
+VÉASE TAMBIÉN
+       console_ioctl(4), chvt(1), loadkeys(1), mknod(1), open(1),
+       tty(4),  ttys(4),  disalloc(8), getty(8), init(8), resize­
+       cons(8), setfont(8), mapscrn(8)
+
+
+
+Linux                     30 Junio 1996                CONSOLE(4)

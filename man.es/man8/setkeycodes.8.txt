@@ -1,0 +1,68 @@
+SETKEYCODES(8)          Support de Teclado         SETKEYCODES(8)
+
+
+
+NOMBRE
+       setkeycodes - carga las entradas de la tabla del núcleo de
+       códigos de rastreo a códigos de teclas
+
+SINOPSIS
+       setkeycodes codigo-rastreo código-tecla ...
+
+DESCRIPCIÓN
+       La orden setkeycodes lee sus argumentos  de  dos  en  dos,
+       consistiendo  cada  par  de  ellos en un código de rastreo
+       (dado en hexadecimal) y un código de tecla (en  base  10).
+       Para  cada  par,  le  dice  al  controlador de teclado del
+       núcleo que asocie el código  de  rastreo  especificado  al
+       código de tecla correspondiente.
+
+       Esta  orden  es  útil sólo para gente con teclados ligera­
+       mente distintos de lo  normal,  que  tengan  unas  cuantas
+       teclas  que  produzcan códigos de rastreo que el núcleo no
+       reconozca.
+
+
+TEORÍA
+       El teclado usual de un PC produce una serie de códigos  de
+       rastreo  para  cada  pulsación y liberación de tecla. (Los
+       códigos de rastreo se ven con la  orden  showkey  -s,  vea
+       showkey(1).)   El  núcleo analiza este flujo de códigos de
+       rastreo, y lo convierte en un flujo de  códigos  de  tecla
+       (eventos  de pulsación/liberación de tecla).  (Los códigos
+       de tecla se ven con showkey.)  Aparte de unos pocos  códi­
+       gos  de  rastreo  con significado especial, y aparte de la
+       secuencia producida por la tecla Pausa, y  aparte  de  los
+       códigos  de rastreo relacionados con estados de cambios, y
+       aparte de lo de las teclas arriba/abajo, el flujo de códi­
+       gos  de  rastreo consiste en códigos de rastreo sin escape
+       xx (de 7 bits) y códigos de rastreo con escape e0 xx  (8+7
+       bits).  Está codificado dentro del núcleo actual que en el
+       rango 1-88 (0x01-0x58) los códigos de  tecla  son  iguales
+       que  los de rastreo. Para los códigos de rastreo restantes
+       (0x59-0x7f) o pares de códigos de  rastreo  (0xe0  0x00  -
+       0xe0  0x7f) se puede asignar un código de tecla correspon­
+       diente (en el rango 1-127).  Por ejemplo, si uno tiene una
+       tecla  Macro  que produce e0 6f de acuerdo con showkey(1),
+       la orden
+              setkeycodes e06f 112
+       asignará el código de tecla 112 a ella, y  entonces  puede
+       emplearse  loadkeys(1)  para  definir  la  función de esta
+       tecla.
+
+OPCIONES
+       Ninguna.
+
+FALLOS
+       Los códigos de teclas de X no tienen nada que ver con  los
+       de  Linux.   Las  teclas  inusuales pueden hacerse visible
+       bajo Linux, pero no bajo X.
+
+VÉASE TAMBIÉN
+       dumpkeys (1), loadkeys (1), showkey (1), getkeycodes (8)
+
+
+
+
+
+Local                 8 de Noviembre de 1994       SETKEYCODES(8)

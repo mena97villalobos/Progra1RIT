@@ -1,0 +1,244 @@
+MAKE(1L)                Órdenes de Usuario               MAKE(1L)
+
+
+
+NOMBRE
+       make - utilidad `make' de GNU para mantener grupos de pro­
+       gramas
+
+SINOPSIS
+       make [ -f makefile ] [ opción ] ... [ variable=valor ] ...
+       [ objetivo ] ...
+
+AVISO
+       Esta  página del Manual es un extracto de la documentación
+       de GNU make.  Se actualiza sólo ocasionalmente, porque  el
+       proyecto GNU no emplea nroff (ni incluso groff ;-) para su
+       documentación. Para la documentación completa  y  al  día,
+       remítase  al  fichero  make  en formato Info, o al fichero
+       make.dvi en formato DVI, que se construyen  a  partir  del
+       fichero fuente escrito en TeXInfo make.texinfo.
+
+DESCRIPCIÓN
+       El propósito de la utilidad make es determinar automática­
+       mente qué piezas de un  programa  necesitan  ser  recompi­
+       ladas, y lanzar las órdenes para recompilarlas.  Este man­
+       ual describe la implementación de make del  proyecto  GNU,
+       que  ha  sido  escrita  por el gran Richard Stallman y por
+       Roland McGrath.  Nuestros ejemplos muestran  programas  en
+       C,  que  es  lo  más común, pero se puede emplear make con
+       cualquier lenguaje de programación cuyo  compilador  pueda
+       ejecutarse  con  una  orden  del shell.  De hecho, make no
+       está limitado a compilar programas.  Se  puede  usar  para
+       describir cualquier tarea donde algunos ficheros deban ser
+       actualizados  automáticamente  a  partir   de   otros   en
+       cualquier momento en que éstos cambien.
+
+       Para  prepararnos  a utilizar make, debemos escribir antes
+       un fichero llamado el makefile que describe las relaciones
+       entre  los  ficheros  de  nuestro  programa, y las órdenes
+       necesarias para actualizar cada fichero.  En un  programa,
+       normalmente el fichero ejecutable se actualiza a partir de
+       los ficheros o módulos objeto, los cuales a su vez se con­
+       struyen  mediante  la  compilación  de los ficheros con el
+       código fuente.
+
+       Una vez que exista un makefile  apropiado,  cada  vez  que
+       cambiemos algún fichero fuente, esta simple orden:
+
+              make
+
+       basta  y  sobra  para que se realicen todas las recompila­
+       ciones necesarias.  El programa make emplea los datos  del
+       makefile  (y otros internos) y los tiempos de última modi­
+       ficación de los ficheros  para  decidir  cuáles  de  ellos
+       necesitan   ser  actualizados.   Para  cada  uno  de  esos
+       ficheros, lanza las órdenes que tiene grabadas en su  base
+       de datos.
+
+       make  ejecuta órdenes en el makefile para actualizar uno o
+       más nombres de objetivo, donde nombre  es  típicamente  un
+       programa.  Si no se ha dado la opción -f, make buscará los
+       makefiles llamados GNUmakefile, makefile, y  Makefile,  en
+       este orden, parando en el primero que encuentre y dando un
+       error si no encuentra ninguno.
+
+       Normalmente deberíamos llamar a nuestro  makefile  o  bien
+       makefile  o  bien Makefile.  (Recomendamos Makefile porque
+       normalmente aparece cerca del principio del listado de  un
+       directorio,  al  lado  de  otros ficheros importantes como
+       LÉAME.)  El primer nombre que se busca, GNUmakefile, no se
+       recomienda  para  la  mayoría de los makefiles.  Solamente
+       deberíamos emplear este nombre si tenemos un makefile  que
+       sea específico del make de GNU y no pueda ser leído y com­
+       prendido por otras versiones de make.  Si makefile es `-',
+       se lee de la entrada estándar.
+
+       make  actualiza un objetivo si éste depende de ficheros de
+       prerrequisito (o dependencias) que hayan sido  modificados
+       desde  la  última  modificación del objetivo, o si éste no
+       existe.
+
+OPCIONES
+       -b
+
+       -m   Estas opciones no hacen nada, y sólo se reconocen por
+            compatibilidad con otras versiones de make.
+
+       -C dir
+            Cambia  el  directorio de trabajo a dir antes de leer
+            los makefiles o hacer otra cosa.  Si  se  especifican
+            varias   opciones  -C,  cada  una  se  interpreta  en
+            relación a la anterior: -C / -C etc es equivalente  a
+            -C  /etc.  Esto se usa típicamente en llamadas recur­
+            sivas a make.
+
+       -d   Muestra información de depuración además  del  proce­
+            samiento  normal.  Esta información dice qué ficheros
+            están siendo  considerados  para  ser  rehechos,  qué
+            tiempos de ficheros están siendo comparados y con qué
+            resultados,  qué  ficheros  necesitan  realmente  ser
+            rehechos,  qué reglas implícitas están siendo tenidas
+            en cuenta y cuáles se están aplicando: o sea, todo lo
+            interesante  sobre  cómo  make  decide  las cosas que
+            tiene que hacer.
+
+       -e   Da a las variables que vienen del entorno precedencia
+            a las que vienen de los makefiles.
+
+       -f makefile
+            Emplea makefile como un makefile.
+
+       -i   No tiene en cuenta ningún error en las órdenes ejecu­
+            tadas para reconstruir ficheros.
+
+       -I dir
+            Especifica un directorio dir en  donde  buscar  make­
+            files  incluidos.  Si se usan varias opciones -I para
+            especificar varios directorios, éstos se buscan en el
+            orden  dado.   De  forma distinta a como se deben dar
+            los argumentos de otras opciones de make, los  direc­
+            torios  dados en las opciones -I pueden ir inmediata­
+            mente tras la I: o sea, se permite tanto  -Idir  como
+            -I  dir.  Esta sintaxis se permite por compatibilidad
+            con la misma opción -I del preprocesador de C.
+
+       -j trabajos
+            Especifica el número de  trabajos  (órdenes)  que  se
+            deban  ejecutar  simultáneamente.   Si hay más de una
+            opción -j, sólo la última vale.  Si se da  la  opción
+            -j  sin  ningún  argumento, make no pondrá límites al
+            número de trabajos que puedan ejecutarse  simultánea­
+            mente.
+
+       -k   Continúa tanto como sea posible tras un error.  Mien­
+            tras que el objetivo que ha fallado, y los que depen­
+            den  de  él,  no  pueden ser reconstruidos, las otras
+            dependencias de estos objetivos sí que pueden  proce­
+            sarse, así que con esta opción se procesan.
+
+       -l
+
+       -l carga
+            Dice  que  no  deberá  empezarse ningún nuevo trabajo
+            (mandato) si hay otros trabajos  en  ejecución  y  la
+            carga  media  es  como poco carga (un número real, en
+            coma flotante).  Sin el argumento,  anula  un  límite
+            anterior de carga, si lo hubiera.
+
+       -n   Muestra  las  órdenes  que se ejecutarían, pero no se
+            hace nada más. Muy útil.
+
+       -o fichero
+            No  reconstruye  el  fichero  especificado,   incluso
+            siendo  más  antiguo  que sus dependencias, y tampoco
+            reconstruye nada que dependa de cambios  en  fichero.
+            Esencialmente  el  fichero se trata como muy viejo, y
+            sus reglas no son tenidas en cuenta.
+
+       -p   Muestra la base de datos (reglas y valores  de  vari­
+            ables) que resultan de leer los makefiles; luego todo
+            se procesa de la forma usual o  de  la  que  se  haya
+            especificado.   También  se muestra la información de
+            versión dada por la opción -v (vea más abajo).   Para
+            ver  la base de datos sin hacer ninguna otra cosa, dé
+            la orden make -p -f/dev/null.
+
+       -q   ``Modo  de  interrogación  (Query)''.    No   ejecuta
+            ninguna  orden ni muestra nada; sólo devuelve un sta­
+            tus de salida cero si los objetivos especificados  ya
+            están actualizados, o no cero si no lo están.
+
+       -r   Elimina  el  empleo de las reglas implícitas incorpo­
+            radas.  También  borra  la  lista  predeterminada  de
+            sufijos para las reglas de sufijo.
+
+       -s   Modo  de operación silencioso; no muestra las órdenes
+            que se están ejecutando.
+
+       -S   Cancela el efecto de la opción  -k.   Esto  nunca  es
+            necesario  salvo  en  un make recursivo, en el que -k
+            puede venir heredado del make superior  a  través  de
+            MAKEFLAGS  o  si activamos -k en la variable de ambi­
+            ente MAKEFLAGS.
+
+       -t   Toca los ficheros (los marca  como  actualizados  sin
+            cambiarlos  realmente) en vez de ejecutar las órdenes
+            pertientes.  Esto se emplea para  pretender  que  las
+            órdenes  han sido ejecutadas, con el fin de engañar a
+            futuras ejecuciones de make.
+
+       -v   Muestra la versión del programa make más la lista  de
+            autores,  una nota sobre los derechos de copia y otra
+            sobre la falta de garantía y a dónde enviar  informes
+            de  fallos.   Después de imprimirse esta información,
+            el procesamiento continúa normalmente.  Para  obtener
+            esta  información sin ningún otro efecto, dé la orden
+            make -v -f/dev/null.
+
+       -w   Muestra un mensaje conteniendo el directorio de  tra­
+            bajo  antes  y  después  de otro procesamiento.  Esto
+            puede ser útil para seguir la  pista  a  errores  que
+            vienen  de  anidamientos  complicados de órdenes make
+            recursivas.
+
+       -W fichero
+            Pretende que el objetivo fichero acaba de ser modifi­
+            cado.   Cuando  se  emplea con la opción -n, esto nos
+            enseña lo que pasaría si  fuéramos  a  modificar  ese
+            fichero.   Sin  -n,  es casi lo mismo que ejecutar la
+            orden touch en el fichero dado antes de dar la  orden
+            make,  salvo en que el tiempo de modificación se cam­
+            bia solamente en la imaginación de make.
+
+OTROS ARGUMENTOS
+       variable=valor
+            Le da a la variable de make  el  valor  especificado.
+            Esta   definición  tiene  precedencia  sobre  la  que
+            pudiera haber en el makefile.
+
+       objetivo
+            Cualquier argumento que no empiece por  -  o  que  no
+            contenga un signo = se considera un objetivo que make
+            tiene que construir. Si no se menciona ninguno en  la
+            línea  de órdenes, make construirá el primer objetivo
+            que encuentre en el makefile.
+
+VÉASE TAMBIÉN
+       /usr/info/make.info*
+                           The GNU Make Manual
+
+FALLOS
+       Consulte el capítulo `Problems and Bugs' en The  GNU  Make
+       Manual.
+
+AUTORES
+       Dennis  Morse,  de la Stanford University, escribió origi­
+       nalmente esta página del Manual.  Roland  McGrath  trabajó
+       posteriormente en ella.  Fue traducida al español por Ger­
+       ardo Aburruzaga  García  (gerardo@cica.es),  quien  añadió
+       además algunas líneas (además de ésta ;-).
+
+
+
+GNU                       22 Agosto 1989                 MAKE(1L)

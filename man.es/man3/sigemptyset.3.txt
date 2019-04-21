@@ -1,0 +1,63 @@
+SIGSETOPS(3)     Manual del Programador de Linux     SIGSETOPS(3)
+
+
+
+NOMBRE
+       sigemptyset, sigfillset, sigaddset, sigdelset, sigismember
+       - operaciones POSIX con conjuntos de señales
+
+
+SINOPSIS
+       #include <signal.h>
+
+
+       int sigemptyset(sigset_t *conjunto);
+
+       int sigfillset(sigset_t *conjunto);
+
+       int sigaddset(sigset_t *conjunto, int numse);
+
+       int sigdelset(sigset_t *conjunto, int numse);
+
+       int sigismember(const sigset_t *conjunto, int numse);
+
+
+DESCRIPCIÓN
+       La función sigsetops(3) permite la manipulación de conjun­
+       tos de señales, según la norma POSIX.
+
+       sigemptyset  inicia  el  conjunto de señales dado por con­
+       junto al conjunto vacío, con todas las señales  fuera  del
+       conjunto.
+
+       sigfillset inicia conjunto al conjunto completo, con todas
+       las señales incluidas en el conjunto.
+
+       sigaddset y sigdelset añaden y quitan  respectivamente  la
+       señal numse de conjunto.
+
+       sigismember mira a ver si numse pertenece a conjunto.
+
+
+VALOR DEVUELTO
+       sigemptyset, sigfullset, sigaddset y sigdelset devuelven 0
+       si acaban bien y -1 en caso de error.
+
+       sigismember devuelve 1 si numse es un miembro de conjunto,
+       0 si numse no lo es, y -1 en caso de error.
+
+
+ERRORES
+       EINVAL sig no es una señal válida.
+
+
+CONFORME A
+       POSIX
+
+
+VÉASE TAMBIÉN
+       sigaction(2), sigpending(2), sigprocmask(2), sigsuspend(2)
+
+
+
+Linux 1.0                  9 Marzo 1998              SIGSETOPS(3)

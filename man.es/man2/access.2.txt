@@ -1,0 +1,114 @@
+ACCESS(2)              Llamadas al sistema              ACCESS(2)
+
+
+
+NOMBRE
+       access - comprueba los permisos de usuario para un fichero
+
+SINOPSIS
+       #include <unistd.h>
+
+       int access(const char *pathname, int mode);
+
+DESCRIPCIÓN
+       access comprueba si al  proceso  se  le  permitiría  leer,
+       escribir  o  comprobar  la  existencia del fichero (u otro
+       objeto del sistema de ficheros) cuyo nombre  es  pathname.
+       Si  pathname es un enlace simbólico se comprueban los per­
+       misos del fichero referenciado por dicho enlace simbólico.
+
+       mode  es  una máscara compuesta por uno o más de los sigu­
+       ientes elementos: R_OK, W_OK, X_OK y F_OK.
+
+       R_OK, W_OK y X_OK se utilizan para la comprobación de lec­
+       tura,  escritura o ejecución del fichero, respectivamente.
+       F_OK se utiliza para ver si se  permite  la  mera  compro­
+       bación  de  la existencia del fichero. Esto depende de los
+       permisos de los directorios  que  aparecen  en  el  camino
+       hasta  el  fichero,  tal  como se da en pathname, y de los
+       permisos de los directorios y ficheros  referenciados  por
+       los  enlaces simbólicos que se pueden encontrar a lo largo
+       del camino.
+
+       La comprobación se realiza con los uid y  gid  reales  del
+       proceso,  en  lugar  de utilizar los identificadores efec­
+       tivos, tal como se hace cuando realmente  se  intenta  una
+       operación.  Esto permite a los programas con el bit SETUID
+       activo determinar  fácilmente  la  autoridad  del  usuario
+       invocador.
+
+       Sólo  se  comprueban  los  bits  de  acceso, no el tipo de
+       fichero o sus contenidos. Por lo tanto, si encontramos que
+       un directorio se puede "escribir", probablemente esto sig­
+       nifica que se pueden crear ficheros en el  directorio,  no
+       que  el  directorio  se pueda escribir como se hace con un
+       fichero. Similarmente, podemos encontrar  un  fichero  DOS
+       como  "ejecutable"  y, aún así, puede fallar una llamada a
+       execve(2).
+
+
+VALOR DEVUELTO
+       Si ha habido éxito (se han concedido  todos  los  permisos
+       solicitados) la función devuelve un valor 0. Si se ha pro­
+       ducido un error (al menos, uno de  los  bits  de  mode  ha
+       interrogado  por  un  permiso  que  ha sido denegado, o ha
+       ocurrido algún otro tipo de error), la función devuelve -1
+       y a errno se le asigna un valor adecuado.
+
+
+ERRORES
+       EACCES  Se  denegaría el acceso solicitado al fichero o se
+               deniega el permiso de búsqueda  para  uno  de  los
+               directorios en pathname.
+
+       EROFS   Se  ha  solicitado  permiso  de  escritura para un
+               fichero en un sistema de ficheros de sólo lectura.
+
+       EFAULT  pathname  apunta  fuera del espacio de direcciones
+               al que tiene acceso."
+
+       EINVAL  mode se ha especificado incorrectamente
+
+       ENAMETOOLONG
+               pathname es demasiado largo.
+
+       ENOENT  Un directorio componente de pathname es  accesible
+               pero no existe o es un enlace simbólico colgado.
+
+       ENOTDIR Un componente usado como directorio en pathname no
+               es, de hecho, un directorio.
+
+       ENOMEM  No hay suficiente memoria disponible en el kernel.
+
+       ELOOP   Se han encontrado demasiados enlaces simbólicos al
+               resolver pathname.
+
+       EIO     Ha ocurrido un error de E/S.
+
+RESTRICCIONES
+       access regresa un error si falla cualquiera de  los  tipos
+       de acceso especificados en la llamada a la función, aunque
+       los otros tipos tuvieran éxito.
+
+       access no puede funcionar correctamente sobre sistemas  de
+       ficheros  NFS  que  tengan  activa  la aplicación del UID,
+       porque la aplicación del UID se realiza en el  servidor  y
+       se oculta a los clientes que comprueban los permisos.
+
+       Usar  access  para comprobar si un usuario está autorizado
+       a, por ejemplo, abrir un fichero antes de que realmente lo
+       haga  usando  open(2), crea un agujero de seguridad ya que
+       el usuario podría explotar el breve  intervalo  de  tiempo
+       que  hay  entre  la comprobación y la apertura del fichero
+       para manipularlo.
+
+CONFORME A
+       SVID, AT&T, POSIX, X/OPEN, BSD 4.3
+
+VÉASE TAMBIÉN
+       stat(2),  open(2),  chmod(2),  chown(2),  setuid(2),  set­
+       gid(2).
+
+
+
+Linux                     13 Enero 1998                 ACCESS(2)

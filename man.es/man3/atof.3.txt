@@ -1,0 +1,33 @@
+ATOF(3)          Manual del Programador de Linux          ATOF(3)
+
+
+
+NOMBRE
+       atof - convierte una cadena a un double.
+
+SINOPSIS
+       #include <stdlib.h>
+
+       double atof(const char *nptr);
+
+DESCRIPCIÓN
+       La  función  atof()  convierte  la  porción  inicial de la
+       cadena apuntada por nptr a un double. El comportamiento es
+       el mismo que
+
+              strtod(nptr, (char **)NULL);
+
+       excepto que atof() no detecta errores.
+
+VALOR DEVUELTO
+       El valor convertido.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       atoi(3), atol(3), strtod(3), strtol(3), strtoul(3)
+
+
+
+GNU                       29 Marzo 1993                   ATOF(3)

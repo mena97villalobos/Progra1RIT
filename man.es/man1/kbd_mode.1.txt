@@ -1,0 +1,46 @@
+KBD_MODE(1)                                           KBD_MODE(1)
+
+
+
+NOMBRE
+       kbd_mode - dice o establece el modo de teclado
+
+SINOPSIS
+       kbd_mode [ -a | -u | -k | -s ]
+
+DESCRIPCIÓN
+       Sin argumentos, kbd_mode muestra el modo actual de teclado
+       (RAW, MEDIUMRAW o XLATE).  Con un argumento, establece  el
+       modo del teclado según se indica:
+
+       -s: modo de código de rastreo (RAW, CRUDO),
+
+       -k: modo de código de tecla (MEDIUMRAW, MEDIO CRUDO),
+
+       -a: modo ASCII (XLATE),
+
+       -u: modo UTF-8 (UNICODE).
+
+       Por  supuesto  el  "-a"  es  algo tradicional, y el código
+       empleado puede ser cualquier conjunto de caracteres  de  8
+       bits.  Con  "-u" se espera un conjunto de caracteres de 16
+       bits. y estos caracteres se transmiten al núcleo como 1, 2
+       ó 3 bytes (siguiendo la codificación UTF-8).  En estos dos
+       últimos modos se emplea el mapa de  teclado  definido  por
+       loadkeys(1).
+
+       Atención:  cambiar  el  modo  del teclado, a menos que sea
+       entre ASCII y Unicode, probablemente se lo  dejará  inuti­
+       lizable.   Esta orden está pensada para su empleo (digamos
+       mediante entrada remota) cuando algún programa haya dejado
+       su teclado en el estado equivocado. Observe que en algunas
+       versiones anticuadas de este programa la opción  "-u"  era
+       un sinónimo de la "-s".
+
+VÉASE TAMBIÉN
+       loadkeys(1)
+
+
+
+
+                        6 de Abril de 1994            KBD_MODE(1)

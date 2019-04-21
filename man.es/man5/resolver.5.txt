@@ -1,0 +1,139 @@
+RESOLVER(5)      Manual del programador de Linux      RESOLVER(5)
+
+
+
+NOMBRE
+       resolver - fichero de configuración del resolvedor de nom­
+       bres
+
+SINOPSIS
+       /etc/resolv.conf
+
+DESCRIPCIÓN
+       El resolvedor es un conjunto de rutinas en  la  biblioteca
+       de  C  que  proporcionan  acceso  al Sistema de Nombres de
+       Dominio de Internet.   El  fichero  de  configuración  del
+       resolvedor contiene información que es leída por las ruti­
+       nas del resolvedor la primera vez que son llamadas por  un
+       proceso. El fichero está diseñado para que sea legible por
+       los humanos y contiene una lista  de  palabras  clave  con
+       valores  que proporcionan varios tipos de información para
+       el resolvedor.
+
+       En un sistema  configurado  normalmente  este  fichero  no
+       debería  ser  necesario.  El  único  servidor  de  nombres
+       estaría en la máquina  local,  el  nombre  de  dominio  se
+       determinaría a partir del nombre completo del ordenador, y
+       el camino de búsqueda del dominio se construiría a  partir
+       del nombre de dominio.
+
+       Las diferentes opciones de configuración son:
+
+       nameserver
+              Dirección de Internet (en la notación de puntos) de
+              un servidor de nombres a quien deberá interrogar el
+              resolvedor.   Pueden ponerse hasta MAXNS (3 actual­
+              mente) servidores de nombres, uno por cada  palabra
+              clave.  Si hay varios servidores, la biblioteca del
+              resolvedor los interroga en el orden en que se pon­
+              gan.   Si  no  hay  ninguna  entrada nameserver, se
+              usará el servidor de nombres en la  máquina  local.
+              (El  algoritmo empleado es intentar con un servidor
+              de  nombres,  y  si  la  petición  lleva  demasiado
+              tiempo,  intentar  con  el  siguiente, hasta que no
+              haya más, después se intenta de nuevo con todos los
+              servidores  de  nombres,  hasta  que  se efectúe un
+              número máximo de reintentos).
+
+       domain Nombre de dominio local.  La mayoría de las  inter­
+              rogaciones  sobre  nombres  dentro  de este dominio
+              pueden emplear nombres cortos relativos al  dominio
+              local.  Si no hay una entrada domain, el dominio se
+              determina a partir del nombre  de  ordenador  local
+              devuelto por gethostname(); la parte del dominio se
+              toma como todo lo que haya a partir del primer `.'.
+              Finalmente,  si el nombre del ordenador no contiene
+              una parte del dominio, se supone el dominio raíz.
+
+       search Lista de búsqueda para la determinación de  nombres
+              de  ordenador.   La  lista de búsqueda se determina
+              normalmente a partir del nombre de  dominio  local;
+              por   omisión,  contiene  solamente  el  nombre  de
+              dominio local.  Esto puede  cambiarse  listando  el
+              camino de búsqueda del dominio deseado detrás de la
+              palabra clave search  con  espacios  o  tabuladores
+              separando  los nombres.  La mayoría de las interro­
+              gaciones del resolvedor se intentarán  usando  cada
+              componente del caminio de búsqueda por turnos hasta
+              que haya una concordancia.  Observe que  este  pro­
+              ceso  puede  ser  lento y generará mucho tráfico de
+              red si los servidores para los dominios listados no
+              son locales, y las interrogaciones se rendirán tras
+              un tiempo si no hay un servidor disponible para uno
+              de los dominios.
+
+              La  lista de búsqueda está actualmente limitada a 6
+              dominios con un total de 256 caracteres.
+
+       sortlist
+              Permite clasificar las  direcciones  devueltas  por
+              gethostbyname().   Una  lista  de  clasificación se
+              especifica mediante pares de direcciones  IP,  más­
+              caras  de  red.  Las  direcciones  y  pares  de red
+              opcionales se separan  por  barras  inclinadas.  Se
+              pueden especificar hasta 10 pares.
+
+              Ejemplo:    sortlist    130.155.160.0/255.255.240.0
+              130.155.0.0
+
+       options
+              Permite la modificación de ciertas variables inter­
+              nas del resolvedor.  La sintaxis es
+
+              options opción ...
+
+              donde opción es una de las siguientes:
+
+              debug -- pone RES_DEBUG en _res.options.
+
+              ndots:n  --  establece  un umbral para el número de
+              puntos que deben  aparecer  en  un  nombre  dado  a
+              res_query  (vea  resolver(@LIB_NETWORK_EXT@)) antes
+              de que se haga una interrogación absoluta  inicial.
+              El  valor  predeterminado para n es ``1'', signifi­
+              cando que si hay puntos en un nombre, el nombre  se
+              considerará  primero  como un nombre absoluto antes
+              de que cualquier elemento de una lista de  búsqueda
+              se añada a él.
+
+       Las palabras clave domain y search son mutuamente exclusi­
+       vas.  Si más de una instancia de estas palabras clave está
+       presente, gana la última.
+
+       La palabra clave search del fichero resolv.conf de un sis­
+       tema puede ser sobrescrita en  cada  proceso  mediante  la
+       variable de ambiente ``LOCALDOMAIN'' puesta como una lista
+       de dominios de búsqueda separados por espacios.
+
+       La palabra clave options del  fichero  resolv.conf  de  un
+       sistema  puede  ser  corregida en cada proceso mediante la
+       variable de ambiente ``RES_OPTIONS'' puesta como una lista
+       de  opciones del resolvedor separadas por espacio, como se
+       ha explicado antes bajo el apartado options.
+
+       La palabra clave y su valor deben  aparecer  en  una  sola
+       línea,  y la palabra clave (e.g. nameserver) debe estar en
+       el comienzo de la línea. El valor va después de la palabra
+       clave, separada por espacio en blanco.
+
+FICHEROS
+       /etc/resolv.conf
+
+VÉASE TAMBIÉN
+       gethostbyname(3), hostname(7), named(8),
+       Name Server Operations Guide for BIND (Guía de Operaciones
+       del Servidor de Nombres para BIND)
+
+
+
+Linux                   11 Noviembre 1993             RESOLVER(5)

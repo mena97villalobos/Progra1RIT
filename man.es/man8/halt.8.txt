@@ -1,0 +1,59 @@
+HALT(8)        Manual del Administrador de Sistemas       HALT(8)
+
+
+
+NOMBRE
+       halt, reboot, poweroff - Detienen el sistema.
+
+SINOPSIS
+       /sbin/halt [-n] [-w] [-d] [-f] [-i] [-p]
+       /sbin/reboot [-n] [-w] [-d] [-f] [-i]
+       /sbin/poweroff [-n] [-w] [-d] [-f] [-i]
+
+DESCRIPCIÔN
+       Halt  comprueba que el sistema está siendo desconectado en
+       el archivo /var/log/wtemp, y entonces llama al núcleo para
+       detener, reiniciar o apagar el sistema. Si se llama a halt
+       o reboot cuando el sistema no está en los niveles 0  o  6,
+       será invocado shutdown(8) (con el flag -h o -r).
+
+OPCIONES
+       -n     No sincroniza antes de reiniciar o detener.
+
+       -w     No   reinicia  o  detiene  el  sistema,  únicamente
+              escribe  la  grabación  en  wtmp  (en  el   fichero
+              /var/log/wtmp).
+
+       -d     No  escribe  la  grabación wtmp. El flag -n implica
+              -d.
+
+       -f     Fuerza una detención o reinicio, no llama  a  shut­
+              down(8).
+
+       -i     Apaga  todos los interfaces de redes justo antes de
+              detener o reiniciar.
+
+       -p     Cuando detiene el sistema, hace  un  apagado.  Esto
+              actúa  por  defecto  cuando  halt  es  llamado como
+              poweroff.
+
+DIAGNÓSTICOS
+       Si no eres un superusuario, obtendrás el mensaje `must  be
+       superuser' (debes ser un superusuario).
+
+NOTAS
+       Nunca  se debe llamar directamente a las versiones anteri­
+       ores de sysvinit, reboot y halt. Desde esta versión halt y
+       reboot llaman a shutdown(8) si el sistema no está en nive­
+       les 0 o 6.
+
+
+AUTOR
+       Miquel van Smoorenburg, miquels@cistron.nl
+
+VÉASE TAMBIÉN
+       shutdown(8), init(1)
+
+
+
+Linux                    24 Febrero 1998                  HALT(8)

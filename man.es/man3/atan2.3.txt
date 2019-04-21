@@ -1,0 +1,31 @@
+ATAN2(3)         Manual del Programador de Linux         ATAN2(3)
+
+
+
+NOMBRE
+       atan2 - función arco tangente de dos variables
+
+SINOPSIS
+       #include <math.h>
+
+       double atan2(double y, double x);
+
+DESCRIPCIÓN
+       La  función  atan2()  calcula  el arco tangente de las dos
+       variables x e y. Es similar a calcular el arco tangente de
+       y  /  x, excepto en que los signos de ambos argumentos son
+       usados para determinar el cuadrante del resultado.
+
+VALOR DEVUELTO
+       La función atan2() devuelve el resultado en radianes,  que
+       está entre -PI y PI (inclusive).
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       acos(3), asin(3), atan(3), cos(3), sin(3), tan(3)
+
+
+
+Linux                      8 Junio 1993                  ATAN2(3)

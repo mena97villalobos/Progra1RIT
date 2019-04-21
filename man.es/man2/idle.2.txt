@@ -1,0 +1,36 @@
+IDLE(2)          Manual del Programador de Linux          IDLE(2)
+
+
+
+NOMBRE
+       idle - deja inactivo al proceso 0
+
+SINOPSIS
+       #include <unistd.h>
+
+       void idle(void);
+
+DESCRIPCIÓN
+       idle  es  una llamada al sistema interna utilizada durante
+       el arranque del sistema.  Marca las paginas de memoria del
+       proceso  intercambiables y entra en el bucle principal del
+       planificador.  idle nunca regresa.
+
+       Sólo el proceso 0 puede llamar a idle.  Cualquier  proceso
+       de  usuario,  incluso  uno  con  permisos  de superusuario
+       recibira el valor EPERM.
+
+VALOR DEVUELTO
+       idle nunca regresa para el proceso 0, y  siempre  devuelve
+       el valor -1 para un proceso de usuario.
+
+ERRORES
+       EPERM   Siempre, para un proceso de usuario.
+
+CONFORME A
+       Esta  funcion  es  especifica  de Linux y no debe ser uti­
+       lizada en programas que se espera sean portables.
+
+
+
+Linux 1.1.46              21 Agosto 1994                  IDLE(2)

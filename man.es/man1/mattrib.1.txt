@@ -1,0 +1,78 @@
+MATTRIB(1)                                             MATTRIB(1)
+
+
+
+NOMBRE
+       mattrib - cambia los atributos de un fichero MS-DOS
+
+
+NOTA
+       Esta  página  de manual ha sido generada automáticamente a
+       partir de la documentación texinfo de mtools. Sin embargo,
+       el  proceso  es sólo aproximado, y algunos elementos tales
+       como referencias cruzadas, notas  al  pie  e  índices,  se
+       pierden  en  este  proceso de traducción.  De hecho, estos
+       elementos no tienen una representación adecuada en el for­
+       mato  de  las  páginas del manual. Por otra parte, sólo se
+       han traducido los elemntos específicos de cada comando,  y
+       se  ha  desechado de la versión de la página del manual la
+       información general de mtools. Por este motivo,  le  aviso
+       encarecidamente que use el documento texinfo original.
+
+       *      Para generar un copia imprimible del documento tex­
+       info use los siguientes comandos:
+
+                     ./configure; make dvi; dvips mtools.dvi .fi
+
+
+
+       *      Para generar una copia html, ejecute:
+
+                     ./configure; make html
+
+              Puede   encontrar   un  html  preconfeccionado  en:
+              `http://linux.wauug.org/pub/knaff/mtools'
+
+       *      Para generar un copia info (visualizable usando  el
+              modo info de emacs), ejecute:
+
+                     ./configure; make info
+
+
+
+       El documento texinfo parece más bonito en html o cuando se
+       imprime. De hecho, la versión info contiene ciertos ejemp­
+       los que son difíciles de leer debido a las convenciones de
+       notación usadas en info.
+
+DESCRIPCIÓN
+       Mattrib se usa para cambiar los atributos de un fichero de
+       MS-DOS.  Tiene la siguiente sintaxis:
+
+       mattrib  [-a|+a]  [-h|+h]  [-r|+r]  [-s|+s] ficheromsdos [
+       ficherosmsdos ... ]
+
+       Mattrib añade atributos a un fichero MS-DOS (con el  oper­
+       ador `+') o quita atributos (con el operador `-').
+
+       Mattrib soporta los siguientes bits de atributo:
+
+       a      Bit  de  archivo.   Usado  por algunos programas de
+              copia de seguridad para indicar un nuevo fichero.
+
+       r      Bit de solo lectura.  Usado para indicar un fichero
+              de  solo  lectura.  Los  ficheros con este atributo
+              marcado no pueden ser borrados por DEL ni modifica­
+              dos.
+
+       s      Bit  de  sistema.  Usado por MS-DOS para indicar un
+              fichero del sistema operativo.
+
+       h      Bit de oculto.  Usado para ocultar ficheros de DIR.
+
+VÉASE TAMBIÉN
+       Documentación en texinfo de las Mtools
+
+
+
+mtools-3.7                29 Junio 1997                MATTRIB(1)

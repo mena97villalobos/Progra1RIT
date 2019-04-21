@@ -1,0 +1,132 @@
+ARP(8)           Manual del Programador de Linux           ARP(8)
+
+
+
+NOMBRE
+       arp - manipula la cache ARP del sistema
+
+SINOPSIS
+       arp [-vn] [-H type] [-i if] -a [hostname]
+
+       arp [-v] [-i if] -d hostname [pub]
+
+       arp [-v] [-H type] [-i if] -s hostname hw_addr [temp]
+
+       arp  [-v]  [-H  type] [-i if] -s hostname hw_addr [netmask
+       nm] pub
+
+       arp [-v] [-H type] [-i if] -Ds hostname ifa  [netmask  nm]
+       pub
+
+       arp [-vnD] [-H type] [-i if] -f filename
+
+
+DESCRIPCIÓN
+       Arp  manipula  la cache ARP del sistema de varias maneras.
+       Las opciones primarias son las de eliminar una entrada  de
+       asociación  de  direcciones y configurar otra manualmente.
+       Para propósitos de depuración el programa arp permite tam­
+       bién un vaciado total de la cache ARP.
+
+OPCIONES
+       -v, --verbose
+              Informa  al  usuario  de  lo  que  ocurre de manera
+              extendida.
+
+       -n, --umeric
+              muestra direcciones numéricas en vez de  tratar  de
+              determinar  nombres simbólicos de servidores, puer­
+              tos o nombres de usuario.
+
+       -H type, --hw-type type
+              Al configurar o leer la cache ARP, esta  opción  le
+              dice  a  arp  qué clase de entradas debe buscar. El
+              valor por defecto es ether (es decir, código  hard­
+              ware  0x01 para IEEE 802.3 10Mbps Ethernet).  Otros
+              valores incluyen tecnologías de red como las  sigu­
+              ientes  ARCnet  (arcnet),  PROnet  (pronet),  AX.25
+              (ax25) y NET/ROM (netrom).
+
+       -a [hostname], --display [hostname]
+              Muestra las entradas de los servidores  especifica­
+              dos.  Si  no  se  usa  el  parámetro  hostname,  se
+              mostrarán todas las entradas.
+
+       -d hostname, --delete hostname
+              Elimina toda entrada del servidor  que  se  especi­
+              fica.  Se  puede  usar esta opción, por ejemplo, al
+              cerrar el servidor.
+
+       -D, --use-device
+              Usa la dirección hardware ifa's del interfaz.
+
+       -i If, --device If
+              Selecciona un interfaz. Al vaciar la cache  ARP  se
+              mostrarán  solamente  aquellas  entradas que corre­
+              spondan al interfaz. Se usará una configuración  de
+              entrada  ARP temporal o permanente para el disposi­
+              tivo especificado. Si no se especifica uno, el ker­
+              nel  lo  deducirá  a  partir de la tabla de encami­
+              namiento.  Para  entradas  tipo  pub  el   interfaz
+              especificado  será  el  usado  para responder peti­
+              ciones ARP.
+              NOTA: Este interfaz ha de ser diferente de aquel al
+              que se encaminen los paquetes IP.
+
+       -s hostname hw_addr, --set hostname
+              Crea  una  entrada ARP de asociación de direcciones
+              para el servidor hostname con una  dirección  hard­
+              ware  hw_addr  El  formato de la dirección hardware
+              depende de la clase de hardware, pero para la  may­
+              oría  de las clases se puede asumir la presentación
+              normal. Para la clase Ethernet, ésta supone 6 bytes
+              en  formato  hexadecimal,  separados  por  dos pun­
+              tos(:). Al  añadir  entradas  arp  tipo  proxy  (es
+              decir, aquellas con la opción publish activada), se
+              puede especificar una netmask (máscara de red) para
+              así  hacer  arp  proxy a subredes enteras. El proxy
+              arp no resulta un  buen  protocolo,  pero  a  veces
+              resulta de utilidad. Si no se proporciona la opción
+              temp las entradas se almacenarán permanentemente en
+              la cache ARP.
+
+       -f filename, --file filename
+              Parecida  a la opción -s, pero esta vez la informa­
+              ción de direcciones se toma del  archivo  filename.
+              Se  puede  usar  esta opción si han de configurarse
+              las entradas ARP de muchos servidores. A menudo  el
+              nombre  del  archivo  de datos es /etc/ethers, pero
+              esto no es oficial.
+
+              El formato del archivo es  simple;  solamente  con­
+              tiene líneas de texto ASCII con un nombre de servi­
+              dor (hostname) y una dirección  hardware  separados
+              por  un espacio en blanco. Adicionalmente se pueden
+              usar las opciones pub, temp y netmask.
+
+       En todos los lugares donde se espera un nombre  de  servi­
+       dor,  se  puede  proporcionar  también una dirección IP en
+       notación decimal separada por puntos.
+
+       Cada entrada completa de la cache ARP se  marcará  con  la
+       opción  C,  las entradas permanentes se marcan con M y las
+       entradas publicadas tienen la marca P.
+
+ARCHIVOS
+       /proc/net/arp
+       /etc/networks
+       /etc/hosts
+       /etc/ethers
+
+VÉASE TAMBIÉN
+       rarp(8), route(8), ifconfig(8), netstat(8)
+
+AUTORES
+       Fred N. van Kempen,  <waltje@uwalt.nl.mugnet.org>  con  un
+       montón  de  mejoras del encargado del mantenimiento de las
+       herramientas    de    red    Bernd     Eckenfels     <net-
+       tools@lina.inka.de>.
+
+
+
+Herramientas de Red        15 mayo 1996                    ARP(8)

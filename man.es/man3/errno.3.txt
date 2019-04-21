@@ -1,0 +1,153 @@
+ERRNO(3)             Funciones de biblioteca             ERRNO(3)
+
+
+
+NOMBRE
+       errno - número del último error
+
+SINOPSIS
+       #include <errno.h>
+
+       extern int errno;
+
+DESCRIPCIÓN
+       Algunas  llamadas  al sistema (y algunas funciones de bib­
+       lioteca) dan un valor al entero errno para indicar qué  ha
+       ido  mal. Su valor sólo es significativo cuando la llamada
+       devolvió un error (usualmente -1) y cuando una función  de
+       biblioteca que acabe bien tenga permitido cambiar errno.
+
+       Algunas  veces,  cuando una función tambíen puede devolver
+       -1 como valor válido, se debe poner errno a cero antes  de
+       la llamada, para poder detectar posibles errores.
+
+       errno  se  define  en  el estándar ISO de C como un lvalor
+       (valor de lado izquierdo) modificable de tipo int y no  se
+       debe  declarar  de  forma  explícita;  errno puede ser una
+       macro. errno es "local en hilo"; asignarle un valor en  un
+       hilo no afecta al valor que tenga en ningún otro hilo.
+
+       Los  números  de  error válidos son todos no cero; ninguna
+       función de biblioteca asigna nunca un valor cero a  errno.
+       Todos los nombres de error especificados por POSIX.1 deben
+       tener valores distintos.
+
+       POSIX.1 (edición de 1996) lista los siguientes nombres  de
+       error  simbólicos.   De éstos, EDOM y ERANGE existen en el
+       estándar ISO de C.  La enmienda 1  del  ISO  C  define  el
+       número  de  error  adicional  EILSEQ  para  codificar  los
+       errores en múltiples bytes o caracteres extendidos.
+
+
+       E2BIG  Lista de argumentos demasiado larga
+
+       EACCES Permiso denegado
+
+       EAGAIN Recurso temporalmente no disponible
+
+       EBADF  Descriptor de fichero incorrecto
+
+       EBADMSG
+              Mensaje incorrecto
+
+       EBUSY  Recurso ocupado
+
+       ECANCELED
+              Operación cancelada
+
+       ECHILD No hay procesos hijos
+
+       EDEADLK
+              Interbloqueo de recurso evitado
+
+       EDOM   Error de dominio
+
+       EEXIST El fichero existe
+
+       EFAULT Dirección incorrecta
+
+       EFBIG  Fichero demasiado grande
+
+       EINPROGRESS
+              Operación en progreso
+
+       EINTR  Llamada a función interrumpida
+
+       EINVAL Argumento inválido
+
+       EIO    Error de Entrada/Salida
+
+       EISDIR Es un directorio
+
+       EMFILE Demasiados ficheros abiertos
+
+       EMLINK Demasiados enlaces
+
+       EMSGSIZE
+              Longitud de buffer de mensaje inapropiada
+
+       ENAMETOOLONG
+              Nombre de fichero demasiado largo
+
+       ENFILE Demasiados ficheros abiertos en el sistema
+
+       ENODEV No existe tal dispositivo
+
+       ENOENT No existe ese fichero o directorio
+
+       ENOEXEC
+              Error en el formato del ejecutable
+
+       ENOLCK No hay bloqueos disponibles
+
+       ENOMEM No hay bastante espacio
+
+       ENOSPC No queda espacio en el dispositivo
+
+       ENOSYS Función no implementada
+
+       ENOTDIR
+              No es un directorio
+
+       ENOTEMPTY
+              El directorio no está vacío
+
+       ENOTSUP
+              Operación no soportada
+
+       ENOTTY Operación de control de E/S inapropiada
+
+       ENXIO  No existe tal dispositivo o dirección
+
+       EPERM  Operación no permitida
+
+       EPIPE  Interconexión rota
+
+       ERANGE Resultado demasiado grande
+
+       EROFS  Sistema de ficheros de sólo lectura
+
+       ESPIPE Posicionamiento inválido
+
+       ESRCH  No existe tal proceso
+
+       ETIMEDOUT
+              La operación ha excedido su plazo de tiempo
+
+       EXDEV  Enlace inapropiado
+
+       Otras implementaciones  de  Unix  devuelven  muchos  otros
+       tipos  de  error.  System  V  devuelve ETXTBSY (fichero de
+       código ocupado) si se intenta ejecutar una llamada  exec()
+       sobre un fichero que actualmente está abierto para escrit­
+       ura.  Linux también devuelve  este  error  si  se  intenta
+       tener  un  fichero  tanto asociado en memoria con VM_DENY­
+       WRITE como abierto para escritura.
+
+
+VÉASE TAMBIÉN
+       perror(3), strerror(3)
+
+
+
+                          30 Marzo 1998                  ERRNO(3)

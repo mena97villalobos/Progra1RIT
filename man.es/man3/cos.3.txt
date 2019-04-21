@@ -1,0 +1,28 @@
+COS(3)           Manual del Programador de Linux           COS(3)
+
+
+
+NOMBRE
+       cos - función coseno
+
+SINOPSIS
+       #include <math.h>
+
+       double cos(double x);
+
+DESCRIPCIÓN
+       La  función  cos()  devuelve  el coseno de x, donde x está
+       dado en radianes.
+
+VALOR DEVUELTO
+       La función cos() devuelve un valor entre -1 y 1.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       acos(3), asin(3), atan(3), atan2(3), sin(3), tan(3)
+
+
+
+                        25 Diciembre 1995                  COS(3)

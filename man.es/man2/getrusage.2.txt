@@ -1,0 +1,104 @@
+GETRLIMIT(2)     Manual del programador de Linux     GETRLIMIT(2)
+
+
+
+NOMBRE
+       getrlimit,  getrusage,  setrlimit  - devuelve/establece el
+       límite de recursos y su utilización
+
+SINOPSIS
+       #include <sys/time.h>
+       #include <sys/resource.h>
+       #include <unistd.h>
+
+       int getrlimit (int resource, struct rlimit *rlim);
+       int getrusage (int who, struct rusage *usage);
+       int setrlimit (int resource, const struct rlimit *rlim);
+
+DESCRIPCIÓN
+       getrlimit y setrlimit devuelve / establece  el  límite  de
+       recursos,  respectivamente.   resource  debería ser uno de
+       los siguientes:
+
+       RLIMIT_CPU      /* tiempo de CPU en segundos */
+       RLIMIT_FSIZE    /* tamaño Máximo de fichero */
+       RLIMIT_DATA     /* tamaño máximo de los datos */
+       RLIMIT_STACK    /* tamaño máximo de la pila */
+       RLIMIT_CORE     /* tamaño máximo del fichero del núcleo */
+       RLIMIT_RSS      /* tamaño máximo de la parte
+                          residente (fija) */
+       RLIMIT_NPROC    /* núero máximo de procesos */
+       RLIMIT_NOFILE   /* número máximo de ficheros abiertos */
+       RLIMIT_MEMLOCK  /* máximo espacio de direcciones fijado
+                          en memoria*/
+
+       Un  recurso puede definirse como ilimitado si se establece
+       el límite en RLIM_INFINITY. RLIMIT_OFILE es el nombre  BSD
+       para RLIMIT_NOFILE.
+
+       La estructura rlimit está definida como sigue:
+
+            struct rlimit
+            {
+                    int     rlim_cur;
+                    int     rlim_max;
+            };
+
+       getrusage  devuelve la utilización actual de los recursos,
+       para  un  who  de  cualquiera  de  los  siguientes,   bien
+       RUSAGE_SELF oo RUSAGE_CHILDREN.
+
+            struct rusage
+            {
+                    struct timeval ru_utime; /* tiempo de usuario utilizado */
+                    struct timeval ru_stime; /* tiempo de sistema utilizado */
+                    long    ru_maxrss;       /* tamaño máximo de la parte
+                                                establecida como residente */
+                    long    ru_ixrss;        /* tamaño total de la memoria
+                                                compartida */
+                    long    ru_idrss;        /* tamaño total de la memoria
+                                                no compartida */
+                    long    ru_isrss;        /* tamaño de pila no compartido */
+                    long    ru_minflt;       /* peticiones de página */
+                    long    ru_majflt;       /* fallos de página */
+                    long    ru_nswap;        /* intercambios */
+                    long    ru_inblock;      /* operaciones de entrada de
+                                                bloques */
+                    long    ru_oublock;      /* operaciones de salida de
+                                                bloques */
+                    long    ru_msgsnd;       /* mensajes enviados */
+                    long    ru_msgrcv;       /* mensajes recibidos */
+                    long    ru_nsignals;     /* señales recibidas */
+                    long    ru_nvcsw;        /* cambios de contexto
+                                                voluntarios */
+                    long    ru_nivcsw;       /* cambios de contexto
+                                                involuntarios */
+            };
+
+
+VALOR DEVUELTO
+       Si  tiene éxito, devuelve cero. Si hay error, devuelve -1,
+       y errno toma el correspondiente valor.
+
+ERRORES
+       EFAULT rlim o usage apuntan fuera del  espacio  de  direc­
+              ciones accesible.
+
+       EINVAL getrlimit  o  setrlimit  es llamado con un resource
+              erróneo, o getrusage es llamado con un who erróneo.
+
+       EPERM  Un  no-superusuario  intenta  utilizar  setrlimit()
+              para incrementar el límite `flexible' o  `estricto'
+              por  encima  del límite estricto actual, o un supe­
+              rusuario  intenta  incrementar  RLIMIT_NOFILE   por
+              encima del máximo actual del núcleo.
+
+CONFORME A
+       SVr4, BSD 4.3
+
+VÉASE TAMBIÉN
+       ulimit(2), quotactl(2)
+
+
+
+Linux                     23 Julio 1993              GETRLIMIT(2)

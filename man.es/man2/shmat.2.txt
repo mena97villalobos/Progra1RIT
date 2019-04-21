@@ -1,0 +1,154 @@
+SHMOP(2)         Manual del Programador de Linux         SHMOP(2)
+
+
+
+NOMBRE
+       shmop - operaciones cno memoria compartida
+
+SINOPSIS
+       # include <sys/types.h>
+       # include <sys/ipc.h>
+       # include <sys/shm.h>
+
+       char *shmat ( int shmid, char *shmaddr, int shmflg )
+
+       int shmdt ( char *shmaddr)
+
+DESCRIPCIÓN
+       La  función  shmat  pega el segmento de memoria compartida
+       identificada por shmid al segmento de  datos  del  proceso
+       que  llama  a  la  función.   La  dirección  del pegado se
+       especifica en shmaddr según uno  de  los  criterios  sigu­
+       ientes:
+
+              Si  shmaddr  es 0, el sistema intenta encontrar una
+              región no asociada en el rango de 1 a 1,5 GB comen­
+              zando por el valor superior y bajando desde él.
+
+              Si  shmaddr no es 0 y SHM_RND está activado en shm­
+              flg, el pegado ocurre  en  la  dirección  igual  al
+              redondeo  por  abajo  de  shmaddr  a un múltiplo de
+              SHMLBA.  De otro modo, shmaddr debe ser una  direc­
+              ción  alineada  de  una página en la cual ocurra el
+              pegado.
+
+       Si SHM_RDONLY está activado en shmflg, el segmento se pega
+       para lectura y el proceso debe tener permiso de lectura en
+       el segmento.  De otro modo el segmento se pega  para  lec­
+       tura  y  escritura  y  debe  tener  permisos  de lectura y
+       escritura en el segmento. No existe la noción de segmentos
+       de memoria compartida de escritura exclusiva.
+
+       El  valor  de brk del proceso que llama a la función no se
+       altera por el pegado.  El segmento se despegará  automáti­
+       camente  cuendo  el  proceso  se acabe.  El mismo segmento
+       puede ser pegaado como de lectura y de  lectura-escritura,
+       y  más  de  una vez, en el espacio de direcciones del pro­
+       ceso.
+
+       Tras una llamada exitosa a shmat el sistema actualiza  los
+       miembros de la estructura shmid_ds asociada al segmento de
+       memoria compartida como sigue:
+
+              shm_atime toma el valor de la hora actual.
+
+              shm_lpid toma el valor del  PID  del  proceso  lla­
+              mador.
+
+              shm_nattch se incrementa en uno.
+
+       Observe  que  el pegado tiene éxito también si el segmento
+       de memoria compartida se marca como para ser borrado.
+
+       La función shmdt despega del segmento de datos del proceso
+       que  la llama el segmento de memoria compartida localizado
+       en la dirección especificada por shmaddr.  El segmento  de
+       memoria  compartida  despegado  debe  ser uno de entre los
+       pegados actualmente (al espacio de  direcciones  del  pro­
+       ceso)  con  shmaddr igual al valor devuelto por su llamada
+       de pegado shat.
+
+       Tras una llamada exitosa a shmdt el sistema actualiza  los
+       miembros de la estructura shmid_ds asociada al segmento de
+       memoria compartida como sigue:
+
+              shm_dtime toma el valor de la hora actual.
+
+              shm_lpid toma el valor del  PID  del  proceso  lla­
+              mador.
+
+              shm_nattch se decrementa en uno.  Si llega a 0 y el
+              segmento está marcado para ser borrado, el segmento
+              se borra.
+
+       La  región  ocupada  en  el espacio de usuario del proceso
+       llamador es desasociada.
+
+
+LLAMADAS AL SISTEMA
+       fork() Después de un fork() el hijo hereda  los  segmentos
+              de memoria compartidos pegados.
+
+       exec() Tras  un exec() todos los segmentos de memoria com­
+              partida pegados son despegados  (pero  no  destrui­
+              dos).
+
+       exit() Tras  exit() todos los segmentos de memoria compar­
+              tida pegados son despegados (no destruidos).
+
+
+VALOR DEVUELTO
+       En caso de fallo ambas funciones devuelven  -1  con  errno
+       indicando  el error; en otro caso shmat devuelve la direc­
+       ción del segmento de memoria compartido  pegado,  y  shmdt
+       devuelve 0.
+
+ERRORES
+       Cuando shmat falla, al regresar, errno tendrá uno de entre
+       los siguientes valores:
+
+       EACCES     El proceso llamador no tiene permisos de acceso
+                  para el tipo de pegado pedido.
+
+       EINVAL     Valor de shmid inválido, no alineado (i.e., sin
+                  alineamiento de página y SHM_RND no se  especi­
+                  ficó),  o  valor  de shmaddr inválido, o pegado
+                  fallido en brk.
+
+       ENOMEM     No se pudo reservar memoria para el  descriptor
+                  o para las tablas de página.
+
+       La  función  shmdt puede fallar sólo si no hay segmento de
+       memoria compartida pegada en  shmaddr,  en  cuyo  caso  al
+       regresar errno tendrá el valor EINVAL.
+
+NOTAS
+       Al ejecutar una llamada al sistema fork(2), el hijo hereda
+       todos los segmentos de memoria compartida pegados.
+
+       Los segmentos de memoria compartida pegados a  un  proceso
+       que  ejecuta  una  llamada  al  sistema execve(2) no serán
+       pegados en el proceso resultante.
+
+       El siguiente es un parámetro del sistema que afecta  a  la
+       llamada al sistema shmat:
+
+       SHMLBA     Dirección  del  límite  inferior  del segmento.
+                  Debe estar alineado a página.  Para  la  imple­
+                  mentación   actual   el   valor  de  SHMBLA  es
+                  PAGE_SIZE.
+
+       La implementación no tiene un límite  intrínseco  para  el
+       número  máximo de segmentos de memoria compartida por pro­
+       ceso (SHMSEG)
+
+CONFORME A
+       SVr4, SVID.  SVr4 documenta una condición  de  error  adi­
+       cional EMFILE.
+
+VÉASE TAMBIÉN
+       ipc(5), shmctl(2), shmget(2).
+
+
+
+Linux 0.99.13             28 Enero 1998                  SHMOP(2)

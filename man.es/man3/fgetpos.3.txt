@@ -1,0 +1,77 @@
+FSEEK(3)         Manual del Programador de Linux         FSEEK(3)
+
+
+
+NOMBRE
+       fgetpos, fseek, fsetpos, ftell, rewind - reposicionarse en
+       un flujo
+
+SINOPSIS
+       #include <stdio.h>
+
+       int fseek( FILE *flujo, long desplto, int origen);
+       long ftell( FILE *flujo);
+       void rewind( FILE *flujo);
+       int fgetpos( FILE *flujo, fpos_t *pos);
+       int fsetpos( FILE *flujo, fpos_t *pos);
+
+DESCRIPCIÓN
+       La función  fseek  mueve  el  indicador  de  posición  del
+       fichero  correspondiente  al  flujo  de datos apuntado por
+       flujo.  La nueva posición, medida  en  bytes,  se  obtiene
+       añadiendo  desplto  bytes  a  la posición especificada por
+       origen.  Si origen es SEEK_SET, SEEK_CUR, o  SEEK_END,  el
+       desplazamiento  es  relativo al comienzo del fichero, a la
+       posición actual, o al final del fichero,  respectivamente.
+       Una llamada exitosa a la función fseek limpia el indicador
+       de fin-de-fichero para el flujo y deshace cualquier efecto
+       de la función ungetc(3) en el mismo flujo.
+
+       La  función ftell obtiene el valor actual del indicador de
+       posición del fichero para el flujo apuntado por flujo.
+
+       La función rewind  mueve  el  indicador  de  posición  del
+       fichero  para el flujo apuntado por flujo al principio del
+       fichero. Es equivalente a:
+
+              (void)fseek(flujo, 0L, SEEK_SET)
+
+       salvo en que el indicador de error para el  flujo  también
+       se limpia (vea clearerr(3)).
+
+       Las  funciones fgetpos y fsetpos son interfaces alternati­
+       vas equivalentes a ftell y fseek (con el origen  puesto  a
+       SEEK_SET),  poniendo  y  almacenando  el  valor actual del
+       desplazamiento desde o en el objeto referenciado por  pos.
+       En  algunos sistemas no UNIX un objeto fpos_t puede ser un
+       objeto complejo y estas rutinas pueden ser la única manera
+       de  reposicionar un flujo de texto de forma transportable.
+
+VALOR DEVUELTO
+       La función rewind no devuelve nada.  Cuando  acaban  bien,
+       fgetpos, fseek, y fsetpos devuelven 0, y ftell devuelve el
+       desplazamiento actual. Cuando acaban mal, devuelve -1 y se
+       pone un valor apropiado en la variable global errno.
+
+ERRORES
+       EBADF  El  flujo  especificado  es  tal  que no permite el
+              acceso directo.
+
+       EINVAL El argumento  origen  de  fseek  no  era  SEEK_SET,
+              SEEK_END, ni SEEK_CUR.
+
+       Las funciones fgetpos, fseek, fsetpos, y ftell pueden fal­
+       lar también y poner un valor en errno para  cualquiera  de
+       los  errores  especificados  para  las  rutinas fflush(3),
+       fstat(2), lseek(2), y malloc(3).
+
+VÉASE TAMBIÉN
+       lseek(2)
+
+CONFORME A
+       Las funciones fgetpos, fsetpos,  fseek,  ftell,  y  rewind
+       siguen el estándar ANSI C3.159-1989 (``C ANSI'').
+
+
+
+BSD                       21 Enero 1998                  FSEEK(3)

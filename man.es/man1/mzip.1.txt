@@ -1,0 +1,103 @@
+MZIP(1)                                                   MZIP(1)
+
+
+
+NOMBRE
+       mzip  - cambia el modo de protección y expulsa un disco en
+       una unidad Zip/Jaz
+
+
+
+NOTA
+       Esta página de manual ha sido generada  automáticamente  a
+       partir de la documentación texinfo de mtools. Sin embargo,
+       el proceso es sólo aproximado, y algunos  elementos  tales
+       como  referencias  cruzadas,  notas  al  pie e índices, se
+       pierden en este proceso de traducción.   De  hecho,  estos
+       elementos no tienen una representación adecuada en el for­
+       mato de las páginas del manual. Por otra  parte,  sólo  se
+       han  traducido los elemntos específicos de cada comando, y
+       se ha desechado de la versión de la página del  manual  la
+       información  general  de mtools. Por este motivo, le aviso
+       encarecidamente que use el documento texinfo original.
+
+       *    Para generar un copia imprimible del  documento  tex­
+       info use los siguientes comandos:
+
+                     ./configure; make dvi; dvips mtools.dvi
+
+
+
+       *      Para generar una copia html, ejecute:
+
+                     ./configure; make html
+
+              Puede  encontrar  un  html   preconfeccionado   en:
+              `http://linux.wauug.org/pub/knaff/mtools'
+
+       *      Para  generar un copia info (visualizable usando el
+              modo info de emacs), ejecute:
+
+                     ./configure; make info
+
+
+
+       El documento texinfo parece más bonito en html o cuando se
+       imprime. De hecho, la versión info contiene ciertos ejemp­
+       los que son difíciles de leer debido a las convenciones de
+       notación usadas en info.
+
+
+DESCRIPCIÓN
+       El  comando  mzip  se usa para dar comandos específicos de
+       los discos Zip bajo Solaris o HPUX. Su sintáxis es:
+
+       mzip [-epqrwx]
+
+
+       Mzip permite las siguientes opciones en la línea de coman­
+       dos:
+
+       e      Expulsa el disco.
+
+       f      Fuerza  la  expulsión incluso si el disco está mon­
+              tado ( debe usarse junto con el parámetro -e).
+
+       r      Protege el disco contra escritura.
+
+       w      Quita la protección contra escritura.
+
+       p      Protege contra escritura mediante contraseña.
+
+       x      Protege mediante contraseña.
+
+       q      Informa sobre el estado.
+
+       Para quitar la contraseña, ponle uno de los modos sin con­
+       traseña  -r  o  -w:  mzip  te preguntará ahora por la con­
+       traseña, y desprotegerá el disco. Si has olvidado la  con­
+       traseña,  puedes  librarte  de ella formateando el disco a
+       bajo nivel (usando los menús de configuración de  la  BIOS
+       de tu adaptador SCSI).
+
+       El  disco  ZipTools  que  viene con la unidad está tambien
+       protegido con contraseña. En DOS o en MAC, esta contraseña
+       se  quita  automáticamente una vez que las ZipTools se han
+       instalado. A partir de varios artículos publicados  en  la
+       Usenet,  he  aprendido  que la contraseña para el disco es
+       APlaceForYourStuff.  Mzip conoce  esta  contraseña,  y  lo
+       prueba  primero,  antes  de  pedirte  una contraseña.  Así
+       entonces, mzip -w z: desprotege el disco de las herramien­
+       tas.   El disco de las herramientas está formateado de una
+       forma especial, de forma que puede usarse tanto en  un  PC
+       como  en  un  MAC. En un PC, el sistema de ficheros de MAC
+       aparece como un  fichero  oculto  llamado  `partishn.mac'.
+       Puedes  borrarlo  para  liberar  las 50 Megas que ocupa el
+       sistema de ficheros de MAC.
+
+VÉASE TAMBIÉN
+       Documentación texinfo de Mtools
+
+
+
+mtools-3.7                29 Junio 1997                   MZIP(1)

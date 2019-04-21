@@ -1,0 +1,56 @@
+SOCKETPAIR(2)    Manual del Programador de Linux    SOCKETPAIR(2)
+
+
+
+NOMBRE
+       socketpair - crea un par de zócalos conectados
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <sys/socket.h>
+
+       int socketpair(int d, int tipo, int protocolo, int sv[2]);
+
+DESCRIPCIÓN
+       La llamada a crea una pareja sin nombre de zócalos (`sock­
+       ets', enchufes) en el dominio especificado por d, del tipo
+       especificado por tipo, y empleando opcionalmente el proto­
+       colo  especificado  por  protocolo.  Los descriptores uti­
+       lizados para referenciar los nuevos zócalos  se  devuelven
+       en sv[0] y sv[1].  Los dos zócalos son indistinguibles.
+
+VALOR DEVUELTO
+       En  caso  de éxito, se devuelve cero. En caso de error, se
+       devuelve -1 y se pone en errno un valor apropiado.
+
+ERRORES
+       EMFILE  Demasiados descriptores están en uso por este pro­
+               ceso.
+
+       EAFNOSUPPORT
+               La  familia  de  direcciones  especificada no está
+               admitida en esta máquina.
+
+       EPROTONOSUPPORT
+               El protocolo especificado no está admitido en esta
+               máquina.
+
+       EOPNOSUPPORT
+               El protocolo especificado no admite la creación de
+               parejas de zócalos.
+
+       EFAULT  La dirección sv no especifica una parte válida del
+               espacio de direcciones del proceso.
+
+CONFORME A
+       4.4BSD  (la  llamada  al  sistema  socketpair  apareció en
+       4.2BSD). Generalmente transportable a o desde sistemas  no
+       BSD  que  admitan  clónicos  de  la  capa  de  zócalos BSD
+       (incluyendo variantes System V).
+
+VÉASE TAMBIÉN
+       read(2), write(2), pipe(2)
+
+
+
+BSD                       3 Febrero 1998            SOCKETPAIR(2)

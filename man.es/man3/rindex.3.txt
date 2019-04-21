@@ -1,0 +1,41 @@
+INDEX(3)         Manual del Programador de Linux         INDEX(3)
+
+
+
+NOMBRE
+       index,  rindex  -  localizan  un carácter en una cadena de
+       caracteres
+
+SINOPSIS
+       #include <string.h>
+
+       char *index(const char *s, int c);
+
+       char *rindex(const char *s, int c);
+
+DESCRIPCIÓN
+       La función index() devuelve un puntero a la 1ª  ocurrencia
+       del carácter c en la cadena s.
+
+       La  función rindex() devuelve un puntero a la última ocur­
+       rencia del carácter c en la cadena s.
+
+       El carácter cero (NUL) terminador de cadena  se  considera
+       como parte de las cadenas de caracteres.
+
+VALOR DEVUELTO
+       Las  funciones  index() y rindex() devuelven un puntero al
+       carácter que concuerda o NULL si no se encuentra el carác­
+       ter.
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       memchr(3),  strchr(3),  strpbrk(3), strrchr(3), strsep(3),
+       strspn(3), strstr(3), strtok(3)
+
+
+
+
+GNU                       12 Abril 1993                  INDEX(3)

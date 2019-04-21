@@ -1,0 +1,38 @@
+ASSERT(3)        Manual del Programador de Linux        ASSERT(3)
+
+
+
+NOMBRE
+       assert - aborta el programa si la expresión es falsa.
+
+SINOPSIS
+       #include <assert.h>
+
+       void assert (int expression);
+
+DESCRIPCIÓN
+       assert()  imprime un mensaje de error a la salida estándar
+       y termina el programa llamando a abort() si expression  es
+       falsa  (es  decir,  es  igual  a  cero).  Esto sólo sucede
+       cuando la macro NDEBUG está sin definir.
+
+VALOR DEVUELTO
+       No se devuelve ningún valor.
+
+CONFORME A
+       ANSI - C
+
+FALLOS
+       assert() es implementada como un macro;  si  la  expresión
+       comprobada  tiene efectos laterales, el comportamiento del
+       programa puede ser diferente dependiendo de si NDEBUG está
+       definida  o  no.  Esto  puede  crear fallos indeterminados
+       (Heisenbugs) que no se dan cuando la depuración está acti­
+       vada.
+
+VÉASE TAMBIÉN
+       exit(3), abort(3)
+
+
+
+GNU                     19 Diciembre 1995               ASSERT(3)

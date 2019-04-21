@@ -1,0 +1,118 @@
+RDEV(8)          Manual del Programador de Linux          RDEV(8)
+
+
+
+NOMBRE
+       rdev  -  ver/modificar el dispositivo raíz, dispositivo de
+       intercambio, tamaño del disco RAM o el modo  de  vídeo  de
+       una imagen
+
+SINOPSIS
+       rdev [ -rsvh ] [ -o offset ] [ image [ value [ offset ] ] ]
+       rdev [ -o offset ] [ image [ root_device [ offset ] ] ]
+       swapdev [ -o offset ] [ image [ swap_device [ offset ] ] ]
+       ramsize [ -o offset ] [ image [ size [ offset ] ] ]
+       vidmode [ -o offset ] [ image [ mode [ offset ] ] ]
+       rootflags [ -o offset ] [ image [ flags [ offset ] ] ]
+
+DESCRIPCIÓN
+       Sin  argumentos, rdev imprime la línea de /etc/mtab con el
+       sistema de ficheros raíz actual.  Sin argumentos, swapdev,
+       ramsize, vidmode y rootflags imprimen información sobre su
+       uso.
+
+       En una imagen de arranque del kernel de Linux, hay  varios
+       pares  de  bytes  que  especifican el dispositivo raíz, el
+       modo de vídeo, el tamaño del disco RAM y el dispositivo de
+       intercambio.  Estos  pares de bytes, por defecto, empiezan
+       en el desplazamiento 504 (decimal) en la imagen  del  ker­
+       nel:
+
+               498 Opciones raíz
+              (500 y 502 Reservados)
+               504 Tamaño del disco RAM
+               506 Modo VGA
+               508 Dispositivo raíz
+              (510 Firma de Arranque)
+
+       rdev cambiará estos valores.
+
+       Valores  típicos para el parámetro image , que es una ima­
+       gen arrancable del kernel de Linux, son los siguientes:
+
+              /vmlinux
+              /vmlinux.test
+              /vmunix
+              /vmunix.test
+              /dev/fd0
+              /dev/fd1
+
+       Cuando se usan los comandos rdev, o swapdev , los parámet­
+       ros root_device o swap_device son como sigue:
+
+              /dev/hda[1-8]
+              /dev/hdb[1-8]
+              /dev/sda[1-8]
+              /dev/sdb[1-8]
+
+       Para  el comando ramsize , el parámetro size especifica el
+       tamaño del disco RAM en kilobytes.
+
+       Para el comando rootflags , el  parámetro  flags  contiene
+       información  extra  usada cuando se monte la raíz. Actual­
+       mente el único efecto de esta opción es forzar al kernel a
+       montar el sistema de ficheros raíz en modo solo lectura si
+       flags es diferente de cero.
+
+       Para el comando vidmode , el parámetro mode especifica  el
+       modo de vídeo:
+
+              -3 = Preguntar
+              -2 = VGA Extendido
+              -1 = VGA Normal
+               0 = como si se hubiera pulsado "0" al preguntar
+               1 = como si se hubiera pulsado "1" al preguntar
+               2 = como si se hubiera pulsado "2" al preguntar
+               n = como si se hubiera pulsado "n" al preguntar
+
+       Si  value  no  se especifica, la image será examinada para
+       determinar la configuración actual.
+
+
+OPCIONES
+       -s     Causa que rdev actúe como swapdev.
+
+       -r     Causa que rdev actúe como ramsize.
+
+       -R     Causa que rdev actúe como rootflags.
+
+       -v     Causa que rdev actúe como vidmode.
+
+       -h     Proporciona ayuda.
+
+FALLOS
+       Por razones históricas, hay dos métodos  para  especificar
+       valores alternativos para el desplazamiento.
+
+       El  interfaz con el usuario es engorroso, poco intuitivo y
+       debería ser  escrito  de  nuevo,  permitiendo  que  varios
+       parámetros  de una imagen de kernel pudieran ser cambiados
+       o examinados con un único comando.
+
+       Si se usa LILO, no será necesario  rdev  para  cambiar  el
+       dispositivo  raíz y el modo VGA, dado que estos parámetros
+       que rdev modifica pueden ser  cambiados  en  la  línea  de
+       comandos  de  LILO  durante el arranque. De todas maneras,
+       rdev es necesario todavía para cambiar el tamaño del disco
+       RAM.  Se  aconseja  a los usuarios que busquen en la docu­
+       mentación de LILO para  más  información  y  a  usar  LILO
+       cuando arranquen su sistema.
+
+AUTORES
+       Originalmente por Werner Almesberger (almesber@nessie.cs.id.ethz.ch)
+       Modificado por Peter MacDonald (pmacdona@sanjuan.UVic.CA)
+       Soporte para rootflags añadido por Stephen Tweedie (sct@dcs.ed.ac.uk)
+
+
+
+Linux 0.99              20 Noviembre 1993                 RDEV(8)

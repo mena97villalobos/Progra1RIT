@@ -1,0 +1,48 @@
+KILLPG(3)        Manual del Programador de Linux        KILLPG(3)
+
+
+
+NOMBRE
+       killpg  - envía una señal a todos los miembros de un grupo
+       de proceso.
+
+SINOPSIS
+       #include <signal.h>
+
+       int killpg(pid_t pidgrp, int signal);
+
+DESCRIPCIÓN
+       La función killpg() hace que se envíe la  señal  signal  a
+       todos  los  procesos  del grupo de procesos pidgrp o a los
+       procesos del propio grupo de procesos si pidgrp es igual a
+       cero.
+
+       Es equivalente a
+
+       kill(-pidgrp,signal);
+
+VALOR DEVUELTO
+       El  valor  devuelto es -1 en caso de error, ó 0 en caso de
+       acabar bien.
+
+ERRORES
+       Los errores se devuelven en la  variable  global  errno  y
+       pueden ser uno de los siguientes:
+
+       EINVAL para una señal inválida,
+
+       ESRCH  para un grupo de procesos que no existe, y
+
+       EPERM  si  el  UID  del  proceso que hace la llamado no es
+              igual al del proceso al que se envía la señal, y el
+              UID no es el del súper-usuario.
+
+CONFORME A
+       No se sabe.
+
+VÉASE TAMBIÉN
+       kill(2), signal(2), signal(7)
+
+
+
+GNU                        2 Marzo 1998                 KILLPG(3)

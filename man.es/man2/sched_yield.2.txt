@@ -1,0 +1,48 @@
+SCHED_YIELD(2)   Manual del Programador de Linux   SCHED_YIELD(2)
+
+
+
+NOMBRE
+       sched_yield - cede el procesador
+
+SINOPSIS
+       #include <sched.h>
+
+       int sched_yield(void);
+
+DESCRIPCIÓN
+       Un  proceso  puede abandonar el procesador voluntariamente
+       sin bloquearse llamando a sched_yield.  Entonces  el  pro­
+       ceso  se  pondrá  al  final  de  la cola para su prioridad
+       estática y un nuevo proceso obtendrá la ejecución.
+
+       Nota: Si el proceso en curso es el único de  la  lista  de
+       más  alta prioridad en ese tiempo, este proceso continuará
+       en ejecución después de la llamada a sched_yield.
+
+       En sistemas POSIX donde  está  disponible  sched_yield  se
+       define _POSIX_PRIORITY_SCHEDULING en <unistd.h>.
+
+
+VALOR DEVUELTO
+       En  caso  de  éxito,  sched_yield  devuelve 0.  En caso de
+       error, se devuelve -1 y se pone en errno un valor  apropi­
+       ado.
+
+
+CONFORME A
+       POSIX.1b (anteriormente POSIX.4)
+
+VÉASE TAMBIÉN
+       sched_setscheduler(2)  para una descripción de la planifi­
+       cación en Linux.
+
+       Programming for the real  world  -  POSIX.4  por  Bill  O.
+       Gallmeister,    O'Reilly    &   Associates,   Inc.,   ISBN
+       1-56592-074-0
+       IEEE Std 1003.1b-1993 (estándar POSIX.1b)
+       ISO/IEC 9945-1:1996
+
+
+
+Linux 1.3.81              2 Febrero 1998           SCHED_YIELD(2)

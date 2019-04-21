@@ -1,0 +1,26 @@
+KILLALL5(8)    Manual del Administrador de Sistemas   KILLALL5(8)
+
+
+
+NOMBRE
+       killall5 -- envía una señal a todos los procesos.
+
+SINOPSIS
+       killall5 -signalnumber
+
+DESCRIPCIÓN
+       killall5 es el comando killall de SystemV. Envía una señal
+       a todos los procesos excepto al de su propia sesión,  para
+       no eliminar el shell que ejecutó el guión desde el que fue
+       llamado. Su uso principal (único) es en el guión rc que se
+       encuentra en el directorio /etc/init.d
+
+VÉASE TAMBIÉN
+       halt(8), reboot(8)
+
+AUTOR
+       Miquel van Smoorenburg, miquels@cistron.nl
+
+
+
+Linux                      27 mayo 1997               KILLALL5(8)

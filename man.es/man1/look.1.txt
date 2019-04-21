@@ -1,0 +1,66 @@
+
+NOMBRE
+     look - mostrar las líneas que comienzan por una cadena dada
+
+SINOPSIS
+     look [-dfa] [-t termchar] string [file]
+
+DESCRIPCIÓN
+     La utilidad look muestra las líneas del fichero file que contienen string
+     como prefijo.  Dado que look realiza una búsqueda binaria, las líneas en
+     file deben estar ordenadas.
+
+     Si no se especifica file, se usa el fichero /usr/dict/words, solo se com­
+     paran caracteres alfabéticos y las mayúsculas y minúsculas se toman por
+     igual.
+
+     Opciones:
+
+     -d      Diccionario de conjunto de caracteres y orden, por ejemplo, sólo
+             comparar caracteres alfanuméricos.
+
+     -f      Tomar mayúsculas y minúsculas como iguales en caracteres
+             alfabéticos.
+
+     -a      Usar el diccionario alternativo /usr/dict/web2
+
+     -t      Especificar un carácter de terminación de cadena, por ejemplo,
+             sólo comparar los caracteres de string hasta la primera ocurren­
+             cia de termchar.
+
+     La utilidad look termina con valor 0 si una o más líneas fueron encon­
+     tradas y mostradas, 1 si no se encontró ninguna y >1 si ocurrió un error.
+
+FICHEROS
+     /usr/dict/words  el diccionario
+     /usr/dict/web2   el diccionario alternativo
+
+VÉASE TAMBIÉN
+     grep(1), sort(1)
+
+COMPATIBILIDAD
+     La página de manual original indicaba que los tabuladores y espacios par­
+     ticipaban en la comparación cuando se usaba la opción -d.  Esto era
+     incorrecto y la página de manual actual se corresponde con la
+     implentación histórica.
+
+HISTORIA
+     Look apareció en Unix Version 7 de AT&T
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

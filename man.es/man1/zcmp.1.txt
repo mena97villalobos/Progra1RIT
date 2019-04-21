@@ -1,0 +1,33 @@
+ZDIFF(1)                                                 ZDIFF(1)
+
+
+
+NOMBRE
+       zcmp, zdiff - comparar ficheros comprimidos
+
+SINOPSIS
+       zcmp [ cmp_opciones ] fichero1 [ fichero2 ]
+       zdiff [ diff_opciones ] fichero1 [ fichero2 ]
+
+DESCRIPCIÓN
+       Zcmp y zdiff se usan para invocar los programas cmp o diff
+       sobre ficheros comprimidos. Todas las  opciones  especifi­
+       cadas  se  pasan  directamente  a  cmp o diff.  Si sólo se
+       especifica 1 fichero, entonces los ficheros comparados son
+       fichero1  y una copia descomprimida de fichero1.gz.  Si se
+       especifican 2 ficheros, entonces son descomprimidos si  es
+       necesario, y pasados a cmp o diff.  El estado de salida de
+       cmp o diff es preservado.
+
+VÉASE TAMBIÉN
+       cmp(1), diff(1), zmore(1), zgrep(1),  znew(1),  zforce(1),
+       gzip(1), gzexe(1)
+
+FALLOS (BUGS)
+       Los  mensajes  de  los  programas cmp o diff se refieren a
+       nombres de fichero temporales, en vez de a los especifica­
+       dos.
+
+
+
+                                                         ZDIFF(1)

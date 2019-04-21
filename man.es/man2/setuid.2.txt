@@ -1,0 +1,68 @@
+SETUID(2)        Manual del Programador de Linux        SETUID(2)
+
+
+
+NOMBRE
+       setuid - establece la identidad del usuario
+
+SINOPSIS
+       #include <unistd.h>
+
+       int setuid(uid_t uid)
+
+DESCRIPCIÓN
+       setuid establece el UID efectivo del proceso en curso.  Si
+       el UID efectivo de quien llama a esta rutina es root, tam­
+       bién  se  establecen los identificadores de usuario real y
+       salvado.
+
+       Bajo Linux, setuid está implementado como la versión POSIX
+       con  la  característica _POSIX_SAVED_IDS. Esto permite que
+       un programa SUID (distinto de root) renuncie a  todos  sus
+       privilegios  de  usuario,  haga  algún trabajo no privile­
+       giado, y luego recupere su ID de usuario efectivo original
+       de una manera segura.
+
+       Si  el  usuario  es  root o si el programa es SUID a root,
+       deben tomarse precauciones especiales. La  función  setuid
+       comprueba  el  UID  efectivo  de quien la llama y si es el
+       súper-usuario, todos los IDs relacionados con  el  proceso
+       se  ponen  a  uid.   Después de esto, es imposible para el
+       programa recuperar sus privilegios de root.
+
+       Así, un programa  SUID  a  root  que  desea  temporalmente
+       renunciar  a  sus provilegios de root, asumir la identidad
+       de un usuario no-root y luego recuperar sus privilegios de
+       root  no puede emplear setuid.  Esto se puede hacer con la
+       llamada (no POSIX, BSD) seteuid.
+
+VALOR DEVUELTO
+       En caso de éxito, se devuelve cero. En caso de  error,  se
+       devuelve -1, y se pone un valor apropiado en errno.
+
+ERRORES
+       EPERM   El  usuario  no es el súper-usuario, y uid no con­
+               cuerda con el ID efectivo ni salvado  del  proceso
+               que llama a la función.
+
+CONFORME A
+       SVr4,  SVID, POSIX.1.  No muy compatible con la llamada de
+       4.4BSD, que establece todos los IDs de usuario: real, sal­
+       vado  y  efectivo.  SVr4  documenta una condición de error
+       adicional, EINVAL.
+
+OBSREVACIONES ESPECÍFICAS DE LINUX
+       Linux posee el concepto de UID  de  sistema  de  ficheros,
+       normalmente  igual  al  UID  efectivo. La llamada a setuid
+       también establece el UID de sistema de ficheros  del  pro­
+       ceso en curso.  Vea setfsuid(2).
+
+       Si  uid  es diferente del uid efectivo antiguo, al proceso
+       se le prohibirá dejar volcados de memoria.
+
+VÉASE TAMBIÉN
+       getuid(2), setreuid(2), seteuid(2), setfsuid(2)
+
+
+
+Linux 1.1.36              16 Junio 1997                 SETUID(2)

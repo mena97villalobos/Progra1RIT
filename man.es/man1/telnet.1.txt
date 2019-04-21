@@ -1,0 +1,837 @@
+TELNET(1)               System General Commands Manual               TELNET(1)
+
+NAME
+     telnet - interfaz de usuario para el protocolo TELNET
+
+SINOPSIS
+     telnet [-8ELadr] [-S tos] [-e escapechar] [-l user] [-n tracefile] [host
+     [port]]
+
+DESCRIPCIÓN
+     El comando telnet se usa en la comunicación interactiva con otro host que
+     utilice el protocolo TELNET ("telnet> "). Si telnet es invocado con el
+     parámetro host, la orden open se ejecuta implícitamente; vea la descrip­
+     ción siguiente.
+
+     Opciones:
+
+     -8      Petición de operación de 8-bits. Esto provoca un intento de nego­
+             ciar las TELNET BINARY opciones de entrada y salida. Por defecto
+             telnet no es puramente de 8-bits.
+
+     -E      Deshabilita la función del carácter escape; es decir, establece
+             que la tecla escape actúe como "no character".
+
+     -L      Especifica un path de datos de 8-bits. Esto provoca que la opción
+             TELNET BINARY sólo se negocie en la salida.
+
+     -a      Intenta un login automático.  En realidad, esto envía el nombre
+             del usuario vía la variable USER de la opción ENVIRON si ésta es
+             soportada por el sistema remoto. El nombre del usuario se obtiene
+             mediante getlogin(3).
+
+     -d      Establece el valor inicial del debug toggle en VERDADERO.
+
+     -r      Emulará rlogin(1).  En este modo, por defecto el carácter escape
+             es una tilde. A su vez, la interpretación del carácter escape
+             cambia: el carácter escape seguido de un punto hará que telnet
+             desconecte del host remoto. Una ^Z en lugar de un punto, sus­
+             penderá telnet, y un ^] (el defecto del carácter escape de telnet
+             generará un prompt normal de telnet. Estos códigos sólo se acep­
+             tan al principio de la línea.
+
+     -S tos  Establece la opción IP type-of-service (TOS) (tipo de servicio
+             IP) para el valor de la conexión telnet tos.
+
+     -e escapechar
+             Establece que el carácter escape equivalga a escapechar.  Si no
+             se especifica un carácter escape, no se usará ningún carácter de
+             escape.  Al introducir un carácter de escape durante la conexión
+             telnet cambiará al modo comando.
+
+     -l user
+             Especifica que user es el usuario como el que entraremos en el
+             sistema remoto. Esto se consigue al enviar el nombre especificado
+             en la variable de entorno USER, así que requiere que el sistema
+             remoto soporte la opción TELNET ENVIRON (entorno telnet). Esta
+             opción implica el uso de la opción -a, y también puede ser usada
+             por la orden open.
+
+     -n tracefile
+             Ejecuta tracefile para grabar la información de trace.  Vea la
+             orden set tracefile más adelante.
+
+     host    Especificará a qué host de la red conectar.
+
+     port    Especifica que número de puerto o qué servicio contactar. Si no
+             se especifica, el puerto telnet (el 23) será el usado.
+
+     Protocol:
+
+     Una vez abierta una conexión, telnet intentará habilitar la opción TELNET
+     LINEMODE.  Si fallase, telnet volverá a uno de los dos modos de input
+     (entrada): bien ``character at a time'' o ``old line by line'' dependi­
+     endo del modo que soporte el sistema remoto.
+
+     Cuando se habilita LINEMODE, el procesado de caracteres se realiza en el
+     sistema local, bajo el control del sistema remoto. Si la edición del
+     input o el eco del carácter se deshabilita, el sistema remoto confiará en
+     esa información. También confiará en los cambios de cualquier carácter
+     especial que ocurra en el sistema remoto para que puedan tener efecto en
+     el sistema local.
+
+     En el modo ``character at a time'', la mayor parte del texto tecleado es
+     inmediatamente enviado al host remoto para ser procesado.
+
+     En el modo ``old line by line'', todo el texto se muestra localmente, y
+     (normalmente) sólo las líneas completas se envían al host remoto. El
+     ``local echo character'' (inicialmente ``^E'') puede ser usado para poner
+     y quitar el echo local (esto se usar normalmente para introducir con­
+     traseñas, sin que sean mostradas).
+
+     Si la opción LINEMODE se habilita, o si la conmutación binaria de
+     localchars está en TRUE (el defecto de ``old line by line``; ver más ade­
+     lante), los caracteres quit, intr y flush del usuario son capturados
+     localmente, y son mandados como secuencias del protocolo TELNET al host
+     remoto.  Si se ha habilitado LINEMODE, las teclas de usuario susp y eof
+     también se mandan como secuencias del protocolo TELNET, y quit es enviado
+     como un TELNET ABORT en lugar de un BREAK Hay opciones (ver toggle
+     autoflush y toggle autosynch más adelante) que provocan el borrado de la
+     salida consiguiente al terminal (hasta que el host remoto admita la
+     secuencia TELNET) y borre el input de terminal previo (en el caso de quit
+     y intr).
+
+     Comandos:
+
+     Las siguientes órdenes para telnet están disponibles. Los prefijos únicos
+     se entienden como abreviaturas.
+
+     auth argument ...
+                La orden auth controla la opción TELNET AUTHENTICATE del pro­
+                tocolo. Si telnet se compiló sin autenticación, la orden auth
+                no será soportada.  Los argumentos válidos son los siguientes:
+
+                disable type  Deshabilita la forma especificada de autenti­
+                              cación. Para obtener una lista de los tipos
+                              disponibles, use la orden auth disable ?.
+
+                enable type   Habilita el tipo de autenticación especificada.
+                              Para obtener una lista de los tipos disponibles,
+                              use la orden auth enable ?.
+
+                status        Ofrece el estado de los distintos tipos de aut­
+                              enticación.
+
+                Tenga en cuenta que la actual versión de telnet no soporta
+                autenticación.
+
+     close      Cierra la conexión con el host remoto, si la hubiera, y
+                regresa al modo comando.
+
+     display argument ...
+                Muestra todos, o algunos de los valores de set y toggle (ver
+                más adelante).
+
+     encrypt argument ...
+                La orden encriptar controla las opciones del protocolo TELNET
+                ENCRYPT.  Si telnet se compiló sin encriptación, la orden
+                encrypt no se soportará.
+
+                Los argumentos válidos son los siguientes:
+
+                disable type [input|output]
+                              Deshabilita el tipo especificado de
+                              encriptación. Si usted no especifica el input
+                              (entrada) o el output (salida), la encriptación
+                              de ambos es desactivada. Para obtener una lista
+                              de los tipos disponibles, use ``encrypt disable
+                              ?''
+
+                enable type [input|output]
+                              Habilita el tipo especificado de encriptación.
+                              Si no se indica input o output, se habilita la
+                              encriptación de ambos. Para obtener una lista de
+                              los tipos disponibles, use ``encrypt disable ?''
+
+                input         Equivale a ``encrypt start input''.
+
+                -input        Equivale a ``encrypt stop input''.
+
+                output        Equivale a ``encrypt start output''.
+
+                -output       Equivale a ``encrypt stop output''.
+
+                start [input|output]
+                              Intenta empezar a encriptar. Si no especifica
+                              input o output, comienza la encriptación de
+                              ambos, input y output.
+
+                status        Muestra el estado actual del módulo de
+                              encriptación.
+
+                stop [input|output]
+                              Para la encriptación. Si no especifica input o
+                              output, se pararán ambos modos de encriptación.
+
+                type type     Establece la encriptación por defecto que será
+                              luego usada con  las órdenes ``encrypt start'' o
+                              ``encrypt stop''.
+
+                              Tenga en cuenta que la versión actual de telnet
+                              no soporta encriptación.
+
+                environ arguments...
+                              La orden environ se usa para extender las vari­
+                              ables de entorno a través del link telnet usando
+                              la opción TELNET ENVIRON del protocolo.  Todas
+                              las variables exportadas del shell serán
+                              definidas, pero sólo DISPLAY y PRINTER son man­
+                              dadas por defecto. La variable USER se marca
+                              para su envío si se usan las opciones de la
+                              línea de comandos -a o -l
+
+                              Argumentos válidos para la orden environ:
+
+                              define variable value
+                                          Define la variable variable para que
+                                          tenga el valor value. Cualquier
+                                          variable definida por esta orden
+                                          será automáticamente marcada para su
+                                          propagación (``exported'').  value
+                                          puede incluirse con comillas sencil­
+                                          las o dobles para que tabuladores y
+                                          espacios sean incluidos.
+
+                              undefine variable
+                                          Borra cualquier definición existente
+                                          de variable.
+
+                              export variable
+                                          Marca la variable especificada para
+                                          su propagación al host remoto
+
+                              unexport variable
+                                          No marca la variable para su propa­
+                                          gación al host remoto. Éste puede
+                                          incluso pedir explícitamente vari­
+                                          ables que no se exporten.
+
+                              list        Ofree un listado de las variables de
+                                          entorno actuales.aquellas marcadas
+                                          con un * serán propagadas al host
+                                          remoto. El host remoto puede pedir
+                                          explícitamente el resto.
+
+                              ?           Muestra la información para la orden
+                                          environ.
+
+                logout        Manda la opción TELNET LOGOUT del protocolo al
+                              host remoto.  Esta orden es parecida a la orden
+                              close LOGOUT, no ocurrirá nada. Pero en caso
+                              afirmativo, esta orden provocará el cierre de la
+                              conexión. Si el host remoto también soporta el
+                              concepto de suspender la sesión de un usuario
+                              para más tarde volver a unirse, la orden logout
+                              indica que la sesión debe terminar inmediata­
+                              mente.
+
+                mode type     Type es una de varias opciones, dependiendo del
+                              estado de la sesión.  Telnet pide al host remoto
+                              que entre en el modo requerido. Si el host
+                              remoto afirma poder hacerlo, ese modo tomará
+                              efecto.  -width Ar
+
+                              character   deshabilita la opción TELNET
+                                          LINEMODE, o, si el lado remoto no
+                                          entiende la opción LINEMODE
+                                          entonces, introduzca ``character at
+                                          a time`` mode.
+
+                              line        habilita la opción TELNET LINEMODE,
+                                          o, si el lado remoto no entiende la
+                                          opción LINEMODE, intente introducir
+                                          ``old-line-by-line`` mode.
+
+                              isig (-isig)
+                                          Intenta habilitar(deshabilitar) el
+                                          modo TRAPSIG de la opción LINEMODE.
+                                          Esto requiere que la opción LINEMODE
+                                          esté habilitada.
+
+                              edit (-edit)
+                                          Intenta habilitar (o deshabilitar)
+                                          el modo EDIT de la opción LINEMODE.
+                                          Esto requiere que la opción LINEMODE
+                                          esté habilitada.
+
+                              softtabs (-softtabs)
+                                          Intenta habilitar(deshabilitar) el
+                                          modo SOFT_TAB de la opción LINEMODE.
+                                          Esto requiere que la opción LINEMODE
+                                          esté habilitada.
+
+                              litecho (-litecho)
+                                          Intenta habilitar(deshabilitar) el
+                                          modo LIT_ECHO de la opción LINEMODE.
+                                          Esto requiere que la opción LINEMODE
+                                          esté habilitada.
+
+                              ?           Muestra la información de la orden
+                                          mode.
+
+                open host [[-l] user][- port]
+                              abre una conexión con el host especificado. Si
+                              no se concreta un puerto, telnet tratará de con­
+                              tactar un demonio telnet en el puerto estándar
+                              (23).  La especificación de host puede hacerse
+                              mediante su nombre o su dirección IP. Puede
+                              usarse la opción -l para especificar el nombre
+                              de usuario a pasar al sistema remoto, como la
+                              opción -l de la línea de comandos.
+
+                              Para conectar a puertos distintos del de telnet,
+                              telnet no intenta negociar protocolos de telnet.
+                              Esto posibilita la conexión a servicios que no
+                              soportan el protocolo telnet sin organizar un
+                              lío. la negociación del protocolo puede forzarse
+                              incluyendo un guión antes del número de puerto.
+
+                              Tras establecer la conexión, cualquier orden
+                              asociada al host remoto en el archivo .telnetrc
+                              del usuario será ejecutada.
+
+                              El formato del archivo .telnetrc es el sigu­
+                              iente: Las líneas que comiencen con #, y las
+                              líneas en blanco, son ignoradas. El resto del
+                              archivo deberá consistir en nombres de hosts y
+                              secuencias de órdenes telnet a usar con esos
+                              hosts. Las órdenes deben ir una en cada línea,
+                              identadas con espacios en blanco; las líneas que
+                              comiencen sin un espacio en blanco se interpre­
+                              tarán como nombres de hosts. Al conectar a un
+                              host en concreto, las órdenes asociadas al mismo
+                              se ejecutarán.
+
+                quit          Cierra cualquier conexión abierta y sale.
+                              telnet.  La condición de fin de archivo en el
+                              input, en modo comando, también desencadenará
+                              esta operación.
+
+                send arguments
+                              Envía una o más secuencias de caracteres espe­
+                              ciales del protocolo telnet al host remoto. Se
+                              pueden especificar los siguientes códigos (puede
+                              usarse más de uno en una misma orden):
+
+                              abort   Envía la secuencia TELNET ABORT (Abortar
+                                      los procesos).
+
+                              ao      Envía la secuencia TELNET AO (Abortar el
+                                      Output), que hace que el sistema remoto
+                                      borre todo el output desde el sistema
+                                      remoto al terminal del usuario.
+
+                              ayt     Envía la secuencia TELNET AYT (Are You
+                                      There?, ¿Estás ahí?), a lo que el sis­
+                                      tema remoto puede elegir contestar o no.
+
+                              brk     Envía la secuencia TELNET BRK (Break),
+                                      que puede ser relevante para el sistema
+                                      remoto.
+
+                              ec      Envía la secuencia TELNET EC (Erase
+                                      Character, borrar carácter), que hace
+                                      que el sistema remoto borre el último
+                                      carácter introducido.
+
+                              el      Envía la secuencia TELNET EL (Erase
+                                      Line, borrar línea), que hace que el
+                                      sistema remoto borre la línea que se
+                                      está introduciendo en ese momento.
+
+                              eof     Envía la secuencia TELNET EOF (End Of
+                                      File, fin del archivo).
+
+                              eor     Envía la secuencia TELNET EOR (End of
+                                      Record, fin del Record).
+
+                              escape  Envía el carácter escape actual de
+                                      telnet.
+
+                              ga      Envía la secuencia TELNET GA (Go Ahead,
+                                      adelante), que seguramente no signifique
+                                      nada para el sistema remoto.
+
+                              getstatus
+                                      Si el lado remoto soporta la orden
+                                      TELNET STATUS, getstatus enviará la sub­
+                                      negociación a la petición de que el
+                                      servidor mande su opción actual de
+                                      estado.
+
+                              ip      Envía la secuencia TELNET IP (Interrupt
+                                      Process, interrumpir el proceso), que
+                                      hace que el sistema remoto aborte el
+                                      proceso que se ejecuta en ese momento.
+
+                              nop     Envía la secuencia TELNET NOP (No Opera­
+                                      tion, ninguna operación).
+
+                              susp    Envía la secuencia TELNET SUSP (Suspend
+                                      Process, suspender el proceso).
+
+                              synch   Envía la secuencia TELNET SYNCH.  Esta
+                                      secuencia hace que el sistema remoto
+                                      descarte todo el input que se haya
+                                      tecleado previamente (pero que todavía
+                                      no haya leído).Esta secuencia se envía
+                                      como data urgente TCP (y puede no fun­
+                                      cionar si el sistema remoto es un .Bx
+                                      4.2 --si no funciona, en minúsculas
+                                      puede teclearse ``r'' may be echoed on
+                                      the terminal).
+
+                              do cmd
+
+                              dont cmd
+
+                              will cmd
+
+                              wont cmd
+                                      Envía la secuencia TELNET DO cmd.  cmd
+                                      puede ser tanto un número decimal entre
+                                      0 y 255, un nombre simbólico dado a una
+                                      orden específica de TELNET.  cmd también
+                                      puede ser help o ? para que se muestre
+                                      la ayuda, incluyendo una lista de nom­
+                                      bres simbólicos conocidos.
+
+                              ?       Muestra la ayuda de la orden send.
+
+                set argument value
+
+                unset argument value
+                              La orden set otorgará un valor específico a una
+                              de las variables de telnet o el valor TRUE.  El
+                              valor especial off deshabilita la asociación de
+                              la función a la variable. Equivale al uso de la
+                              orden unset.  La orden unset deshabilita o da el
+                              valor FALSE a cualquiera de las variables que se
+                              especifiquen. Se pueden preguntar los valores de
+                              las variables con la orden display.  Las vari­
+                              ables set o unset (asociadas o no), pero no las
+                              toggled, son enumeradas aquí. Además, cualquier
+                              variable de la orden toggle puede ser explícita­
+                              mente asociada o no.
+
+                              ayt     Si telnet está en modo localchars, o se
+                                      habilita LINEMODE, y se teclea el carác­
+                                      ter de estado, se envía una secuencia
+                                      TELNET AYT al host remoto. El valor ini­
+                                      cial del carácter "Are You There" es el
+                                      carácter de estado del terminal.
+
+                              echo    Este es el valor (inicialmente ``^E'')
+                                      que, en el modo ``line by line'' mode,
+                                      cambia entre el echo local de los carac­
+                                      teres introducidos (para proceso nor­
+                                      mal), y la supresión del echo de los
+                                      caracteres introducidos (digamos que
+                                      para introducir una contraseña).
+
+                              eof     Si telnet opera en modo LINEMODE o ``old
+                                      line by line'' mode, introduciendo este
+                                      carácter como el primero de la línea
+                                      hará que este carácter se envíe al sis­
+                                      tema remoto. El valor inicial del carác­
+                                      ter eof será tomado como propio del ter­
+                                      minal.  eof character.
+
+                              erase   Si telnet está en modo localchars (ver
+                                      toggle localchars más adelante), y
+                                      telnet opera en modo ``character at a
+                                      time'' mode, al ser este carácter
+                                      tecleado, una secuencia TELNET EC (ver
+                                      send ec más arriba) se envía al sistema
+                                      remoto.  El valor inicial del carácter
+                                      de borrado se toma como el carácter
+                                      erase del terminal.
+
+                              escape  Este es el carácter escape de telnet
+                                      (initially ``^['') que hace que telnet
+                                      entre en modo comando (si está conectado
+                                      a un sistema remoto).
+
+                              flushoutput
+                                      Si telnet está en modo localchars (ver
+                                      toggle localchars más adelante) y el
+                                      carácter flushoutput es introducido, una
+                                      secuencia TELNET AO (ver send ao más
+                                      arriba) se envía al host remoto.  El
+                                      valor inicial del carácter de flush
+                                      (borrado) se toma como el propio del
+                                      terminal.
+
+                              forw1
+
+                              forw2   Si TELNET opera en modo LINEMODE, estos
+                                      son los caracteres que al ser tecleados
+                                      provocan que las líneas parciales sean
+                                      enviadas al sistema remoto. El valor
+                                      inicial de los caracteres enviados se
+                                      toma de los caracteres eol y eol2 del
+                                      terminal.
+
+                              interrupt
+                                      Si telnet está en modo localchars (ver
+                                      toggle localchars más adelante) y se
+                                      teclea el carácter interrupt, una
+                                      secuencia TELNET IP (ver send ip más
+                                      arriba) es enviada al host remoto.  El
+                                      valor inicial del carácter interrupt se
+                                      toma como el propio del terminal.
+
+                              kill    Si telnet está en modo localchars (ver
+                                      toggle localchars más abajo), and si
+                                      telnet opera en modo  ``character at a
+                                      time'' mode, cuando se teclea este
+                                      carácter, se envía una secuencia TELNET
+                                      EL (ver send el más arriba) al host
+                                      remoto.  El valor inicial del carácter
+                                      kill se toma como el propio del termi­
+                                      nal.
+
+                              lnext   Si telnet opera en modo LINEMODE o en
+                                      modo ``old line by line`` mode, este
+                                      carácter se toma como el lnext propio
+                                      del terminal.  El valor inicial del
+                                      carácter lnext se toma como el propio
+                                      del terminal.
+
+                              quit    Si telnet está en modo localchars (ver
+                                      toggle localchars más adelante) y se
+                                      teclea el carácter quit, una secuencia
+                                      TELNET BRK (ver send brk más arriba) se
+                                      envía al host remoto.  El valor inicial
+                                      del carácter quit se toma como el propio
+                                      del terminal.
+
+                              reprint
+                                      Si telnet opera en modo LINEMODE o en
+                                      modo ``old line by line`` mode, este
+                                      carácter se toma como el propio carácter
+                                      reprint del terminal.  El valor inicial
+                                      del carácter reprint se toma como el
+                                      propio del terminal
+
+                              rlogin  Este es el carácter escape del modo
+                                      rlogin.  Al establecerlo se habilita el
+                                      modo rlogin, como con la opción r de la
+                                      línea de comandos (q.v.)
+
+                              start   Si la opción TELNET TOGGLE-FLOW-CONTROL
+                                      está habilitada, este carácter se toma
+                                      como el propio carácter start del termi­
+                                      nal.  El valor inicial del carácter kill
+                                      se toma como el propio start del termi­
+                                      nal.
+
+                              stop    Si la opción TELNET TOGGLE-FLOW-CONTROL
+                                      ha sido habilitada, este carácter se
+                                      toma como el carácter stop del terminal.
+                                      El valor inicial del carácter kill se
+                                      toma como el propio stop del terminal
+
+                              sus     Si telnet está en modo localchars, o se
+                                      ha habilitado LINEMODE, y se teclea el
+                                      carácter suspend, una secuencia TELNET
+                                      SUSP (ver send susp más arriba) es man­
+                                      dada al host remoto.  El valor inicial
+                                      del carácter suspend se toma como el
+                                      propio el terminal
+
+                              tracefile
+                                      Este es el archivo en que se escribe la
+                                      salida producida por netdata o option
+                                      cuando tracing sea TRUE.  Si fuera
+                                      ``-'', la información obtenida de trac­
+                                      ing se escribirá en la salida estándar
+                                      por defecto.
+
+                              worderase
+                                      Si telnet opera en LINEMODE o en modo
+                                      ``old line by line`` mode, este carácter
+                                      sera tomado como el carácter worderase
+                                      del terminal.  El valor inicial del
+                                      carácter worderase (borrado de palabra)
+                                      se toma como el propio del terminal
+
+                              ?       Muestra las ordenes legales set (unset).
+
+                slc state     La orden slc (Set Local Characters, establecer
+                              los caracteres locales) se usa para establecer o
+                              cambiar los caracteres especiales cuando la
+                              opción TELNET LINEMODE está habilitada. Los car­
+                              acteres especiales que son asociados a las
+                              secuencias de órdenes TELNET (como ip o quit) o
+                              caracteres de edición de línea (como erase y
+                              kill).  Por defecto, los caracteres especiales
+                              locales son exportados.
+
+                              check       Verifica la configuración actual de
+                                          los caracteres especiales actuales.
+                                          Se pide al lado remoto que envíe
+                                          toda la configuración de los carac­
+                                          teres especiales, y si hubiera dis­
+                                          crepancias con el lado local, el
+                                          lado local cambiará a los valores
+                                          remotos.
+
+                              export      Cambia los defectos locales de los
+                                          caracteres especiales. Los valores
+                                          por defecto de los caracteres serán
+                                          los del terminal en el momento en
+                                          que se inició telnet.
+
+                              import      Cambia los valores remotos por
+                                          defecto de los caracteres espe­
+                                          ciales.  Los caracteres remotos por
+                                          defecto son aquellos del sistema
+                                          remoto en el momento en que se
+                                          estableció la conexión TELNET
+
+                              ?           Muestra información de ayuda para la
+                                          orden slc.
+
+                status        Muestra el estado actual de telnet.  Incluye el
+                              nombre del host remoto, si lo hubiera, a la vez
+                              que el modo actual.
+
+                toggle arguments ...
+                              Cambia (entre los valores TRUE y FALSE) varias
+                              opciones que controlan la forma en que telnet
+                              responde a los sucesos.  A estas opciones se les
+                              puede dar explícitamente los valores TRUE or
+                              FALSE usando las órdenes set y unset.  Se puede
+                              activar más de una opción a la vez. El estado de
+                              estas opciones puede ser examinado con la orden
+                              display.  Son opciones válidas:
+
+                              authdebug     Activa la depuración del código de
+                                            autenticación. Esta opción sólo
+                                            existe si el soporte de autentifi­
+                                            cación está habilitado.
+
+                              autoflush     Si autoflush y localchars están a
+                                            la vez activadas con TRUE, cuando
+                                            los caracteres ao, o quit sean
+                                            reconocidos (y transformados en
+                                            secuencias de TELNET; vea set
+                                            arriba para mayores detalles),
+                                            telnet rehusará mostrar data en la
+                                            terminal del usuario hasta que el
+                                            sistema remoto se dé cuenta de que
+                                            ha procesado esas secuencias de
+                                            TELNET (por medio de una opción
+                                            TELNET TIMING MARK ). El valor
+                                            inicial de este conmutador es TRUE
+                                            si el usuario del terminal no ha
+                                            efectuado un "stty noflsh", y es,
+                                            por el contrario FALSE (vea
+                                            stty(1)).
+
+                              autodecrypt   Cuando se negocia la opción TELNET
+                                            ENCRYPT, por defecto la
+                                            encriptación actual del flujo de
+                                            datos no comienza automáticamente.
+                                            La orden autoencrypt (autodecrypt)
+                                            establece que la encriptación del
+                                            output (o input) se habilite lo
+                                            antes posible.
+
+                                            Tenga en cuenta que esta opción
+                                            sólo existe si el soporte de
+                                            encriptación está habilitado.
+
+                              autologin     Si el lado remoto soporta la
+                                            opción TELNET AUTHENTICATION,
+                                            telnet intentará usarla para efec­
+                                            tuar una autentificación
+                                            automática. Si la opción TELNET
+                                            AUTHENTICATION no es soportada, el
+                                            login del usuario es transmitido
+                                            usando la opción TELNET ENVIRON.
+                                            Habilitar esta opción equivale a
+                                            darle la opción a a la orden open
+                                            o a hacerlo en la línea de coman­
+                                            dos.
+
+                              autosynch     Si autosynch y localchars tienen
+                                            como valor TRUE, cuando se
+                                            escriban los caracteres intr o
+                                            quit (vea set más arriba para
+                                            obtener una descripción de los
+                                            caracteres intr y quit ), la
+                                            secuencia telnet resultante que se
+                                            envía es seguida de la secuencia
+                                            TELNET SYNCH.  Este procedimiento
+                                            debería provocar que el sistema
+                                            remoto comience a desechar todo lo
+                                            que se haya tecleado previamente
+                                            hasta que ambas secuencias de
+                                            telnet hayan sido leídas y se haya
+                                            actuado en consecuencia.  El valor
+                                            inicial de este conmutador es
+                                            FALSE.
+
+                              binary        Habilita o deshabilita la opción
+                                            TELNET BINARY tanto para el output
+                                            como para el input.
+
+                              inbinary      Habilita o deshabilita la opción
+                                            TELNET BINARY para el input.
+
+                              outbinary     Habilita o deshabilita la opción
+                                            TELNET BINARY para el output.
+
+                              crlf          Si su valor es TRUE, los retornos
+                                            de carro se enviarán como
+                                            <CR><LF>.  Si su valor es FALSE,
+                                            los retornos de carro se enviarán
+                                            como <CR><NUL>.  El valor inicial
+                                            de este conmutador es FALSE.
+
+                              crmod         Conmutador del retorno de carro.
+                                            Cuando está habilitado, la mayoría
+                                            de los retornos de carro recibidos
+                                            del host i remoto serán transfor­
+                                            mados a un retorno de carro
+                                            seguido de una nueva línea.  Este
+                                            modo no afecta a los caracteres
+                                            escritos por el usuario, sólo a
+                                            aquellos recibidos del host
+                                            remoto. Esto no resulta muy útil a
+                                            no ser que el host remoto sólo
+                                            envíe retornos de carro, y nunca
+                                            envíe líneas nuevas.  El valor
+                                            inicial de este conmutador es
+                                            FALSE.
+
+                              debug         Conmuta el nivel de depuración
+                                            (debugging) del conector (que sólo
+                                            resulta útil para el super
+                                            usuario).  El valor inicial de
+                                            este conmutador es FALSE.
+
+                              encdebug      Habilita la información de depu­
+                                            ración (debugging informationi)
+                                            para el código de encriptación.
+                                            Tenga en cuenta que esta opción
+                                            sólo existe si el soporte de
+                                            encriptación está habilitado.
+
+                              localchars    Si su valor es TRUE, los carac­
+                                            teres flush, interrupt, quit,
+                                            erase, y kilL (vea set más arriba)
+                                            son reconocidos localmente, y
+                                            (esperemos que) transformados en
+                                            secuencias de control TELNET
+                                            apropiadas (respectivamente en ao,
+                                            ip, brk, ec, y el; vea send más
+                                            arriba).  El valor inicial de este
+                                            conmutador es TRUE en ``old line
+                                            by line'' mode, y FALSE en ``char­
+                                            acter at a time'' mode.  Cuando la
+                                            opción LINEMODE está habilitada,
+                                            el valor de localchars es igno­
+                                            rada, y se asume que siempre ten­
+                                            drá como valor TRUE.  Si LINEMODE
+                                            ha sido alguna vez habilitado,
+                                            quit es enviado como un abort, y
+                                            eof y son enviados como eof y
+                                            susp, vea send más arriba).
+
+                              netdata       Conmuta el valor de todos los
+                                            datos de la red (en formato hex­
+                                            adecimal).  El valor inicial de
+                                            este conmutador es FALSE.
+
+                              options       Conmuta el valor de algunas
+                                            opciones internas del procesado de
+                                            protocolo de telnet El valor ini­
+                                            cial de este conmutador es FALSE.
+
+                              prettydump    Cuando el conmutador de netdata
+                                            está habilitado, si también lo
+                                            está prettydump el output de la
+                                            orden netdata adquirirá un formato
+                                            más legible para el usuario.
+                                            Habrá espacios entre los carac­
+                                            teres en el output, y el comienzo
+                                            de las secuencias de escape de
+                                            telnet serán precedidas de un '*'
+                                            para ayudar a localizarlas.
+
+                              skiprc        Cuando el conmutador skiprc toma
+                                            el valor TRUE, telnet no leerá el
+                                            archivo .telnetrc.  El valor ini­
+                                            cial de este conmutador es FALSE.
+
+                              termdata      Conmuta la exhibición de toda la
+                                            data de terminal (en formato hex­
+                                            adecimal).  El valor inicial de
+                                            este conmutador es FALSE.
+
+                              verbose_encrypt
+                                            Si el conmutador verbose_encrypt
+                                            toma el valor TRUE, TELNET muestra
+                                            un mensaje cada vez que la
+                                            encriptación es habilitada o
+                                            deshabilitada.  El valor inicial
+                                            de este conmutador es FALSE. Esta
+                                            opción sólo existe si el soporte
+                                            de encriptación está habilitado.
+
+                              ?             Muestra las órdenes legales de
+                                            toggle.
+
+                z             Postpone telnet.  Esta orden sólo funciona si el
+                              usuario utiliza la orden csh(1).
+
+                ! [file ...]  Ejecuta un único programa en una subshell en el
+                              sistema local. Si se omite la orden, se invocará
+                              una subshell interactiva.
+
+                ? [command]   Invoca la ayuda. Sin parámetros, telnet muestra
+                              un resumen de la ayuda.  Si se especifica una
+                              orden, telnet muestra la información de la ayuda
+                              para esa única orden.
+
+ENTORNO
+     Telnet usa como mínimo las variables de entorno HOME, SHELL, DISPLAY, y
+     TERM.  Se pueden propagar o transmitir otras variables de entorno por
+     medio de la opción TELNET ENVIRON.
+
+FICHEROS
+     ~/.telnetrc  valores personalizados por el usuario para el inicio de una
+                  sesión telnet.
+
+HISTORIA
+     La orden Telnet apareció en 4.2BSD.
+
+NOTAS
+     en algunos sistemas remotos, el echo debe ser deshabilitado manualmente
+     en modo ``old line by line'' .
+
+     En modo  ``old line by line'' o LINEMODE el carácter eof de los termi­
+     nales sólo es reconocido (y enviado al sistema remoto) cuando es el
+     primer carácter de una línea.
+
+FALLOS (BUGS)
+     El código fuente no resulta comprensible.
+
+     Traducción al español por Amaya M. Rodrigo Sastre (barbwired@big­
+     foot.com).  Agradeceré cualquier sugerencia o comentario con el fin de
+     mejorar la presente traducción.
+
+Linux 2.0                      29 diciembre 1996                     Linux 2.0

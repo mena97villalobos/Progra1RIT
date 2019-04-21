@@ -1,0 +1,87 @@
+NANOSLEEP(2)     Manual del Programador de Linux     NANOSLEEP(2)
+
+
+
+NOMBRE
+       nanosleep  -  hace  una  pausa  en la ejecución durante un
+       tiempo especificado
+
+SINOPSIS
+       #include <time.h>
+
+       int nanosleep(const struct timespec *req, struct  timespec
+       *rem);
+
+DESCRIPCIÓN
+       nanosleep  retarda  la  ejecución  del programa durante al
+       menos el tiempo especificado en *req.   La  función  puede
+       regresar  antes  si se ha mandado una señal al proceso. En
+       este caso, devuelve -1, pone errno a EINTR, y  escribe  el
+       tiempo  restante en la estructura apuntada por rem a menos
+       que rem sea NULL.  El valor de *rem puede  emplearse  para
+       llamar a nanosleep de nuevo y completar la pausa especifi­
+       cada.
+
+       La estructura timespec se emplea para especificar interva­
+       los  de tiempo con precisión de nanosegundo. Se especifica
+       en <time.h> y tiene la forma
+
+              struct timespec
+              {
+                      time_t  tv_sec;         /* segundos */
+                      long    tv_nsec;        /* nanosegundos */
+              };
+
+       El valor del campo de nanosegundos debe estar en el  rango
+       de 0 a 999 999 999.
+
+       Comparado  con  sleep(3)  y  usleep(3), nanosleep tiene la
+       ventaja de no afectar a ninguna  señal,  está  normalizado
+       por  POSIX,  proporciona  una  resolución del temporizador
+       mayor, y permite que un `sleep' que ha  sido  interrumpido
+       por una señal continúe más fácilmente.
+
+ERRORES
+       En  caso  de  un  error o excepción, la llamada al sistema
+       nanosleep devuelve -1 en vez de 0 y pone en errno  uno  de
+       los valores siguientes:
+
+       EINTR   La  pausa  ha  sido  interrumpida por una señal no
+               bloqueante que ha  sido  mandada  al  proceso.  El
+               tiempo  restante  de sueño ha sido escrito en *rem
+               de modo que el proceso pueda llamar fácilmente  de
+               nuevo a nanosleep para continuar así con la pausa.
+
+       EINVAL  El valor en el campo tv_nsec no estaba en el rango
+               de  0  a  999 999 999 ó tv_sec era un número nega­
+               tivo.
+
+FALLOS
+       La implementación actual de nanosleep está  basada  en  el
+       mecanismo  normal  del  temporizador del núcleo, que tiene
+       una resolución de 1/HZ s (i.e., 10 ms en Linux/i386 y 1 ms
+       en  Linux/Alpha).   Por lo tanto, nanosleep hace una pausa
+       siempre de al menos el tiempo especificado,  empero  puede
+       tardar  hasta  10 ms más hasta que el proceso sea de nuevo
+       ejecutable. Por la misma razón, el valor devuelto en  *rem
+       en  el  caso de una señal enviada, se redondea normalmente
+       al siguiente múltiplo más grande de 1/HZ s.
+
+       Como algunas aplicaciones requieren pausas mucho más  pre­
+       cisas  (p. ej., para controlar algún hardware que requiere
+       respuestas en tiempo real), nanosleep también es capaz  de
+       pausas  cortas  de alta precisión. Si el proceso se plani­
+       fica bajo una política de tiempo real  como  SCHED_FIFO  o
+       SCHED_RR,  entonces se harán pausas de hasta 2 ms como las
+       esperas ocupadas con precisión de microsegundo.
+
+CONFORME A
+       POSIX.1b (antes, POSIX.4).
+
+VÉASE TAMBIÉN
+       sleep(3), usleep(3), sched_setscheduler(2),  y  timer_cre­
+       ate(2).
+
+
+
+Linux 2.0.30              10 Abril 1996              NANOSLEEP(2)

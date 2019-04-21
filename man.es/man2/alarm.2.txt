@@ -1,0 +1,43 @@
+ALARM(2)         Manual del Programador de Linux         ALARM(2)
+
+
+
+NOMBRE
+       alarm - activa una alarma para el envio de una señal
+
+SINOPSIS
+       #include <unistd.h>
+
+       unsigned int alarm(unsigned int sec);
+
+DESCRIPCIÓN
+       alarm se encarga de enviar una señal SIGALRM al proceso en
+       sec segundos.
+
+       Si sec es cero, no se prepara una  nueva  alarma.  Además,
+       cualquier alarm previamente preparada se cancela.
+
+VALOR DEVUELTO
+       alarm devuelve el número de segundos que quedaban para que
+       cualquier alarma previa se disparase, o cero si  no  había
+       ninguna alarma pendiente.
+
+NOTAS
+       alarm  y   setitimer comparten el mismo cronómetro; el uso
+       de una interferirá con el de la otra.
+
+       Los retardos en la  planificación  pueden,  como  siempre,
+       provocar el retardo de la ejecución del proceso una canti­
+       dad arbitraria de tiempo.
+
+CONFORME A
+       SVID, AT&T, POSIX, X/OPEN, BSD 4.3
+
+VÉASE TAMBIÉN
+       setitimer(2),  signal(2),  sigaction(2),  gettimeofday(2),
+       select(2), pause(2), sleep(3)
+
+
+
+
+Linux                     30 Junio 1996                  ALARM(2)

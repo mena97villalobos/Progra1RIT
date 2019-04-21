@@ -1,0 +1,37 @@
+NEWGRP(1)        Manual del Programador de Linux        NEWGRP(1)
+
+
+
+NOMBRE
+       newgrp - ingresar con un nuevo grupo
+
+SINOPSIS
+       newgrp [ group ]
+
+DESCRIPCIÓN
+       Newgrp  cambia la identificación de grupo de su invocador,
+       análogamente a login(1).  La misma  persona  queda  ingre­
+       sada,  y  el  directorio actual no es modificado, pero los
+       cálculos de los permisos de acceso a los ficheros se real­
+       izan con respecto al nuevo ID de grupo.
+
+       Si  no se espcifica un grupo, el GID es cambiado al GID de
+       ingreso.
+
+
+FICHEROS
+       /etc/group
+       /etc/passwd
+
+
+VÉASE TAMBIÉN
+       login(1), group(5)
+
+
+AUTOR
+       Originalmente por Michael  Haardt.  Actualmente  mantenido
+       por Peter Orbaek (poe@daimi.aau.dk).
+
+
+
+Linux 1.2                 9 Octubre 1993                NEWGRP(1)

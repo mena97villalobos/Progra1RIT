@@ -1,0 +1,269 @@
+STDIO(3)              Manual del programador             STDIO(3)
+
+
+
+NOMBRE
+       stdio  -  funciones de biblioteca de entrada/salida están­
+       dar.
+
+SINOPSIS
+       #include <stdio.h>
+
+       FILE *stdin;
+       FILE *stdout;
+       FILE *stderr;
+
+DESCRIPCIÓN
+       La biblioteca de E/S estándar proporciona una interface de
+       corriente (stream) utilizando un sistema de buffers (memo­
+       ria intermedia) simple y eficiente. La entrada y la salida
+       se mapean en corrientes logicas de datos y las caracteris­
+       ticas fisicas de E/S permanecen ocultas  para  el  progra­
+       mador.  Las  funciones  y  las macros se muestran mas ade­
+       lante; para mas información se puede recurrir a las  pagi­
+       nas del manual individuales para cada una de ellas.
+
+       Una  corriente  se  asocia con un archivo externo (el cual
+       debe estar en un dispositivo físico) abriendo un  archivo,
+       el  cual  se  supone que debe ser creado. Crear un archivo
+       existente hara  que  dicho  archivo  quede  vacio.  Si  un
+       archivo soporta posicionamiento (como un archivo en disco,
+       y en contraposición a lo que ocurre con un archivo de ter­
+       minal) entonces un marcador de posición asociado a la cor­
+       riente se situara al principio del archivo (byte cero),  a
+       no ser que el archivo sea abierto en modo añadir (append).
+       Si se utiliza esta última modalidad de apertura,  el  mar­
+       cador  de  posición  será situado al final del archivo. el
+       indicador de posicion se mantiene en  sucesivas  lecturas,
+       escrituras  y  reposicionamientos.  Todas  las entradas se
+       hacen como si los caracteres hubieran sido leidos mediante
+       sucesivas llamadas a la función fgetc(3) todas las salidas
+       se producen como si todos  los  caracteres  fueran  leidos
+       mediante llamadas sucesivas a la función fputc(3)
+
+       Un  archivo se desentiende de una corriente cerrando dicho
+       archivo. Las corrientes de salida son descargadas (toda el
+       contenido  de  la memoria intermedia que no fue escrita al
+       archivo, se transmite en ese momento) antes de que la cor­
+       riente  se desentienda del archivo. El valor de un puntero
+       que apunta a un  objeto  FILE  es  indeterminado  tras  el
+       cierre del archivo.
+
+       Un  archivo  sera  reabierto repitidamente, por la misma u
+       otras ejecuciones de un programa, y sus  contenidos  seran
+       leidos  o modificados (si se puede reposicionar al princi­
+       pio). Si la función main() retorna a quien llamo  al  pro­
+       grama,  o se utiliza la función exit(3) todos los archivos
+       abiertos seran cerrados (consecuentemente todos las corri­
+       entes  de  salida  seran descargadas sobre sus respectivos
+       ficheros) antes de que se produzca el cierre efectivo  del
+       programa.Otras   formas   de  terminar  un  programa  como
+       abort(3) no se preocupan de cerrar los archivos apropiada­
+       mente.
+
+       Cuando  el  programa comienza, tres corrientes de texto se
+       inician por defecto y no necesitan ser abiertas explicita­
+       mente  --  entrada estándar (para la lectura de la entrada
+       convencional), -- salida estándar (para la escritura de la
+       salida  convencional) -- salida de error estándar (para la
+       salida de diagnósticos).  Estas  corrientes  se  abrevian,
+       respectivamente,  como  stdin,stdout  y  stderr.   Una vez
+       abierta, la corriente de errores estándar no utiliza memo­
+       ria  intermedia  totalmente;  las  corrientes  estándar de
+       entrada y salida lo haran solamente  en  el  caso  de  que
+       dichas  corrientes  no  hagan  referencia a un dispositivo
+       interactivo.
+
+       Las corrientes de salida que hacen referencia  a  disposi­
+       tivos de tipo terminal, siempre utilizan memorias interme­
+       dias lineales por defecto; durante la  salida  hacia  cada
+       corriente  se  escribe  automaticamente  una  corriente de
+       entrada que hace referencia al  dispositivo  terminal  que
+       lee.  En  los casos donde se requieren una enorme cantidad
+       de calculos, despues de imprimir parte de una linea en  un
+       terminal  de salida, es necesario efectuar una descarga de
+       la memoria intermedia en la corriente de  salida  estándar
+       mediante  fflush(3) antes de dejarlo y comenzar los calcu­
+       los para que la salida aparezca.
+
+       La libreria stdio es parte de la libreria libc y las ruti­
+       nas  se  cargan  automaticamente segun son necesitadas por
+       los compiladores cc(1) y pc(1).  Las secciones SINOPSIS de
+       las  siguientes paginas del manual indican que archivos de
+       cabecera (include) deben ser utilizados, en  forma  de  la
+       declaración de la función y mostrando que variables exter­
+       nas resultan de interes.
+
+       Las siguientes están definidas como macros; estos  nombres
+       no deben ser reutilizados sin eliminar primero sus defini­
+       ciones  actuales  mediante  #undef:  BUFSIZ,  EOF,   FILE­
+       NAME_MAX, FOPEN_MAX, L_cuserid, L_ctermid, L_tmpnam, NULL,
+       SEEK_END, SEEK_SET, SEE_CUR, TMP_MAX, clearerr, feof, fer­
+       ror, fileno, fropen, fwopen, getc, getchar, putc, putchar,
+       stderr, stdin, stdout.  Existén versiones como función  de
+       las  macros feof, ferror, clearerr, fileno, getc, getchar,
+       putc, y putchar y serán utilizadas si las definiciones  de
+       las macros han sido eliminadas explicitamente.
+
+VEA TAMBIÉN
+       open(2), close(2), read(2), write(2), stdout(3)
+
+ERRORES
+       Las  funciones  estándar  para  el  tratamiento de memoria
+       intermedia no interactuan bien con algunas otras librerias
+       y  funciones  de sistema, especialmente con vfork y abort.
+       No deberia darse el caso bajo Linux.
+
+CONFORME A
+       La biblioteca stdio cumple con  ANSI  C3.159-1989  (``ANSI
+       C'').
+
+LISTA DE FUNCIONES
+       Función
+              Descripción
+
+       clearerr
+              comprueba y reinicia el estado de la corriente
+
+       fclose cierra una corriente
+
+       fdopen funciones de apertura de corriente
+
+       feof   comprueba y reinicia el estado de la corriente
+
+       ferror comprueba y reinicia el estado de la corriente
+
+       fflush descarga  la  memoria  intermedia  de una corriente
+              sobre el archivo
+
+       fgetc  recoge el próximo  caracter  de  una  corriente  de
+              entrada
+
+       fgetline
+              recoge una línea de una corriente de entrada
+
+       fgetpos
+              reposición en una corriente
+
+       fgets  recoge una linea de una corriente de entrada
+
+       fileno comprueba y reinicia el estado de la corriente
+
+       fopen  funciones de apertura de corriente
+
+       fprintf
+              conversión para salida formateada.
+
+       fpurge descarga  el  buffer  de  una  corriente  sobre  el
+              archivo
+
+       fputc  envia un caracter o una palabra a una corriente
+
+       fputs  envia una linea a una corriente
+
+       fread  entrada/salida binaria
+
+       freopen
+              funciones de apertura de corriente
+
+       fropen abre una corriente
+
+       fscanf conversión para entrada con formato
+
+       fseek  reposiciona una corriente
+
+       fsetpos
+              reposiciona una corriente
+
+       ftell  reposiciona una corriente
+
+       fwrite entrada/salida binaria
+
+       getc   recoge el próximo caracter o palabra de una  corri­
+              ente de entrada
+
+       getchar
+              recoge  el próximo caracter o palabra de una corri­
+              ente de entrada
+
+       gets   recoge una línea de una corriente
+
+       getw   recoge el próximo caracter o palabra de una  corri­
+              ente de entrada
+
+       mktemp crea un nombre de archivo temporal (único)
+
+       perror mensajes de error del sistema
+
+       printf conversión para salida formateada
+
+       putc   envia un caracter o palabra a una corriente
+
+       putchar
+              envía un caracter o palabra a una corriente
+
+       puts   envía una línea a una corriente
+
+       putw   envía un caracter o palabra a una corriente
+
+       remove elimina una entrada de directorio
+
+       rewind reposiciona una corriente
+
+       scanf  conversión para entrada formateada
+
+       setbuf operaciones de corriente con memoria intermedia
+
+       setbuffer
+              operaciones de corriente con memoria intermedia
+
+       setlinebuf
+              operaciones de corriente con memoria intermedia
+
+       setvbuf
+              operaciones de corriente con memoria intermedia
+
+       sprintf
+              conversión para salida formateada
+
+       sscanf conversión para entrada formateada
+
+       strerror
+              mensajes de error del sistema
+
+       sys_errlist
+              mensajes de error del sistema
+
+       sys_nerr
+              mensajes de error del sistema
+
+       tempnam
+              rutinas para archivado temporal
+
+       tmpfile
+              rutinas para archivado temporal
+
+       tmpnam rutinas para archivado temporal
+
+       ungetc ignora un caracter de una corriente de entrada
+
+       vfprintf
+              conversión para salida formateada
+
+       vfscanf
+              conversión para entrada formateada
+
+       vprintf
+              conversión para salida formateada
+
+       vscanf conversión para entrada formateada
+
+       vsprintf
+              conversión para salida formateada
+
+       vsscanf
+              conversión para entrada formateada
+
+
+
+BSD MANPAGE             29 Noviembre 1993                STDIO(3)

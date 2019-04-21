@@ -1,0 +1,38 @@
+UPTIME(1)        Manual del Programador de Linux        UPTIME(1)
+
+
+
+NOMBRE
+       uptime  - Indica el tiempo que lleva el sistema encendido.
+
+SINOPSIS
+       uptime
+       uptime [-V]
+
+DESCRIPCIÓN
+       uptime muestra una linea con la siguiente  informacion  La
+       hora  actual, cuanto tiempo lleva en marcha el sistema, el
+       numero de usuarios actualmente conectados al sistema, y la
+       carga  media del sistema en los ultimos 1, 5 y 15 minutos.
+
+       Esta es la  misma  informacion  que  se  encuentra  en  la
+       cabecera de la linea mostrada por w(1).
+
+FICHEROS
+       /var/run/utmp  informacion  acerca  de  quien esta actual­
+       mente conectado al sistema
+       /proc     informacion de los procesos
+
+AUTORES
+       uptime  ha  sido  escrito  por  Larry  Greenfield  <green­
+       fie@gauss.rutgers.edu> y Michael K. Johnson <johnsonm@sun­
+       site.unc.edu>.
+
+       Por favor, enviar fallos a  <procps-bugs@redhat.com>
+
+VÉASE TAMBIÉN
+       ps(1), top(1), utmp(5), w(1)
+
+
+
+Cohesive Systems          26 Enero 1993                 UPTIME(1)

@@ -1,0 +1,175 @@
+UNICODE(7)       Manual del Programador de Linux       UNICODE(7)
+
+
+
+NOMBRE
+       Unicode - superconjunto unificado de caracteres de 16-bit
+
+DESCRIPCIÓN
+       El  estándar internacional ISO 10646 define el conjunto de
+       caracteres UCS (Universal Character Set - Conjunto de Car­
+       acteres  Universal).  UCS contiene todos los caracteres de
+       todos los demás estándares  de  conjuntos  de  caracteres.
+       También  garantiza  una  compatibilidad  de  ida  y vuelta
+       (round-trip), es decir, se pueden construir tablas de con­
+       versión  de tal forma que no se pierda ninguna información
+       cuando una cadena se convierta desde cualquier otra  codi­
+       ficación a UCS y viceversa.
+
+       UCS contiene el conjunto de los caracteres necesarios para
+       representar  casi  todos  los  lenguajes  conocidos.  Esto
+       incluye,  además  de  los numerosos lenguajes que usan una
+       extensión de la escritura Latina, los siguientes alfabetos
+       y  lenguajes:  Griego,  Cirílico,  Hebreo, Árabe, Armenio,
+       Gregoriano, Japonés, Chino, Hiragana,  Katakana,  Coreano,
+       Hanguliano,  Devangari, Bengalí, Gurmuki, Gujarati, Oriya,
+       Tamil, Telugu, Kannada, Malayam,  Tai,  Lao,  Bopomofo,  y
+       algunos  otros.  Hay trabajo en curso para la inclusión de
+       alfabetos tales  como  Tibetano,  Jemer,  Rúnico,  Etíope,
+       Jeroglíficos,  varios  lenguajes  indo-europeos,  y muchos
+       otros. Para muchos  de  estos  últimos  alfabetos,  en  el
+       momento  de  la  publicación  del estándar en 1993, aún no
+       resultaba claro cómo codificarlos de la mejor manera.
+
+       Además de los caracteres necesarios para estas escrituras,
+       también  se han incluido un enorme número de símbolos grá­
+       ficos, tipográficos, matemáticos y científicos,  como  los
+       proporcionados  por  TeX,  PostScript,  MS-DOS, Macintosh,
+       Videotext, OCR, y muchos sistemas de procesamiento de tex­
+       tos,  además  de códigos especiales que garanticen la com­
+       patibilidad de ida y vuelta con todos los demás estándares
+       existentes de juegos de caracteres.
+
+       El  estándar UCS (ISO 10646) describe una arquitectura del
+       conjunto de caracteres de 31 bits. No obstante, hoy en dia
+       sólo a los primeros 65534 códigos (desde 0x0000 a 0xfffd),
+       que se denominan BMP (Basic  Multilingual  Plane  -  Plano
+       Multilingüe  Básico), se les han asignado caracteres, y se
+       espera que sólo caracteres muy exóticos (p.ej.  jeroglífi­
+       cos)  de  uso  científico  especial obtengan alguna vez un
+       lugar fuera de este BMP de 16 bits.
+
+       Los caracteres UCS 0x0000 a 0x007f son idénticos a los del
+       conjunto  de  caracteres US-ASCII clásico y los caracteres
+       en el rango de 0x0000 a 0x00ff son  idénticos  a  los  del
+       conjunto de caracteres ISO 8859-1 Latin-1
+
+CARACTERES DE COMBINACIÓN
+       Algunos  códigos en UCS han sido asignados como caracteres
+       de combinación.  Éstos  son  similares  a  las  teclas  de
+       acento  en una máquina de escribir.  Un carácter de combi­
+       nación sólo añade un acento al carácter previo.  Los  car­
+       acteres  acentuados más importantes tienen códigos propios
+       en UCS, sin embargo, el mecanismo de combinación de carac­
+       teres  permite añadir acentos y otras marcas diacríticas a
+       cualquier carácter. Los caracteres de combinación  siempre
+       siguen  al  carácter  al  cual  modifican. Por ejemplo, en
+       alemán el carácter Umlaut-A ("A mayúscula  con  diéresis")
+       puede representarse por el ya compuesto código UCS 0x00c4,
+       o alternativamente como la combinación de  una  "A  mayús­
+       cula"  normal  seguida  por una "diéresis de combinación":
+       0x0041 0x0308.
+
+NIVELES DE IMPLEMENTACIÓN
+       Puesto que no se espera que todos  los  sistemas  soporten
+       mecanismos  avanzados  tales como los caracteres de combi­
+       nación, el ISO 10646 especifica los siguientes tres grados
+       de implementación del UCS:
+
+       Nivel 1  Los caracteres de combinación y caracteres Hangul
+                Jamo (una codificación especial del coreano,  más
+                compleja, en la que las sílabas Hangul se codifi­
+                can como 2 ó 3 subcaracteres) no están  implemen­
+                tados.
+
+       Nivel 2  Igual  que  el  nivel  1,  sin embargo en algunos
+                alfabetos se permiten algunos caracteres de  com­
+                binación  (p.ej.  Hebreo,  Árabe, Devangari, Ben­
+                galí, Gurmukhi, Oriya,  Tamil,  Telugo,  Kannada,
+                Malayalam, Tai, y Lao).
+
+       Nivel 3  Todos los caracteres de UCS están soportados.
+
+       El  estándar  Unicode 1.1 publicado por Unicode Consortium
+       contiene  exactamente  el  UCS  Basic  Multilingual  Plane
+       implementado  al  nivel 3, según se describe en ISO 10646.
+       Unicode 1.1 también añade algunas definiciones  semánticas
+       para ciertos caracteres a las definiciones de ISO 10646.
+
+UNICODE EN LINUX
+       En Linux, por el momento sólo se debe usar el BMP de nivel
+       1, a fin de mantener baja  la  complejidad  de  la  imple­
+       mentación  de  los caracteres de combinación. Los niveless
+       de implementación superiores son más apropiados para  for­
+       matos  de procesamiento de textos especiales, pero no como
+       un conjunto de caracteres genérico del sistema.  El tipo C
+       wchar_t  es  en Linux un entero sin signo de 16 bits y sus
+       valores se interpretan como códigos BMP de nivel 1 del UCS
+
+       La  configuración  de  localidad  especifica si la codifi­
+       cación de caracteres del sistema es por  ejemplo  UTF-8  o
+       ISO  8859-1.   Se  pueden utilizar funciones de biblioteca
+       tales como wctomb, mbtowc, o wprintf para transformar  los
+       caracteres y cadenas internas wchar_t a la codificación de
+       caracteres del sistema y viceversa.
+
+ÁREA PRIVADA
+       En el BMP, en el rango de 0xe000 a 0xf8ff ningún  carácter
+       será  nunca  asignado  por  el  estándar  y  dicha zona se
+       reserva para uso privado. Para la  comunidad  Linux,  esta
+       área  privada  ha  sido subdividida aún más entre el rango
+       0xe000 a 0xefff que puede ser utilizado a nivel particular
+       por  cualquier  usuario  final y la zona Linux en el rango
+       0xf000 a 0xf8ff donde las extensiones se  coordinan  entre
+       todos los usuarios de Linux. El registro de los caracteres
+       asignados a la zona Linux es mantenido actualmente por  H.
+       Peter  Anvin <Peter.Anvin@linux.org>, Yggdrasil Computing,
+       Inc. Contiene algunos caracteres gráficos  DEC  VT100  que
+       faltan  en  Unicode, da acceso directo a los caracteres en
+       el búfer de tipos de letra de la consola  y  contiene  los
+       caracteres  usados en algunas escrituras avanzadas como la
+       Klingon.
+
+LITERATURA
+       * Information technology - Universal Multiple-Octet  Coded
+         Character  Set  (UCS)  -  Part 1: Architecture and Basic
+         Multilingual Plane.  International Standard ISO 10646-1,
+         International  Organization for Standardization, Geneva,
+         1993.
+
+         Esta es la especificación oficial de UCS.  Bien oficial,
+         bien  gruesa  y  bien cara. Para información de pedidos,
+         consulte www.iso.ch.
+
+       * The Unicode Standard - Worldwide Character Encoding Ver­
+         sion 1.0.  The Unicode Consortium, Addison-Wesley, Read­
+         ing, MA, 1991.
+
+         Ya está Unicode 1.1.4 disponible. Los cambios  al  libro
+         1.0  están disponibles a través de ftp.unicode.org. Uni­
+         code 2.0 será publicado  de  nuevo  como  libro  durante
+         1996.
+
+       * S.  Harbison,  G. Steele. C - A Reference Manual. Fourth
+         edition, Prentice Hall,  Englewood  Cliffs,  1995,  ISBN
+         0-13-326224-3.
+
+         Una  buena  referencia sobre el lenguaje de programación
+         C. La cuarta edición ahora abarca también la Enmienda  1
+         de  1994 al estándar ISO C (ISO/IEC 9899:1990) que añade
+         un gran número de nuevas funciones a la biblioteca de  C
+         para manejar conjuntos de caracteres amplios.
+
+FALLOS
+       En el momento de escribir esta página, al soporte por libc
+       del UCS le faltaba bastante para estar completo.
+
+AUTOR
+       Markus Kuhn <mskuhn@cip.informatik.uni-erlangen.de>
+
+VÉASE TAMBIÉN
+       utf-8(7)
+
+
+
+Linux                   27 Diciembre 1995              UNICODE(7)

@@ -1,0 +1,185 @@
+DDATE(1)         Utilidades del Emperador Norton         DDATE(1)
+
+
+
+NOMBRE
+       ddate  - convierte fechas Gregorianas en fechas Chiquitis­
+       taníes (por la gloria de mi madre)
+
+SINOPSIS
+       ddate [+format] [date]
+
+DESCRIPCIÓN
+       ddate escribe la fecha en formato de fecha  Chiquitistaní.
+
+       Si es llamado sin argumentos, ddate cogerá la fecha actual
+       del sistema, la convertirá al formato Chiquitistaní  y  la
+       imprimirá en la salida estándar de la pradera.  Alternati­
+       vamente, puede especificarse una fecha en formato Gregori­
+       anorl  en  la  línea  sesual de comandos, usando para ello
+       tres datos numéricos indicando día, mes y año.
+
+       Si se especifica una cadena de formato, la  fecha  Chiqui­
+       tistaní  será  imprimida en el fistro de formato indicado.
+       Este pedaso de mecanismo (que trabaja más que el  chapista
+       de  Mazinguer Z), funciona de la misma manera que date(1),
+       aunque al mismo tiempo de  forma  diferenter.  Los  campos
+       son:
+
+       %A     El  nombre  completor  del  día de la semanarl (por
+              ejemplo, Sweetmorn)
+
+       %a     Nombre abreviadín del  día  de  la  semanilla  (por
+              ejemplor, SM)
+
+       %B     Nombre  completor  de  la  estación  (por ejemplor,
+              Chaos)
+
+       %b     Nombre abreviadín de la estación (por ejemplo, Chs)
+
+       %d     Numero  del  día  de la estación en formato ordinal
+              (por ejemplor, 23)
+
+       %e     Numero del día de la estación en  formato  cardinal
+              (por ejemplor, 23rd)
+
+       %H     Nombre de la festividad actual, si hay alguna
+
+       %N     Código  mágicorl para prevenir que el resto de for­
+              mato se imprima a menos que hoy sea fiesta
+
+       %n     Nueva línea
+
+       %t     Tabulador sesual de la pradera
+
+       %X     Número de días que quedan para el día X. (No válido
+              si las opciones Grijander no han sido compiladas)
+
+       %{
+
+       %}     Usados  para  englobar  la parte de la cadenilla de
+              formatorl que debe ser reemplazada por las palabras
+              "St.  Tib's  Day"  (  N.  del T.  viene a ser más o
+              menos "El día de San Pepito Comedor de Higos  Chum­
+              bos")  si  el  día actual es el día de tan glorioso
+              santo.
+
+       %.     Pruebe esta opción y verá.( N. del T.  y si sabe lo
+              que hace no dude en decírmelo)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EJEMPLOS
+       % ddate
+       Sweetmorn, Bureaucracy 42, 3161 YOLD
+
+       % ddate +'Today is %{%A, the %e of %B%}, %Y. %N%nCelebrate %H'
+       Today is Sweetmorn, the 42nd of Bureaucracy, 3161.
+
+       % ddate +"It's %{%A, the %e of %B%}, %Y. %N%nCelebrate %H" 26 9 1995
+       It's Prickle-Prickle, the 50th of Bureaucracy, 3161.
+       Celebrate Bureflux
+
+       % ddate +'Today's %{%A, the %e of %B%}, %Y. %N%nCelebrate %H' 29 2 1996
+       Today's St. Tib's Day, 3162.
+
+
+FALLOS
+       ddate(1)   producirá   un   pedaso  de  fistro  de  salida
+       indefinida si se le pide que produzca la fecha del día  de
+       San Pepito Comedor de Higos Chumbos y la cadena de formato
+       no contiene los delimitadores %{ y %}.
+
+
+AUTOR
+       Programa original por Druel the Chaotic aka Jeremy Johnson
+       (mpython@gnu.ai.mit.edu)
+       Revisiones  por Lee H:. O:. Smith, KYTP, aka Andrew Bulhak
+       (acb@dev.null.org)
+       Jander, Grijander de la pradera.
+
+
+POLÍTICA DE DISTRIBUCIÓN
+       Dominio Público. Todos los derechos invertidos.
+
+
+VÉASE TAMBIÉN
+       date(1),
+       Malaclypse the Younger,  Principia  Discordia,  Or  How  I
+       Found Goddess And What I Did To Her When I Found Her
+
+
+NOTAS DEL TRADUCTOR
+       El  traductor ofrece esta traducción jocosa de esta página
+       de manual dado que no es capaz de  entender  el  propósito
+       original  de la ``aplicación''.  Para cualquier sugerencia
+       o explicación de la utilidad de esta aplicación póngase en
+       contacto con:
+          Juan José López Mellado (laveneno@hotmail.com)
+
+
+
+
+                       59 Bureaucracy 3161               DDATE(1)

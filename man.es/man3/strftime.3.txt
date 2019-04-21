@@ -1,0 +1,228 @@
+STRFTIME(3)      Manual del Programador de Linux      STRFTIME(3)
+
+
+
+NOMBRE
+       strftime - formatea fecha y hora
+
+SINOPSIS
+       #include <time.h>
+
+       size_t strftime(char *s, size_t max, const char *format,
+                           const struct tm *tm);
+
+DESCRIPCIÓN
+       La  función  strftime() formatea el tiempo descompuesto en
+       campos tm según la  especificación  de  formato  format  y
+       coloca el resultado en el vector de caracteres s de tamaño
+       max.
+
+       Los caracteres normales de la cadena de formato se  copian
+       en  s  sin conversión ninguna. Los especificadores de con­
+       versión se introducen con un carácter de porcentaje `%', y
+       se reemplazan en s como sigue:
+
+       %a     El  nombre  abreviado del día de la semana según la
+              localización en curso.
+
+       %A     El nombre del día de la semana, completo, según  la
+              localización en curso.
+
+       %b     El  nombre  abreviado del mes según la localización
+              en curso.
+
+       %B     El nombre completo del mes según la localización en
+              curso.
+
+       %c     La representación preferida de fecha y hora para la
+              localización en curso.
+
+       %C     El siglo (año/100) como un  entero  de  2  dígidos.
+              (SU)
+
+       %d     El  día  del mes como un número en base diez (en el
+              rango de 01 a 31).
+
+       %D     Equivalente a %m/%d/%y. (Sip - sólo para norteamer­
+              icanos.  Los norteamericanos deben darse cuenta que
+              en otros países %d/%m/%y es  bastante  común.  Esto
+              significa  que  en  un  contexto internacional este
+              formato es ambiguo y no se debería usar). (SU)
+
+       %e     Como %d, el día del mes  como  un  número  decimal,
+              pero  un  cero inicial se reemplaza por un espacio.
+              (SU)
+
+       %E     Modificador;  use  formato  alternativo,  ver   más
+              abajo. (SU)
+
+       %G     El  año  con  siglo como un número decimal según el
+              estándar ISO 8601.  El año de 4 dígitos  correspon­
+              diente  al  número de la semana ISO (ver %V).  Éste
+              tiene el mismo formato y valor que %y, salvo que si
+              el  número  de la semana ISO pertenece al año ante­
+              rior o siguiente, ese año se utiliza en  su  lugar.
+              (TZ).
+
+       %g     Como  %G, pero sin siglo, es decir, con un año de 2
+              dígitos (00-99). (TZ)
+
+       %h     Equivalente a %b. (SU)
+
+       %H     La hora como un número en base diez en  formato  de
+              24 horas (en el rango de 00 a 23).
+
+       %I     La  hora  como un número en base diez en formato de
+              12 horas (en el rango de 01 a 12).
+
+       %j     El día juliano (día del año) como un número en base
+              diez (en el rango de 001 a 366).
+
+       %k     La  hora  (en  un reloj de 24 horas) como un número
+              decimal (en el rango de 0 a 23); los dígitos  indi­
+              viduales son precedidos por un blanco. (Ver también
+              %H). (TZ)
+
+       %l     La hora (en un reloj de 12 horas)  como  un  número
+              decimal  (en el rango de 1 a 12); los dígitos indi­
+              viduales son precedidos por un blanco.  (Ver   tam­
+              bíen %I). (TZ).
+
+       %m     El  mes como un número en base diez (en el rango de
+              01 a 12).
+
+       %M     El minuto como un número en base diez (en el  rango
+              de 00 a 59).
+
+       %n     Un carácter de nueva línea. (SU)
+
+       %O     Modificador;  use  un  formato alternativo, ver más
+              abajo. (SU)
+
+       %p     O `AM' ("Ante Meridiem", antes del mediodía) o `PM'
+              ("Post  Meridiem", después del mediodía) de acuerdo
+              con el valor del tiempo dado, o la cadena de carac­
+              teres  correspondiente  según  la  localización  en
+              curso.  El medio día se trata como `pm' y la  media
+              noche como `am'.
+
+       %P     Como  %p  pero  en letras minúsculas: `am' o `pm' o
+              una cadena  correspondiente  para  la  localización
+              actual. (GNU)
+
+       %r     El  tiempo  en  notación a.m. o p.m..  En la local­
+              ización POSIX esto es equivalente a `%I:%M:%S  %p'.
+              (SU)
+
+       %R     El  tiempo  en  notación  de 24 horas (%H:%M). (SU)
+              Para una versión que incluya lo  segundos,  ver  %T
+              más abajo.
+
+       %s     El  número  de  segundos  desde la Época, es decir,
+              desde 1970-01-01 00:00:00 UTC. (TZ)
+
+       %S     El segundo como un número decimal (en el  rango  de
+              00 a 61)
+
+       %t     Un carácter tabulador. (SU)
+
+       %T     El tiempo en notación de 24 horas (%H:%M:%S). (SU)
+
+       %u     El  día  de la semana como un número decimal, en el
+              rango de 1 a 7, siendo 1 el Lunes.  Ver también %w.
+              (SU)
+
+       %U     El  número  de  la  semana  del  año actual como un
+              número en base decimal, en el rango  de  00  a  53,
+              empezando  por el primer domingo como el primer día
+              de la primera semana. Ver también %V y %W.
+
+       %W     El número de la  semana  del  año  actual  como  un
+              número  decimal  según  el  estándar ISO 8601:1988,
+              donde la semana 1 es la primera semana que tiene al
+              menos  4  días  del  año  actual y el lunes como el
+              primer día de la semana. Ver también %U y %W. (SU)
+
+       %w     El día de la semana como un número decimal,  en  el
+              rango  de  0  a  6, siendo el domingo el cero.  Ver
+              también %u.
+
+       %W     El número de la  semana  del  año  actual  como  un
+              número  decimal,  en el rango de 00 a 53, empezando
+              con el primer  Lunes  como  el  primer  día  de  la
+              primera semana.
+
+       %x     La  representación  preferida  de  la fecha (sin la
+              hora) para la localización en curso.
+
+       %X     La representación preferida  de  la  hora  (sin  la
+              fecha) para la localización en curso.
+
+       %y     El  año como un número en base diez sin la centuria
+              (en el rango de 00 a 99).
+
+       %Y     El año como un número en base diez,  incluyendo  la
+              centuria.
+
+       %z     El  huso  horario  como  las  horas  de  diferencia
+              respecto a GMT.  Necesario para emitir fechas  con­
+              formes  a  RFC822  (usando  "%a,  %d %b %Y %H:%M:%S
+              %z"). (GNU)
+
+       %Z     La zona horaria, nombre o abreviatura.
+
+       %+     La fecha y hora en el formato de date(1). (TZ)
+
+       %%     Un carácter de porcentaje literal, '%'.
+
+       Algunos indicadores de conversión se pueden modificar pre­
+       cediéndolos  por  un modificador E u O para indicar que se
+       debe usar un formato alternativo.  Si no existen  formatos
+       o   especificaciones  alternativos  para  la  localización
+       actual, el comportamiento quedará  como  si  se  usara  la
+       especificación de conversión sin modificar. (SU) `The Sin­
+       gle Unix Specification' menciona %Ec, %EC, %Ex, %EX,  %Ry,
+       %EY,  %Od,  %Oe,  %OH,  %OI, %Om, %OM, %OS, %Ou, %OU, %OV,
+       %Ow, %OW, %Oy, donde el efecto del modificador O es el  de
+       usar  símbolos  numéricos  alternativos  (digamos, números
+       romanos) y el del modificador E es el de  usar  un  repre­
+       sentación alternativa dependiente de la localización.
+
+       La  estructura  para el tiempo descompuesto, tm, se define
+       en <time.h>.  Véase también ctime(3).
+
+VALOR DEVUELTO
+       La función strftime() devuelve  el  número  de  caracteres
+       puestos  en el vector s, sin incluir el carácter cero ter­
+       minador (NUL), suponiendo que  la  cadena,  incluyendo  el
+       carácter   cero   terminador,  cabe.  En  caso  contrario,
+       devuelve 0 y el contenido del vector es indefinido.  (Esto
+       es  así  al menos desde la versión 4.4.4 de libc; las ver­
+       siones de libc muy antiguas, tales  como  la  libc  4.4.1,
+       devolvían max si el vector era demasiado pequeño).
+
+       Dése  cuenta  que el valor devuelto 0 no indica necesaria­
+       mente un error; por ejemplo, en muchas  localizaciones  %p
+       da lugar a una cadena vacía.
+
+ENTORNO
+       Se usan las variables de entorno TZ y LC_TIME.
+
+CONFORME A
+       ANSI  C,  SVID 3, ISO 9899.  Existen inclusiones estrictas
+       entre el conjunto de conversiones dadas  en  ANSI  C  (sin
+       marcar), aquellas dadas en `the Single Unix Specification'
+       (marcadas como SU), aquellas dadas en el paquete  de  huso
+       horario  de  Olson (marcadas TZ) y aquellas dadas en glibc
+       (marcadas GNU),  excepto  que  %+  no  está  soportado  en
+       glibc2.  Por  otro  lado,  glibc2 tiene varias extensiones
+       más. POSIX.1 sólo referencia a ANSI  C;  POSIX.2  describe
+       bajo  date(1)  varias  extensiones  que se podrían aplicar
+       también a strftime.
+
+VÉASE TAMBIÉN
+       date(1), time(2), ctime(3), setlocale(3), sprintf(3)
+
+
+
+GNU                       29 Marzo 1999               STRFTIME(3)

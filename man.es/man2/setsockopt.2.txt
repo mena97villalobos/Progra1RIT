@@ -1,0 +1,107 @@
+GETSOCKOPT(2)    Manual del Programador de Linux    GETSOCKOPT(2)
+
+
+
+NOMBRE
+       getsockopt, setsockopt - obtiene y pone opciones en conec­
+       tores (sockets)
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <sys/socket.h>
+
+
+       int getsockopt(int s, int nivel, int nomopc, void *valopc,
+       socklen_t *lonopc);
+
+       int  setsockopt(int  s,  int nivel, int nomopc, const void
+       *valopc, socklen_t lonopc);
+
+DESCRIPCIÓN
+       Getsockopt y setsockopt manipulan las opciones asociadas a
+       un  conector. Éstas pueden existir en múltiples niveles de
+       protocolo; siempre están presentes en el nivel más alto de
+       conector.
+
+       Al  manipular opciones de conector, deben especificarse el
+       nivel en el que reside la opción, y su nombre.
+
+       Para manipular opciones en el nivel de conector, nivel  se
+       especifica  como  SOL_SOCKET.   Para  manipular opciones a
+       cualquier otro nivel, se suministra el número de protocolo
+       del  apropiado  que  controle la opción. Por ejemplo, para
+       indicar que una opción ha de ser interpretada por el  pro­
+       tocolo TCP, nivel debe ponerse como el número de protocolo
+       de TCP; vea getprotoent(3).
+
+       Los parámetros valopc y lonopc se emplean para  acceder  a
+       valores  de opciones de setsockopt.  Para getsockopt iden­
+       tifican a un búfer en el que se pondrá el  valor  para  la
+       opción  pedida (u opciones). Para getsockopt, lonopc es un
+       parámetro por referencia,  que  contiene  inicialmente  el
+       tamaño  del  búfer  apuntado por optval, y que se modifica
+       al acabar la función para  contener  el  tamaño  real  del
+       valor  devuelto.  Si  no se va a suministrar o devolver un
+       valor de opción, valopc puede ser NULL.
+
+       Nomopc y cualesquiera opciones especificadas se pasan  sin
+       interpretar  al  módulo  de  protocolo  apropiado  para su
+       interpretación. El fichero de cabecera <sys/socket.h> con­
+       tiene  definiciones  para  opciones  de nivel de conector,
+       descritas más abajo. Las opciones a otros niveles de  pro­
+       tocolo  varían  en  formato y nombre; consulte las páginas
+       apropiadas de la sección 4 del Manual.
+
+       La mayoría de las opciones de nivel-conector  utilizan  un
+       parámetro  int para valopc.  Para setsockopt, el parámetro
+       debe  ser  distinto  de  cero  para  permitir  una  opción
+       booleana, o cero si la opción va a ser deshabilitada.
+
+       Para  una  descripción  de  las  opciones disponibles para
+       conectores vea socket(7) y las páginas de manual del  pro­
+       tocolo apropiado.
+
+VALOR DEVUELTO
+       Se  devuelve  cero  en  caso de éxito. En caso de error se
+       devuelve -1 y errno toma un valor apropiado.
+
+ERRORES
+       EBADF   El argumento s no es un descriptor válido.
+
+       ENOTSOCK
+               El argumento s es un fichero, no un conector.
+
+       ENOPROTOOPT
+               La opción es desconocida al nivel indicado.
+
+       EFAULT  La dirección apuntada por valopc  no  está  en  un
+               sitio  válido  del espacio de direcciones del pro­
+               ceso. Para getsockopt, este  error  puede  también
+               ser  devuelto si lonopc no está en un sitio válido
+               del espacio de direcciones del proceso.
+
+CONFORME A
+       SVr4, 4.4BSD (estas primitivas aparecieron por primera vez
+       en  4.2BSD).   SVr4  documenta  los  códigos de error adi­
+       cionales ENOMEM y ENOSR, pero no  documenta  las  opciones
+       SO_SNDLOWAT, SO_RCVLOWAT, SO_SNDTIMEO ni SO_RCVTIMEO
+
+NOTA
+       El quinto argumento de getsockopt y setsockopt es en real­
+       idad un entero [*] (y esto es lo que tienen BSD 4.*, libc4
+       y libc5).  Cierta confusión en POSIX dio como resultado el
+       actual socklen_t.  El estándar  propuesto  todavía  no  ha
+       sido  adoptado  pero  glibc2  ya  lo sigue y también tiene
+       socklen_t [*]. Vea también accept(2).
+
+FALLOS
+       Algunas de las opciones de conector deberían ser manejadas
+       a niveles más bajos del sistema.
+
+VÉASE TAMBIÉN
+       ioctl(2),    socket(2),    getprotoent(3),    protocols(5)
+       socket(7), unix(7), tcp(7)
+
+
+
+Página man de Linux        24 Mayo 1999             GETSOCKOPT(2)

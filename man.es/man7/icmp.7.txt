@@ -1,0 +1,110 @@
+ICMP(7)          Manual del Programador de Linux          ICMP(7)
+
+
+
+NONMBRE
+       icmp, IPPROTO_ICMP - Módulo IPv4 ICMP del núcleo de Linux.
+
+DESCRIPCIÓN
+       Este módulo de protocolo del núcleo implementa  el  Proto­
+       colo  de Mensajes de Control de Internet (Internet Control
+       Message Protocol, ICMP) definido en el  documento  RFC792.
+       Se  utiliza para indicar condiciones de error y para diag­
+       nóstico. El usuario no interactúa  directamente  con  este
+       módulo.  En vez de eso, se comunica con los otros protoco­
+       los del núcleo y éstos pasan los errores ICMP a las  capas
+       de  la  aplicación.  El  módulo  ICMP  del  núcleo también
+       responde a peticiones ICMP.
+
+       Un protocolo de usuario puede recibir paquetes  ICMP  para
+       todos  los conectores locales abriendo un conector directo
+       (raw) con el protocolo IPPROTO_ICMP.  Vea raw(7) para  más
+       información.   Los  tipos  de los paquetes ICMP pasados al
+       conector se pueden filtrar usando la  opción  de  conector
+       ICMP_FILTER.  Los paquetes ICMP son también siempre proce­
+       sados por el núcleo, aunque se  pasen  a  un  conector  de
+       usuario.
+
+       Linux  limita  la tasa de paquetes de error ICMP para cada
+       destino.  ICMP_REDIRECT y ICMP_DEST_UNREACH también  están
+       limitados   por   la  ruta  de  destino  de  los  paquetes
+       entrantes.
+
+
+SYSCTLS
+       ICMP soporta una interfaz sysctl para  configurar  algunos
+       parámetros  IP  globales.  Se  puede acceder a las sysctls
+       leyendo  o  escribiendo  los   ficheros   del   directorio
+       /proc/sys/net/ipv4  o  con la inferfaz sysctl(2).  La may­
+       oría de estas sysctls son limitaciones de tasas para tipos
+       ICMP  específicos.  Linux  2.2 usa un filtro de cubetas de
+       fichas (token bucket) para limitar los ICMPs.  El valor es
+       el  plazo  de  tiempo  en  segundos hasta que el filtro de
+       cubetas de fichas desaparece.
+
+       icmp_destunreach_rate
+              Tasa máxima para enviar paquetes ICMP  de  "destino
+              inalcanzable".  Esto  limita  la  tasa  a la que se
+              envían los paquetes  a  cualquier  ruta  o  destino
+              individual.  El límite no afecta al envío de paque­
+              tes ICMP_FRAG_NEEDED necesarios para  descubrir  la
+              MTU de la ruta.
+
+       icmp_echo_ignore_all
+              Si  este  valor es distinto de cero, Linux ignorará
+              todas las peticiones ICMP_ECHO.
+
+       icmp_echo_ignore_broadcasts
+              Si este valor es distinto de cero,  Linux  ignorará
+              todos  los paquetes ICMP_ECHO enviados a las direc­
+              ciones de difusión (broadcast).
+
+       icmp_echoreply_rate
+              Tasa máxima de envío de paquetes ICMP_ECHOREPLY  en
+              respuesta a paquetes ICMP_ECHOREQUEST.
+
+       icmp_paramprob_rate
+              Tasa  máxima  de  envío de paquetes ICMP_PARAMETER­
+              PROB.  Estos paquetes se envían cuando  un  paquete
+              llega con una cabecera IP inválida.
+
+       icmp_timeexceed_rate
+              Tasa     máxima     de     envío     de    paquetes
+              ICMP_TIME_EXCEEDED.  Estos paquetes se envían  para
+              evitar  ciclos cuando un paquete ha dado demasiados
+              saltos.
+
+NOTAS
+       Ya que  muchas  implementaciones  no  soportan  conectores
+       directos  (raw) IPPROTO_ICMP, no debería contarse con esta
+       característica en programas transportables.
+
+       No se envían paquetes ICMP_REDIRECT cuando Linux no  actúa
+       como  enrutador (router).  También, estos sólo son acepta­
+       dos cuando procesden de  la  pasarela  (gateway)  anterior
+       definida  en la tabla de enrutamiento y las rutas de redi­
+       rección expiran después de un cierto tiempo.
+
+       La marca de tiempo de 64 bits devuelta por  ICMP_TIMESTAMP
+       viene dada en milisegundos desde el 1 de enero de 1970.
+
+       El ICMP de Linux usa internamente un conector directo para
+       enviar ICMPs.  Este conector directo puede aparecer en  la
+       salida de netstat(8) con un nodo-i cero.
+
+
+VERSIONES
+       El  soporte  para peticiones ICMP_ADDRESS se eliminó en la
+       versión 2.2.
+
+       El soporte para ICMP_SOURCE_QUENCH se eliminó en  la  ver­
+       sión 2.2.
+
+VÉASE TAMBIÉN
+       ip(7)
+
+       RFC792 para una descripción del protocolo ICMP.
+
+
+
+Página man de Linux       27 abril 1999                   ICMP(7)

@@ -1,0 +1,69 @@
+KILL(2)          Manual del Programador de Linux          KILL(2)
+
+
+
+NOMBRE
+       kill - enviar una señal a un proceso
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <signal.h>
+
+       int kill(pid_t pid, int sig);
+
+DESCRIPCIÓN
+       La  llamada kill se puede usar para enviar cualquier señal
+       a un proceso o grupo de procesos.
+
+       Si pid es positivo, entonces la señal  sig  es  enviada  a
+       pid.  En este caso, se devuelve 0 si hay éxito, o un valor
+       negativo si hay error.
+
+       Si pid es 0, entonces sig se envía a cada  proceso  en  el
+       grupo de procesos del proceso actual.
+
+       Si  pid  es  igual a -1, entonces se envía sig a cada pro­
+       ceso, excepto al primero, desde los números más  altos  en
+       la tabla de procesos, hasta los más bajos.
+
+       Si  pid es menor que -1, entonces se envía sig a cada pro­
+       ceso en el grupo de procesos -pid.
+
+       Si sig es 0, entonces  no  se  envía  ninguna  señal  pero
+       todavía se realiza la comprobación de errores.
+
+
+VALOR DEVUELTO
+       Si  hay éxito, se devuelve cero. Si hay error, se devuelve
+       -1, y se actualiza errno apropiadamente.
+
+ERRORES
+       EINVAL Se especificó una señal inválida.
+
+       ESRCH  El pid o grupo de procesos no existe. Nótese que un
+              proceso  existente  podría ser un zombi, un proceso
+              que ya ha sido terminado, pero que aún no  ha  sido
+              "wait()eado".
+
+       EPERM  El  proceso no tiene permiso para enviar la señal a
+              alguno de los procesos que la recibirán.  Para  que
+              un  proceso  tenga permiso para enviar una señal al
+              proceso pid debe, o bien tener privilegios de root,
+              o bien el ID de usuario real o efectivo del proceso
+              que envía la señal ha de ser igual  al  set-user-ID
+              real o guardado del proceso que la recibe.
+
+FALLOS
+       Es  imposible  enviar  una señal a la tarea número uno, el
+       proceso init, para el que no ha sido  instalado  un  mane­
+       jador  de  señales. Esto se hace para asegurarse de que el
+       sistema no se venga abajo accidentalmente.
+
+CONFORME A
+       SVr4, SVID, POSIX.1, X/OPEN y BSD 4.3
+
+VÉASE TAMBIÉN
+       _exit(2), exit(3), signal(2), signal(7)
+
+
+

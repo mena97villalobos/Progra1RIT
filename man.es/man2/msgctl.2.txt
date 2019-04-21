@@ -1,0 +1,97 @@
+MSGCTL(2)        Manual del Programador de Linux        MSGCTL(2)
+
+
+
+NOMBRE
+       msgctl - operaciones para el control de mensajes
+
+SINOPSIS
+       # include <sys/types.h>
+       # include <sys/ipc.h>
+       # include <sys/msg.h>
+
+       int msgctl ( int msqid, int  cmd, struct msqid_ds *buf )
+
+DESCRIPCIÓN
+       La función ejecuta la operación especificada por cmd en la
+       cola de mensajes  con  el  identificador  msqid.   Valores
+       legales para cmd son:
+
+       IPC_STAT    Copia información desde la estructura de datos
+                   mensaje en la estructura apuntada por buf.  El
+                   usuario  debe  tener  permiso de lectura en la
+                   cola de mensajes.
+
+       IPC_SET     Escribe los valores de algunos miembros de  la
+                   estructura  msqid_ds  apuntada  por  buf  a la
+                   estructura de datos cola de mensajes,  actual­
+                   izando su componente msg_ctime Los componentes
+                   considerados  de  la  estructura  del  usuario
+                   struct msqid_ds apuntados por buf son
+
+                        msg_perm.uid
+                        msg_perm.gid
+                        msg_perm.mode  /* solo los 9 bits más bajos */
+                        msg_qbytes
+
+                   El  identificador  de usuario del proceso debe
+                   ser al menos el del  superusuario,  creador  o
+                   propietario  de  la cola de mensajes.  Sólo el
+                   superusuario puede superar el valor msg_qbytes
+                   por encima del valor del sistema MSGMNB.
+
+       IPC_RMID    Elimina  la cola de mensajes y sus estructuras
+                   de datos despertando a todos los  procesos  en
+                   espera  de lectura o escritura (devolviendo un
+                   valor de error y asignando a  errno  el  valor
+                   EIDRM).   El identificador de usuario del pro­
+                   ceso invocador debe ser al menos el del  supe­
+                   rusuario,  creador o propietario de la cola de
+                   mensajes.
+
+VALOR DEVUELTO
+       Si ha funcionado, el valor devuelto sera 0, en  otro  caso
+       -1 con errno indicando el error
+
+ERRORES
+       Ante  un  error  errno sera fijado a uno de los siguientes
+       valores:
+
+       EACCES     El argumento cmd es igual a  IPC_STAT  pero  el
+                  proceso  invocador no tiene permisos de lectura
+                  sobre la cola de mensajes msqid.
+
+       EFAULT     El argumento  cmd  tiene  el  valor  IPC_SET  o
+                  IPC_STAT  pero la dirección apuntada por buf no
+                  es accesible.
+
+       EIDRM      La cola de mensajes ha sido eliminada.
+
+       EINVAL     Valor incorrecto de cmd o msqid.
+
+       EPERM      El argumento  cmd  tiene  el  valor  IPC_SET  o
+                  IPC_RMID pero el identificador de usuario efec­
+                  tivo del proceso no tiene suficientes  privile­
+                  gios para ejecutar el comando.  Éste también es
+                  el caso para un  proceso  no  perteneciente  al
+                  superusuario intentando incrementar el valor de
+                  msg_qbytes por encima  del  valor  espeficicado
+                  por el parámetro del sistema MSGMNB.
+
+NOTAS
+       Las  llamadas IPC_INFO, MSG_STAT y MSG_INFO son utilizadas
+       por el programa ipcs(8) a fin de proporcionar  información
+       de  los  recursos  asignados.  En el futuro esto puede ser
+       modificado segun las necesitades o trasladado al  interfaz
+       /proc.
+
+
+CONFORME A
+       SVr4, SVID.  SVID no documenta el error EIDRM.
+
+VÉASE TAMBIÉN
+       ipc(5), msgget(2), msgsnd(2), msgrcv(2).
+
+
+
+Linux 0.99.13            1 Noviembre 1993               MSGCTL(2)

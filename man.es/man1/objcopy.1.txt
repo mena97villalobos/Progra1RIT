@@ -1,0 +1,308 @@
+objcopy(1)      Herramientas de Desarrollo de GNU      objcopy(1)
+
+
+
+NOMBRE
+       objcopy - copia y traduce ficheros objeto
+
+
+SINOPSIS
+       objcopy
+              [-F nombrebfd | --target=nombrebfd]
+              [-I nombrebfd | --input-target=nombrebfd]
+              [-O nombrebfd | --output-target=nombrebfd]
+              [-R nombresección | --remove-section=nombresección]
+              [-S | --strip-all] [-g | --strip-debug]
+              [--strip-unneeded]
+              [-K nombresímbolo | --keep-symbol=nombresímbolo]
+              [-N nombresímbolo | --strip-symbol=nombresímbolo]
+              [-L nombresímbolo | --localize-symbol=nombresímbolo]
+              [-W nombresímbolo | --weaken-symbol=nombresímbolo]
+              [-x | --discard-all] [-X | --discard-locals]
+              [-b byte | --byte=byte]
+              [-i entrelazamiento | --interleave=entrelazamiento]
+              [-p | --preserve-dates] [--debugging]
+              [--gap-fill=val] [--pad-to=dirección]
+              [--set-start=val] [--adjust-start=incr]
+              [--adjust-vma=incr]
+              [--adjust-section-vma=sección{=,+,-}val]
+              [--adjust-warnings] [--no-adjust-warnings]
+              [--set-section-flags=sección=flags]
+              [--add-section=nombresección=nombrefichero]
+              [--change-leading-char] [--remove-leading-char]
+              [--weaken] [-v | --verbose] [-V | --version]
+              [--help] fichin [fichsal]
+
+DESCRIPCIÓN
+       El programa de utilidad de GNU objcopy copia los
+       contenidos de un fichero objeto a otro.  objcopy emplea la
+       Biblioteca BFD de GNU para leer y escribir los ficheros
+       objeto. Puede escribir el fichero objeto de destino en un
+       formato diferente del fichero objeto origen. El
+       comportamiento exacto de objcopy se controla mediante
+       opciones en la línea de órdenes.
+
+       objcopy crea ficheros temporales para hacer sus
+       traducciones y los borra después.  objcopy emplea BFD para
+       hacer todo su trabajo de traducción; conoce todos los
+       formatos que BFD entiende y por lo tanto es capaz de
+       reconocer la mayoría de formatos sin tener que decírselo
+       explícitamente.
+
+       objcopy puede emplearse para generar registros-S mediante
+       el empleo de un objetivo de salida srec (p.e., use -O
+       srec).
+
+       objcopy puede emplearse para generar un fichero binario
+       crudo empleando un objetivo de salida binary (p.e., use -O
+       binary).  Cuando objcopy genera un fichero binario crudo,
+       produce esencialmente un volcado de memoria de los
+       contenidos del fichero objeto de entrada. Todos los
+       símbolos y la información de reubicación se perderán. El
+       volcado de memoria comenzará en la dirección virtual de la
+       sección más baja copiada en el fichero de salida.
+
+       Cuando se genere un registro-S o un fichero binario crudo,
+       puede ser de ayuda emplear -S para quitar la sección que
+       contiene información de depuración. En algunos casos será
+       útil -R para quitar secciones que contienen información
+       que no necesita el fichero binario.
+
+       fichin y fichsal son los ficheros fuente y destino
+       respectivamente. Si uno no especifica fichsal, objcopy
+       crea un fichero temporal y renombra destructivamente el
+       resultado con el nombre del fichero de entrada.
+
+
+OPCIONES
+       -I nombrebfd, --input-target=nombrebfd
+              Considera que el formato del objeto del fichero
+              fuente es nombrebfd, en vez de intentar deducirlo.
+
+       -O nombrebfd, --output-target=nombrebfd
+              Escribe el fichero de salida usando el formato de
+              objeto nombrebfd.
+
+       -F nombrebfd, --target=nombrebfd
+              Usa nombrebfd como el formato objeto para los
+              ficheros de entrada y salida; esto es, simplemente
+              transfiere datos desde el fuente al destino sin
+              ninguna traducción.
+
+       -R nombresección, --remove-section=nombresección
+              Borra la sección nombrada del fichero. Esta opción
+              puede darse más de una vez. Observe que emplear
+              esta opción inapropiadamente puede hacer inservible
+              al fichero de salida.
+
+       -S, --strip-all
+              No copia información de símbolos ni reubicación del
+              fichero fuente.
+
+       -g, --strip-debug
+              No copia símbolos de depuración del fichero fuente.
+
+       --strip-unneeded
+              Quita todos los símbolos que no se necesiten para
+              el procesamiento de la reubicación.
+
+       -K nombresímbolo, --keep-symbol=nombresímbolo
+              Copia sólo el símbolo nombresímbolo del fichero
+              fuente. Esta opción puede darse más de una vez.
+
+       -N nombresímbolo, --strip-symbol=nombresímbolo
+              No copia el símbolo nombresímbolo  del fichero
+              fuente. Esta opción puede darse más de una vez.
+
+       -L nombresímbolo, --localize-symbol=nombresímbolo
+              Hace al símbolo nombresímbolo local al fichero, de
+              forma que no sea visible externamente. Esta opción
+              puede darse más de una vez.
+
+       -W nombresímbolo, --weaken-symbol=nombresímbolo
+              Hace al símbolo nombresímbolo débil. Esta opción
+              puede darse más de una vez.
+
+       -x,  --discard-all
+              No copia símbolos no globales del fichero fuente.
+
+       -X, --discard-locals
+              No copia símbolos locales generados por el
+              compilador. (Éstos empiezan usualmente por "L" o
+              ".").
+
+       -b byte, --byte=byte
+              Sólo guarda cada byte-simo byte del fichero de
+              entrada (los datos de cabecera no se ven
+              afectados). byte puede estar en el rango desde 0
+              hasta el entrelazamiento - 1. Esta opción es útil
+              para crear ficheros para programar ROMs. Se usa
+              típicamente con un objetivo de salida srec.
+
+       -i entrelazamiento, --interleave=entrelazamiento
+              Sólo copia uno de cada entrelazamiento bytes.  Cuál
+              de ellos copiar se selecciona mediante la opción -b
+              o --byte.  El predeterminado es 4. El
+              entrelazamiento no se tiene en cuenta si no se da
+              ni -b ni --byte.
+
+       -p, --preserve-dates
+              Establece las fechas de acceso y modificación del
+              fichero de salida como las mismas que las del de
+              entrada.
+
+       --debugging
+              Convierte información de depuración, si es posible.
+              Esto no es lo predeterminado puesto que solo
+              ciertos formatos de depuración se soportan, y el
+              proceso de conversión puede consumir bastante
+              tiempo.
+
+       --gap-fill=val
+              Llena huecos entre las secciones con val. Esta
+              operación se aplica a la dirección de carga (LMA)
+              de las secciones. Se hace incrementando el tamaño
+              de la sección con la dirección más baja, y llenando
+              el espacio extra creado con val.
+
+       --pad-to=dirección
+              Rellena el fichero de salida hasta la dirección de
+              carga dirección. Esto se hace incrementando el
+              tamaño de la última sección. El espacio extra se
+              rellena con el valor especificado por --gap-fill
+              (por omisión, cero).
+
+       --set-start=val
+              Establece la dirección de comienzo del nuevo
+              fichero a val. No todos los formatos de fichero
+              objeto admiten el establecimiento de la dirección
+              de comienzo.
+
+       --adjust-start=incr
+              Ajusta la dirección de comienzo añadiendo incr. No
+              todos los formatos de fichero objeto admiten el
+              establecimiento de la dirección de comienzo.
+
+       --adjust-vma=incr
+              Ajusta la dirección de todas las secciones, así
+              como la dirección de comienzo, añadiendo incr.
+              Algunos formatos de ficheros objeto no permiten
+              cambiar arbitrariamente las direcciones de sección.
+              Observe que esto no reubica las secciones; si el
+              programa espera que las secciones se carguen en
+              ciertas direcciones, y esta opción se emplea para
+              cambiar las secciones de forma que se carguen en
+              direcciones diferentes, el programa puede fallar.
+
+       --adjust-section-vma=sección{=,+,-}val
+              Establece o ajusta la dirección de la sección
+              nombrada. Si se emplea =, la dirección de la
+              sección se establece a val. Si no, se añade o
+              sustrae val de la dirección de la sección. Vea los
+              comentarios en --adjust-vma, arriba. Si no existe
+              sección en el fichero de entrada, se emite un
+              aviso, a menos que se haya dado la opción
+              --no-adjust-warnings.
+
+       --adjust-warnings
+              Si se ha dado la opción --adjust-section-vma, y la
+              sección nombrada no existe, emite un aviso. Esto es
+              el comportamiento predeterminado.
+
+       --no-adjust-warnings
+              No emite un aviso si se emplea la opción
+              --adjust-section-vma, aunque la sección nombrada no
+              exista.
+
+       --set-section-flags=sección=flags
+              Establece las opciones para la sección nombrada. El
+              argumento flags es una cadena de nombres de
+              opciones separadas por comas. Los nombres
+              reconocidos son alloc, load, readonly, code, data y
+              rom.  No todos tienen sentido para todos los
+              formatos de ficheros objeto.
+
+       --add-section=nombresección=nombrefichero
+              Añade una nueva sección llamada nombresección
+              mientras copia el fichero. Los contenidos de la
+              nueva sección se toman del fichero nombrefichero.
+              El tamaño de la sección será el tamaño del fichero.
+              Esta opción sólo funciona en formatos de fichero
+              que puedan admitir secciones con nombres
+              arbitrarios.
+
+       --change-leading-char
+              Algunos formatos de ficheros objeto emplean
+              caracteres especiales al principio de los símbolos.
+              El más común de estos caracteres es el subrayado,
+              que los compiladores suelen añadir antes de cada
+              símbolo. Esta opción le dice a objcopy que cambie
+              el carácter inicial de cada símbolo cuando
+              convierta entre formatos de ficheros objeto. Si los
+              formatos de los ficheros objeto emplean el mismo
+              carácter inicial, esta opción no tiene efecto. De
+              otro modo, añadirá un carácter, o lo quitará, o lo
+              cambiará, según sea apropiado.
+
+       --remove-leading-char
+              Si el primer carácter de un símbolo global es un
+              símbolo especial empleado por el formato del
+              fichero objeto, quita el carácter. El carácter
+              inicial como símbolo más común es el subrayado.
+              Esta opción quitará un subrayado inicial de todos
+              los símbolos globales. Esto puede ser útil si uno
+              quiere enlazar juntos objetos con formatos de
+              fichero diferentes, con diferentes convenios para
+              los nombres de símbolos. Esto es diferente de
+              --change-leading-char porque siempre cambia el
+              nombre del símbolo cuando es apropiado, sin tener
+              en cuenta el formato del fichero objeto de la
+              salida.
+
+       --weaken
+              Cambia todos los símbolos globales en el fichero a
+              débiles.
+
+       -v, --verbose
+              Salida prolija: lista todos los ficheros objeto
+              modificados.  En el caso de archivos, objcopy -v
+              lista todos los miembros del archivo.
+
+       -V, --version
+              Muestra el número de versión de objcopy y acaba.
+
+       --help Muestra un resumen de las opciones de objcopy y
+              acaba.
+
+VÉASE TAMBIÉN
+       La entrada de menú `binutils' en Info; Las Utilidades de
+       Binarios de GNU, Roland H. Pesch (Junio de 1993).
+
+
+DERECHOS DE COPIA
+       Copyright (c) 1993, 94, 95, 96, 1997 Free Software
+       Foundation, Inc.
+
+       Permission is granted to make and distribute verbatim
+       copies of this manual provided the copyright notice and
+       this permission notice are preserved on all copies.
+
+       Permission is granted to copy and distribute modified
+       versions of this manual under the conditions for verbatim
+       copying, provided that the entire resulting derived work
+       is distributed under the terms of a permission notice
+       identical to this one.
+
+       Permission is granted to copy and distribute translations
+       of this manual into another language, under the above
+       conditions for modified versions, except that this
+       permission notice may be included in translations approved
+       by the Free Software Foundation instead of in the original
+       English.
+
+       N. del T.: Sólo tiene validez legal el aviso de copyright
+       original.
+
+
+
+Cygnus support           Octubre de 1994               objcopy(1)

@@ -1,0 +1,126 @@
+FOPEN(3)         Manual del Programador de Linux         FOPEN(3)
+
+
+
+NOMBRE
+       fopen, fdopen, freopen - funciones de apertura de flujos
+
+SINOPSIS
+       #include <stdio.h>
+
+       FILE *fopen( const char *camino, const char *modo);
+       FILE *fdopen( int descf, const char *modo);
+       FILE  *freopen( const char *camino, const char *modo, FILE
+       *flujo);
+
+DESCRIPCIÓN
+       La función fopen abre el fichero cuyo nombre es la  cadena
+       apuntada por camino y asocia un flujo de datos a él.
+
+       El  argumento modo apunta a una cadena que empieza con una
+       de las siguientes secuencias (a las que pueden seguir car­
+       acteres adicionales):
+
+       r      Abre  un fichero de texto para lectura. El flujo se
+              posiciona al principio del fichero.
+
+       r+     Abre para lectura y escritura. El  flujo  se  posi­
+              ciona al principio del fichero.
+
+       w      Trunca el fichero a longitud cero o crea un fichero
+              de texto para escritura.  El flujo se posiciona  al
+              principio del fichero.
+
+       w+     Abre  para  lectura y escritura. El fichero se crea
+              si no existe, en otro caso se trunca.  El flujo  se
+              posiciona al principio del fichero.
+
+       a      Abre  para  escribir.  El  fichero  se  crea  si no
+              existe. El flujo se posiciona al final del fichero.
+
+       a+     Abre para leer y escribir. El fichero se crea si no
+              existe. El flujo se posiciona al final del fichero.
+
+       La  cadena  modo también puede incluir la letra ``b'' como
+       un tercer carácter o entre los de cualquiera de las  cade­
+       nas  de  dos caracteres descritas anteriormente. Todo esto
+       es estrictamente por compatibilidad con  ANSI  C3.159-1989
+       (``ANSI  C'')  y  no tiene efecto; la ``b'' no se tiene en
+       cuenta en Linux.
+
+       Cualquier    fichero    creado    tendrá    de    permisos
+       S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH    (0666),
+       modificados por el valor de la máscara umask  del  proceso
+       (vea umask(2)).
+
+       Las  lecturas  y las escrituras pueden mezclarse en flujos
+       abiertos  para  lectura/escritura  en   cualquier   orden.
+       Observe  que C ANSI requiere que intervenga una función de
+       posicionamiento entre la salida y la entrada, a menos  que
+       una  operación de entrada encuentre el fin-de-fichero. (Si
+       esta condición no se cumple, entonces  se  permite  a  una
+       lectura devolver el resultado de escrituras distintas a la
+       más reciente.)  Por lo tanto es buena  práctica  (y  desde
+       luego  necesario  algunas  veces  bajo  Linux)  hacer  una
+       operación fseek o fgetpos entre operaciones de escritura y
+       lectura   en   tal   flujo.   Esta   operación  puede  ser
+       aparentemente inútil (como en fseek(...,  0L,  SEEK_CUR)),
+       llamada por su efecto lateral de sincronización.
+
+       La  función  fdopen  asocia  un flujo con el descriptor de
+       fichero existente, descf.  El modo del flujo (uno  de  los
+       valores "r", "r+", "w", "w+", "a", "a+") debe ser compati­
+       ble con el del descriptor  de  fichero.  Al  indicador  de
+       posición  de fichero del nuevo flujo se le asigna el valor
+       del indicador de posición  perteneciente  a  descf  y  los
+       indicadores  de  error y de fin-de-fichero se limpian. Los
+       modos "w" y "w+" no provocan el trucamiento  del  fichero.
+       El  descriptor  de  fichero  no  es duplicado y se cerrará
+       cuando el flujo creado por fdopen se cierre.  El resultado
+       de  aplicar  fdopen  a  un objeto compartido de memoria es
+       indefinido.
+
+       La función freopen abre  el  fichero  cuyo  nombre  es  la
+       cadena  apuntada por camino y asocia el flujo apuntado por
+       flujo con él. El flujo original (si existe) se cierra.  El
+       argumento modo se emplea igual que en la función fopen. El
+       uso principal de la función freopen es cambiar el  fichero
+       asociado  con un flujo de texto estándar (stderr, stdin, o
+       stdout).
+
+VALOR DEVUELTO
+       Cuando acaban bien, fopen, fdopen y freopen  devuelven  un
+       puntero  a  FILE.  Cuando no, devuelven NULL y la variable
+       global errno contiene un valor que indica el error.
+
+ERRORES
+       EINVAL El modo pasado a fopen, fdopen, o a freopen no  era
+              válido.
+
+       Las  funciones fopen, fdopen y freopen también pueden fal­
+       lar y poner un valor  en  errno  para  cualquiera  de  los
+       errores especificados para la rutina malloc(3).
+
+       La  función fopen también puede fallar y poner un valor en
+       errno para cualquiera de los errores especificados para la
+       rutina open(2).
+
+       La función fdopen también puede fallar y poner un valor en
+       errno para cualquiera de los errores especificados para la
+       rutina fcntl(2).
+
+       La  función  freopen también puede fallar y poner un valor
+       en errno para cualquiera de los errores especificados para
+       las rutinas open(2), fclose(3) y fflush(3).
+
+VÉASE TAMBIÉN
+       open(2), fclose(3)
+
+CONFORME A
+       Las  funciones  fopen  y  freopen  son  conformes con ANSI
+       C3.159-1989 (``C ANSI'').  La función fdopen  es  conforme
+       con IEEE Std1003.1-1988 (``POSIX.1'').
+
+
+
+BSD                       19 Enero 1998                  FOPEN(3)

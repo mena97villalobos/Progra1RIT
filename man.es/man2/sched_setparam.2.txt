@@ -1,0 +1,84 @@
+SCHED_SETPARAM(2)Manual del Programador de LinuxSCHED_SETPARAM(2)
+
+
+
+NOMBRE
+       sched_setparam, sched_getparam - pone y obtiene parámetros
+       de planificación
+
+SINOPSIS
+       #include <sched.h>
+
+       int sched_setparam(pid_t  pid,  const  struct  sched_param
+       *p);
+
+       int sched_getparam(pid_t pid, struct sched_param *p);
+
+       struct sched_param {
+           ...
+           int sched_priority;
+           ...
+       };
+
+DESCRIPCIÓN
+       sched_setparam  establece  los parámetros de planificación
+       asociados con la política de planificación para el proceso
+       identificado por pid. Si pid es cero, entonces se estable­
+       cen los parámetros del proceso en curso. La interpretación
+       del  parámetro  p  depende  de  la  política seleccionada.
+       Actualmente se admiten  bajo  Linux  las  siguientes  tres
+       políticas   de   planificación:  SCHED_FIFO,  SCHED_RR,  y
+       SCHED_OTHER.
+
+       sched_getparam obtiene  los  parámetros  de  planificación
+       para  el  proceso  identificado  por pid.  Si pid es cero,
+       entonces se obtienen los parámetros del proceso en  curso.
+
+       sched_setparam  comprueba la validez de p para la política
+       de planificación del proceso. El parámetro p->sched_prior­
+       ity  debe caer en el rango dado por sched_get_priority_min
+       y sched_get_priority_max.
+
+       Los sistemas POSIX en los que estén disponibles sched_set­
+       param  y sched_getparam definen _POSIX_PRIORITY_SCHEDULING
+       en <unistd.h>.
+
+
+VALOR DEVUELTO
+       En caso de éxito, sched_setparam y sched_getparam  devuel­
+       ven  0.  En caso de  error, devuelven -1, y ponen en errno
+       un valor apropiado.
+
+ERRORES
+       ESRCH   No se ha podido encontrar el proceso  cuya  ID  es
+               pid.
+
+       EPERM   El proceso que hace la llamada no tiene los privi­
+               legios  apropiados.  El  proceso   que   llame   a
+               sched_setparam  necesita  un UID efectivo igual al
+               del EUID o UID del proceso identificado por pid, o
+               debe ser un proceso del súper-usuario.
+
+       EINVAL  El  parámetro  p no tiene sentido para la política
+               de planificación actual.
+
+CONFORME A
+       POSIX.1b (antiguamente POSIX.4)
+
+VÉASE TAMBIÉN
+       sched_setscheduler(2),              sched_getscheduler(2),
+       sched_get_priority_max(2),      sched_get_priority_min(2),
+       nice(2), setpriority(2), getpriority(2),
+
+       sched_setscheduler(2) contiene una descripción del esquema
+       de planificación de Linux.
+
+       Programming  for  the  real  world  -  POSIX.4 por Bill O.
+       Gallmeister,   O'Reilly   &   Associates,    Inc.,    ISBN
+       1-56592-074-0
+       IEEE Std 1003.1b-1993 (estándar POSIX.1b)
+       ISO/IEC 9945-1:1996
+
+
+
+Linux 1.3.81              2 Febrero 1998        SCHED_SETPARAM(2)

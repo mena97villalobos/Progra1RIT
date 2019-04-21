@@ -1,0 +1,149 @@
+CTIME(3)         Manual del Programador de Linux         CTIME(3)
+
+
+
+NOMBRE
+       asctime,  ctime,  gmtime,  localtime, mktime - transforman
+       fechas y horas binarias a ASCII
+
+SINOPSIS
+       #include <time.h>
+
+       char *asctime(const struct tm *timeptr);
+
+       char *ctime(const time_t *timep);
+
+       struct tm *gmtime(const time_t *timep);
+
+       struct tm *localtime(const time_t *timep);
+
+       time_t mktime(struct tm *timeptr);
+
+       extern char *tzname[2];
+       long int timezone;
+       extern int daylight;
+
+DESCRIPCIÓN
+       La funciones ctime(), gmtime() y localtime()  toman  todas
+       un  argumento  de  tipo time_t que representa el tiempo de
+       calendario.  Al ser interpretado como un valor  de  tiempo
+       absoluto,  representa  el número de segundos transcurridos
+       desde las 00:00:00 del 1 de Enero de 1970, en Tiempo  Uni­
+       versal Coordinado, Coordinated Universal Time (UTC).
+
+       Las  funciones asctime() y mktime() toman un argumento que
+       representa el  tiempo  descompuesto,  que  es  una  repre­
+       sentación  binaria  separada  en  año,  mes,  día, etc. El
+       tiempo descompuesto se guarda en una estructura tm, que se
+       define en <time.h> como sigue:
+
+              struct tm
+              {
+                      int     tm_sec;         /* segundos */
+                      int     tm_min;         /* minutos */
+                      int     tm_hour;        /* horas */
+                      int     tm_mday;        /* día del mes */
+                      int     tm_mon;         /* mes */
+                      int     tm_year;        /* año */
+                      int     tm_wday;        /* día de la semana */
+                      int     tm_yday;        /* día del año */
+                      int     tm_isdst;       /* cambio horario verano/invierno */
+              };
+
+       Los miembros de la estructura tm son:
+
+       tm_sec El número de segundos, normalmente en el rango de 0
+              a 59, pero puede llegar a 61 para permitir segundos
+              bisiestos.
+
+       tm_min El número de minutos, en el rango de 0 a 59.
+
+       tm_hour
+              El  número  de  horas  pasada  la medianoche, en el
+              rango de 0 a 23.
+
+       tm_mday
+              El día del mes, en el rango de 1 a 31.
+
+       tm_mon El número de meses desde Enero, en el rango de 0  a
+              11.
+
+       tm_year
+              El número de años desde 1900.
+
+       tm_wday
+              El número de dias desde el Domingo, en el rango  de
+              0 a 6.
+
+       tm_yday
+              El número de dias desde el 1 de Enero en  el  rango
+              de 0 a 365.
+
+       tm_isdst
+              Un  indicador  que  dice  si  existe cambio horario
+              entre verano e invierno para el tiempo descrito. El
+              valor es positivo si existe este cambio, cero si no
+              lo hay,  y  negativo  si  la  información  no  está
+              disponible.
+
+       La función ctime() convierte el tiempo de calendario timep
+       a una cadena de la forma
+
+              "Wed Jun 30 21:49:08 1993\n"
+
+       Las abreviaturas para los dias de  la  semana  son  `Sun',
+       `Mon', `Tue', `Wed', `Thu', `Fri', y `Sat'.  Las abreviat­
+       uras para los meses son `Jan', `Feb', `Mar', `Apr', `May',
+       `Jun',  `Jul',  `Aug',  `Sep',  `Oct',  `Nov', y `Dec'. El
+       valor devuelto apunta a una cadena reservada estáticamente
+       que  puede  ser  sobreescrita  por  posteriores llamadas a
+       cualquiera de las funciones de fecha u  hora.  La  función
+       también  pone  en  la  variable externa tzname información
+       acerca del huso horario.
+
+       La función gmtime()  convierte  el  tiempo  de  calendario
+       timep a una representación descompuesta del tiempo, expre­
+       sado en Tiempo Universal Coordinado (UTC).
+
+       La función localtime() convierte el tiempo  de  calendario
+       timep  a  una representación descompuesta, expresada rela­
+       tiva a la zona horaria especificada  por  el  usuario.  La
+       función  pone  en  la  variable externa tzname información
+       acerca de la zona horaria en curso, en timezone la  difer­
+       encia entre el Tiempo Universal Coordinado (UTC) y la hora
+       local normal en segundos, y en daylight un valor  distinto
+       de cero si las reglas del estándar US de cambio horario de
+       verano/invierno se aplican.
+
+       La función  asctime()  convierte  el  tiempo  descompuesto
+       timeptr a una cadena con el mismo formato que ctime().  El
+       valor devuelto apunta a una cadena reservada estáticamente
+       que  puede  ser  sobreescrita  por  posteriores llamadas a
+       cualquiera de las funciones de fecha u hora.
+
+       La función mktime() convierte un tiempo descompuesto a una
+       representación  tiempo de calendario. La función hace caso
+       omiso de los contenidos específícos en los miembros de  la
+       estructura  tm_wday  y tm_yday y los recalcula a partir de
+       otra información existente en  la  estructura  del  tiempo
+       descompuesto.   Si  los  miembros  de  la estructura están
+       fuera de sus  intervalos  permitidos,  serán  normalizados
+       (del tal manera que, por ejemplo, el 40 de octubre se cam­
+       biará al 9 de noviembre).  Al llamar a mktime() también se
+       pone  un  valor en la variable externa tzname con informa­
+       ción acerca de la zona horaria. Si el tiempo  descompuesto
+       especificado  no puede representarse como tiempo de calen­
+       dario (segundos desde la `Época'),  mktime()  devuelve  el
+       valor   (time_t)(-1)  y  no altera los miembros tm_wday ni
+       tm_yday de la estructura del tiempo descompuesto.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       date(1), gettimeofday(2), time(2), tzset(3),  difftime(3),
+       strftime(3)
+
+
+
+BSD                        9 Enero 1995                  CTIME(3)

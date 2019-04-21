@@ -1,0 +1,38 @@
+GETGID(2)        Manual del Programador de Linux        GETGID(2)
+
+
+
+NOMBRE
+       getgid,  getegid  -  devuelve la identidad (identificador)
+       del grupo
+
+SINOPSIS
+       #include <unistd.h>
+       #include <sys/types.h>
+
+       gid_t getgid(void);
+       gid_t getegid(void);
+
+DESCRIPCIÓN
+       getgid devuelve el ID (identificador) real del  grupo  del
+       proceso actual.
+
+       getegid  devuelve  el  ID 'efectivo' del grupo del proceso
+       actual.
+
+       El ID real se corresponde con el ID del proceso invocador.
+       El  ID  efectivo  corresponde  al bit ID establecido en el
+       fichero que se está ejecutando.
+
+ERRORES
+       Estas funciones siempre terminan sin error.
+
+CONFORME A
+       POSIX, BSD 4.3
+
+VÉASE TAMBIÉN
+       setregid(2), setgid(2)
+
+
+
+Linux 0.99.11             23 Julio 1993                 GETGID(2)

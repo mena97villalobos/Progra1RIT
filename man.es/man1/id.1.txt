@@ -1,0 +1,58 @@
+ID(1)                                                       ID(1)
+
+
+
+NOMBRE
+       id - imprime UIDs y GIDs reales y efectivos
+
+SINOPSIS
+       id   [-gnruG]   [--group]   [--name]   [--real]   [--user]
+       [--groups] [--help] [--version] [username]
+
+DESCRIPCIÓN
+       Esta documentación no será mantenida y puede ser  inexacta
+       o incompleta.  La documentación Texinfo es ahora la fuente
+       autorizada.
+
+       Esta página de manual documenta la versión GNU de id.   id
+       imprime  información  sobre  el usuario dado, o el proceso
+       que lo ejecuta si no se especifica usuario.  Por  defecto,
+       imprime  el ID de usuario real, el ID de grupo real, el ID
+       de usuario efectivo si es diferente del usuario  real,  el
+       ID  de grupo efectivo si es diferente del ID de grupo real
+       e IDs de grupo complementarios. Imprime cada uno de  estos
+       valores  precedido  por  una  cadena  que  lo identifica y
+       seguido por el nombre correspondiente de grupo  o  usuario
+       entre paréntesis.
+
+       Las  opciones  de  id  hacen  que imprima sólo parte de la
+       información anterior.
+
+   OPCIONES
+       -g, --group
+              Imprime sólo el ID de grupo.
+
+       -G, --groups
+              Imprime sólo los grupo suplementarios.
+
+       --help Imprime un mensaje de uso en la salida  estándar  y
+              termina correctamente.
+
+       -n, --name
+              Imprime  el  nombre de usuario o grupo en lugar del
+              número ID.  Requiere -u, -g, o -G.
+
+       -r, --real
+              Imprime el ID real de usuario o grupo en lugar  del
+              efectivo.  Requiere -u, -g, o -G.
+
+       -u, --user
+              Imprime sólo el ID del usuario.
+
+       --version
+              Imprime  información  sobre la versión en la salida
+              estándar y termina correctamente.
+
+
+
+FSF                    Utilidades Shell GNU                 ID(1)

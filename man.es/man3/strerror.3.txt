@@ -1,0 +1,33 @@
+STRERROR(3)      Manual del Programador de Linux      STRERROR(3)
+
+
+
+NOMBRE
+       strerror  - devuelve una cadena de caracteres describiendo
+       un código de error
+
+SINOPSIS
+       #include <string.h>
+
+       char *strerror(int errnum);
+
+DESCRIPCIÓN
+       La función strerror() devuelve una  cadena  de  caracteres
+       que  describe  el  código  de error pasado en el argumento
+       errnum.  La cadena sólo puede ser usada hasta la siguiente
+       llamada a strerror().
+
+VALOR DEVUELTO
+       La  función  strerror()  devuelve  la cadena apropiada que
+       describe el error, o un mensaje de error desconocido si el
+       código de error es inválido.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       errno(3), perror(3), strsignal(3)
+
+
+
+GNU                       11 Marzo 1998               STRERROR(3)

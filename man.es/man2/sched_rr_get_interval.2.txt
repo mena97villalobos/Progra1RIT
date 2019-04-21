@@ -1,0 +1,69 @@
+RR_GET_INTERVAL(2)Manual del Programador de LinuxRR_GET_INTERVAL(2)
+
+
+
+NOMBRE
+       sched_rr_get_interval   -  obtiene  el  intervalo SCHED_RR
+       para el proceso especificado
+
+SINOPSIS
+       #include <sched.h>
+
+       int sched_rr_get_interval(pid_t pid, struct timespec *tp);
+
+       struct timespec {
+           time_t  tv_sec;     /* segundos */
+           long    tv_nsec;    /* nanosegundos */
+       };
+
+DESCRIPCIÓN
+       sched_rr_get_interval  escribe  en  la estructura timespec
+       apuntada por tp el cuanto (quantum)  de  tiempo  de  asig­
+       nación en rueda (round robin) para el proceso identificado
+       por pid. Si pid es cero, el cuanto de tiempo para el  pro­
+       ceso  que  hace  la  llamada se escribe en *tp. El proceso
+       identificado debe ejecutarse bajo la política de  planifi­
+       cación SCHED_RR.
+
+       El cuanto de tiempo de asignación en rueda no es alterable
+       bajo Linux 1.3.81.
+
+       Los  sistemas   POSIX   en   los   que   está   disponible
+       sched_rr_get_interval  definen  _POSIX_PRIORITY_SCHEDULING
+       en <unistd.h>.
+
+
+VALOR DEVUELTO
+       En caso de éxito, sched_rr_get_interval  devuelve  0.   En
+       caso de  error, se devuelve -1 y se pone en errno un valor
+       apropiado.
+
+ERRORES
+       ESRCH   El proceso cuyo ID es pid no ha podido ser  encon­
+               trado.
+
+       ENOSYS  La   llamada   al  sistema  no  está  implementada
+               todavía.
+
+CONFORME A
+       POSIX.1b (anteriormente POSIX.4)
+
+FALLOS
+       En Linux 1.3.81  sched_rr_get_interval  regresaba  con  el
+       error  ENOSYS, porque SCHED_RR no había sido aún implemen­
+       tada completamente ni comprobada correctamente.
+
+VÉASE TAMBIÉN
+       sched_setscheduler(2) contiene una descripción del esquema
+       de planificación de Linux.
+
+       Programming  for  the  real  world  -  POSIX.4 por Bill O.
+       Gallmeister,   O'Reilly   &   Associates,    Inc.,    ISBN
+       1-56592-074-0
+       IEEE  Std  1003.1b-1993  (estándar  POSIX.1b, antiguamente
+       POSIX.4)
+       ISO/IEC 9945-1:1996
+
+
+
+Linux 1.3.81              2 Febrero 1998       RR_GET_INTERVAL(2)

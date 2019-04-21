@@ -1,0 +1,26 @@
+CBRT(3)          Manual del Programador de Linux          CBRT(3)
+
+
+
+NOMBRE
+       cbrt - función raíz cúbica
+
+SINOPSIS
+       #include <math.h>
+
+       double cbrt(double x);
+
+DESCRIPCIÓN
+       La función cbrt() devuelve la raiz cúbica de x.  Esta fun­
+       ción no puede fallar; todo  valor real representable tiene
+       una raiz cúbica real representable.
+
+CONFORME A
+       cbrt es una extensión de GNU.
+
+VÉASE TAMBIÉN
+       sqrt(3), pow(3)
+
+
+
+GNU                     16 Septiembre 1995                CBRT(3)

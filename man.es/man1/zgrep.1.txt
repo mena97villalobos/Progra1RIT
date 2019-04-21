@@ -1,0 +1,38 @@
+ZGREP(1)                                                 ZGREP(1)
+
+
+
+NOMBRE
+       zgrep  - buscar una expresión regular en ficheros posible­
+       mente comprimidos
+
+SINOPSIS
+       zgrep [ grep_opciones ] [ -e ] patrón fichero...
+
+DESCRIPCIÓN
+       Zgrep es usado para invocar grep sobre ficheros  comprimi­
+       dos  o  "gzipeados".  Todas  las opciones especificadas se
+       pasan directamente a grep.  Si  no  se  especifica  ningún
+       fichero,  entonces la entrada estándar es descomprimida si
+       fuera necesario, y  pasada  a  grep.   De  otro  modo  los
+       ficheros  dados son descomprimidos si es necesario y pasa­
+       dos a grep.
+
+       Si zgrep es invocado como zegrep o zfgrep entonces egrep o
+       fgrep  es usado en vez de grep.  Si la variable de entorno
+       GREP está definida, zgrep la usa  como  el  programa  grep
+       para ser invocado. Por ejemplo:
+
+           para sh:  GREP=fgrep  zgrep cadena ficheros
+           para csh: (setenv GREP fgrep; zgrep cadena ficheros)
+
+AUTOR
+       Charles Levert (charles@comm.polymtl.ca)
+
+VÉASE TAMBIÉN
+       grep(1),  egrep(1), fgrep(1), zdiff(1), zmore(1), znew(1),
+       zforce(1), gzip(1), gzexe(1)
+
+
+
+                                                         ZGREP(1)

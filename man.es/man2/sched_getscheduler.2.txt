@@ -1,0 +1,228 @@
+SETSCHEDULER(2)  Manual del Programador de Linux  SETSCHEDULER(2)
+
+
+
+NOMBRE
+       sched_setscheduler,   sched_getscheduler  -  establecen  y
+       obtienen los algoritmos/parámetros de planificación
+
+SINOPSIS
+       #include <sched.h>
+
+       int  sched_setscheduler(pid_t  pid,  int  politica,  const
+       struct sched_param *p);
+
+       int sched_getscheduler(pid_t pid);
+
+       struct sched_param {
+           ...
+           int sched_priority;
+           ...
+       };
+
+DESCRIPCIÓN
+       sched_setscheduler establece tanto la política de planifi­
+       cación como los parámetros asociados para el proceso iden­
+       tificado  por pid. Si pid es igual a cero, se establece el
+       planificador del proceso que hace la  llamada.  La  inter­
+       pretación  del  parámetro  p depende de la política selec­
+       cionada. Actualmente se admiten en Linux  las  tres  sigu­
+       ientes políticas: SCHED_FIFO, SCHED_RR, y SCHED_OTHER; sus
+       respectivas semánticas se describen abajo.
+
+       sched_getscheduler pregunta por la  política  de  planifi­
+       cación  aplicada  actualmente  al proceso identificado por
+       pid. Si pid es igual a cero, se obtiene  la  política  del
+       proceso que hace la llamada.
+
+
+
+   Políticas de Planificación
+       El planificador es la parte del núcleo que decide qué pro­
+       ceso ejecutable será ejecutado por la CPU a  continuación.
+       El planificador de Linux ofrece tres políticas de planifi­
+       cación diferentes, una para los procesos  normales  y  dos
+       para aplicaciones en tiempo real. Se asigna a cada proceso
+       un valor de prioridad estática sched_priority y este valor
+       sólo puede cambiarse a través de llamadas al sistema. Con­
+       ceptualmente, el planificador mantiene una lista de proce­
+       sos  ejecutables para cada posible valor sched_priority, y
+       sched_priority puede tener un valor en el rango de 0 a 99.
+       Para  poder determinar qué proceso se debe ejecutar a con­
+       tinuación, el planificador de Linux busca en la  lista  no
+       vacía con la prioridad estática más alta y toma el proceso
+       a la cabeza de dicha lista. La política  de  planificación
+       determina  para  cada  proceso,  dónde  se insertará en la
+       lista de procesos con igual prioridad estática y  cómo  se
+       moverá dentro de esta lista.
+
+       SCHED_OTHER  es  el planificador de tiempo compartido uni­
+       versal predeterminado empleado por la mayoría de los  pro­
+       cesos;  SCHED_FIFO y SCHED_RR han sido pensados para apli­
+       caciones especiales donde el tiempo es crítico y necesitan
+       un control preciso sobre la forma en la que se seleccionan
+       para ejecución los procesos ejecutables.  A  los  procesos
+       planificados con SCHED_OTHER se les debe asignar la prior­
+       idad estática 0; los procesos planificados bajo SCHED_FIFO
+       o SCHED_RR pueden tener una prioridad estática en el rango
+       de 1 a 99. Solamente los procesos con privilegio de súper-
+       usuario  pueden obtener una prioridad estática mayor que 0
+       y por tanto pueden  ser  planificados  bajo  SCHED_FIFO  o
+       SCHED_RR. Las llamadas al sistema sched_get_priority_min y
+       sched_get_priority_max pueden emplearse para encontrar  el
+       rango  válido  de  prioridad para una política de planifi­
+       cación de una manera transportable en todos  los  sistemas
+       que cumplan POSIX.1b.
+
+       Toda  la  planificación  es apropiativa: si un proceso con
+       una prioridad estática más alta  está  listo  para  ejecu­
+       tarse,  el  proceso  actual será apropiado y devuelto a su
+       lista de espera. La política  de  planificación  solamente
+       determina  la  clasificación  en la lista de procesos eje­
+       cutables con igual prioridad estática.
+
+
+   SCHED_FIFO: Planificación FIFO (1º en entrar, 1º en salir).
+       SCHED_FIFO sólo puede emplearse con prioridades  estáticas
+       mayores  que  0,  lo  que  significa que cuando un proceso
+       SCHED_FIFO se convierte en ejecutable, siempre prevalecerá
+       inmediatamente   sobre   cualquier   otro  proceso  normal
+       SCHED_OTHER ejecutándose.  SCHED_FIFO es un  simple  algo­
+       ritmo  de planificación sin rodajas de tiempo. Para proce­
+       sos planificados bajo la política SCHED_FIFO,  se  aplican
+       las  siguientes  reglas: Un proceso SCHED_FIFO que ha sido
+       apropiado por otro proceso de mayor prioridad  permanecerá
+       en  la cabeza de la lista para su prioridad y reanudará su
+       ejecución tan pronto como todos los procesos de  prioridad
+       más   alta   se  bloqueen  de  nuevo.  Cuando  un  proceso
+       SCHED_FIFO llegue a ser ejecutable, se insertará al  final
+       de   la   lista   para   su   prioridad.   Una  llamada  a
+       sched_setscheduler o a sched_setparam  pondrá  el  proceso
+       SCHED_FIFO  identificado  por  pid al final de la lista si
+       era ejecutable. Un proceso que llame  a  sched_yield  será
+       colocado  al  final de la lista. Ningún otro suceso moverá
+       un proceso planificado bajo la política SCHED_FIFO  en  la
+       lista  de espera de procesos ejecutables con igual priori­
+       dad estática. Un proceso SCHED_FIFO se ejecuta  hasta  que
+       es  bloqueado  por  una  petición  de  E/S,  hasta que sea
+       apropiado por un proceso de más alta  prioridad,  o  hasta
+       que llame a sched_yield.
+
+
+
+   SCHED_RR:  Planificación de asignación en rueda (Round Robin).
+       SCHED_RR es una  simple  mejora  de  SCHED_FIFO.  Todo  lo
+       descrito  arriba  para  SCHED_FIFO  se  aplica  también  a
+       SCHED_RR, excepto que a cada proceso sólo  se  le  permite
+       ejecutarse durante un cuanto de tiempo máximo.  Si un pro­
+       ceso SCHED_RR ha estado ejecutándose durante un periodo de
+       tiempo  igual o mayor que el cuanto de tiempo, será puesto
+       al final  de  la  lista  para  su  prioridad.  Un  proceso
+       SCHED_RR  que ha sido apropiado por un proceso de más alta
+       prioridad y subsecuentemente reanuda su ejecución como  un
+       proceso en ejecución, completará la porción no expirada de
+       su cuanto de tiempo de asignación en  rueda.  La  cantidad
+       del    cuanto   de   tiempo   puede   ser   obtenida   con
+       sched_rr_get_interval.
+
+
+   SCHED_OTHER: Planificación predeterminada de Linux en t.c.
+       SCHED_OTHER solamente puede  emplearse  con  la  prioridad
+       estática  0.   SCHED_OTHER  es el planificador estándar de
+       Linux  en  tiempo  compartido,  pensado  para  todos   los
+       procesos que no requieren mecanismos especiales de priori­
+       dad estática en tiempo real.  El proceso a  ejecutarse  se
+       escoge  de  la lista de prioridad estática 0 basado en una
+       prioridad dinámica que se determina  solamente  dentro  de
+       esta  lista.  La prioridad dinámica se basa en el nivel de
+       `nice' (puesto por la llamada nice o setpriority) e incre­
+       mentado  para cada cuanto de tiempo para el que el proceso
+       está listo para la ejecución, pero denegado para ella  por
+       el planificador. Esto asegura un buen progreso entre todos
+       los procesos SCHED_OTHER.
+
+
+   Tiempo de respuesta
+       Un proceso de alta prioridad bloqueado esperando E/S tiene
+       un cierto tiempo de respuesta antes de que sea planificado
+       otra vez. El  escritor  del  controlador  del  dispositivo
+       puede  reducir grandemente este tiempo de respuesta emple­
+       ando un manejador de interrupción de "interrupción  lenta"
+       como se describe en request_irq(9).
+
+
+   Miscelánea
+       Los  procesos  hijos  heredan el algoritmo y parámetros de
+       planificación a través de un fork.
+
+       Usualmente se necesita un bloqueo de memoria para que  los
+       procesos  en tiempo real puedan evitar demoras en la pagi­
+       nación; esto puede hacerse con mlock o mlockall.
+
+       Como un bucle infinito no bloqueante en un proceso  plani­
+       ficado  bajo SCHED_FIFO o SCHED_RR, bloqueará para siempre
+       todos los procesos con baja prioridad, un desarrollador de
+       software debería siempre mantener disponible en la consola
+       un shell planificado bajo una prioridad estática mayor que
+       la  de  la aplicación en pruebas. Esto permitirá un `kill'
+       de emergencia en aplicaciones de tiempo  real  en  pruebas
+       que no bloqueen o terminen como se espere. Como los proce­
+       sos SCHED_FIFO y SCHED_RR pueden apropiar  otros  procesos
+       para  siempre,  sólo  los  procesos de root tienen permiso
+       para activar estas políticas bajo Linux.
+
+       Los  sistemas  POSIX  en  los   cuales   se   dispone   de
+       sched_setscheduler     y     sched_getscheduler    definen
+       _POSIX_PRIORITY_SCHEDULING en <unistd.h>.
+
+
+VALOR DEVUELTO
+       En caso de éxito, sched_setscheduler  devuelve  cero.   En
+       caso  de  éxito,  sched_getscheduler  devuelve la política
+       para el proceso (un  entero  no  negativo).   En  caso  de
+       error,  se devuelve -1 y se pone en errno un valor apropi­
+       ado.
+
+ERRORES
+       ESRCH   No se ha podido encontrar el proceso  cuya  ID  es
+               pid.
+
+       EPERM   El proceso que hace la llamada no tiene los privi­
+               legios apropiados. Solamente los procesos de  root
+               tienen   permiso   para   activar   las  políticas
+               SCHED_FIFO y SCHED_RR.  El  proceso  que  llame  a
+               sched_setscheduler  necesita un UID efectivo igual
+               al EUID o al UID del proceso identificado por pid,
+               o debe ser un proceso del súper-usuario.
+
+       EINVAL  La  politica  de  planificación  no  es una de las
+               políticas reconocidas, o el parámetro p  no  tiene
+               sentido para la politica.
+
+CONFORME A
+       POSIX.1b (antiguamente POSIX.4)
+
+FALLOS
+       En Linux-1.3.81, SCHED_RR no había sido aún probada cuida­
+       dosamente y pudiera ser que no se  comportara  exactamente
+       como se describe o requiere por POSIX.1b.
+
+VÉASE TAMBIÉN
+       sched_setparam(2),    sched_getparam(2),   sched_yield(2),
+       sched_get_priority_max(2),      sched_get_priority_min(2),
+       nice(2),   setpriority(2),   getpriority(2),  mlockall(2),
+       munlockall(2), mlock(2), munlock(2).
+
+       Programming for the real  world  -  POSIX.4  por  Bill  O.
+       Gallmeister,    O'Reilly    &   Associates,   Inc.,   ISBN
+       1-56592-074-0
+       IEEE Std 1003.1b-1993 (estándar POSIX.1b)
+       ISO/IEC 9945-1:1996 - Ésta es la nueva revisión de 1996 de
+       POSIX.1,  que  contiene en un solo estándar POSIX.1(1990),
+       POSIX.1b(1993), POSIX.1c(1995), y POSIX.1i(1995).
+
+
+
+
+
+Linux 1.3.81              2 Febrero 1998          SETSCHEDULER(2)

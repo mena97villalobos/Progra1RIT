@@ -1,0 +1,66 @@
+
+NOMBRE
+     script - hace una transcripción de una sesión de terminal
+
+SINOPSIS
+     script [-a] [file]
+
+DESCRIPCIÓN
+     Script hace una transcripción de cualquier cosa que sea impresa en su
+     terminal.  Es útil para estudiantes que necesitan tener una copia de una
+     sesión interactiva como una prueba de alguna asignatura, ya que el
+     ficheros de transcripción puede mandarse a la impresora más tarde con
+     lpr(1).
+
+     Si aparece el argumento file, script guarda todo el diálogo en file.  Si
+     no se especifica ningún nombre de fichero, la transcripción es guardada
+     en el fichero typescript.
+
+     Opción:
+
+     -a      Añade la salida al final de file o typescript, manteniendo los
+             contenidos anteriores.
+
+     script finaliza cuando el shell hijo termina (un control-D para salir del
+     Bourne shell (sh(1)), y exit, logout o control-d (si ignoreeof no está
+     activado) para el C-shell, csh(1)).
+
+     Algunos comandos interactivos, como vi(1), crean basura en el fichero de
+     transcripción.  Script funciona mejor con comandos que no manipulan la
+     pantalla, los resultados deben ser interpretados como una copia directa
+     del terminal.
+
+ENTORNO
+     Las siguientes variables de entorno son usadas por script:
+
+     SHELL  Si la variable SHELL existe, el shell ejecutado por script será
+            ese shell. Si SHELL no está definida, se asume el Bourne shell.
+            (Muchos shells activan esta variable automáticamente).
+
+VÉASE TAMBIÉN
+     csh(1) (para el mecanismo de history ).
+
+HISTORIA
+     El comando script apareció en 3.0BSD.
+
+FALLOS
+     Script pone todo en el fichero de salida, incluyendo saltos de línea y
+     caracteres de borrado.  Esto no es lo que un usuario novato espera.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,48 @@
+FERROR(3)        Manual del Programador de Linux        FERROR(3)
+
+
+
+NOMBRE
+       clearerr, feof, ferror, fileno - comprueban y reestablecen
+       los estados de un flujo de datos
+
+SINOPSIS
+       #include <stdio.h>
+
+       void clearerr( FILE *flujo);
+       int feof( FILE *flujo);
+       int ferror( FILE *flujo);
+       int fileno( FILE *flujo);
+
+DESCRIPCIÓN
+       La función clearerr  limpia  los  indicadores  de  fin-de-
+       fichero y error para el flujo indicado por flujo.
+
+       La función feof inspecciona el indicador de fin-de-fichero
+       para el flujo indicado por flujo, devolviendo no  cero  si
+       está puesto. El indicador de fin-de-fichero sólo puede ser
+       limpiado por la función clearerr.
+
+       La función ferror inspecciona el indicador de  error  para
+       el  flujo  indicado por flujo, devolviendo no cero si está
+       puesto. El indicador de error sólo puede ser puesto a cero
+       por la función clearerr .
+
+       La función fileno examina el argumento flujo y devuelve su
+       descriptor de fichero, como un entero.
+
+ERRORES
+       Estas funciones no deberían  fallar,  y  no  ponen  ningún
+       valor en la variable externa errno.
+
+VÉASE TAMBIÉN
+       open(2), stdio(3)
+
+CONFORME A
+       Las  funciones  clearerr, feof, y ferror son conformes con
+       C3.159-1989 (``C ANSI'').
+
+
+
+
+BSD                    12 de Enero de 1998              FERROR(3)

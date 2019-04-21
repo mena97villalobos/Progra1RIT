@@ -1,0 +1,28 @@
+STRLEN(3)        Manual del Programador de Linux        STRLEN(3)
+
+
+
+NOMBRE
+       strlen - calcula la longitud de una cadena de caracteres
+
+SINOPSIS
+       #include <string.h>
+
+       size_t strlen(const char *s);
+
+DESCRIPCIÓN
+       La  función  strlen()  calcula la longitud de la cadena de
+       caracteres s, sin incluir el carácter terminador `\0'.
+
+VALOR DEVUELTO
+       La función strlen() devuelve el número de caracteres en s.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       string(3)
+
+
+
+GNU                       11 Marzo 1998                 STRLEN(3)

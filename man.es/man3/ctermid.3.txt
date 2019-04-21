@@ -1,0 +1,40 @@
+CTERMID(3)       Manual del Programador de Linux       CTERMID(3)
+
+
+
+NOMBRE
+       ctermid - obtiene el nombre de la terminal de control
+
+SINOPSIS
+       #include <stdio.h>
+
+       char *ctermid(char *s);
+
+DESCRIPCIÓN
+       ctermid()  devuelve una cadena que es el camino de la ter­
+       minal controlador actual para este proceso.  Si s es NULL,
+       se  emplea  un  búfer estático; si no, s apunta a un búfer
+       usado para contener el camino de  la  terminal.   La  con­
+       stante  simbólica  L_ctermid es el máximo número de carac­
+       teres del camino devuelto.
+
+VALOR DEVUELTO
+       El puntero al camino.
+
+CONFORME A
+       POSIX.1
+
+FALLOS
+       El camino devuelto puede no identificar  únicamente  a  la
+       terminal   controladora;  ésta  puede,  por  ejemplo,  ser
+       /dev/tty.
+
+       No se garantiza que el programa pueda abrir la terminal.
+
+VÉASE TAMBIÉN
+       ttyname(3)
+
+
+
+
+GNU                        9 Enero 1995                CTERMID(3)

@@ -1,0 +1,39 @@
+BRK(2)           Manual del Programador de Linux           BRK(2)
+
+
+
+NOMBRE
+       brk, sbrk - cambia el tamaño del segmento de datos
+
+SINOPSIS
+       #include <unistd.h>
+
+       int brk(void *end_data_segment);
+       void *sbrk(ptrdiff_t increment);
+
+DESCRIPCIÓN
+       brk asigna el final del segmento de datos al valor especi­
+       ficado por end_data_segment.   end_data_segment  debe  ser
+       mayor  que  el final del segmento de texto y debe estar 16
+       kB antes del final de la pila.
+
+       sbrk aumenta el espacio de datos  del  programa  increment
+       bytes.  sbrk no es una llamada del sistema, es simplemente
+       un envoltorio (wrapper) de la biblioteca de C.
+
+VALOR DEVUELTO
+       En caso de éxito, brk devuelve cero, y sbrk da un  puntero
+       al  principio  de la nueva área. En caso de error, la fun­
+       ción devuelve -1, y en errno se coloca el valor ENOMEM.
+
+CONFORME A
+       BSD 4.3 brk y sbrk no están definidos en el estándar de  C
+       y  están  excluidos  deliberadamente  del estándar POSIX.1
+       (véanse los párrafos B.1.1.1.3 y B.8.3.3).
+
+VÉASE TAMBIÉN
+       execve(2), getrlimit(2), malloc(3).
+
+
+
+Linux 0.99.11             30 Junio 1996                    BRK(2)

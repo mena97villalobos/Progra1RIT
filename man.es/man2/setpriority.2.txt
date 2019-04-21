@@ -1,0 +1,72 @@
+GETPRIORITY(2)   Manual del Programador de Linux   GETPRIORITY(2)
+
+
+
+NOMBRE
+       getpriority,  setpriority - obtiene/asigna la prioridad de
+       planificación de un programa
+
+SINOPSIS
+       #include <sys/time.h>
+       #include <sys/resource.h>
+
+       int getpriority(int which, int who);
+       int setpriority(int which, int who, int prio);
+
+DESCRIPCIÓN
+       La prioridad de planificación del proceso, grupo de proce­
+       sos  o usuario, según se indique en which y who se obtiene
+       con la función getpriority y se  asigna  con  setpriority.
+       Which  puede  ser  PRIO_PROCESS, PRIO_PGRP, o PRIO_USER, y
+       who se interpreta en función de which  (un  indentificador
+       de  proceso  para PRIO_PROCESS, un indentificador de grupo
+       de procesos para PRIO_PGRP, y un identificador de  usuario
+       para  PRIO_USER).   Un valor cero de who indica el proceso
+       actual, grupo de procesos actual o usuario  actual.   Prio
+       es un valor que puede variar de -20 a 20. La prioridad por
+       defecto es 0; cuanto más baja es la prioridad  más  favor­
+       able es la planificación.
+
+       La  llamada getpriority devuelve la prioridad más alta (el
+       valor numérico más bajo) de la que disfruta cualquiera  de
+       los  procesos especificados. La llamada setpriority asigna
+       el valor especificado a las prioridades de todos los  pro­
+       cesos  especificados. Sólo el superusuario puede decremen­
+       tar las prioridades (haciéndolas, por tanto, más altas).
+
+VALOR DEVUELTO
+       Ya que getpriority legítimamente puede devolver  el  valor
+       -1, es necesario borrar la variable externa errno antes de
+       la llamada a la función y comprobar su valor más  adelante
+       para determinar si -1 es un error o un valor legítimo.  La
+       función setpriority devuelve 0 si no hay error o -1 si  lo
+       hay.
+
+ERRORES
+       ESRCH   No  se  encontró  ningún proceso que cumpliera con
+               los valores especificados por which y who.
+
+       EINVAL  Which   no   era   PRIO_PROCESS,   PRIO_PGRP,   ni
+               PRIO_USER.
+
+       Además  de  los errores indicados arriba, setpriority fal­
+       lará si:
+
+       EPERM  Se encontró un proceso, pero ni su identificador de
+              usuario  efectivo  ni  su  identificador de usuario
+              real coincidieron con el identificador  de  usuario
+              efectivo del invocador.
+
+       EACCES Un no superusuario intentó decrementar la prioridad
+              de un proceso.
+
+CONFORME A
+       SVr4, 4.4BSD (estas funciones aparecieron por primera  vez
+       en 4.2BSD).
+
+VÉASE TAMBIÉN
+       nice(1), fork(2), renice(8)
+
+
+
+Página de Manual BSD      24 Julio 1993            GETPRIORITY(2)

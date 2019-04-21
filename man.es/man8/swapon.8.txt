@@ -1,0 +1,75 @@
+SWAPON(8)        Manual del Programador de Linux        SWAPON(8)
+
+
+
+NOMBRE
+       swapon,  swapoff  -  (des)habilita dispositivos o ficheros
+       para el paginado y el trasiego
+
+SINOPSIS
+       /sbin/swapon [-h -V]
+       /sbin/swapon -a [-v]
+       /sbin/swapon [-v] [-p prioridad]  fichero-especial ...
+       /sbin/swapon [-s]
+       /sbin/swapoff [-h -V]
+       /sbin/swapoff -a
+       /sbin/swapoff fichero-especial ...
+
+DESCRIPCIÓN
+       Swapon se emplea para especificar dispositivos  sobre  los
+       cuales  van  a  tener  lugar las actividades de paginado y
+       trasiego.  Las llamadas a swapon se hacen  normalmente  en
+       el  fichero  de  inicio del sistema en modo multi-usuario,
+       normalmente /etc/rc, haciendo ahí que todos  los  disposi­
+       tivos  de  trasiego  estén  disponibles,  de  modo que las
+       actividades de paginado y  trasiego  se  intercalen  entre
+       varios dispositivos o ficheros.
+
+       Normalmente, se emplea la primera forma:
+
+       -h     Proporciona ayuda.
+
+       -V     Muestra la versión.
+
+       -s     Muestra un sumario del uso del trasiego por dispos­
+              itivo.
+
+       -a     Se hacen disponibles para  el  trasiego  todos  los
+              dispositivos  marcados  con ``sw'', de tipo `swap',
+              en el fichero /etc/fstab.
+
+       -p prioridad
+              Especifica la prioridad para swapon.   Esta  opción
+              sólo está disponible si swapon se ha compilado y se
+              está usando bajo un núcleo 1.3.2 ó superior.   pri­
+              oridad  es  un valor entre 0 y 32767. Vea swapon(2)
+              para una descripción completa de las prioridades de
+              trasiego.  Añada  pri=valor al campo de opciones de
+              /etc/fstab para el empleo con swapon -a.
+
+       Swapoff deshabilita el  trasiego  en  los  dispositivos  o
+       ficheros  especificados,  o  en todas las entradas de tipo
+       `swap' de /etc/fstab cuando se da la opción -a.
+
+VÉASE TAMBIÉN
+       swapon(2),  swapoff(2),  fstab(5),   init(8),   mkswap(8),
+       rc(8), mount(8)
+
+FICHEROS
+       /dev/hd??  dispositivos estándar de paginación.
+       /dev/sd??  dispositivos estándar (SCSI) de paginación.
+       /etc/fstab tabla ASCII de descripción estática de los sis­
+       temas de ficheros.
+
+HISTORIA
+       La orden swapon apareció en 4.0BSD.
+
+AUTORES
+       Vea la página del Manual de Linux mount(8) para una  lista
+       completa  de autores. Entre los principales contribuyentes
+       se incluyen Doug Quale, H. J. Lu, Rick Sladkey  y  Stephen
+       Tweedie.
+
+
+
+Linux 1.x               25 Septiembre 1995              SWAPON(8)

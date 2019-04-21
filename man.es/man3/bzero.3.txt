@@ -1,0 +1,29 @@
+BZERO(3)         Manual del Programador de Linux         BZERO(3)
+
+
+
+NOMBRE
+       bzero - escribe ceros en una cadena de bytes
+
+SINOPSIS
+       #include <string.h>
+
+       void bzero(void *s, int n);
+
+DESCRIPCIÓN
+       La  función bzero() pone a cero los n primeros bytes de la
+       cadena de bytes s.
+
+VALOR DEVUELTO
+       La función bzero() no devuelve ningún valor.
+
+CONFORME A
+       BSD 4.3. Esta función está desaconsejada -- use memset  en
+       programas nuevos.
+
+VÉASE TAMBIÉN
+       memset(3), swab(3)
+
+
+
+GNU                        9 Abril 1993                  BZERO(3)

@@ -1,0 +1,31 @@
+ATAN(3)          Manual del Programador de Linux          ATAN(3)
+
+
+
+NOMBRE
+       atan - función arco tangente
+
+SINOPSIS
+       #include <math.h>
+
+       double atan(double x);
+
+DESCRIPCIÓN
+       La  función  atan() calcula el arco tangente de x; este es
+       el valor cuya tangente es x.
+
+VALOR DEVUELTO
+       La función atan() devuelve el arco tangente  en  radianes;
+       el  valor se define matemáticamente para estar entre -PI/2
+       y PI/2 (inclusive).
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       acos(3), asin(3), atan2(3), cos(3), sin(3), tan(3)
+
+
+
+
+GNU                        8 Junio 1993                   ATAN(3)

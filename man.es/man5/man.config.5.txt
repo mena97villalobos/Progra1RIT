@@ -1,0 +1,37 @@
+MAN.CONF(5)            Comandos utilisador            MAN.CONF(5)
+
+
+
+NOMBRE
+       man.conf - fichero de configuración para el comando man
+
+DESCRIPCIÓN
+       Este ficheiro es leido por man(1) y contiene: (a) informa­
+       ción de como construir el camino de búsqueda de las  pági­
+       nas  (manpath);  (b) nombres completos de vários programas
+       como nroff, eqn, tbl, etc. usados por man; (c)  una  lista
+       de descompresores de ficheros com determinadas extensions.
+       Un fichero alternativo puede ser indicado con
+
+              man -C fich_config ...
+
+       Los nombres de comandos pueden ser indicados con opciones.
+       Las  opciones  útiles  para  nroff  podem se encuentran en
+       grotty(1).  Por ejemplo, en vez de la linea
+
+              NROFF /usr/bin/groff -mandoc -Tlatin1
+
+       se puede usar
+
+              NROFF /usr/bin/groff -mandoc -Tlatin1 -P-u -P-b
+
+       para suprimir subrayados y carácteres grasos.
+
+VEA TAMBIÉN
+       col(1),   (g)eqn(1),   (g)pic(1),   groff(1),   grotty(1),
+       (g)refer(1),  (g)tbl(1),  less(1),  man (1) e compress(1),
+       gzip(1).
+
+
+
+Manual Linux               25 Mayo 1996               MAN.CONF(5)

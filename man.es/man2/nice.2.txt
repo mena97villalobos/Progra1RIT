@@ -1,0 +1,40 @@
+NICE(2)          Manual del Programador de Linux          NICE(2)
+
+
+
+NOMBRE
+       nice - cambia la prioridad de un proceso
+
+SINOPSIS
+       #include <unistd.h>
+
+       int nice(int inc);
+
+DESCRIPCIÓN
+       nice añade inc a la prioridad del proceso que hace la lla­
+       mada. Sólo el súper-usuario puede  especificar  un  incre­
+       mento negativo, o sea, un aumento de la prioridad.
+
+       Observe que internamente, un número más alto es una prior­
+       idad más alta. No se confunda con el esquema de  prioridad
+       empleado por el programa nice.
+
+VALOR DEVUELTO
+       En  caso  de éxito, se devuelve cero. En caso de error, se
+       devuelve -1 y se pone un valor apropiado en errno.
+
+ERRORES
+       EPERM   Un usuario normal intenta aumentar  la  prioridad,
+               disminuyendo  el valor numérico suministrando a la
+               función un inc negativo.
+
+CONFORME A
+       SVr4, SVID EXT, AT&T, X/OPEN, BSD 4.3.  SVr4 documenta  un
+       código de error adicional EINVAL.
+
+VÉASE TAMBIÉN
+       nice(1), setpriority(2), fork(2), renice(8)
+
+
+
+Linux                    4 Noviembre 1996                 NICE(2)

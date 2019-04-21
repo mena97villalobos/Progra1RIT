@@ -1,0 +1,32 @@
+MBSTOWCS(3)      Manual del Programador de linux      MBSTOWCS(3)
+
+
+
+NOMBRE
+       mbstowcs - convierte una cadena multibyte en una cadena de
+       caracteres anchos.
+
+SINOPSIS
+       #include <stdlib.h>
+
+       size_t mbstowcs(wchar_t *pwcs, const char *s, size_t n);
+
+DESCRIPCIÓN
+       La función mbstowcs() convierte una  secuencia  de  carac­
+       teres multibyte del vector s a una secuencia de caracteres
+       anchos y guarda hasta n caracteres  anchos  en  el  vector
+       pwcs.
+
+VALOR DEVUELTO
+       mbstowcs() devuelve el número de caracteres anchos guarda­
+       dos ó -1 si s contiene un carácter multibyte inválido.
+
+CONFORME A
+       SVID 3, ISO 9899
+
+VÉASE TAMBIÉN
+       mblen(3), mbtowc(3), wcstombs(3), wctomb(3)
+
+
+
+GNU                        3 Marzo 1998               MBSTOWCS(3)

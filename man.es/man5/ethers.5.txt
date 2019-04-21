@@ -1,0 +1,36 @@
+ETHERS(5)              Formatos de Archivo              ETHERS(5)
+
+
+
+NOMBRE
+       ethers  -  Base  de  datos con asociaciones de direcciones
+       Ethernet a números IP.
+
+DESCRIPCIÓN
+       /etc/ethers contiene direcciones Ethernet de 48 bits y sus
+       números  IP  correspondientes,  una línea para cada número
+       IP:
+
+       Ethernet-address  IP-number
+
+Los dos números se separan por un número cualquiera de caracteres
+de  espacio  o  de  tabulación.  Un # al principio de la línea da
+comienzo a un comentario que se extiende hasta  el  final  de  la
+línea.  La  Ethernet-address se escribe como x:x:x:x:x:x, donde x
+es un número hexadecimal entre 0 y ff que representa un  byte  de
+la  dirección,  que está en orden de byte de red (big-endian). El
+IP-number puede ser un nombre de servidor que se  puede  resolver
+por medio de DNS o de un número separado por puntos.
+
+EJEMPLOS
+       08:00:20:00:61:CA  pal
+
+ARCHIVOS
+       /etc/ethers
+
+VÉASE TAMBIÉN
+       rarp(8)
+
+
+
+                          26 abril 1996                 ETHERS(5)

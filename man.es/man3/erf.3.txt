@@ -1,0 +1,33 @@
+ERF(3)           Manual del Programador de Linux           ERF(3)
+
+
+
+NOMBRE
+       erf, erfc - función error y función error complementario
+
+SINOPSIS
+       #include <math.h>
+
+       double erf(double x);
+
+       double erfc (double x);
+
+DESCRIPCIÓN
+       La  función erf() devuelve la función error de x; definida
+       como
+
+       erf(x) = 2/sqrt(pi)* integral desde 0 hasta x de exp(-t*t)
+       dt
+
+       La función erfc() devuelve la función error complementario
+       de x, que es 1.0 - erf(x).
+
+CONFORME A
+       SVID 3, BSD 4.3
+
+VÉASE TAMBIÉN
+       exp(3)
+
+
+
+BSD                       21 Enero 1995                    ERF(3)

@@ -1,0 +1,34 @@
+VHANGUP(2)       Manual del Programador de Linux       VHANGUP(2)
+
+
+
+NOMBRE
+       vhangup - cuelga virtualmente la tty en uso
+
+SINOPSIS
+       #include <unistd.h>
+
+       int vhangup(void);
+
+DESCRIPCIÓN
+       vhangup simula un cuelgue en la terminal en uso. Esta lla­
+       mada hace que otros usuarios  obtengan  una  tty  "limpia"
+       cuando entren en el sistema.
+
+VALOR DEVUELTO
+       En  caso  de éxito, se devuelve cero. En caso de error, se
+       devuelve -1 y se pone en errno un valor apropiado.
+
+ERRORES
+       EPERM   El usuario no es el súper-usuario.
+
+CONFORME A
+       Esta  llamada  es  específica  de  Linux,  y  no   debería
+       emplearse en programas que se pretendan transportables.
+
+VÉASE TAMBIÉN
+       init(8)
+
+
+
+Linux 0.99.11            13 Febrero 1998               VHANGUP(2)

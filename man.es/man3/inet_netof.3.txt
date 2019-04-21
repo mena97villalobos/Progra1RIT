@@ -1,0 +1,90 @@
+INET(3)          Manual del Programador de Linux          INET(3)
+
+
+
+NOMBRE
+       inet_aton,     inet_addr,     inet_network,     inet_ntoa,
+       inet_makeaddr, inet_lnaof, inet_netof - Rutinas de manipu­
+       lación de direcciones de Internet
+
+SINOPSIS
+       #include <sys/socket.h>
+       #include <netinet/in.h>
+       #include <arpa/inet.h>
+
+       int inet_aton(const char *cp, struct in_addr *inp);
+
+       unsigned long int inet_addr(const char *cp);
+
+       unsigned long int inet_network(const char *cp);
+
+       char *inet_ntoa(struct in_addr in);
+
+       struct in_addr inet_makeaddr(int net, int host);
+
+       unsigned long int inet_lnaof(struct in_addr in);
+
+       unsigned long int inet_netof(struct in_addr in);
+
+DESCRIPCIÓN
+       inet_aton() convierte la dirección de Internet cp desde la
+       notación estándar de números y puntos a la  representación
+       binaria, y la guarda en la estructura a la que apunte inp.
+       inet_aton devuelve no-cero si la dirección es válida, cero
+       si no.
+
+       La  función inet_addr() convierte la dirección de Internet
+       cp desde la notación de números y puntos  a  la  de  datos
+       binarios  en  orden  de  bytes  del ordenador local. Si la
+       entrada no es  válida,  devuelve  INADDR_NONE  (usualmente
+       -1).  Ésta  es una interfaz obsoleta a inet_aton, descrita
+       anteriormente; es obsoleta porque -1 es una dirección vál­
+       ida  (255.255.255.255), e inet_aton porporciona una manera
+       más clara para indicar que ha ocurrido un error.
+
+       La función inet_network() extrae el número de red en orden
+       de  bytes  de  red  desde la dirección cp a la notación de
+       números y puntos. Si la entrada es inválida, devuelve  -1.
+
+       La  función inet_ntoa() convierte la dirección de Internet
+       in dada en orden de bytes de red a una  cadena  de  carac­
+       teres  en  la  notación  estándar  de números y puntos. La
+       cadena se devuelve en un  búfer  reservado  estáticamente,
+       que será sobreescrito en siguientes llamadas.
+
+       La  función  inet_makeaddr()  construye  una  dirección de
+       Internet en orden de bytes de red combinando el número  de
+       red  net  con la dirección local host en la red net, ambas
+       en orden de bytes de ordenador local.
+
+       La función inet_lnaof() devuelve la  parte  del  ordenador
+       local  de  la  dirección de  Internet in.  La dirección de
+       ordenador local se devuelve en orden de bytes de ordenador
+       local.
+
+       La función inet_netof() devuelve la parte de número de red
+       de la dirección de Internet  in.   El  número  de  red  se
+       devuelve en orden de bytes de ordenador local.
+
+       La    estructura   in_addr,   empleada   en   inet_ntoa(),
+       inet_makeaddr(), inet_lnoaf() e inet_netof() se define  en
+       netinet/in.h como:
+
+              struct in_addr {
+                      unsigned long int s_addr;
+              }
+
+       Observe  que  en  el i80x86 el orden de bytes de ordenador
+       es: primero el Byte Menos  Significativo  (LSB),  mientras
+       que  el orden de bytes de red es, como se usa en la Inter­
+       net, el Byte Más Significativo (MSB) primero.
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       gethostbyname(3), getnetent(3), hosts(5), networks(5)
+
+
+
+BSD                     3 Septiembre  1995                INET(3)

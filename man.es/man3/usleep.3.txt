@@ -1,0 +1,28 @@
+USLEEP(3)        Manual del Programador de Linux        USLEEP(3)
+
+
+
+NOMBRE
+       usleep  -  suspende  la  ejecución durante un intervalo de
+       varios microsegundos
+
+SINOPSIS
+       #include <unistd.h>
+
+       void usleep(unsigned long usec);
+
+DESCRIPCIÓN
+       La función usleep() suspende la ejecución del proceso lla­
+       mante  durante  usec microsegundos. La pausa puede prolon­
+       garse ligeramente por cualquier actividad en el sistema  o
+       por el tiempo gastado procesando la llamada.
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       setitimer(2), getitimer(2), sleep(3), alarm(2), select(2)
+
+
+
+                        4 de Julio de 1993              USLEEP(3)

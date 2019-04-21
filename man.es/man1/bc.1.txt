@@ -1,0 +1,932 @@
+bc(1)                                                       bc(1)
+
+
+
+NOMBRE
+       bc - Un lenguaje de cálculo de precisión arbitraria
+
+SINTAXIS
+       bc [ -lwsqv ] [opciones largas] [  fichero ... ]
+
+VERSIÓN
+       Esta página de manual documenta la versión 1.04 de GNU bc.
+
+DESCRIPCIÓN
+       bc es un lenguaje que permite la ejecución interactiva  de
+       sentencias  con precisión numérica arbitraria. La sintaxis
+       es similar a la del lenguaje de programación C.  Se  puede
+       disponer de una biblioteca matemática estándar a través de
+       una opción en la línea de comando. En ese  caso,  la  bib­
+       lioteca  matemática  se determina antes de procesar ningún
+       fichero.   bc  comienza  procesando  en  orden  todos  los
+       ficheros  dados  en  la  línea  de comando. Después de que
+       todos los  ficheros  hayan  sido  procesados,  bc  lee  la
+       entrada  estándar.  Todo el código es ejecutado tal y como
+       es leído. (Si un fichero contiene un comando  que  detiene
+       el procesador bc nunca leerá la entrada estándar.)
+
+       Esta versión de bc tiene varias ampliaciones adicionales a
+       las tradicionales implementaciones de  bc  y  el  estándar
+       POSIX.   Las opciones en la línea de comando pueden causar
+       que estas extensiones impriman un aviso o sean rechazadas.
+       Este  documento  describe  el  lenguaje  aceptado por este
+       procesador.  Las  ampliaciones  serán  identificadas  como
+       tales.
+
+
+   OPCIONES
+       -l     Selecciona la biblioteca matemática estándar.
+
+       -w     Da mensajes de advertencia ante las ampliaciones al
+              bc de POSIX.
+
+       -s     Procesa exactamente como el lenguaje bc de POSIX.
+
+       -q     No imprime el habitual mensaje  de  bienvenida  del
+              GNU bc.
+
+       -v     Imprime el número de versión el copyright y sale.
+
+       --mathlib
+              Selecciona la biblioteca matemática estándar.
+
+       --warn Da mensajes de advertencia ante las ampliaciones al
+              bc de POSIX.
+
+       --standard
+              Procesa exactamente como el lenguaje bc de POSIX.
+
+       --quiet
+              No imprime el habitual mensaje  de  bienvenida  del
+              GNU bc.
+
+       --version
+              Imprime el número de versión el copyright y sale.
+
+   NÚMEROS
+       El elemento más básico en bc es el número. Los números son
+       de precisión arbitraria, tanto en la parte entera como  en
+       la  fraccionaria.   Todos  los  números  son representados
+       internamente en decimal y toda la computación es hecha  en
+       decimal. (Esta versión trunca los resultados de las opera­
+       ciones división y multiplicación). Los números tienen  dos
+       atributos,  la  longitud  y  la  escala. La longitud es el
+       número total de  dígitos  decimales  significativas  y  la
+       escala  el  número de dígitos decimales tras la coma deci­
+       mal.  Por ejemplo:
+               .000001 tiene longitud 6 y escala 6.
+               1935.000 tiene longitud 7 y escala 3.
+
+   VARIABLES
+       Los números son almacenados en  dos  tipos  de  variables,
+       variables  simples  y matrices. Ambos tipos son designados
+       por  nombres.  Estos  nombres  comienzan  con  una  letra,
+       seguida  por  cualquier número de letras, dígitos y carac­
+       teres de subrayado. Todas las letras deben ir en  minúscu­
+       las.  (Estos  nombres alfanuméricos son una ampliación. En
+       el bc de POSIX todos los nombres son una sola letra minús­
+       cula).   El tipo de variable queda claro según el contexto
+       ya que a todas las variables de tipo matriz les sigue unos
+       corchetes ([]).
+
+       Hay  cuatro  variables  especiales,  scale, ibase, obase y
+       last. scale define como son tratadas los dígitos  tras  la
+       coma  decimal en algunas operaciones. El valor por defecto
+       de scale es 0.  ibase y obase definen la base numérica  de
+       conversión  para  la  entrada  y  la  salida. El valor por
+       defecto para ambos es la base 10.  last  (una  ampliación)
+       es  la  variable  en  la  que  se guardar el último número
+       mostrado. Todo esto será tratado en  detalle  cuando  pro­
+       ceda. Todas estas variables pueden tener un valor asignado
+       así como ser usadas en expresiones.
+
+   COMENTARIOS
+       Los comentarios en bc comienzan con los  caracteres  /*  y
+       finalizan  con  los  caracteres */. Los comentarios pueden
+       empezar en cualquier lugar y aparecen como un solo espacio
+       en la entrada. (Esto hace que delimiten otros elementos de
+       entrada. Por ejemplo, un comentario no  puede  encontrarse
+       en  medio  del  nombre  de una variable).  Los comentarios
+       pueden incluir saltos de línea.
+
+       Para poder usar macros (scripts) en bc, la posibilidad  de
+       incluir comentarios de una sola línea ha sido añadida como
+       ampliación. Estos comienzan con el carácter # y  continúan
+       hasta  el final de la línea. El final de línea no es parte
+       del comentario y es procesado de forma normal.
+
+   EXPRESIONES
+       Los números son manipulados por las expresiones y las sen­
+       tencias.  Como  el lenguaje fue diseñado para ser interac­
+       tivo, las sentencias  y  expresiones  son  ejecutadas  tan
+       pronto   como   es  posible.  No  hay  programa  principal
+       ("main"). En su lugar, el código es ejecutado tal  y  como
+       se  encuentra.  (Las  funciones,  tratadas  en detalle más
+       abajo, se definen cuando se encuentran).
+
+       Una constante es la expresión  más  simple.  bc  convierte
+       internamente las constantes en números decimales usando la
+       base de  entrada  activa,  especificada  por  la  variable
+       ibase.  (Hay  una excepción en las funciones). Los valores
+       permitidos para ibase van del 2 hasta el 16. Si se  asigna
+       un  valor  a ibase fuera de este rango se cambiará por 2 ó
+       16. Los números en la entrada pueden formarse con los car­
+       acteres  0-9  y  A-F.  (Nota:  Deben ir en mayúsculas. Las
+       minúsculas son nombres de variables). Los  números  de  un
+       solo  dígito  tienen siempre el valor del dígito, sea cual
+       sea el valor de ibase. (ej. A = 10.). En  los  números  de
+       más  de  un  dígito  bc cambia todos los dígitos mayores o
+       iguales a ibase al valor de  ibase-1.  Esto  hace  que  el
+       número  FFF sea siempre el mayor número de 3 dígitos de la
+       base de entrada.
+
+       Las expresiones más complejas son similares a muchos otros
+       lenguajes  de alto nivel. Como sólo hay un tipo de número,
+       no hay reglas para mezclar tipos. En  cambio,  hay  reglas
+       para  la  escala  de las expresiones. Cada expresión tiene
+       una escala. Esta es derivada de la escala de  los  números
+       originales,  la operación realizada y, en muchos casos, el
+       valor de la variable scale. Los  valores  permitidos  para
+       scale son desde 0 hasta el máximo número representable por
+       un entero en C.
+
+       En las siguientes descripciones de expresiones permitidas,
+       "expr"  se  usa para indicar un expresión completa y "var"
+       una variable, simple o matricial. Una variable simple  es,
+       simplemente
+              nombre
+       y una matriz se designa así
+              nombre[expr]
+       Si  no se especifica la escala del resultado, esta será la
+       máxima escala de las expresiones implicadas.
+
+       - expr El resultado es la expresión negada.
+
+       ++ var La variable es incrementada en uno y el nuevo valor
+              es el resultado de la expresión.
+
+       -- var La variable es decrementada en uno y el nuevo valor
+              es el resultado de la expresión.
+
+       var ++ El resultado de la expresión  es  el  valor  de  la
+              variable  y entonces la variable es incrementada en
+              uno.
+
+       var -- El resultado de la expresión  es  el  valor  de  la
+              variable  y entonces la variable es decrementada en
+              uno.
+
+       expr + expr
+              El resultado de la expresión es la suma de las  dos
+              expresiones.
+
+       expr - expr
+              El  resultado  de  la expresión es la diferencia de
+              las dos expresiones.
+
+       expr * expr
+              El resultado de la expresión es el producto de  las
+              dos expresiones.
+
+       expr / expr
+              El  resultado de la expresión es el cociente de las
+              dos expresiones.  La escala  del  resultado  es  el
+              valor de la variable scale.
+
+       expr % expr
+              El  resultado  de  la  expresión es el "resto" y se
+              calcula de la siguiente manera. Para calcular  a%b,
+              primero  se  calcula  a/b  en  scale dígitos.  Este
+              resultado es usado para  calcular  a-(a/b)*b  a  la
+              escala   que   resulte   mayor,   scale+scale(b)  ó
+              scale(a). Si scale vale cero  y  ambas  expresiones
+              son enteros esta expresión calcula el resto entero.
+
+       expr ^ expr
+              El resultado de la expresión  es  el  valor  de  la
+              primera  elevada a la segunda. La segunda expresión
+              debe ser un entero. (Si la segunda expresión no  es
+              un entero, se genera un mensaje de advertencia y la
+              expresión es truncada a un valor entero). La escala
+              del resultado es scale si el exponente es negativo.
+              Si el exponente es positivo la escala del resultado
+              es el mínimo de estos valores: la escala de la base
+              por el exponente o el máximo de scale y  la  escala
+              de  la base. (ej. scale(a^b) = min(scale(a)*b, max(
+              scale, scale(a))).). Hay que tener en cuenta que el
+              resultado de expr^0 siempre será 1.
+
+       ( expr )
+              Altera la precedencia estándar para forzar la eval­
+              uación de la expresión.
+
+       var = expr
+              Se asigna a la variable el valor de la expresión.
+
+       var <op>= expr
+              Es equivalente a "var  =  var  <op>  expr"  con  la
+              excepción  de  que  "var" sólo es evaluada una vez.
+              Esto puede afectar si "var" es una matriz.
+
+       Las expresiones relacionales son de un tipo  especial  que
+       siempre  se evalúan a 0 ó 1, 0 si la relación es falsa y 1
+       si la relación es verdadera. Pueden aparecer en  cualquier
+       expresión  permitida.  (El bc de POSIX sólo permite el uso
+       de expresiones relacionales en las sentencias if, while  y
+       for y sólo una expresión relacional en cada una de ellas).
+       Los operadores relacionales son:
+
+       expr1 < expr2
+              El resultado es 1 si expr1 es  estrictamente  menor
+              que expr2.
+
+       expr1 <= expr2
+              El  resultado  es  1  si expr1 es menor o igual que
+              expr2.
+
+       expr1 > expr2
+              El resultado es 1 si expr1 es  estrictamente  mayor
+              que expr2.
+
+       expr1 >= expr2
+              El  resultado  es  1  si expr1 es mayor o igual que
+              expr2.
+
+       expr1 == expr2
+              El resultado es 1 si expr1 es igual a expr2.
+
+       expr1 != expr2
+              El resultado es 1 si expr1 no es igual a expr2.
+
+       Las operaciones booleanas también están permitidas. (El bc
+       de  POSIX NO tiene operaciones booleanas). El resultado de
+       toda operación booleana es 0 ó 1 (falso o verdadero)  como
+       en  las expresiones relacionales. Los operadores booleanos
+       son:
+
+       !expr  El resultado es 1 si expr es 0.
+
+       expr && expr
+              El resultado es 1 si ambas expresiones son  distin­
+              tas de 0.
+
+       expr || expr
+              El  resultado  es 1 si alguna de las expresiones es
+              distinta de 0.
+
+       La precedencia de las  expresiones  es  la  siguiente  (de
+       menor a mayor):
+              operador || , asociativo por la izquierda
+              operador && , asociativo por la izquierda
+              operador !  , no asociativo
+              operadores relacionales, asociativos por la izquierda
+              operador asignación, asociativo por la derecha
+              operadores + y - , asociativos por la izquierda
+              operadores *, / y % , asociativos por la izquierda
+              operador ^ , asociativo por la derecha
+              operador unario - , no asociativo
+              operadores ++ y -- , no asociativo
+
+       Esta  precedencia  fue  elegida  para  que  los  programas
+       acordes con el bc de POSIX funcionaran correctamente. Esto
+       hará que el uso de operadores relacionales y lógicos tenga
+       un comportamiento inusual cuando se usen  con  expresiones
+       de asignación. Considere la expresión:
+              a = 3 < 5
+
+       La  mayoría  de  los  programadores  de C asumirían que se
+       asignaría el resultado de "3 < 5" (el valor 1) a la  vari­
+       able  "a". Lo que ocurre en bc es que se asigna el valor 3
+       a la variable "a" y entonces se compara 3 con 5. Es  mejor
+       usar  paréntesis  cuando se usan operadores relacionales y
+       lógicos con operadores de asignación.
+
+       Hay algunas expresiones especiales más en bc. Estas  están
+       relacionadas  con las funciones definidas por el usuario y
+       las funciones estándar. Tienen la  forma  "nombre(parámet­
+       ros)". Las funciones definidas por el usuario son tratadas
+       en la sección FUNCIONES.  Las funciones estándar son:
+
+       length ( expresión )
+              EL valor de la función length es el número de dígi­
+              tos significativos en la expresión.
+
+       read ( )
+              La función read (una ampliación) leerá un número de
+              la entrada estándar, independientemente  del  lugar
+              dónde  aparezca la función. Tenga cuidado pues esto
+              puede causar problemas mezclando datos  y  programa
+              en  la  entrada estándar. El mejor uso de esta fun­
+              ción es ponerla en un programa previamente  escrito
+              que  necesite  la  entrada  del usuario, pero nunca
+              permitiendo que el  usuario  introduzca  código  de
+              programa.  El valor de la función read es el número
+              leído de la entrada estándar usando el valor de  la
+              variable ibase para la base de conversión.
+
+       scale ( expresión )
+              El  valor de la función scale es el número de dígi­
+              tos tras la coma decimal en la expresión.
+
+       sqrt ( expresión )
+              El valor de la función sqrt es la raíz cuadrada  de
+              la  expresión. Si la expresión es negativa, se gen­
+              era un error en tiempo de ejecución.
+
+   SENTENCIAS
+       Las sentencias (como en la mayoría de los lenguajes  alge­
+       braicos)  proporcionan  la  secuencia de las evaluación de
+       las expresiones. En bc las sentencias son ejecutadas  "tan
+       pronto  como  es  posible".  La ejecución ocurre cuando se
+       encuentra un cambio de línea y hay una  o  más  sentencias
+       completas.  Debido a esta ejecución inmediata, los cambios
+       de línea son muy importantes en bc. En realidad, tanto  el
+       punto y coma como el cambio de línea son usados como sepa­
+       radores de sentencias. Un cambio  de  línea  en  un  lugar
+       inapropiado  provocará  un  error  de sintaxis. Es posible
+       ocultar el que un cambio de línea sea un separador de sen­
+       tencias  usando  el  carácter  de contra-barra. bc toma la
+       secuencia "\<nl>", donde <nl> es el cambio de línea,  como
+       un  espacio en blanco en lugar de como un cambio de línea.
+       Una lista de sentencias es una serie de  sentencias  sepa­
+       radas por punto y coma y cambios de línea. Lo siguiente es
+       un lista de sentencias y la descripción de  lo  que  real­
+       izan:  (Las  partes  entre corchetes de las sentencias son
+       opcionales).
+
+       expresión
+              Esta sentencia hace una de estas dos cosas.  Si  la
+              expresión  comienza  con  "<variable>  <asignación>
+              ...", es considerada como una  sentencia  de  asig­
+              nación.  Si  no  es una sentencia de asignación, la
+              expresión es evaluada e impresa en la salida.  Tras
+              el  número  viene  un cambio de línea. Por ejemplo,
+              "a=1" es una sentencia de asignación y  "(a=1)"  es
+              una  expresión  que  tiene una asignación incluida.
+              Todos los números se imprimen en la base  especifi­
+              cada  por  la  variable obase. Los valores posibles
+              para obase van desde 2 hasta BC_BASE_MAX. (Ver sec­
+              ción  LÍMITES). Para las bases comprendidas entre 2
+              y 16, se usa el método usual de impresión. Para las
+              bases  mayores de 16, bc usa un método de impresión
+              en  el  que  utiliza  dígitos  multi-carácter  para
+              imprimir  cada  dígito  mayor  que  la base como un
+              número en base 10. Los dígitos  multi-carácter  son
+              separados  por  espacios. Cada dígito emplea tantos
+              caracteres como sean  necesarios  para  representar
+              "obase-1"  en  base  diez.  Como los números son de
+              precisión arbitraria, puede que algunos números  no
+              se puedan imprimir en una sola línea. Estos números
+              grandes serán repartidos en varias  lineas  con  el
+              carácter "\" al final de cada línea. El número máx­
+              imo de caracteres que se imprimen por línea es  70.
+              Debido a la naturaleza interactiva de bc, la impre­
+              sión de un número lleva consigo la  asignación  del
+              valor  impreso  a  la  variable especial last. Esto
+              permite al usuario utilizar el último valor impreso
+              sin  tener  que  volver  a teclear la expresión que
+              causó su impresión. Está permitido asignar  valores
+              a  last  y  esto  sobreescribirá  el  último  valor
+              impreso con el valor asignado. El nuevo valor  per­
+              manecerá hasta que se imprima el siguiente número o
+              se le asigne otro valor a last.  (Algunas  instala­
+              ciones pueden permitir usar un punto (.) que no sea
+              parte de un número como una notación más corta para
+              last).
+
+       cadena Se  imprime  la  cadena  en  la salida. Las cadenas
+              comienzan con una comilla doble y  contienen  todos
+              los  caracteres  hasta  la siguiente comilla doble.
+              Todos  los  caracteres  son  tomados  literalmente,
+              incluidos  los  cambios de línea. Tras la cadena no
+              se cambia de línea.
+
+       print lista
+              La sentencia  print  (una  ampliación)  proporciona
+              otro  método de impresión.  La "lista" es una lista
+              de cadenas y expresiones separadas  por  comas.  La
+              lista  se  imprime en el orden en el que está. Tras
+              la lista no se cambia de línea. Las expresiones son
+              evaluadas  y  sus valores impresos y asignados a la
+              variable last. Las cadenas se imprimen en la salida
+              y pueden contener caracteres especiales. Los carac­
+              teres especiales comienzan con el carácter de  con­
+              tra-barra  (\).  bc  reconoce  los caracteres espe­
+              ciales "a" (alerta o campana), "b" (borrar carácter
+              (backspace)),  "f"  (salto  de  línea),  "n" (nueva
+              linea),  "r"  (retorno  de  carro),  "q"   (comilla
+              doble),  "t"  (tabulador),  y  "\"  (contra-barra).
+              Cualquier otro carácter que siga a una contra-barra
+              será ignorado.
+
+       { lista_de_sentencias }
+              Esta  es  la  sentencia compuesta. Permite ejecutar
+              varias sentencias agrupadas.
+
+       if ( expresión ) sentencia1 [else sentencia2]
+              Esta sentencia evalúa la  expresión  y  ejecuta  la
+              sentencia1 o la sentencia2 dependiendo del valor de
+              la expresión. Si el valor es distinto de 0, se eje­
+              cuta  la  sentencia1.  Si  se da la sentencia2 y el
+              valor de la expresión es 0, entonces se ejecuta  la
+              sentencia2. (La cláusula else es una ampliación).
+
+       while ( expresión ) sentencia
+              Se  ejecuta  la sentencia mientras la expresión sea
+              distinta de 0. Se evalúa la expresión antes de cada
+              ejecución  de  la  sentencia.  El  bucle termina al
+              tomar la expresión el valor 0 o ante una  sentencia
+              break.
+
+       for ( [expresión1] ; [expresión2] ; [expresión3] ) senten­
+       cia
+              La  sentencia  for controla la ejecución repetitiva
+              de la sentencia. La expresión1  es  evaluada  antes
+              del  bucle. La expresión2 es evaluada antes de cada
+              ejecución de la sentencia. Si es 0, el  bucle  ter­
+              mina. Después de cada ejecución de la sentencia, se
+              evalúa la expresión3 antes de reevaluar  la  expre­
+              sión2.  Si la expresión1 o la expresión3 no se dan,
+              no se evalúa nada en su lugar. Si la expresión2  no
+              se  da, es lo mismo que sustituirla por el valor 1.
+              (El que las  expresiones  sean  opcionales  es  una
+              ampliación. El bc de POSIX requiere las tres expre­
+              siones).  Este es el  código  equivalente  para  la
+              sentencia for:
+              expresión1;
+              while (expresión2) {
+                 sentencia;
+                 expresión3;
+              }
+
+       break  Esta  sentencia  fuerza  la  salida de la sentencia
+              while o for más reciente.
+
+       continue
+              La sentencia continue (una ampliación) provoca  que
+              la  sentencia  for  más reciente comience una nueva
+              iteración.
+
+       halt   La sentencia halt (una ampliación) provoca  que  el
+              procesador bc termine sólo cuando es ejecutada. Por
+              ejemplo, "if (0 == 1) halt" no hará que bc  termine
+              porque no llega a ejecutarse la sentencia halt.
+
+       return Devuelve el valor 0 desde una función. (Ver sección
+              sobre funciones).
+
+       return ( expresión )
+              Devuelve el valor de la expresión  desde  una  fun­
+              ción.  (Ver sección sobre funciones).
+
+   PSEUDO SENTENCIAS
+       Estas  sentencias  no  son sentencias en el sentido tradi­
+       cional. No son sentencias que se ejecuten. Su  función  se
+       realiza en "tiempo de compilación".
+
+       limits Imprime los límites locales forzados por la versión
+              local de bc. Esto es una ampliación.
+
+       quit   Cuando la sentencia quit se lee, el  procesador  bc
+              termina,  cualquiera  que  sea  el  lugar  donde se
+              encuentre la sentencia quit. Por ejemplo, "if (0 ==
+              1) quit" hará que bc termine.
+
+       warranty
+              Imprime  un  aviso largo sobre la garantía. Esto es
+              una ampliación.
+
+   FUNCIONES
+       Las funciones proporcionan un método para definir un  cál­
+       culo  que  será  ejecutado  más tarde. Las funciones en bc
+       siempre calculan un valor que devuelven a quien la ha lla­
+       mado. La definición de las funciones son "dinámicas" en el
+       sentido de que una función está indefinida  hasta  que  se
+       encuentra una definición en la entrada. Se usa esa defini­
+       ción hasta que se encuentra otra definición de función con
+       el  mismo nombre. La nueva definición reemplaza a la ante­
+       rior.  Una función se define como sigue:
+              define nombre ( parámetros ) { nueva_línea
+                  auto_lista   lista_de_sentencias }
+       La ejecución de una función es simplemente  una  expresión
+       de la forma "nombre(parámetros)".
+
+       Los parámetros son números o matrices (una ampliación). En
+       la definición  de  la  función,  se  definen  cero  o  más
+       parámetros  listando  sus nombres separados por comas. Los
+       números son llamados por valor. Las matrices son  llamadas
+       por variable. Las matrices se especifican en la definición
+       de parámetros mediante la notación "name[]". En la llamada
+       a  la  función,  los  parámetros son expresiones completas
+       para los parámetros que son  números.   Se  usa  la  misma
+       notación  para  pasar  matrices que para definirlas en los
+       parámetros. El nombre de la matriz se pasa  a  la  función
+       por  variable.  Como las definiciones de las funciones son
+       dinámicas, el número de parámetros y los tipos se comprue­
+       ban  en  el momento de llamar a la función. Cualquier dis­
+       crepancia en el número o en  el  tipo  de  los  parámetros
+       provocará  un  error  en  tiempo  de ejecución. También se
+       provocará un error al llamar a una función no definida.
+
+       La auto_lista es una lista opcional de variables para  uso
+       "local".  La  sintaxis  de  esta lista (si se da) es "auto
+       nombre, ... ;". (El punto y coma es opcional). Cada nombre
+       es  el nombre de una variable auto. Las matrices se pueden
+       especificar con la  misma  notación  que  se  usa  en  los
+       parámetros.  Los  valores de estas variables se guardan en
+       una pila al comienzo de la función. Entonces son  inicial­
+       izadas a cero y se usan en el transcurso de la función. Al
+       finalizar la función, se recuperan de la pila los  valores
+       originales (en el momento de la llamada a la función). Los
+       parámetros son realmente variables auto que se inicializan
+       al  valor  proporcionado  en  la llamada a la función. Las
+       variables auto son diferentes de las  tradicionales  vari­
+       ables locales en que si la función A llama a la función B,
+       B puede acceder a las  variables  auto  de  A  simplemente
+       usando  sus nombres, a no ser que la función B tenga vari­
+       ables auto del mismo nombre.   Como  tanto  las  variables
+       auto  como  los  parámetros  son guardados en una pila, bc
+       admite funciones recursivas.
+
+       El cuerpo de la función es una lista de sentencias de  bc.
+       De  nuevo  las sentencias van separadas por punto y coma o
+       cambio de línea. La sentencia return hace que  la  función
+       termine  y devuelva un valor a la expresión que ha llamado
+       a la función.. La primera  forma,  "return",  devuelve  el
+       valor  0. La segunda forma "return ( expresión )", calcula
+       el valor de la expresión y lo devuelve a la expresión  que
+       ha  llamado  la  función. Hay un "return (0)" implícito al
+       final de cada función. Esto permite a una función terminar
+       y  devolver  0,  sin  necesidad  de  una  sentencia return
+       explícita.
+
+       Las funciones también cambian el uso de la variable ibase.
+       Todas  las  constantes en el cuerpo de la función son con­
+       vertidas usando el valor de ibase en el momento de  llamar
+       a la función. Los cambios de ibase serán ignorados durante
+       la ejecución de la función excepto para la función  están­
+       dar  read, que siempre usará el valor actual de ibase para
+       la conversión de los números.
+
+   BIBLIOTECA MATEMÁTICA
+       Si  se  invoca  bc  con  la  opción  -l,  una   biblioteca
+       matemática  es pre-cargada y la escala por defecto se pone
+       a 20. Las funciones matemáticas calcularán sus  resultados
+       a la escala definida en el momento de su llamada.  La bib­
+       lioteca matemática define las siguientes funciones:
+
+       s (x)  El seno de x, con x en radianes.
+
+       c (x)  El coseno de x, con x en radianes.
+
+       a (x)  El arcotangente de x, con el resultado en radianes.
+
+       l (x)  El logaritmo natural de x.
+
+       e (x)  La  función  exponencial  resultante de elevar e al
+              valor de x.
+
+       j (n,x)
+              La función bessel de orden entero n de x.
+
+   EJEMPLOS
+       En /bin/sh, lo siguiente asignará el valor de  "pi"  a  la
+       variable shell pi.
+
+              pi=$(echo "scale=10; 4*a(1)" | bc -l)
+
+
+       Lo  siguiente  es  la definición de la función exponencial
+       usada en  la  biblioteca  matemática.  Esta  función  está
+       escrita en bc de POSIX.
+
+              scale = 20
+
+              /* Usa el hecho de que  e^x = (e^(x/2))^2
+                 Si x es lo suficientemente pequeño, se usa la serie:
+                   e^x = 1 + x + x^2/2! + x^3/3! + ...
+              */
+
+              define e(x) {
+                auto  a, d, e, f, i, m, v, z
+
+                /* Comprueba el signo de x. */
+                if (x<0) {
+                  m = 1
+                  x = -x
+                }
+
+                /* Precondición x. */
+                z = scale;
+                scale = 4 + z + .44*x;
+                while (x > 1) {
+                  f += 1;
+                  x /= 2;
+                }
+
+                /* Inicialización de las variables. */
+                v = 1+x
+                a = x
+                d = 1
+
+                for (i=2; 1; i++) {
+                  e = (a *= x) / (d *= i)
+                  if (e == 0) {
+                    if (f>0) while (f--)  v = v*v;
+                    scale = z
+                    if (m) return (1/v);
+                    return (v/1);
+                  }
+                  v += e
+                }
+              }
+
+
+       El  siguiente  código usa las características ampliadas de
+       bc para implementar un simple programa para calcular  bal­
+       ances.  Es  mejor guardar este programa en un fichero para
+       poderlo usar varias veces sin  tener  que  teclearlo  cada
+       vez.
+
+              scale=2
+              print "\n¡Programa de balances!\n"
+              print " Recuerde, los depósitos son transacciones negativas.\n"
+              print " Para salir introducir una transacción 0 .\n\n"
+
+              print "¿ Balance inicial ? "; bal = read()
+              bal /= 1
+              print "\n"
+              while (1) {
+                "Balance actual = "; bal
+                "¿ transacción ? "; trans = read()
+                if (trans == 0) break;
+                bal -= trans
+                bal /= 1
+              }
+              quit
+
+
+       Lo  siguiente  es  la  definición  de la función factorial
+       recursiva.
+
+              define f (x) {
+                if (x <= 1) return (1);
+                return (f(x-1) * x);
+              }
+
+
+   OPCIÓN READLINE
+       El bc de GNU se puede compilar  (mediante  una  opción  de
+       configuración) para usar la biblioteca de entrada readline
+       de GNU. Esto permite al usuario mayor posibilidad de  edi­
+       ción  de  las líneas antes de mandarlas a bc. También per­
+       mite tener un histórico de las líneas  previamente  intro­
+       ducidas.  Cuando  se  selecciona esta opción, bc tiene una
+       variable especial más. Esta variable especial, history  es
+       el  número  de  líneas  que se guardan en el histórico. Un
+       valor de -1 significa que este número es  ilimitado.  Este
+       es el valor por defecto. Dando un valor positivo a history
+       se restringe el número de líneas a este valor. El valor  0
+       desactiva  el  histórico.  Para  más información, leer los
+       manuales de usuario de las bibliotecas readline y  history
+       de GNU.
+
+   DIFERENCIAS
+       Esta  versión de bc fue implementada a partir del borrador
+       POSIX P1003.2/D11 y contiene varias diferencias y  amplia­
+       ciones  respecto  a  este  borrador y las implementaciones
+       tradicionales. No  está  implementada  usando  dc(1)  como
+       suele  ser  tradicional. Esta versión es un simple proceso
+       que analiza el programa y ejecuta una traducción de este a
+       un código de bytes (byte code). Hay una opción "indocumen­
+       tada" (-c) que hace que el programa imprima en  la  salida
+       estándar  este  código  en  lugar de ejecutarlo. Fue usada
+       principalmente para depurar el analizador  y  preparar  la
+       biblioteca matemática.
+
+       Una  mayor  fuente  de  diferencias  son las ampliaciones,
+       tanto cuando son añadidas para dar más funcionalidad  como
+       cuando añaden nuevas características.  Esta es la lista de
+       las diferencias y ampliaciones.
+
+       Entorno
+              Esta versión no se ajusta al estándar  POSIX  sobre
+              el  proceso  de la variable de entorno LANG y todas
+              las variables de entorno que comienzan por LC_.
+
+       nombres
+              El bc tradicional y el de POSIX usan nombres de una
+              sola  letra  para  funciones, variables y matrices.
+              Han sido ampliados para ser nombres  multi-carácter
+              que  comienzan  por  una  letra  y  pueden contener
+              letras, dígitos y caracteres de subrayado.
+
+       Cadenas
+              No se permite que las cadenas contengan  caracteres
+              nulos  (NUL).  El estándar POSIX dice que todos los
+              caracteres se deben incluir en las cadenas.
+
+       last   En el bc de POSIX no existe la variable last. Algu­
+              nas  implementaciones  de  bc  usan el punto (.) de
+              manera similar.
+
+       comparaciones
+              El bc de POSIX permite las comparaciones sólo en la
+              sentencia  if,  la  sentencia  while  y  la segunda
+              expresión de la sentencia for. Además, sólo se per­
+              mite  una operación relacional en cada una de estas
+              sentencias.
+
+       sentencia if, cláusula else
+              El bc de POSIX no tiene la cláusula else.
+
+       sentencia for
+              El bc de POSIX obliga a que estén todas las  expre­
+              siones de la sentencia for.
+
+       &&, ||, !
+              El bc de POSIX no tiene los operadores lógicos.
+
+       función read
+              El bc de POSIX no tiene la función read.
+
+       sentencia print
+              El bc de POSIX no tiene la sentencia print.
+
+       sentencia continue
+              El bc de POSIX no tiene la sentencia continue.
+
+       parámetros de tipo matriz
+              El  bc  de POSIX (actualmente) no admite totalmente
+              las matrices como parámetros.  La  gramática  POSIX
+              permite  incluir  matrices  en la definición de las
+              funciones,  pero  no  proporciona  un  método  para
+              especificar  una  matriz  como parámetro en la lla­
+              mada. (Se puede considerar esto como un error de la
+              gramática).  En  las implementaciones tradicionales
+              de  bc  sólo  se  pueden  usar  las  matrices  como
+              parámetros por valor.
+
+       =+, =-, =*, =/, =%, =^
+              El  bc de POSIX no define estos operadores de asig­
+              nación "al viejo estilo". Esta  versión  puede  que
+              las  permita.  Utilice la sentencia limits para ver
+              si la versión instalada las admite. Si se  admiten,
+              la  sentencia "a =- 1" decrementará a en 1 en lugar
+              de asignar a a el valor -1.
+
+       espacios en los números
+              Otras implementaciones de bc permiten  espacios  en
+              los  números.  Por  ejemplo, "x=1 3" asignaría a la
+              variable x el valor 13. La misma  sentencia  provo­
+              cará un error de sintaxis en esta versión de bc.
+
+       errores y ejecución
+              Esta implementación varia de otras implementaciones
+              en el tema de qué código se ejecutará cuando en  el
+              programa  se  encuentren  errores  sintácticos o de
+              otro tipo. Si en la definición de  una  función  se
+              encuentra un error sintáctico, se intenta recuperar
+              el error encontrando el principio de la sentencia y
+              continuando  con el análisis de la función. Una vez
+              que el error se encuentra en la función, la función
+              no  podrá  usarse  y queda indefinida.  Los errores
+              sintácticos en la ejecución de  código  interactivo
+              invalidarán  el  actual  bloque  en  ejecución.  El
+              bloque en ejecución acaba con  un  salto  de  línea
+              tras  una  secuencia  completa  de  sentencias. Por
+              ejemplo,
+              a = 1
+              b = 2
+       tiene dos bloques y
+              { a = 1
+                b = 2 }
+       tiene un bloque. Cualquier error en  tiempo  de  ejecución
+       terminará con el actual bloque en ejecución. Un mensaje de
+       aviso (warning) en tiempo de ejecución no terminará con el
+       actual bloque en ejecución.
+
+       Interrupciones
+              Durante  una  sesión  interactiva,  la señal SIGINT
+              (habitualmente generada por el  carácter  control-C
+              desde  el  terminal)  provocará la interrupción del
+              actual bloque en ejecución. Se mostrará un error en
+              tiempo  de  ejecución  indicando  que  función  fue
+              interrumpida. Después de limpiar todas las  estruc­
+              turas,  se muestra un mensaje al usuario para indi­
+              carle que bc esta listo para aceptar  más  entrada.
+              Todas  las  funciones  definidas  previamente  per­
+              manecen definidas y las variables que no  sean  del
+              tipo  auto  conservan  el  valor  que  tenían en el
+              momento de la interrupción. Durante una sesión  no-
+              interactiva, la señal SIGINT interrumpirá la ejecu­
+              ción de bc por completo.
+
+   LÍMITES
+       Los límites actualmente en vigor para este  procesador  bc
+       son los siguientes. Algunos de ellos pueden haber cambiado
+       en el proceso de instalación. Utilice la sentencia  limits
+       para ver sus valores actuales.
+
+       BC_BASE_MAX
+              La  máxima base de salida se inicializa actualmente
+              a 999. La base máxima de entrada es 16.
+
+       BC_DIM_MAX
+              Tal y como se distribuye, este límite se inicializa
+              arbitrariamente  a  65535.  En su instalación puede
+              ser diferente.
+
+       BC_SCALE_MAX
+              El número de dígitos tras la coma decimal se limita
+              a  INT_MAX  dígitos.  De igual manera, el número de
+              dígitos delante de la  coma  decimal  se  limita  a
+              INT_MAX dígitos
+
+       BC_STRING_MAX
+              El  límite  para  el  número  de  caracteres de una
+              cadena es INT_MAX caracteres.
+
+       exponente
+              El valor del exponente en la operación potencia (^)
+              esta limitado a LONG_MAX.
+
+       multiplicación
+              La  rutina  de  multiplicación puede dar resultados
+              incorrectos si uno de  los  números  tiene  más  de
+              LONG_MAX / 90 dígitos en total. Para enteros largos
+              (longs) de  32  bits,  este  número  es  23.860.929
+              dígitos.
+
+       tamaño del código
+              Cada función y el programa principal ("main") están
+              limitados a 16384 bytes de código  de  bytes  (byte
+              code) cada uno. Este límite (BC_MAX_SEGS) puede ser
+              fácilmente cambiado para tener más de 16  segmentos
+              de 1024 bytes.
+
+       nombres de variables
+              El  límite  actual para el número de nombres únicos
+              de variables simples, matrices y  funciones  es  de
+              32767 para cada tipo.
+
+VARIABLES DE ENTORNO
+       Las siguientes variables de entorno son procesadas por bc:
+
+       POSIXLY_CORRECT
+              Esto es lo mismo que la opción -s.
+
+       BC_ENV_ARGS
+              Este es otra forma de pasar  argumentos  a  bc.  El
+              formato  es el mismo que los argumentos de la línea
+              de comando. Estos argumentos se  procesan  primero,
+              por  lo que cualquier fichero presente en los argu­
+              mentos de entorno es procesado antes que cualquiera
+              que  aparezca  en la línea de comando. Esto permite
+              al usuario establecer  opciones  "estándar"  y  los
+              ficheros  que serán procesados en todas las invoca­
+              ciones de bc. Los ficheros listados  en  las  vari­
+              ables  de  entorno  generalmente contendrán defini­
+              ciones de funciones que  el  usuario  quiera  tener
+              definidas cada vez que ejecute bc.
+
+       BC_LINE_LENGTH
+              Este  es un número que especifica el número de car­
+              acteres utilizados por los números en una línea  en
+              la  salida.  Incluyendo  los  caracteres de contra-
+              barra y de salto de línea para los números  largos.
+
+FICHEROS
+       En  la mayoría de las instalaciones, bc está completamente
+       auto-contenido. Allí dónde el tamaño  del  ejecutable  sea
+       importante  o el compilador de C no maneje las cadenas muy
+       largas, bc leerá la  biblioteca  matemática  estándar  del
+       fichero /usr/local/lib/libmath.b. (La situación real puede
+       variar. Puede ser /lib/libmath.b ).
+
+DIAGNÓSTICOS
+       Si algún fichero dado en la línea de comando no  se  puede
+       abrir,  bc  informará  que el fichero no está disponible y
+       terminará. Asimismo, hay errores en tiempo de  compilación
+       y de ejecución que deberían ser auto-explicativos.
+
+FALLOS (BUGS)
+       La recuperación de errores no es muy buena todavía.
+
+       Notifique cualquier error a bug-gnu-utils@prep.ai.mit.edu.
+       Compruebe que incluye la palabra ``bc'' dentro  del  campo
+       ``Asunto:'' (``Subject:'').
+
+AUTOR
+       Philip A. Nelson
+       phil@cs.wwu.edu
+
+RECONOCIMIENTOS
+       El  autor  quisiera  agradecer a Steve Sommars (Steve.Som­
+       mars@att.com) su gran ayuda probando la implementación. Me
+       dio  muchas  sugerencias  estupendas.  Éste es un producto
+       mejor gracias a su implicación.
+
+
+
+                                .                           bc(1)

@@ -1,0 +1,33 @@
+FIXSCRIBEPS(1)                                     FIXSCRIBEPS(1)
+
+
+
+NOMBRE
+       fixscribeps  -  filtro  que prepara documentos Scribe para
+       que las PSUtils funcionen
+
+SINOPSIS
+       fixscribeps < Scribe.ps > Fixed.ps
+
+DESCRIPCIÓN
+       Fixscribeps es un filtro  perl  que  "prepara"  PostScript
+       generado por Scribe para que funcione correctamente con el
+       paquete psutils de Angus Duggan.
+
+AUTOR
+       Copyright (C) Angus J. C. Duggan 1991-1995
+
+VÉASE TAMBIÉN
+       psbook(1), psselect(1), pstops(1),  epsffit(1),  psnup(1),
+       psresize(1), psmerge(1), fixscribeps(1), getafm(1), fixdl­
+       srps(1),  fixfmps(1),  fixmacps(1),  fixpsditps(1),  fixp­
+       spps(1),  fixtpps(1), fixwfwps(1), fixwpps(1), fixwwps(1),
+       extractres(1), includeres(1)
+
+MARCAS REGISTRADAS
+       PostScript es una marca registrada de Adobe Systems Incor­
+       porated.
+
+
+
+                 PSUtils Release 1 Patchlevel 17   FIXSCRIBEPS(1)

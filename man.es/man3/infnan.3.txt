@@ -1,0 +1,38 @@
+INFNAN(3)        Manual del Programador de Linux        INFNAN(3)
+
+
+
+NOMBRE
+       infnan  - maneja un resultado infinito o no-numérico (not-
+       a-number, NaN)
+
+SINOPSIS
+       #include <math.h>
+
+       double infnan(int error);
+
+DESCRIPCIÓN
+       La función infnan() devuelve un valor  manejable  para  un
+       valor  infinito  o  no-numérico  (NaN).  El valor de error
+       puede ser ERANGE para representar  infinito,  o  cualquier
+       otro valor para NaN. errno también se actualiza.
+
+VALOR REGRESADO
+       Si error es ERANGE (infinito), se devuelve HUGE_VAL.
+
+       Si error es -ERANGE (-infinito), se devuelve -HUGE_VAL.
+
+       Si error es cualquier otra cosas, se devuelve NAN.
+
+ERRORES
+       ERANGE El  valor de error es infinito positivo o negativo.
+
+       EDOM   El valor de error es no-numérico (NaN).
+
+CONFORME A
+       BSD 4.3
+
+
+
+
+GNU                         2 Jun 1993                  INFNAN(3)

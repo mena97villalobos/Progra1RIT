@@ -1,0 +1,30 @@
+ACOSH(3)         Manual del Programador de Linux         ACOSH(3)
+
+
+
+NOMBRE
+       acosh - función arco coseno hyperbólico
+
+SINOPSIS
+       #include <math.h>
+
+       double acosh(double x);
+
+DESCRIPCIÓN
+       La  función  acosh() calcula el arco coseno hyperbólico de
+       x; éste es el valor cuyo coseno hyperbólico es x. Si x  es
+       menor  que  1.0, acosh() devuelve NaN (not-a-number, no es
+       un número) y a errno se le asigna un valor apropiado.
+
+ERRORES
+       EDOM   x está fuera de rango.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       asinh(3), atanh(3), cosh(3), sinh(3), tanh(3)
+
+
+
+GNU                       13 Junio 1993                  ACOSH(3)

@@ -1,0 +1,25 @@
+ACCT(5)          Manual del Programador de Linux          ACCT(5)
+
+
+
+NOMBRE
+       acct - fichero de contabilidad de ejecución
+
+SINOPSIS
+       #include <sys/acct.h>
+
+DESCRIPCIÓN
+       El  núcleo mantiene una estructura de información contable
+       para todos los procesos. Si un proceso finaliza, y la con­
+       tabilidad  está  activada,  el  núcleo  llama a la función
+       acct(2) para preparar, y luego añadir,  un  registro  para
+       este  proceso  al fichero contable. La estructura contable
+       struct    acct    se    describe     en     el     fichero
+       /usr/src/linux/include/acct.h.
+
+VÉASE TAMBIÉN
+       acct(2), sa(1).
+
+
+
+Debian/GNU Linux         31 Octubre 1995                  ACCT(5)

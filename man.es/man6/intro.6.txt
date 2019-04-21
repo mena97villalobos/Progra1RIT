@@ -1,0 +1,21 @@
+INTRO(6)                      Juegos                     INTRO(6)
+
+
+
+NOMBRE
+       intro - Introducción a los juegos
+
+DESCRIPCIÓN
+       Este   capítulo  describe  todos  los  juegos  y  pequeños
+       entretenimientos disponibles en el sistema.
+
+AUTORES
+       Los autores y derechos de autor aparecen en  el  encabeza­
+       miento  de  cada una de las páginas del manual.  Los dere­
+       chos de autor  pueden  ser  muy  distintos  de  página  en
+       página.
+
+
+
+
+Linux                       7 Feb 1998                   INTRO(6)

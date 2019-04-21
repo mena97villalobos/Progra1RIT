@@ -1,0 +1,27 @@
+WALL(1)             Manual de Usuario de Linux            WALL(1)
+
+
+
+NOMBRE
+       wall -- envía un mensaje a todos los terminales.
+
+SINOPSIS
+       wall [ mensage ]
+
+DESCRIPCIÓN
+       Wall  envía  un  mensaje a todos los terminales conectados
+       con sus permisos mesg(1) puestos a yes. El  mensaje  puede
+       pasarse como un argumento a wall, o puede ser enviado a la
+       entrada estándar de wall. Cuando usamos la entrada  están­
+       dar desde un terminal, el mensaje debería finalizar con la
+       clave EOF (generalmente Control-D).
+
+VÉASE TAMBIÉN
+       mesg(1).
+
+AUTOR
+       Miquel van Smoorenburg, miquels@cistron.nl
+
+
+
+                         10 octubre 1994                  WALL(1)

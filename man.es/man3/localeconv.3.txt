@@ -1,0 +1,36 @@
+LOCALECONV(3)    Manual del Programador de Linux    LOCALECONV(3)
+
+
+
+NOMBRE
+       localeconv  - obtiene información sobre formateo de canti­
+       dades numéricas
+
+SINOPSIS
+       #include <locale.h>
+
+       struct lconv *localeconv(void);
+
+DESCRIPCIÓN
+       La función localeconv() devuelve un puntero a  una  struct
+       lconv  para  la  localización en curso. Esta estructura se
+       define en el fichero cabecera locale.h  y  contiene  todos
+       los  valores  asociados con las categorías de localización
+       LC_NUMERIC y LC_MONETARY.  Los  programas  también  pueden
+       hacer  uso  de  las  funciones printf() y strfmom() que se
+       comportan de acuerdo con la localización actual en uso.
+
+CONFORME A
+       ANSI C y POSIX.1
+
+FALLOS
+       La familia de funciones printf() puede respetar  o  no  la
+       localización en curso.
+
+VÉASE TAMBIÉN
+       locale(1),  localedef(1),  strcoll(3),  isalpha(3), setlo­
+       cale(3), strftime(3), locale(7)
+
+
+
+GNU                       25 Abril 1993             LOCALECONV(3)

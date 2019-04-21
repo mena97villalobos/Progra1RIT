@@ -1,0 +1,35 @@
+GETPAGESIZE(2)   Manual del Programador de Linux   GETPAGESIZE(2)
+
+
+
+NOMBRE
+       getpagesize - obtiene el tamaño de página del sistema
+
+SINOPSIS
+       #include <unistd.h>
+
+       size_t getpagesize(void);
+
+DESCRIPCIÓN
+       Devuelve  el  número  de  bytes  de una página. Éste es el
+       tamaño de página del sistema, que no es necesariamente  el
+       mismo que el tamaño de página de hardware.
+
+OBSERVACIONES
+       getpagesize  está  implementada  como  una función de bib­
+       lioteca en las DLL 4.4.1. Dependiendo de lo que se  defina
+       cuando  la  biblioteca  se  compile, esta función devuelve
+       EXEC_PAGESIZE (puesto  a  4096  en  Linux  0.99.11),  NBPG
+       (puesto  a  4096 en Linux 0.99.11), o NBPC (no definido ni
+       en Linux 0.99.11 ni en las bibliotecas DLL 4.4.1).
+
+CONFORME A
+       SVr4, 4.4BSD (esta llamada al sistema apareció por 1ª  vez
+       en 4.2BSD).
+
+VÉASE TAMBIÉN
+       sbrk(2)
+
+
+
+Linux 0.99.11            22 Octubre 1996           GETPAGESIZE(2)

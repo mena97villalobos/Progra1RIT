@@ -1,0 +1,221 @@
+MSGOP(2)         Manual del Programador de Linux         MSGOP(2)
+
+
+
+NOMBRE
+       msgop - operaciones con mensajes
+
+SINOPSIS
+       # include <sys/types.h>
+       # include <sys/ipc.h>
+       # include <sys/msg.h>
+
+       int  msgsnd  (  int msqid, struct msgbuf *msgp, int msgsz,
+       int msgflg )
+
+       int msgrcv ( int msqid, struct msgbuf  *msgp,  int  msgsz,
+       long msgtyp, int msgflg )
+
+DESCRIPCIÓN
+       Para  enviar  o  recibir  un  mensaje, el proceso llamador
+       aloja una estructura como la siguiente:
+
+            struct msgbuf {
+                 long mtype;     /* tipo de msj., debe ser > 0 */
+                 char mtext[1];  /* datos del mensaje */
+            };
+
+       pero  con un vector mtext de tamaño msgsz, un valor entero
+       no negativo.  El miembro de la estructura mtype debe tener
+       un  valor  entero  estrictamente  positivo  que  puede ser
+       empleado por el proceso receptor para la selección de men­
+       saje (vea la sección sobre msgrcv).
+
+       El  proceso  llamador  debe  tener  permiso  de  acceso de
+       escritura para enviar, y de lectura para recibir  un  men­
+       saje en la cola.
+
+       La  llamada al sistema msgsnd encola una copia del mensaje
+       apuntado por el argumento msgp en la cola de mensaje  cuyo
+       identificador  se  especifica  por  el valor del argumento
+       msqid.
+
+       El argumento msgflg especifica  el  comportamiento  de  la
+       llamada al sistema si el poner en la cola el nuevo mensaje
+       necesitara más de msg_q bytes en la cola.   Si  IPC_NOWAIT
+       está  definido, el mensaje no será enviado y la llamada al
+       sistema falla regresando con el  valor  EAGAIN  puesto  en
+       errno.   De otro modo, el proceso se suspende hasta que la
+       condición de la suspensión deje de existir (en  cuyo  caso
+       el  mensaje  es  enviado y la llamada al sistema acaba con
+       éxito), o la cola se borra (en cuyo  caso  la  llamada  al
+       sistema  falla  con el valor EIDRM en errno), o el proceso
+       recibe una señal que ha de ser capturada (en cuyo caso  la
+       llamada al sistema falla con EINTR en errno).
+
+       Tras la terminación con éxito de la llamada, la estructura
+       de datos de la cola de mensajes se actualiza como sigue:
+
+              msg_lspid toma el valor del PID  del  proceso  lla­
+              mador.
+
+              msg_qnum se incrementa en una unidad.
+
+              msg_stime toma el valor de la hora actual.
+
+       La  llamada al sistema msgrcv lee un mensaje de la cola de
+       mensajes especificada por msqid y lo guarda en la  estruc­
+       tura msgbuf apuntada por el argumento msgp, borrando de la
+       cola, en caso de éxito, el mensaje leído.
+
+       El argumento msgsz especifica el tamaño  máximo  en  bytes
+       para  el  miembro  mtext  de la estructura apuntada por el
+       argumento msgp.  Si el texto del mensaje tiene una  longi­
+       tud  mayor  de msgsz, entonces si el argumento msgflg con­
+       tiene MSG_NOERROR, el texto del mensaje se truncará (y  la
+       parte  truncada  se  perderá),  y  si no, el mensaje no se
+       borra de la cola y la llamada al sistema falla  regresando
+       y poniendo el valor E2BIG en errno.
+
+       El  argumento  msgtyp especifica el tipo de mensaje pedido
+       como se muestra a continuación:
+
+              Si msgtyp es 0, entonces se lee el  mensaje  en  la
+              parte frontal de la cola.
+
+              Si msgtyp es mayor que 0, entonces se lee el primer
+              mensaje en la cola del tipo msgtyp si MSG_EXCEPT no
+              está contenido en el argumento msgflg, de otro modo
+              se lee el primer mensaje en la cola  de  tipo  dis­
+              tinto a msgtyp.
+
+              Si  msgtyp  es  menor  que  0, entonces se leerá el
+              primer mensaje en la cola  con  el  tipo  más  bajo
+              menor o igual al valor absoluto de msgtyp.
+
+       El   argumento   msgflg   continene  ninguna,  una  o  más
+       (engarzándolas con el operador OR) de entre las siguientes
+       opciones:
+
+              IPC_NOWAIT  Para  retorno inmediato si no hay en la
+              cola ningún mensaje del tipo pedido. La llamada  al
+              sistema falla con el valor ENOMSG en errno.
+
+              MSG_EXCEPT  Empleado  con  msgtyp  mayor que 0 para
+              leer el primer mensaje en la cola con tipo de  men­
+              saje diferente de msgtyp.
+
+              MSG_NOERROR Para truncar el texto del mensaje si es
+              mayor que msgsz bytes.
+
+       Si  no  hay  disponible  un  mensaje  del  tipo  pedido  e
+       IPC_NOWAIT  no  está  contenido en msgflg, el proceso lla­
+       mador se bloquea hasta que ocurra una  de  las  siguientes
+       condiciones:
+
+              Un mensaje del tipo deseado se ponga en la cola.
+
+              La  cola  de mensajes se borre del sistema.  En tal
+              caso la llamada al sistema falla con el valor EIDRM
+              en errno.
+
+              El  proceso llamador reciba una señal que ha de ser
+              capturada.  En tal caso la llamada al sistema falla
+              con el valor EINTR en errno.
+
+       Tras  la  terminación con éxito, la estructura de datos de
+       la cola de mensajes se actualiza como sigue:
+
+              msg_lrpid toma el valor del PID  del  proceso  lla­
+              mador.
+
+              msg_qnum se decrementa en una unidad.
+
+              msg_rtime toma el valor de la hora actual.
+
+VALOR DEVUELTO
+       En  caso  de  fallo ambas funciones devuelven -1 con errno
+       indicando el error, en caso contrario msgsnd devuelve 0  y
+       msgrvc  devuelve  el número de bytes realmente copiados en
+       el vector mtext.
+
+ERRORES
+       Si msgsnd falla, cuando la función regresa,  errno  cogerá
+       uno de entre los siguientes valores:
+
+       EAGAIN     El  mensaje  no  puede  ser  enviado  debido al
+                  límite  para  la  cola  de   msg_q   bytes,   e
+                  IPC_NOWAIT estaba contenido en mgsflg.
+
+       EACCES     El   proceso  llamador  no  tiene  permisos  de
+                  escritura en la cola de mensajes.
+
+       EFAULT     La dirección apuntada por msgp no es accesible.
+
+       EIDRM      La cola de mensajes fue borrada.
+
+       EINTR      Durmiendo  a la espera de una condición de cola
+                  de mensajes llena, el proceso recibió una señal
+                  que tuvo que ser capturada.
+
+       EINVAL     Valor inválido para msqid, o  valor no positivo
+                  de mtype, o valor inválido  para  msgsz  (menor
+                  que 0 ó mayor que el valor del sistema MSGMAX).
+
+       ENOMEM     El sistema no tiene bastante memoria para hacer
+                  una copia del msgbuf suministrado.
+
+       Si  msgrcv  falla, cuando la función regresa, errno tomará
+       uno de entre los valores siguientes:
+
+       E2BIG      La longitud del texto del mensaje es mayor  que
+                  msgsz   y  MSG_NOERROR  no  está  contenido  en
+                  msgflg.
+
+       EACCES     El proceso llamador no tiene permiso de lectura
+                  en la cola de mensajes.
+
+       EFAULT     La dirección apuntada por msgp no es accesible.
+
+       EIDRM      Mientras el proceso estaba durmiento en  espera
+                  de  recibir un mensaje, la cola de mensajes fue
+                  borrada.
+
+       EINTR      Mientras el proceso estaba durmiento en  espera
+                  de  recibir  un mensaje, el proceso recibió una
+                  señal que tuvo que ser capturada.
+
+       EINVAL     Valor ilegal de msgqid, o msgsz menor que 0.
+
+       ENOMSG     IPC_NOWAIT estaba  contenido  en  msgflg  y  no
+                  existía ningún mensaje del tipo requerido en la
+                  cola de mensajes.
+
+OBSERVACIONES
+       Los siguientes son límites del sistema que  afectan  a  la
+       llamada al sistema msgsnd :
+
+       MSGMAX     Tamaño  máximo  para  un  texto  de mensaje: la
+                  implementación pone esta valor a 4080 bytes.
+
+       MSGMNB     Tamaño máximo predeterminado en  bytes  de  una
+                  cola de mensaje: depende de la política seguida
+                  en el sistema. El super-usuario puede incremen­
+                  tar  el tamaño de una cola de mensajes más allá
+                  de MSGMNB a través de  la  llamada  al  sistema
+                  msgctl .
+
+       La  implementación  no  tiene  límites intrínsecos para el
+       número  máximo,  del  sistema,  de  cabeceras  de  mensaje
+       (MSGTQL)  ni para el tamaño máximo, del sistema, en bytes,
+       de la zona común de mensajes (MSGPOOL).
+
+CONFORME A
+       SVr4, SVID.
+
+VÉASE TAMBIÉN
+       ipc(5), msgctl(2), msgget(2), msgrcv(2), msgsnd(2).
+
+
+
+Linux 2.0.32             22 Octubre 1996                 MSGOP(2)

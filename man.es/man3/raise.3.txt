@@ -1,0 +1,30 @@
+RAISE(3)         Manual del Programador de Linux         RAISE(3)
+
+
+
+NOMBRE
+       raise - envía una señal al proceso en curso
+
+SINOPSIS
+       #include <signal.h>
+
+       int raise (int sig);
+
+DESCRIPCIÓN
+       La  función  raise envía la señal sig al proceso en curso.
+       Es equivalente a
+
+              kill(getpid(),sig)
+
+VALOR DEVUELTO
+       0 en caso de éxito, no-cero si falla.
+
+CONFORME A
+       C ANSI
+
+VÉASE TAMBIÉN
+       kill(2), signal(2), getpid(2)
+
+
+
+GNU                        5 Marzo 1998                  RAISE(3)

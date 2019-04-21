@@ -1,0 +1,99 @@
+CRYPT(3)           Manual del Programador Linux          CRYPT(3)
+
+
+
+NOMBRE
+       crypt - cifrado de contraseñas y datos
+
+SINOPSIS
+       #define _XOPEN_SOURCE
+       #include <unistd.h>
+
+       char *crypt(const char *key, const char *salt);
+
+DESCRIPCIÓN
+       crypt es la función de cifrado de contraseñas. Está basada
+       en el algoritmo DES (Data Encryption Standard) con algunas
+       variaciones tendentes (junto con otras cosas) a desalentar
+       el uso de implementaciones por hardware de  buscadores  de
+       claves.
+
+       key es una contraseña tecleada por el usuario.
+
+       salt es una cadena de dos caracteres elegidas del conjunto
+       [a-zA-Z0-9./]. Esta cadena se emplea para variar el  algo­
+       ritmo en uno de 4096 modos diferentes.
+
+       Al  tomar  el  7º bit más bajo de cada carácter de key, se
+       obtiene una clave de 56 bits. Esta clave  de  56  bits  se
+       utiliza  para  cifrar  repetidamente  una cadena constante
+       (usualmente una cadena consistente  en  ceros).  El  valor
+       devuelto  apunta  a la contraseña cifrada, una serie de 13
+       caracteres imprimibles (los primeros dos caracteres repre­
+       sentan  al propio salt).  El valor devuelto apunta a datos
+       estáticos cuyos contenidos se sobreescriben en  cada  lla­
+       mada.
+
+       Cuidado:  El  espacio  de claves consiste en 2**56 igual a
+       7.2e16  valores   posibles.   Son   posibles   exhaustivas
+       búsquedas en este espacio de claves empleando computadores
+       masivamente paralelos. Existen programas,  como  crack(1),
+       que  pueden buscar en la porción del espacio de claves que
+       es generalmente  usado  por  los  humanos  para  sus  con­
+       traseñas.  De  aquí  que en la selección de contraseñas se
+       debe, como mínimo, evitar palabras y nombres  comunes.  Se
+       recomienda  el  uso de un programa passwd(1) que compruebe
+       durante el proceso de selección si la contraseña  es  vul­
+       nerable.
+
+       El algoritmo DES en sí tiene unas peculiaridades que hacen
+       que el empleo de la interfaz crypt(3) sea una pobre  elec­
+       ción  para  otro  fin más allá de la autenticación de con­
+       traseñas. Si está planeando utilizar la interfaz  crypt(3)
+       para  un  proyecto  criptográfico,  no lo haga: consiga un
+       buen  libro  sobre  cifrado  y  una  de  las   ampliamente
+       disponibles programotecas DES.
+
+       Cuando se cifra un texto plano P mediante DES con la clave
+       K, se obtiene el texto cifrado C, y  luego  al  cifrar  el
+       texto  plano complementario P' con la clave complementaria
+       K' se obtendrá el texto cifrado complementario C'.
+
+       Son claves débiles  aquéllas  que  permanecen  invariantes
+       tras  la  transformación de clave DES.  Deben evitarse las
+       cuatro claves débiles conocidas 0101010101010101,  fefefe­
+       fefefefefe, 1f1f1f1f0e0e0e0e y e0e0e0e0f1f1f1f1.
+
+       Hay  seis  pares  conocidos de claves medio débiles, cuyas
+       claves llevan a los mismos datos cifrados. Las claves  que
+       son  parte  de  tales  grupos de claves deberían evitarse.
+       Siento que no haya podido encontrar cuáles son.
+
+       Los datos fuertemente redundantes causan problemas con  el
+       cifrado  DES,  cuando  se  emplean  en el modo de libro de
+       claves que  implementa  crypt(3).   La  interfaz  crypt(3)
+       debería  emplearse  solamente para su propósito inicial de
+       verificación de contraseñas, y no como parte de  una  her­
+       ramienta de cifrado de datos.
+
+       Los  primeros  y  últimos tres bits de salida de la cuarta
+       caja-S pueden representarse como funciones de sus bits  de
+       entrada. Estudios empíricos han demostrado que las cajas-S
+       calculan  parcialmente  la  misma  salida   para   similar
+       entrada. Se sospecha que esto puede representar una puerta
+       trasera que podría  permitir  a  la  NSA  descifrar  datos
+       cifrados con DES.
+
+       Por las razones anteriormente expuestas, el hacer pública­
+       mente disponibles datos cifrados con crypt() debe  consid­
+       erarse como algo inseguro.
+
+CONFORME A
+       SVID, X/OPEN, BSD 4.3
+
+VÉASE TAMBIÉN
+       login(1), passwd(1), encrypt(3), getpass(3), passwd(5)
+
+
+
+Linux                      9 Enero 1995                  CRYPT(3)

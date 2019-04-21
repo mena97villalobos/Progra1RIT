@@ -1,0 +1,69 @@
+SENDFILE(2)      Manual del Programador de Linux      SENDFILE(2)
+
+
+
+NOMBRE
+       sendfile - transfiere datos entre descriptores de fichero
+
+SINOPSIS
+       #include <unistd.h>
+
+       int  sendfile(int out_fd, int in_fd, off_t *offset, size_t
+       count)
+
+DESCRIPCIÓN
+       Esta llamada copia datos entre un descriptor de fichero  y
+       otro.  Cualquiera de los dos descriptores de fichero o los
+       dos pueden referirse a un conector (socket).   in_fd  debe
+       ser un descriptor de fichero abierto para lectura y out_fd
+       debe ser un descriptor abierto para escritura.  offset  es
+       un  puntero  a  una  variable que contiene la posición del
+       puntero del fichero de entrada desde  la  que  sendfile(2)
+       empezará  a  leer  datos.  Cuando sendfile regrese, a esta
+       variable se le asignará la posición del byte siguiente  al
+       último  byte  que  se  ha  leído.  count es la cantidad de
+       bytes a copiar entre los descriptores de fichero.
+
+
+NOTAS
+       Sendfile no modifica  el  puntero  de  fichero  actual  de
+       in_fd, pero sí lo hace para out_fd.
+
+       Si planea usar sendfile para enviar ficheros a un conector
+       TCP,  pero  necesita  enviar  algunos  datos  de  cabecera
+       delante  de  los  contenidos del fichero, por favor vea la
+       opción TCP_CORK en tcp(7)  para  minimizar  el  número  de
+       paquetes y ajustar el rendimiento.
+
+
+VALOR DEVUELTO
+       Si la transferencia ha tenido éxito, se devuelve el número
+       de bytes  escritos  en  out_fd.   En  caso  de  error,  se
+       devuelve -1 y se asigna a errno un valor apropiado.
+
+
+ERRORES
+       EBADF   El fichero de entrada no ha sido abierto para lec­
+               tura o el fichero de salida  no  ha  sido  abierto
+               para escritura.
+
+       EINVAL  Descriptor inválido o bloqueado.
+
+       ENOMEM  No hay memoria suficiente para leer de in_fd.
+
+       EIO     Se  ha producido un error indeterminado al leer de
+               in_fd.
+
+VERSIONES
+       sendfile es una nueva característica de la versión 2.2  de
+       Linux.
+
+       Otros  Unix  normalmente  implementan  sendfile  con otras
+       semánticas y prototipos. No debería  usarse  en  programas
+       transportables.
+
+VÉASE TAMBIÉN
+       socket(2), open(2)
+
+
+

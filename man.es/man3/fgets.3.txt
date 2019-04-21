@@ -1,0 +1,89 @@
+GETS(3)          Manual del Programador de Linux          GETS(3)
+
+
+
+NOMBRE
+       fgetc,  fgets,  getc,  getchar,  gets, ungetc - entrada de
+       caracteres y cadenas de ellos
+
+SINOPSIS
+       #include <stdio.h>
+
+       int fgetc(FILE *flujo);
+       char *fgets(char *s, int tam, FILE *flujo);
+       int getc(FILE *flujo);
+       int getchar(void);
+       char *gets(char *s);
+       int ungetc(int c, FILE *flujo);
+
+DESCRIPCIÓN
+       fgetc() lee el siguiente carácter de flujo y  lo  devuelve
+       como  un  unsigned char modelado a un int, o EOF al llegar
+       al final del flujo o en caso de error.
+
+       getc() es equivalente a fgetc() excepto en el hecho de que
+       puede  estar  implementado como una macro que evalúe flujo
+       más de una vez.
+
+       getchar() es equivalente a getc(stdin).
+
+       gets() lee una línea de stdin y la guarda en el  búfer  al
+       que  apunta s hasta que se encuentre bien un carácter ter­
+       minador nueva-línea, bien EOF, al cual reemplaza con '\0'.
+       No  se  hace  ninguna  comprobación  de desbordamiento del
+       búfer (vea FALLOS más abajo).
+
+       fgets() lee como mucho uno menos  de  tam  caracteres  del
+       flujo  y  los guarda en el búfer al que apunte s.  La lec­
+       tura se para tras un EOF o una nueva-línea. Si se lee  una
+       nueva-línea,  se guarda en el búfer. Tras el último carác­
+       ter en el búfer se guarda un '\0'.
+
+       ungetc() pone c de vuelta en flujo,  modelado  a  unsigned
+       char,  donde queda disponible para una posterior operación
+       de lectura. Los  caracteres  puestos  en  el  flujo  serán
+       devueltos en orden inverso; sólo se garantiza que se pueda
+       devolver al flujo un carácter.
+
+       Las  llamadas  a  las  funciones  descritas  aquí   pueden
+       mezclarse  unas con otras y con llamadas a otras funciones
+       de entrada de la biblioteca stdio para el mismo  flujo  de
+       entrada.
+
+VALOR DEVUELTO
+       fgetc(),  getc()  y  getchar() devuelven el carácter leído
+       como un unsigned char modelado a un int o EOF al llegar al
+       final de la entrada o en caso de error.
+
+       gets() and fgets() devuelven s en caso de éxito, y NULL en
+       caso de error o cuando se  llegue  al  final  del  fichero
+       mientras que no se haya leído ningún carácter.
+
+       ungetc()  devuelve  c  en  caso de éxito, o EOF en caso de
+       error.
+
+CONFORME A
+       ANSI - C, POSIX.1
+
+FALLOS
+       Puesto que es imposible saber, sin conocer de antemano los
+       datos,  cuántos  caracteres va a leer gets(), y puesto que
+       gets() continuará guardando caracteres una  vez  alcanzado
+       el final del búfer, su empleo es extremadamente peligroso.
+       Muchas veces ha sido utilizado para comprometer la seguri­
+       dad  de un sistema. En su lugar emplee fgets() siempre que
+       pueda.
+
+       No es recomendable mezclar llamadas  a  las  funciones  de
+       entrada  de la biblioteca stdio con llamadas de bajo nivel
+       a read() para el descriptor de  fichero  asociado  con  el
+       flujo de entrada; los resultados serán indefinidos y prob­
+       ablemente no los deseados.
+
+VÉASE TAMBIÉN
+       read(2), write(2), fopen(3), fread(3), scanf(3),  puts(3),
+       fseek(3), ferror(3)
+
+
+
+GNU                       3 Febrero 1998                  GETS(3)

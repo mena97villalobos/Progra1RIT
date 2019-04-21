@@ -1,0 +1,32 @@
+RESET(1)         Manual del Programador de Linux         RESET(1)
+
+
+
+NOMBRE
+       reset - restaurar el terminal
+
+SINOPSIS
+       reset
+
+DESCRIPCIÓN
+       reset    llama    a    tput(1)    con    los    argumentos
+       clear,rmacs,rmm,rmul,rs1,rs2 y rs3.  Esto provoca que tput
+       envíe las cadenas de restauración al terminal basándose en
+       la información de /etc/termcap (para el tput de GNU o BSD)
+       o en la base de datos terminfo (para el tput de ncurses ).
+
+       Esta secuencia parece ser  suficiente  para  restaurar  la
+       Consola  Virtual de Linux cuando empieza a escribir carac­
+       teres extraños. Como  medida  de  precaución,  también  se
+       llama  a  stty(1)  con el argumento sane en un intento por
+       volver al modo ``cooked'' (interpretado).
+
+VÉASE TAMBIÉN
+       clear(1), stty(1), tput(1)
+
+AUTOR
+       Rik Faith (faith@cs.unc.edu)
+
+
+
+Linux 0.99               10 Octubre 1993                 RESET(1)

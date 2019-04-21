@@ -1,0 +1,121 @@
+QUOTACTL(2)      Manual del Programador de Linux      QUOTACTL(2)
+
+
+
+NOMBRE
+       quotactl - manipula cuotas de disco
+
+SINOPSIS
+       #include <sys/types.h>
+       #include <sys/quota.h>
+
+       int  quotactl  (int  cmd,  const  char *especial, int id ,
+       caddr_t direc);
+
+       #include <linux/unistd.h>
+
+       _syscall4(int, quotactl, int, cmd, const char *,  especial
+       , int, id, caddr_t, direc);
+
+DESCRIPCIÓN
+       El  sistema  de cuotas define para cada usuario o grupo un
+       límite blando y un límite duro limitando  la  cantidad  de
+       espacio  de  disco  que  puede  usarse  en  un  sistema de
+       ficheros dado. EL límite duro no puede ser traspasado.  El
+       límite  blando puede traspasarse, pero se avisará de ello.
+       Ítem más, el usuario no puede estar por encima del  límite
+       blando más allá de una semana (tiempo predeterminado) cada
+       vez: después de este periodo el límite blando cuenta  como
+       el duro.
+
+       La  llamada  al sistema quotactl manipula estas cuotas. Su
+       primer argumento es de la  forma  QCMD(subcmd,tipo)  donde
+       tipo es uno de USRQUOTA o GRPQUOTA (para cuotas de usuario
+       y grupo, respectivamente),  y  subcmd  está  descrito  más
+       abajo.
+
+       El  segundo  argumento especial es el dispositivo especial
+       de bloques al que se aplican  estas  cuotas.   Debe  estar
+       montado.
+
+       El  tercer  argumento id es el identificador del usuario o
+       grupo al cual se aplican estas cuotas  (cuando  sea  rele­
+       vante).
+
+       El  cuarto  argumento direc es la dirección de una estruc­
+       tura de datos, dependiendo de la orden.
+
+       El subcmd es uno de
+
+       Q_QUOTAON  Activa las cuotas. El  argumento  direc  es  el
+                  camino del fichero que contiene las cuotas para
+                  el sistema de ficheros.
+
+       Q_QUOTAOFF Desactiva las cuotas.
+
+       Q_GETQUOTA Obtiene los límites y el uso actual del espacio
+                  de  disco.  El  argumento direc es un puntero a
+                  una    estructura    dqblk     (definida     en
+                  <sys/quota.h>).
+
+       Q_SETQUOTA Establece los límites y el uso actual; direc es
+                  como antes.
+
+       Q_SETQLIM  Establece los límites; direc es como antes.
+
+       Q_SETUSE   Establece el uso.
+
+       Q_SYNC     Sincroniza la copia en disco de las  cuotas  de
+                  un sistema de ficheros.
+
+       Q_GETSTATS Obtiene datos estadísticos recogidos.
+
+
+VALOR DEVUELTO
+       En  caso  de éxito, quotactl devuelve 0. En caso de error,
+       se devuelve -1 y se pone un valor apropiado en errno.
+
+ERRORES
+       ENOPKG   El núcleo ha sido compilado sin soporte  de  cuo­
+                tas.
+
+       EFAULT   Valor malo para direc.
+
+       EINVAL   tipo no es un tipo de cuotas conocido. O especial
+                no ha podido ser encontrado.
+
+       ENOTBLK  especial no es un dispositivo  especial  de  blo­
+                ques.
+
+       ENODEV   especial no se halla en la tabla de montaje.
+
+       EACCES   El  fichero de cuotas no es un fichero ordinario.
+
+       EIO      No se puede leer o escribir en el fichero de cuo­
+                tas.
+
+       EMFILE   Demasiados  ficheros  abiertos: no se puede abrir
+                el fichero de cuotas.
+
+       EBUSY    Se ha pedido Q_QUOTAON pero las cuots ya  estaban
+                activadas.
+
+       ESRCH    Se ha pedido Q_GETQUOTA o Q_SETQUOTA o Q_SETUSE o
+                Q_SETQLIM para un  sistema  de  ficheros  que  no
+                tenía las cuotas activadas.
+
+       EPERM    El  proceso  no  era  root  (para  el  sistema de
+                ficheros),  y se ha pedido Q_GETQUOTA  para  otro
+                id  que el del proceso mismo, o se ha pedido otra
+                cosa distinta a Q_GETSTATS o a Q_SYNC .
+
+CONFORME A
+       BSD
+
+VÉASE TAMBIÉN
+       quota(1),  getrlimit(2),  setrlimit(2),  ulimit(2),   quo­
+       tacheck(8), quotaon(8)
+
+
+
+Linux 1.3.88              21 Enero 1998               QUOTACTL(2)

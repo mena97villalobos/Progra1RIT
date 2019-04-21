@@ -1,0 +1,35 @@
+GETDTABLESIZE(2) Manual del Programador de Linux GETDTABLESIZE(2)
+
+
+
+NOMBRE
+       getdtablesize  - obtiene el tamaño de la tabla de descrip­
+       tores
+
+SINOPSIS
+       #include <unistd.h>
+
+       int getdtablesize(void);
+
+DESCRIPCIÓN
+       getdtablesize devuelve el número máximo de ficheros que un
+       proceso puede tener abiertos.
+
+NOTAS
+       getdtablesize  está  implementada como una función de bib­
+       lioteca en DLL 4.4.1.  Esta función devuelve OPEN_MAX (que
+       vale  256 en Linux 2.0.23) si OPEN_MAX fue definido cuando
+       se compiló la biblioteca. De otra forma, se devuelve -1  y
+       a errno se le asigna el valor ENOSYS.
+
+CONFORME A
+       SVr4,   4.4BSD  (la  función  getdtablesize  apareció  por
+       primera vez en BSD 4.2).
+
+VÉASE TAMBIÉN
+       close(2), dup(2), open(2).
+
+
+
+
+Linux 0.99.11              1 Julio 1996          GETDTABLESIZE(2)

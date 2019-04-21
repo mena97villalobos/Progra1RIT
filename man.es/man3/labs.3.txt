@@ -1,0 +1,33 @@
+LABS(3)          Manual del Programador de Linux          LABS(3)
+
+
+
+NOMBRE
+       labs - calcula el valor absoluto de un entero largo.
+
+SINOPSIS
+       #include <stdlib.h>
+
+       long int labs(long int j);
+
+DESCRIPCIÓN
+       La  función labs() computa el valor absoluto del argumento
+       j, que es un entero largo.
+
+VALOR DEVUELTO
+       Devuelve el valor absoluto del argumento, que es un entero
+       largo.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+OBSERVACIONES
+       No está definido el intento de tomar el valor absoluto del
+       entero más negativo.
+
+VÉASE TAMBIÉN
+       abs(3), ceil(3), floor(3), fabs(3), rint(3)
+
+
+
+GNU                        2 Marzo 1998                   LABS(3)

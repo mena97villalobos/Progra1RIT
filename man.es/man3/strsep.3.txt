@@ -1,0 +1,38 @@
+STRSEP(3)        Manual del programador de Linux        STRSEP(3)
+
+
+
+NOMBRE
+       strsep - extrae un elemento de una cadena
+
+SINOPSIS
+       #include <string.h>
+
+       char *strsep(char **pcadena, const char *delim);
+
+DESCRIPCIÓN
+       La  función  strsep() devuelve el siguiente elemento de la
+       cadena pcadena delimitado por delim. El  elemento  termina
+       en un caracter `\0', y pcadena es actualizado para apuntar
+       después del elemento.
+
+VALOR REGRESADO
+       La función strsep() devuelve un  puntero  al  elemento,  o
+       NULL si delim no se encuentra en pcadena.
+
+NOTAS
+       La  función  strsep()  se  introdujo como para sustituir a
+       strtok(), ya que  esta  última  no  puede  manejar  campos
+       vacíos. Sin embargo, strtok() es conforme al ANSI-C, y por
+       lo tanto es más portable.
+
+CONFORME A
+       BSD 4.4
+
+VÉASE TAMBIÉN
+       index(3),  memchr(3),  rindex(3),  strchr(3),  strpbrk(3),
+       strspn(3), strstr(3), strtok(3)
+
+
+
+GNU                    12 de abril de 1993              STRSEP(3)

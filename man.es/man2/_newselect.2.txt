@@ -1,0 +1,131 @@
+SELECT(2)        Manual del Programador de Linux        SELECT(2)
+
+
+
+NOMBRE
+       select, FD_CLR, FD_ISSET, FD_SET, FD_ZERO - multiplexación
+       de E/S síncrona
+
+SINOPSIS
+       #include <sys/time.h>
+       #include <sys/types.h>
+       #include <unistd.h>
+
+       int  select(int  n,  fd_set  *readfds,  fd_set  *writefds,
+       fd_set *exceptfds, struct timeval *timeout);
+
+       FD_CLR(int fd, fd_set *set);
+       FD_ISSET(int fd, fd_set *set);
+       FD_SET(int fd, fd_set *set);
+       FD_ZERO(fd_set *set);
+
+DESCRIPCIÓN
+       select  espera a que una serie de descriptores de ficheros
+       cambien su estado.
+
+       Se miran tres conjuntos  independientes  de  descriptores.
+       Aquéllos  listados en readfds serán observados para ver si
+       hay caracteres que llegan a estar  disponibles  para  lec­
+       tura, aquéllos en writefds serán observados para ver si es
+       correcto escribir inmediatamente en ellos, y  aquéllos  en
+       exceptfds  serán  observados  para  ver  si ocurren excep­
+       ciones. En caso de éxito, los conjuntos  se  modifican  en
+       marcha  para  indicar qué descriptores cambiaron realmente
+       su estado.
+
+       Se proporcionan cuatro macros para manipular  los  conjun­
+       tos.   FD_ZERO  limpiará  un  conjunto.   FD_SET  y FD_CLR
+       añaden o borran un descriptor dado a  o  de  un  conjunto.
+       FD_ISSET  mira  a  ver  si un descriptor es parte del con­
+       junto; esto es útil después de que select regrese.
+
+       n es el descriptor con el número más alto en cualquiera de
+       los tres conjuntos, más 1.
+
+       timeout  es  un  límite  superior de la cantidad de tiempo
+       transcurrida antes de que select regrese. Puede ser  cero,
+       causando  que select regrese inmediatamente. Si timeout es
+       NULL (no hay tiempo  de  espera),  select  puede  bloquear
+       indefinidamente.
+
+VALOR DEVUELTO
+       En  caso  de  éxito, select devuelve el número de descrip­
+       tores contenidos en los  conjuntos  de  descriptores,  que
+       puede  ser cero si el tiempo de espera expira antes de que
+       ocurra algo interesante.  En caso de  error,  se  devuelve
+       -1, y se pone un valor apropiado en errno; los conjuntos y
+       timeout estarán indefinidos, así que no confíe en sus con­
+       tenidos tras un error.
+
+ERRORES
+       EBADF   Se  ha  dado  un descriptor de fichero inválido en
+               uno de los conjuntos.
+
+       EINTR   Se ha capturado una señal no bloqueante.
+
+       EINVAL  n es negativo.
+
+       ENOMEM  select no ha sido capaz de reservar  memoria  para
+               las tablas internas.
+
+OBSERVACIONES
+       Hay  algún  código por ahí que llama a select con los tres
+       conjuntos vacíos, n cero, y un timeout  distinto  de  cero
+       como  una  forma transportable y curiosa de dormir con una
+       precisión por debajo del segundo.
+
+       En Linux, timeout se modifica para reflejar la cantidad de
+       tiempo no dormido; la mayoría de otras implementaciones no
+       hacen esto. Esto produce problemas  cuando  el  código  de
+       Linux que lee timeout se transporta a otros sistemas oper­
+       ativos, y cuando se transporta a Linux código  que  reuti­
+       liza  una  struct  timeval para varias selects en un bucle
+       sin reinicializarla. Considere que timeout está indefinido
+       después de que select regrese.
+
+EJEMPLO
+       #include <stdio.h>
+       #include <sys/time.h>
+       #include <sys/types.h>
+       #include <unistd.h>
+
+       int
+       main(void)
+       {
+           fd_set rfds;
+           struct timeval tv;
+           int valret;
+
+           /* Mirar stdin (df 0) para ver si tiene entrada */
+           FD_ZERO(&rfds);
+           FD_SET(0, &rfds);
+           /* Esperar hasta 5 s */
+           tv.tv_sec = 5;
+           tv.tv_usec = 0;
+
+           valret = select(1, &rfds, NULL, NULL, &tv);
+           /* ¡No confiar ahora en el valor de tv! */
+
+           if (valret)
+               printf("Los datos ya están disponibles.\n");
+               /* FD_ISSET(0, &rfds) será verdadero */
+           else
+               printf("Ningún dato en 5 segundos.\n");
+
+           return(0);
+       }
+
+CONFORME A
+       4.4BSD  (la  función  select  apareció  por primera vez en
+       4.2BSD). Generalmente es transportable a o desde  sistemas
+       no-BSD  que  admitan  clones  de la capa de zócalos de BSD
+       (incluyendo variantes System V). Sin embargo, observe  que
+       la  variante  System  V  normalmente  pone  la variable de
+       espera antes de salir, pero la variante BSD no.
+
+VÉASE TAMBIÉN
+       accept(2), connect(2), read(2), recv(2), send(2), write(2)
+
+
+
+Linux 1.2                 23 Enero 1998                 SELECT(2)

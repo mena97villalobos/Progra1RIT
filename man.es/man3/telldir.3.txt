@@ -1,0 +1,34 @@
+TELLDIR(3)       Manual del Programador de Linux       TELLDIR(3)
+
+
+
+NOMBRE
+       telldir - devuelve la posición actual en un flujo directo­
+       rio.
+
+SINOPSIS
+       #include <dirent.h>
+
+       off_t telldir(DIR *dir);
+
+DESCRIPCIÓN
+       La función telldir() devuelve la  posición actual asociada
+       al flujo de directorio dir.
+
+VALOR DEVUELTO
+       La  función  telldir() devuelve la posición en curso en el
+       flujo de directorio ó -1 si ocurre un error.
+
+ERRORES
+       EBADF  Descriptor de flujo de directorio inválido dir.
+
+CONFORME A
+       BSD 4.3
+
+VÉASE TAMBIÉN
+       opendir(3),   readdir(3),    closedir(3),    rewinddir(3),
+       seekdir(3), scandir(3)
+
+
+
+GNU                       12 Marzo 1998                TELLDIR(3)

@@ -1,0 +1,69 @@
+PUTS(3)          Manual del Programador de Linux          PUTS(3)
+
+
+
+NOMBRE
+       fputc, fputs, putc, putchar, puts - salida de caracteres y
+       cadenas
+
+SINOPSIS
+       #include <stdio.h>
+
+       int fputc(int c, FILE *flujo);
+       int fputs(const char *s, FILE *flujo);
+       int putc(int c, FILE *flujo);
+       int putchar(int c);
+       int puts(const char *s);
+       int ungetc(int c, FILE *flujo);
+
+DESCRIPCIÓN
+       fputc() escribe el carácter  c,  modelado  a  un  unsigned
+       char, en flujo.
+
+       fputs() escribe la cadena de caracteres s en flujo, sin su
+       terminador '\0'.
+
+       putc() es equivalente a fputc() salvo en que  puede  estar
+       implementada  como  una  macro que evalúe flujo más de una
+       vez.
+
+       putchar(c); equivale a putc(c,stdout);.
+
+       puts() escribe la cadena de caracteres s  y  un  salto  de
+       línea final en stdout.
+
+       ungetc()  devuelve  el  carácter c, modelado a un unsigned
+       char, al flujo especificado,  para  que  sea  devuelto  de
+       nuevo  en  la  próxima lectura. La biblioteca de GNU/Linux
+       permite devolver EOF, aunque esto no es estándar ANSI C.
+
+       Las  llamadas  a  las  funciones  descritas  aquí   pueden
+       mezclarse  unas  con otras y con otras funciones de salida
+       de la biblioteca stdio para el mismo flujo de salida,  sin
+       problemas.
+
+VALOR DEVUELTO
+       fputc(),  putc() y putchar() devuelven el carácter escrito
+       como un unsigned char modelado a un int o EOF en  caso  de
+       error.
+
+       puts(), fputs() y ungetc() devuelven un número no negativo
+       si acaban bien, o EOF en caso de error.
+
+
+CONFORMES CON
+       C ANSI, POSIX.1
+
+FALLOS
+       No es recomendable mezclar llamadas a funciones de  salida
+       de la biblioteca estándar stdio con llamadas de bajo nivel
+       a write() para el descriptor de fichero  asociado  con  el
+       mismo flujo de salida; los resultados quedarán indefinidos
+       y muy probablemente no serán los deseados.
+
+VÉASE TAMBIÉN
+       write(2),   fopen(3),   fwrite(3),   scanf(3),    gets(3),
+       fseek(3), ferror(3)
+
+
+

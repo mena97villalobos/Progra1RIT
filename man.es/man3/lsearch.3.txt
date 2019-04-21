@@ -1,0 +1,42 @@
+LSEARCH(3)       Manual del Programador de Linux       LSEARCH(3)
+
+
+
+NOMBRE
+       lfind, lsearch - búsqueda lineal en una matriz.
+
+SINOPSIS
+       #include <stdlib.h>
+
+       void *lfind(const void *key, const void *base, size_t *nmemb,
+              size_t size, int (*compar)(const void *, const void *));
+
+       void *lsearch(const void *key, const void *base, size_t *nmemb,
+              size_t size, int (*compar)(const void *, const void *));
+
+DESCRIPCIÓN
+       lfind() y lsearch() realizan una búsqueda lineal de key en
+       la matriz base que tiene *nmemb elementos  de  size  bytes
+       cada  uno.  Se  espera que la función de comparación a que
+       hace referencia compar tenga dos argumentos que apuntan al
+       objeto  key  y  a un miembro de la matriz, en ese orden, y
+       que devuelva cero si el objeto key coincide con el miembro
+       de la matriz, y distinto de cero en cualquier otro caso.
+
+       Si   lsearch()   no  encuentra  un  elemento  coincidente,
+       entonces el objeto key es insertado al final de la  tabla,
+       y *nmemb es incrementado.
+
+VALOR REGRESADO
+       lfind() devuelve un puntero a un miembro coincidente de la
+       matriz,  o  NULL  si  no  hubo  coincidencias.   lsearch()
+       devuelve un puntero a un miembro coincidente de la matriz,
+       o al nuevo miembro añadido si no hubo coincidencias.
+
+VÉASE TAMBIÉN
+       bsearch(3), hsearch(3), tsearch(3)
+
+
+
+
+GNU                     17 Septiembre 1995             LSEARCH(3)

@@ -1,0 +1,50 @@
+STRTOK(3)        Manual del Programador de Linux        STRTOK(3)
+
+
+
+NOMBRE
+       strtok - extrae un token de una cadena
+
+SINOPSIS
+       #include <string.h>
+
+       char *strtok(char *s, const char *delim);
+
+DESCRIPCIÓN
+       Un  `token'  es  una  cadena de caracteres no vacía que no
+       está en la cadena delim, seguida por \0 o por un  caracter
+       que está en delim.
+
+       La  función strtok() puede usarse para analizar (parse) la
+       cadena s en tokens. La primera llamada a strtok()  debería
+       tener  s  como  primer  argumento.  Llamadas subsiguientes
+       deberían tener el primer argumento  puesto  a  NULL.  Cada
+       llamada  devuelve  un  puntero  al siguiente token, o NULL
+       cuando no se pueden encontrar más tokens.
+
+       Si un token termina con un delimitador, este  caracter  de
+       delimitación es sobreescrito con un \0 y se guarda un pun­
+       tero al siguiente caracter para  la  siguiente  llamada  a
+       strtok.  La  cadena de delimitación delim puede ser difer­
+       ente para cada llamada.
+
+FALLOS
+       Nunca use esta función.  Esta función modifica  su  primer
+       argumento.   La  identidad  del  caracter  delimitador  se
+       pierde.  Esta función  no  se  puede  usar  sobre  cadenas
+       definidas como constantes.
+
+VALOR DEVUELTO
+       La  función  strtok()  devuelve  un  puntero  al siguiente
+       token, o NULL si no hay más tokens.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       index(3),  memchr(3),  rindex(3),  strchr(3),  strpbrk(3),
+       strsep(3), strspn(3), strstr(3)
+
+
+
+GNU                        10 Feb 1996                  STRTOK(3)

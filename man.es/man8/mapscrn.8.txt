@@ -1,0 +1,60 @@
+MAPSCRN(8)            Soporte Internacional            MAPSCRN(8)
+
+
+
+NOMBRE
+       mapscrn - carga la tabla de mapas de salida por pantalla
+
+SINOPSIS
+       mapscrn [ -o mapa.orig ] ficheromapa
+
+DESCRIPCIÓN
+       La orden mapscrn carga una tabla de mapas de caracteres de
+       salida definida por el usuario en el controlador  de  con­
+       sola.  Éste  puede ser puesto más tarde en un modo de usar
+       tabla de mapas definida por el usuario mediante la  salida
+       de una secuencia de escape especial al dispositivo de con­
+       sola.  Esta secuencia es <esc>(K para el conjunto de  car­
+       acteres  G0  y <esc>)K para el G1.  Cuando se da la opción
+       -o, el mapa antiguo se guarda en mapa.orig.
+
+OPERACIÓN
+       La orden mapscrn puede leer el mapa en  uno  de  dos  for­
+       matos:
+       1. datos binarios de 256 bytes
+       2. fichero de texto de dos columnas
+       El  formato  (1)  es una imagen de la tabla de traducción.
+       Cada vez que un carácter de código i se saca por  el  dis­
+       positivo  de  consola, el carácter cuyo código es tabla[i]
+       es el que aparece en la pantalla. El formato (2) se emplea
+       para  llenar la tabla como sigue: la celda con la posición
+       mencionada en la primera columna se rellena con  el  valor
+       mencionado en la segunda.
+
+       Los  valores  en el fichero pueden especificarse en uno de
+       cuatro formatos:
+       1. Decimal: cadena de dígitos en base 10  que  no  empiece
+       con '0'.
+       2. Octal: cadena de dígitos en base 8 empezando con '0'.
+       3.  Hexadecimal:  cadena de dígitos exadecimales precedida
+       por "0x".
+       4. Carácter: Carácter simple encerrado  entre  apóstrofos.
+       Observe  que  los  caracteres  blancos,  coma, tabulador y
+       sostenido ('#') no pueden especificarse con el 4º formato.
+
+       Note  que  los caracteres de control (con códigos < 32) no
+       pueden re-asociarse con mapscrn puesto que tienen un  sig­
+       nificado especial para el controlador.
+
+VÉASE TAMBIÉN
+       setfont(8)
+
+AUTOR
+       Derechos de copia © 1993 Eugène G. Crosser
+       <crosser@pccross.msk.su>
+       Este  programa  y  su  documentación  pueden  distribuirse
+       libremente.
+
+
+
+Local                  20 de Marzo de 1993             MAPSCRN(8)

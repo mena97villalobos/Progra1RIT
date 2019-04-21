@@ -1,0 +1,57 @@
+GETGRNAM(3)      Manual del Programador de Linux      GETGRNAM(3)
+
+
+
+NOMBRE
+       getgrnam,  getgrgid  - obtienen una entrada del fichero de
+       grupos
+
+SINOPSIS
+       #include <grp.h>
+       #include <sys/types.h>
+
+       struct group *getgrnam(const char *nombre);
+
+       struct group *getgrgid(gid_t gid);
+
+DESCRIPCIÓN
+       La función getgrnam() devuelve un puntero a una estructura
+       que  contiene  la información de grupos de /etc/group para
+       la entrada que concuerde con el nombre de grupo nombre.
+
+       La función getgrgid() devuelve un puntero a una estructura
+       que  contiene  la información de grupos de /etc/group para
+       la entrada que concuerde con el GID gid.
+
+       La estructura group se define en <grp.h> como sigue:
+
+              struct group {
+                      char    *gr_name;        /* nomnbre del grupo */
+                      char    *gr_passwd;      /* contraseña del grupo */
+                      gid_t   gr_gid;          /* ID del grupo */
+                      char    **gr_mem;        /* miembros del grupo */
+              };
+
+VALOR DEVUELTO
+       Las funciones getgrnam() y getgrgid() devuelven la  direc­
+       ción  de una estructura de información de grupo, o NULL si
+       la entrada pedida no se ha encontrado  o  ha  ocurrido  un
+       error.
+
+ERRORES
+       ENOMEM Memoria  insuficiente  para alojar la estructura de
+              información de grupos.
+
+FICHEROS
+       /etc/group
+              Fichero de grupos
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3
+
+VÉASE TAMBIÉN
+       fgetgrent(3), getgrent(3), setgrent(3), endgrent(3)
+
+
+
+GNU                       24 Julio 1993               GETGRNAM(3)

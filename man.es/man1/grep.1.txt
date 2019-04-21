@@ -1,0 +1,287 @@
+GREP(1)                                                   GREP(1)
+
+
+
+NOMBRE
+       grep, egrep, fgrep - muestran líneas que concuerdan con un
+       patrón
+
+SINOPSIS
+       grep [-AB] núm] [-CEFGVbchiLlnqsvwxyUu] [[-e ] patrón | -f
+       fichero]  [--extended-regexp]  [--fixed-strings] [--basic-
+       regexp] [--regexp=PATRÓN] [--file=FICHERO] [--ignore-case]
+       [--word-regexp] [--line-regexp] [--line-regexp] [--no-mes­
+       sages] [--revert-match] [--version] [--help]  [--byte-off­
+       set]   [--line-number]  [--with-filename]  [--no-filename]
+       [--quiet]  [--silent]  [--files-without-match]   [--files-
+       with-matcces]  [--count]  [--before-context=NUM] [--after-
+       context=NUM] [--context] [--binary]  [--unix-byte-offsets]
+       ficheros...
+
+DESCRIPCIÓN
+       Grep  busca en la entrada, bien en la que se le especifica
+       con nombres de ficheros o bien en la entrada  estándar  si
+       no  se le dan dichos nombres o si uno de éstos consiste en
+       -, líneas que concuerden o coincidan con el  patrón  dado.
+       Si  no se dice otra cosa, grep muestra las líneas que con­
+       cuerden.
+
+       Hay tres grandes variantes de grep,  controladas  por  las
+       siguientes opciones:
+       -G, --basic-regexp
+              Interpreta patrón como una expresión regular básica
+              (vea más abajo). Éste es el  comportamiento  prede­
+              terminado.
+       -E, --extended-regexp
+              Interpreta patrón coma una expresión regular exten­
+              dida (vea más adelante).
+       -F, --fixed-strings
+              Interpreta patrón como una lista de cadenas de car­
+              acteres  fijas,  separadas  por saltos de línea; se
+              busca la concordancia de una cualquiera de ellas.
+       Además, están disponibles dos programas que son  variantes
+       de  éste:  egrep y fgrep.  egrep es similar (pero no idén­
+       tico) a grep -E, y es compatible con el egrep histórico de
+       Unix.  fgrep es lo mismo que grep -F.
+
+       Todas  las  variantes  de  grep  entienden  las siguientes
+       opciones:
+       -núm   Las líneas concordantes se mostrarán acompañadas de
+              núm  líneas  anteriores y posteriores. Sin embargo,
+              grep nunca mostrará cualquier línea dada más de una
+              vez.
+       -A  núm , --after-context=NÚM
+              Muestra  núm  líneas de contexto después de las que
+              concuerden con el patrón.
+       -B  núm , --before-context=NÚM
+              Muestra núm líneas de contexto  antes  de  las  que
+              concuerden con el patrón.
+       -C, --context
+              Equivalente a -2.
+       -V, --version
+              Muestra  el  número de versión de grep en la salida
+              estándar de errores. Este número de versión debería
+              incluirse  en todos los informes de fallos (vea más
+              abajo).
+       -b, --byte-offset
+              Muestra el desplazamiento en bytes desde el princi­
+              pio  del  fichero de entrada antes de cada línea de
+              salida.
+       -c, --count
+              Suprime la salida normal; en su  lugar  muestra  el
+              número  de líneas que concuerdan con el patrón para
+              cada  fichero  de  entrada.   Con  la  opción   -v,
+              --revert-match  (vea  más abajo), muestra el número
+              de líneas que no concuerden.
+       -e patrón,--regexp=PATRÓN
+              Emplea patrón como el patrón;  útil  para  proteger
+              patrones que comiencen con -.
+       -f fichero,--file=FICHERO
+              Obtiene el patrón de fichero.
+       -h, --no-filename
+              Suprime  la  impresión  de  los nombres de ficheros
+              antes de las  líneas  concordantes  en  la  salida,
+              cuando se busca en varios ficheros.
+       -i, --ignore-case
+              No  hace  caso  de  si  las letras son mayúsculas o
+              minúsculas ni en el patrón ni en  los  ficheros  de
+              entrada.
+       -L, --files-without-match
+              Suprime  la  salida  normal; en su lugar muestra el
+              nombre de cada  fichero  de  entrada  donde  no  se
+              encuentre  ninguna  concordancia  y por lo tanto de
+              cada fichero que no produciría ninguna  salida.  La
+              búsqueda se detendrá al llegar a la primera concor­
+              dancia.
+       -l, --files-with-matches
+              Suprime la salida normal; en su  lugar  muestra  el
+              nombre  de  cada  fichero de entrada que produciría
+              alguna  salida.  La  búsqueda  se  detendrá  en  la
+              primera concordancia.
+       -n, --line-number
+              Prefija cada línea de salida con el número de línea
+              de su fichero de entrada correspondiente.
+       -q, --quiet
+              Silencioso; suprime la salida normal.  La  búsqueda
+              finaliza en la primera concordancia.
+       -s, --silent
+              Suprime los mensajes de error sobre ficheros que no
+              existen o no se pueden leer.
+       -v, --revert-match
+              Invierte el sentido de la concordancia, para selec­
+              cionar las líneas donde no las hay.
+       -w, --word-regexp
+              Selecciona  solamente aquellas líneas que contienen
+              concordancias que  forman  palabras  completas.  La
+              comprobación  consiste  en  que la cadena de carac­
+              teres concordante debe estar  al  principio  de  la
+              línea  o  precedida  por  un  carácter que no forme
+              parte de una palabra. De forma similar, debe  estar
+              o  al final de la línea o ser seguida por un carác­
+              ter no constituyente de palabra. Los caracteres que
+              se  consideran  como  parte de palabras son letras,
+              dígitos y el subrayado.
+       -x, --line-regexp
+              Selecciona  solamente  aquellas  concordancias  que
+              constan de toda la línea.
+       -y     Sinónimo obsoleto de -i.
+       -U, --binary
+              Trata  el(los) fichero(s) como binario(s). De forma
+              predeterminada,  bajo  MS-DOS  y  MS-Windows,  grep
+              intenta  adivinar  el  tipo del fichero mirando los
+              contenidos de los primeros 32 kB leídos de  él.  Si
+              grep  decide  que el fichero es de texto, quita los
+              caracteres CR (retorno de carro) de los  contenidos
+              originales  del  fichero  (para que las expresiones
+              regulares con ^ y $  funcionen  correctamente).  Al
+              especificar -U deshabilitamos este intento de adiv­
+              inación del tipo del fichero, haciendo que todos se
+              lean  y  pasen  al  mecanismo  de  concordancia tal
+              cuales; si el fichero lo es de  texto  y  tiene  al
+              final  de  cada  línea  el par de caracteres CR/LF,
+              esto hará que algunas expresiones regulares fallen.
+              Esta  opción sólo tiene sentido en MS-DOS y MS-Win­
+              dows.
+       -u, --unix-byte-offsets
+              Informa de desplazamientos de bytes  al  estilo  de
+              Unix.   Esta  opción  hace  que  grep  muestre  los
+              desplazamientos de bytes como si el  fichero  fuera
+              de  texto  al estilo de Unix; o sea, sin los carac­
+              teres CR al final de  cada  línea.  Esto  producirá
+              resultados  idénticos a ejecutar grep en un sistema
+              Unix. Esta opción no tiene efecto a menos que se dé
+              también  la opción -b; sólo tiene sentido en MS-DOS
+              y MS-Windows.
+
+EXPRESIONES REGULARES
+       Una expresión regular es un patrón que  describe  un  con­
+       junto  de cadenas de caracteres. Las expresiones regulares
+       se construyen de forma análoga a las expresiones aritméti­
+       cas,  combinando expresiones más pequeñas mediante ciertos
+       operadores para formar expresiones complejas.
+
+       El programa grep entiende dos versiones diferentes de sin­
+       taxis  para  las expresiones regulares: la ``básica'' y la
+       ``extendida''. En la versión de grep de GNU, no hay difer­
+       encia  en  usar  una  u  otra en cuanto a la funcionalidad
+       disponible. En  otras  implementaciones,  las  expresiones
+       regulares   básicas   son  menos  potentes.  La  siguiente
+       descripción se aplica a expresiones regulares  extendidas;
+       las diferencias con las básicas se resumen a continuación.
+
+       Los bloques de construcción fundamentales son  las  expre­
+       siones  regulares  que concuerdan con un solo carácter. La
+       mayoría de los caracteres, incluyendo todas las  letras  y
+       dígitos,  son expresiones regulares que concuerdan consigo
+       mismos. Cualquier meta-carácter con un  significado  espe­
+       cial debe ser protegido precediéndolo con una barra incli­
+       nada inversa.
+
+       Una lista de caracteres rodeados por [ y ]  concuerda  con
+       cualquier  carácter de esa lista; si el primer carácter de
+       la lista es el acento circunflejo ^ entonces concuerda con
+       cualquier  carácter de fuera de la lista.  Por ejemplo, la
+       expresión regular  [0123456789]  concuerda  con  cualquier
+       carácter  dígito.  Se puede especificar un rango de carac­
+       teres ASCII dando el primero y el último, separados por un
+       guión.   Finalmente,  están predefinidas ciertas clases de
+       caracteres, con un nombre para cada una. Estos nombres son
+       auto-explicativos,  y son [:alnum:], [:alpha:], [:cntrl:],
+       [:digit:],  [:graph:],  [:lower:],  [:print:],  [:punct:],
+       [:space:],   [:upper:],   y   [:xdigit:].    Por  ejemplo,
+       [[:alnum:]] significa (en inglés) [0-9A-Za-z],  salvo  que
+       la  última  forma depende de que la codificación de carac­
+       teres siga el estándar ISO-646 o ASCII,  mientras  que  la
+       primera  es  transportable.  (Observe que los corchetes en
+       estos nombres de clases son parte de los nombres  simbóli­
+       cos, y deben incluirse además de los corchetes que delimi­
+       tan la lista entre corchetes.) La mayor parte de los meta-
+       caracteres pierden su significado especial dentro de estas
+       listas. Para incluir un ] literal, póngalo el  primero  de
+       la  lista.  De  forma  similar, para incluir un ^ literal,
+       póngalo en cualquier sitio menos el  primero.  Finalmente,
+       para incluir un - literal, póngalo el último.
+
+       El  punto  .   concuerda  con cualquier carácter solo.  El
+       símbolo \w es un sinónimo de [[:alnum:]] y  \W  lo  es  de
+       [^[:alnum]].
+
+       El acento circunflejo ^ y el signo del dólar (y del escudo
+       portugués) $ son meta-caracteres que respectivamente  con­
+       cuerdan  con la cadena vacía al comienzo y al final de una
+       línea.  Los símbolos \< y  \>  respectivamente  concuerdan
+       con  la  cadena  vacía al principio y al final de una pal­
+       abra.  El símbolo \b concuerda  con  la  cadena  vacía  al
+       borde  de  una palabra, y \B concuerda con la cadena vacía
+       supuesto que no esté en el extremo de una palabra.
+
+       Una expresión regular que concuerde con un  solo  carácter
+       puede  ser  seguida  por uno de estos varios operadores de
+       repetición:
+       ?      El elemento precedente es opcional y concuerda como
+              mucho una vez.
+       *      El elemento precedente concordará cero o más veces.
+       +      El elemento precedente concordará una o más  veces.
+       {n}    El  elemento  precedente  concuerda  exactamente  n
+              veces.
+       {n,}   El elemento precedente concuerda n o más veces.
+       {,m}   El elemento precedente es opcional y concuerda como
+              mucho m veces.
+       {n,m}  El elemento precedente concuerda como poco n veces,
+              pero no más de m veces.
+
+       Dos expresiones regulares pueden concatenarse;  la  expre­
+       sión  regular  resultante  concuerda  con cualquier cadena
+       formada mediante la concatenación de  dos  subcadenas  que
+       concuerdan respectivamente con las subexpresiones concate­
+       nadas.
+
+       Dos expresiones  regulares  pueden  juntarse  mediante  el
+       operador  infijo  |;  la expresión regular resultante con­
+       cuerda con cualquier cadena que concuerde  con  cualquiera
+       de las subexpresiones.
+
+       La repetición tiene precedencia sobre la concatenación, la
+       cual a su vez tiene precedencia sobre la alternancia.  Una
+       subexpresión  entera  puede ser encerrada entre paréntesis
+       para subvertir estas reglas de precedencia.
+
+       La retrorreferencia \n, donde n es un dígito simple,  con­
+       cuerda  con  la  subcadena que previamente concordó con la
+       n-sima subexpresión entre paréntesis de la expresión regu­
+       lar.
+
+       En  las expresiones regulares básicas, los meta-caracteres
+       ?, +, {, |, (, y ) pierden su significado especial; en  su
+       lugar  emplee  las  versiones protegidas mediante la barra
+       inversa \?, \+, \{, \|, \(, y \).
+
+       En egrep, el meta-carácter { pierde su  significado  espe­
+       cial; en su lugar emplee \{.
+
+DIAGNÓSTICOS
+       Normalmente,  el  status  de  salida es 0 si se encuentran
+       concordancias, y 1 si no  se  encuentran.  (La  opción  -v
+       invierte  el  sentido del status de salida.)  El status de
+       salida es 2 si había errores de sintaxis en el patrón,  si
+       los  ficheros  de  entrada eran inaccesibles, o en caso de
+       otros errores del sistema.
+
+FALLOS
+       Envíe informes sobre fallos por correo  electrónico  a  la
+       dirección   bug-gnu-utils@prep.ai.mit.edu.   Asegúrese  de
+       incluir la palabra  ``grep''  en  algún  sitio  del  campo
+       ``Asunto:'' (``Subject:'').
+
+       Números  de  repetición  grandes  en la construcción {m,n}
+       pueden hacer que grep emplee grandes cantidades  de  memo­
+       ria.   En  adición  a  esto, ciertas otras obscuras expre­
+       siones regulares requieren tiempo y espacio exponenciales,
+       y pueden hacer que grep se quede sin memoria.
+
+       Las retrorreferencias son muy lentas, y pueden requerir un
+       tiempo exponencial.
+
+
+
+Proyecto GNU            10 Septiembre 1992                GREP(1)

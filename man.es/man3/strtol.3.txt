@@ -1,0 +1,65 @@
+STRTOL(3)        Manual del Programador de Linux        STRTOL(3)
+
+
+
+NOMBRE
+       strtol - convierte una cadena en un entero de tipo long.
+
+SINOPSIS
+       #include <stdlib.h>
+
+       long int strtol(const char *nptr, char **endptr, int base);
+
+DESCRIPCIÓN
+       La función strtol() convierte la cadena de entrada nptr en
+       un valor entero de tipo long de acuerdo a  la  base  dada,
+       que debe estar entre 2 y 36 ambos incluidos o ser el valor
+       especial 0.
+
+       La cadena debe comenzar con  una  cantidad  arbitraria  de
+       espacios en blanco, (tal y como los define la función iss­
+       pace(3)) seguida por un único y opcional signo `+' o  `-'.
+       Si  la  base is 0 o 16, la cadena puede incluir el prefijo
+       `0x', y el número será interpretado en base  16,  en  caso
+       contrario  la  base cero se toma como base 10 (decimal), a
+       menos que el carácter siguiente sea `0', en cuyo  caso  se
+       toma como base 8 (octal).
+
+       El  resto  de  la cadena se convierte en un entero de tipo
+       long de una forma evidente, parándose la conversión en  el
+       primer  carácter  que  no  es  un dígito válido en la base
+       dada.  (En bases superiores a 10, la letra `A' en mayúscu­
+       las o minúsculas representa el 10, `B' representa el 11, y
+       así sucesivamente, con la `Z' representando el 35.)
+
+       Si endptr no es NULL, strtol() almacena la  dirección  del
+       primer carácter no válido en *endptr.  Si no hubiera dígi­
+       tos en toda la cadena strtol() almacena el valor  original
+       de  nptr  en  *endptr.   (Por tanto, si *nptr no es `\0' y
+       **endptr es `\0' al regresar  la  cadena  completa  es  un
+       número válido.)
+
+VALOR DEVUELTO
+       La  función  strtol()  devuelve el resultado de la conver­
+       sión, a menos que el valor se desbordara por arriba o  por
+       abajo.   Si ocurriera un desbordamiento inferior, strtol()
+       devuelve LONG_MIN.  Si ocurriera un  desbordamiento  supe­
+       rior,  strtol()  devuelve LONG_MAX.  En ambos casos, errno
+       se establece a ERANGE.
+
+ERRORES
+       ERANGE La cadena dada estaba fuera de rango. El valor con­
+              vertido ha sido fijado.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       atof(3), atoi(3), atol(3), strtod(3), strtoul(3)
+
+FALLOS
+       Ignora el escenario actual.
+
+
+
+GNU                    10 de Junio de 1995              STRTOL(3)

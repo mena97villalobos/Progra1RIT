@@ -1,0 +1,90 @@
+MKDIR(2)         Manual del programador de Linux         MKDIR(2)
+
+
+
+NOMBRE
+       mkdir - crea un directorio
+
+SINOPSIS
+       #include <sys/stat.h>
+       #include <sys/types.h>
+       #include <fcntl.h>
+       #include <unistd.h>
+
+       int mkdir(const char *pathname, mode_t mode);
+
+DESCRIPCIÓN
+       mkdir intenta crear un directorio de nombre pathname.
+
+       mode  especifica los permisos a usar. Es modificado por la
+       umask (máscara de usuario) del proceso de la forma  habit­
+       ual:  los permisos del fichero creado son (mode & ~umask).
+
+       El dueño del directorio recién creado será el  identifica­
+       tivo de usuario efectivo del proceso. Si el directorio que
+       contiene al fichero tiene activo el bit set group id(asig­
+       naridentificadordegrupo),  o  el  sistema de ficheros está
+       montado con semántica de grupo BSD,  el  nuevo  directorio
+       heredará la pertenencia al grupo de su padre. En caso con­
+       trario, pertenecerá al grupo del identificativo  de  grupo
+       efectivo del proceso.
+
+       Si el directorio padre tiene el set group id bit, entonces
+       también lo tendrá el directorio recién creado.
+
+
+VALOR REGRESADO
+       mkdir devuelve cero en caso de éxito, o -1  si  ocurre  un
+       error (en cuyo caso errno tomará el valor apropiado).
+
+ERRORES
+       EEXIST  pathname  ya existe (no necesariamente como direc­
+               torio).
+
+       EFAULT  pathname apunta fuera del espacio  de  direcciones
+               accesible.
+
+       EACCES  El  proceso no tiene permiso de escritura sobre el
+               directorio padre, o  uno  de  los  directorios  de
+               pathname  no permite búsqueda (no tiene permiso de
+               ejecución).
+
+       ENAMETOOLONG
+               pathname es demasiado largo.
+
+       ENOENT  Un elemento usado como directorio en  pathname  no
+               existe o es un enlace simbólico colgado.
+
+       ENOTDIR Un  elemento  usado como directorio en pathname no
+               es en realidad un directorio.
+
+       ENOMEM  No hay suficiente memoria del núcleo.
+
+       EROFS   pathname hace referencia a un fichero de  un  sis­
+               tema de ficheros de sólo lectura.
+
+       ELOOP   Se  encontraron  demasiados  enlaces simbólicos al
+               resolver pathname.
+
+       ENOSPC  El dispositivo que contiene a  pathname  no  tiene
+               espacio para el nuevo directorio.
+
+       ENOSPC  No  puede  crearse  el  nuevo directorio porque la
+               cuota de disco del usuario está agotada.
+
+CONFORME A
+       SVr4, POSIX, BSD, SYSV, X/OPEN.  SVr4 documenta las condi­
+       ciones  de  error  adicionales  EIO,  EMULTIHOP y ENOLINK.
+       POSIX.1 omite ELOOP.
+
+       Hay muchas carencias  subyacentes  en  el  protocolo  NFS.
+       Algunas de ellas afectan a mkdir.
+
+VÉASE TAMBIÉN
+       read(2), write(2), fcntl(2), close(2), unlink(2), open(2),
+       mknod(2),   stat(2),   umask(2),   mount(2),    socket(2),
+       fopen(3).
+
+
+
+Linux 1.0                 29 Marzo 1994                  MKDIR(2)

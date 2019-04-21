@@ -1,0 +1,66 @@
+GETGROUPS(2)     Manual del Programador de Linux     GETGROUPS(2)
+
+
+
+NOMBRE
+       getgroups,  setgroups  - obtiene/asigna la lista de IDs de
+       grupo suplementarios
+
+SINOPSIS
+       #include <unistd.h>
+
+       int getgroups(int size, gid_t list[]);
+
+
+       #define __USE_BSD
+       #include <grp.h>
+
+       int setgroups(size_t size, const gid_t *list);
+
+DESCRIPCIÓN
+       getgroups
+              Se devuelven como mucho size grupos  suplementarios
+              en  list.   Si  size  es cero, list no se modifica,
+              pero se devuelve el número total de  grupos  suple­
+              mentarios para el proceso.
+
+       setgroups
+              Asigna  los  grupos suplementarios para el proceso.
+              Sólo el superusuario puede usar esta función.
+
+VALOR DEVUELTO
+       getgroups
+              En caso de éxito, se devuelve el número  de  grupos
+              suplementarios.  En caso de error, se devuelve -1 y
+              se pone en errno un valor apropiado.
+
+       setgroups
+              En caso de éxito, se devuelve 0. Si hay  un  error,
+              -1, y se pone en errno un valor apropiado.
+
+ERRORES
+       EFAULT list tiene una dirección inválida.
+
+       EPERM  Para setgroups, el usuario no es el superusuario.
+
+       EINVAL Para  setgroups, size es más grande que NGROUPS (32
+              para Linux 2.0.32).  Para getgroups, size es  menor
+              que el número de IDs de grupos suplementarios, pero
+              no es cero.
+
+CONFORME A
+       SVr4, SVID (sólo en la distribución 4; estas  llamadas  al
+       sistema  no estaban presentes en SVr3), X/OPEN, 4.3BSD. La
+       función getgroups está en POSIX.1.  Puesto  que  setgroups
+       requiere privilegios, no está cubierta por POSIX.1.
+
+FALLOS
+       La  macro __USE_BSD probablemente no debería ser necesaria
+       para setgroups.
+
+VÉASE TAMBIÉN
+       initgroups(3), getgid(2), setgid(2)
+
+
+
+Linux 2.0.32            10 Diciembre 1997            GETGROUPS(2)

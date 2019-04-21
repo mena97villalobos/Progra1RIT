@@ -1,0 +1,96 @@
+ld.so(8)         Manual del Programador de Linux         ld.so(8)
+
+
+
+NAME
+       ld.so/ld-linux.so - enlazador/cargador dinámico
+
+DESCRIPCIóN
+       ld.so  carga  las librerías compartidas necesarias para un
+       programa, prepara el programa para ser ejecutado y lo eje­
+       cuta.   A  no  ser  que  se especifique mediante la opción
+       -static a ld durante la compilación, todos  los  programas
+       en  Linux están incompletos y necesitan un enlazado poste­
+       rior en ejecución.
+
+       Las librerías compartidas necesarias para un  programa  se
+       buscan en el siguiente orden
+
+       o      Usando   la  variable  de  entorno  LD_LIBRARY_PATH
+              (LD_AOUT_LIBRARY_PATH   para   programas    a.out).
+              Excepto si el ejecutable es un binario con permisos
+              setuid/setgid, en cuyo caso es ignorada.
+
+       o      Desde el fichero cache  /etc/ld.so.cache  que  con­
+              tiene  una  lista compilada de librerías candidatas
+              previamente encontradas en la variable antes  indi­
+              cada.
+
+       o      En el camino por defecto /usr/lib, y en /lib.
+
+ENTORNO
+       LD_LIBRARY_PATH
+              Una lista de directorios, separados por dos puntos,
+              en los que buscar librerías ELF en tiempo de ejecu­
+              ción.  Similar a la variable de entorno PATH
+
+       LD_PRELOAD
+              Una  lista  de librerías compartidas ELF, separadas
+              por espacios  en  blanco  y  especificadas  por  el
+              usuario,  para  ser  cargadas  antes que las otras.
+              Esto puede ser  usado  para  ignorar  funciones  en
+              otras librerías compartidas.
+
+       LD_AOUT_LIBRARY_PATH
+              Una lista de directorios, separados por dos puntos,
+              en los que buscar librerías a.out en tiempo de eje­
+              cución.  Semejante a la variable de entorno PATH
+
+       LD_AOUT_PRELOAD
+              El  nombre de una librería a.out adicional, especi­
+              ficada por el usuario, para ser cargada después  de
+              las  otras.   Esto  puede  ser  usado  para ignorar
+              selectivamente funciones en otras librerías compar­
+              tidas.
+
+       LD_NOWARN
+              Suprime  los avisos sobre librerías a.out con menor
+              numero de versión.
+
+       LD_KEEPDIR
+              No ignorar el directorio  en  los  nombres  de  las
+              librerías  a.out  a  ser  cargadas.  El uso de esta
+              opción es fuertemente desaconsejado.
+
+FICHEROS
+       /lib/ld.so          enlazador/cargador dinámico a.out
+       /lib/ld-linux.so.*  enlazador/cargador dinámico ELF
+       /etc/ld.so.cache    Fichero conteniendo una  lista  compi­
+                           lada  de directorios en los que buscar
+                           librerías  y  una  lista  ordenada  de
+                           librerías candidatas.
+       /etc/ld.so.preload  Fichero conteniendo una lista de libr­
+                           erías compartidas ELF,  separadas  por
+                           espacios  en  blanco para ser cargadas
+                           antes que el programa.
+       lib*.so*            librerías compartidas
+
+VÉASE TAMBIÉN
+       ldd(1), ldconfig(8).
+
+FALLOS (BUGS)
+       Actualmente ld.so no existe manera de descargar  y  buscar
+       librerías compatibles o nuevas versiones.
+
+       La  funcionalidad  de ld.so solo está disponible para eje­
+       cutables compilados usando la  version  4.4.3  de  libc  o
+       superior.
+
+AUTORES
+       David  Engel, Eric Youngdale, Peter MacDonald, Hongjiu Lu,
+       Linus Torvalds, Lars Wirzenius y Mitch D'Souza  (no  nece­
+       sariamente en este orden).
+
+
+
+Linux                     14 Marzo 1998                  ld.so(8)

@@ -1,0 +1,100 @@
+MREMAP(2)        Manual del Programador de Linux        MREMAP(2)
+
+
+
+NOMBRE
+       mremap - re-asocia una dirección de memoria virtual
+
+SINOPSIS
+       #include <unistd.h>
+       #include <sys/mman.h>
+
+       void  *mremap(void  *vieja_dir,  size_t viejo_tam , size_t
+       nuevo_tam, unsigned long flags);
+
+DESCRIPCIÓN
+       mremap expande (o  encoge)  una  asociación  existente  de
+       memoria, moviéndola potencialmente a la vez (según se con­
+       trole por el argumento flags y según el espacio de  direc­
+       ciones virtuales disponible).
+
+       vieja_dir  es  la  dirección antigua del bloque de memoria
+       virtual que Ud. quiere expandir (o encoger).  Observe  que
+       vieja_dir   tiene   que   tener  alineamiento  de  página.
+       viejo_tam es el antiguo tamaño del bloque de memoria  vir­
+       tual.  nuevo_tam es el tamaño pedido del bloque de memoria
+       virtual tras el cambio de tamaño.
+
+       El argumento flags es un mapa de bits de opciones.
+
+       En Linux la memoria se divide en páginas.  Un  proceso  de
+       usuario  tiene (uno o) varios segmentos de memoria virtual
+       lineales. Cada segmento de memoria virtual tiene una o más
+       asociaciones  a  páginas  de  memoria real (en la tabla de
+       páginas). Cada segmento de memoria virtual tiene su propia
+       protección  (derechos  de acceso), que pueden producir una
+       violación de segmento si a la memoria se accede  incorrec­
+       tamente  (p.ej.,  por  escribir  en un segmento de lectura
+       exclusiva). Acceder a memoria virtual fuera de los segmen­
+       tos también producirá una violación de segmento.
+
+       mremap  emplea  el  esquema  de tabla de páginas de Linux.
+       mremap cambia la asociación entre direcciones virtuales  y
+       páginas  de memoria. Esto puede emplearse para implementar
+       un realloc muy eficiente.
+
+
+FLAGS
+       MREMAP_MAYMOVE
+              indica si la operación, en vez de  fallar,  debería
+              cambiar la dirección virtual si el cambio de tamaño
+              no puede hacerse en el espacio virtual actual.
+
+
+VALOR DEVUELTO
+       En caso de éxito, mremap devuelve un puntero  a  la  nueva
+       área de memoria virtual.  En caso de error, se devuelve -1
+       y se pone un valor apropiado en errno.
+
+
+ERRORES
+       EINVAL Se ha dado un argumento inválido. Lo  más  probable
+              es que vieja_dir no tenga alineamiento de página.
+
+       EFAULT "Segmentation  fault",  o sea, "fallo de segmento".
+              Alguna   dirección   del    rango    vieja_dir    a
+              vieja_dir+viejo_tam  es  una  dirección  de memoria
+              virtual inválida para este  proceso.   También  uno
+              puede  obtener  EFAULT  incluso  si existen asocia­
+              ciones que cubren el espacio  entero  pedido,  pero
+              esas asociaciones son de tipos diferentes.
+
+       EAGAIN El  segmento  de  memoria está bloqueado y no puede
+              re-asociarse.
+
+       ENOMEM El área de memoria no puede expandirse en la direc­
+              ción  virtual  en curso, y la opción MREMAP_MAYMOVE
+              no está puesta en flags.  O bien, no  hay  bastante
+              memoria (virtual) disponible.
+
+CONFORME A
+       Esta   llamada  es  específica  de  Linux,  y  no  debería
+       emplearse en programas que  se  pretendan  transportables.
+       4.2BSD  tenía  una llamada igual (nunca implementada real­
+       mente) mremap(2) con una  semántica  completamente  difer­
+       ente.
+
+VÉASE TAMBIÉN
+       getpagesize(2),  realloc(3),  malloc(3),  brk(2), sbrk(2),
+       mmap(2)
+
+       Su libro de texto favorito de Sistemas Operativos para más
+       información  sobre  la memoria paginada. Por ejemplo: Sis­
+       temas Operativos Modernos por Andrew S. Tannenbaum, Inside
+       Linux  por Randolf Bentson, o The Design of the UNIX Oper­
+       ating System por Maurice J. Bach.
+
+
+
+
+Linux 1.3.87              12 Abril 1996                 MREMAP(2)

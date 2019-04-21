@@ -1,0 +1,276 @@
+ZIC(8)                                                     ZIC(8)
+
+
+
+NOMBRE
+       zic - compilador de husos horarios
+
+SINOPSIS
+       zic  [  -v  ]  [  -d  directory  ]  [  -l localtime ] [ -p
+       posixrules ] [ -L leapsecondfilename ] [ -s ] [ -y command
+       ] [ filename ... ]
+
+DESCRIPCIÓN
+       Zic lee el texto del fichero (los ficheros) indicado(s) en
+       la línea de órdenes y crea los ficheros de información  de
+       conversione  horarias  indicados  en  esta entrada.  Si un
+       filename es -, se lee la entrada estándar.
+
+       Están disponibles estas opciones:
+
+       -d directory
+              Crea los ficheros de  información  de  conversiones
+              horarias  en  el directorio indicado en lugar de en
+              el directorio estándar indicado más abajo.
+
+       -l timezone
+              Usa el huso horario indicado como hora local.   Zic
+              actuará  como si la entrada contuviera una línea de
+              enlace de la forma
+
+                   Link timezone       localtime
+
+       -p timezone
+              Usa las reglas del huso horario indicado al manejar
+              variables  de  entorno  de  huso horario en formato
+              POSIX.  Zic actuará como si la  entrada  contuviera
+              una línea de enlace de la forma
+
+                   Link timezone       posixrules
+
+       -L leapsecondfilename
+              Lee  la  información  de  los segundos de salto del
+              fichero indicado.  Si no se  usa  esta  opción,  no
+              aparece  información  de  segundos  de salto en los
+              ficheros de salida.
+
+       -v     Se queja si un año que aparece  en  el  fichero  de
+              datos  está  fuera  del  intervalo  de  años repre­
+              sentable por valores time(2).
+
+       -s     Limita los valores horarios en los ficheros de sal­
+              ida  a valores que son idénticos tanto si son toma­
+              dos como con signo como sin signo.  Puede usar esta
+              opción para generar fichero compatibles con SYSV.
+
+       -y command
+              Usa   la   orden   command  indicada  en  lugar  de
+              yearistype al  comprobar  los  tipos  de  los  años
+              (veáse más abajo).
+
+       Las líneas de entrada están formadas por campos.  Los cam­
+       pos están separados unos de otros por cualquier número  de
+       espacios  en blanco. Los espacios en blanco al principio y
+       final de las líneas de entrada se  ignoran.   Un  carácter
+       almohadilla  (#) en la entrada introduce un comentario que
+       se extiende hasta el final de la línea en la  que  aparece
+       la almohadilla.  Los espacios en blanco y las almohadillas
+       se pueden encerrar entre comillas dobles (") si se  van  a
+       usar  como  parte  de un campo.  Cualquier línea en blanco
+       (después de  descartar  los  comentarios)  se  ignora.  Se
+       espera  que  las líneas que no están en blanco sean de uno
+       de los tres tipos siguientes: líneas de regla,  líneas  de
+       huso y líneas de enlace.
+
+       Una línea de regla tiene la forma
+
+            Rule  NAME  FROM  TO    TYPE  IN   ON       AT    SAVE  LETTER/S
+
+       Por ejemplo:
+
+            Rule  US    1967  1973  -     Apr  lastSun  2:00  1:00  D
+
+       Los campos que componen una línea de regla son:
+
+       NAME    Indica  el  nombre  (arbitrario)  del  conjunto de
+               reglas de las que esta regla forma parte.
+
+       FROM    Indica el primer año en el que se aplica la regla.
+               Se  puede  dar  cualquier  año entero; se asume el
+               calendario gregoriano.  La palabra minimum (o  una
+               abreviación) significa el año mínimo representable
+               como un entero.  La palabra maximum (o  una  abre­
+               viación)  significa  el  año  máximo representable
+               como  un  entero.   Las  reglas  pueden  describir
+               instantes  que  no son representables como valores
+               de tiempo; los valores de tiempo no se pueden rep­
+               resentar  se  ignoran; esto permite que las reglas
+               sean portables entre  ordenadores  con  diferentes
+               tipos de valores horarios.
+
+       TO      Da  el  año  final  en  el que se aplica la regla.
+               Además de minimum y maximum (como antes), se puede
+               usar  la  palabra  only  (o  una abreviación) para
+               repetir el valor del campo FROM.
+
+       TYPE    Indica el tipo de año  en  el  que  se  aplica  la
+               regla.   Si  TYPE es - la regla se aplica en todos
+               los años entre FROM y  TO,  ambos  inclusive.   Si
+               TYPE  es cualquier otra cosa, entonces zic ejecuta
+               la orden
+                    yearistype year type
+               para comprobar el tipo de un año: se asume que  un
+               estado  de salida cero significa que el año es del
+               tipo dado; se asume que un estado  de  salida  uno
+               significa que el año no es del tipo dado.
+
+       IN      Nombre  del  mes  en el que la regla surte efecto.
+               Los nombres de los meses se pueden abreviar.
+
+       ON      Da el día en el que la regla  surte  efecto.   Los
+               formatos reconocidos incluyen:
+
+                    5        El día 5 del mes
+                    lastSun  el último domingo del mes
+                    lastMon  el último lunes del mes
+                    Sun>=8   el primer domingo 8 o después del día 8
+                    Sun<=25  el último domingo 25 o antes del día 25
+
+               Los  nombres  de  los  días de la semana se pueden
+               abreviar o escribir totalmente. Dése cuenta que no
+               debe haber espacios en el campo ON.
+
+       AT      Da la hora del día a la que surte efecto la regla.
+               Los formatos reconocidos incluyen:
+
+                    2        tiempo en horas
+                    2:00     tiempo en horas y minutos
+                    15:00    hora en formato 24 horas (para
+                             horas después del medio día)
+                    1:28:14  tiempo en horas, minutos y segundos
+
+               donde las 0 horas representan la  media  noche  al
+               comienzo del día y las 24 horas son la media noche
+               al final del día.  Cualquiera de estos formatos se
+               puede  acompañar por la letra w si el tiempo indi­
+               cado es el tiempo local del "reloj incorporado", s
+               si  el  tiempo indicado es un tiempo local "están­
+               dar" o u (o g o z) si el tiempo dado es un  tiempo
+               universal;  en  ausencia de un indicador, se asume
+               la hora del reloj incorporado.
+
+       SAVE    Indica la cantidad de tiempo a  añadir  al  tiempo
+               local estándar cuando la regla está vigente.  Este
+               campo tiene el  mismo  formato  que  el  campo  AT
+               (aunque,  naturalmente,  los  sufijos  w y s no se
+               usan).
+
+       LETTER/S
+               Indica la "parte variable" (por ejemplo, "S" o "D"
+               en  el caso de "EST" o "EDT") de las abreviaciones
+               de huso  horario  a  usar  cuando  la  regla  está
+               vigente.  Si este campo es - no existe parte vari­
+               able.
+
+       Una línea de huso tiene la forma
+
+            Zone  NAME                GMTOFF  RULES/SAVE  FORMAT  [UNTIL]
+
+       Por ejemplo:
+
+            Zone  Australia/Adelaide  9:30    Aus         CST     1971 Oct 31 2:00
+
+       Los campos que forman una línea de huso son:
+
+       NAME  El nombre del huso horario.  Este es el nombre usado
+             al  crear  el fichero de información de conversiones
+             horarias para la zona.
+
+       GMTOFF
+             La cantidad de tiempo a añadir a UTC para obtener el
+             tiempo  estándar  de  la  zona.  Este campo tiene el
+             mismo formato que el de los campos AT y SAVE de  las
+             líneas  de  regla;  comience  el  campo con un signo
+             menos si el tiempo se debe restar a UTC.
+
+       RULES/SAVE
+             El nombre de la(s) regla(s) que  se  aplican  en  el
+             huso  horario  o,  alternativamente, una cantidad de
+             tiempo a añadir al tiempo local estándar.   Si  este
+             campo  es  - el tiempo estándar siempre se aplica en
+             el huso horario.
+
+       FORMAT
+             El formato para las abreviaciones del  huso  horario
+             en  este  huso  horario.  El par de caracteres %s se
+             usa para indicar dónde va la "parte variable" de  la
+             abreviación del huso horario.  Alternativamente, una
+             barra  inclinida  (/)   separa   las   abreviaciones
+             estándar y de horario de verano.
+
+       UNTIL El  instante  en  el  que  cambia  el desplazamiento
+             respecto al UTC o la(s) regla(s) para un lugar.   Se
+             especifica  como un año, un mes, un día y la hora de
+             un día.  Si se especifica esto,  la  información  de
+             huso  horario  se genera a partir del desplazamiento
+             respecto al UTC y  del  cambio  de  regla  indicados
+             hasta  el instante especificado.  El mes, día y hora
+             del día tienen el mismo formato que las columnas IN,
+             ON  y  AT  de  una  regla; las columnas del final se
+             puede omitir y, como valor, se toma por  defecto  el
+             valor   más   cercano   posible  para  las  columnas
+             ausentes.
+
+             La línea siguiente debe ser una línea de  "continua­
+             tion";  ésta tiene el mismo formato que una línea de
+             huso salvo que se omiten la cadena "Zone" y el  nom­
+             bre,  ya que la línea de continuación situará infor­
+             mación que tendrá como punto de partida el  instante
+             especificado por el campo UNTIL de la línea anterior
+             del fichero usado por la línea anterior.  Las líneas
+             de  continuación  pueden  contener  un  campo UNTIL,
+             exactamente como lo hacen las líneas de huso,  indi­
+             cando  que  la  línea  siguiente es una continuación
+             más.
+
+       Una línea de enlace tiene la forma
+
+            Link  LINK-FROM        LINK-TO
+
+       Por ejemplo:
+
+            Link  Europe/Istanbul  Asia/Istanbul
+
+       El campo LINK-FROM debería aparecer como el campo NAME  en
+       alguna línea de huso; el campo LINK-TO se usa como un nom­
+       bre alternativo para ese huso.
+
+       Excepto para las líneas de continuación, las líneas  puede
+       aparecer en cualquier orden en la entrada.
+
+       Las  líneas  del  fichero  que describen segundos de salto
+       tienen el siguiente formato:
+
+            Leap  YEAR  MONTH  DAY  HH:MM:SS  CORR  R/S
+
+       Por ejemplo:
+
+            Leap  1974  Dec    31   23:59:60  +     S
+
+       Los campos YEAR, MONTH, DAY y HH:MM:SS indican  cuándo  se
+       producen los segundos de salto.  El campo CORR debería ser
+       "+" si se añadiera un segundo de salto o "-" if  a  second
+       was  skipped.   El  campo R/S debería ser (una abreviación
+       de) "Stationary" si el instante del segundo de salto  dado
+       por los otros campos debiera interpretarse como UTC o (una
+       abreviación de) "Rolling" si el instante  del  segundo  de
+       salto dado por los otros campos debiera interpretarse como
+       el tiempo local del reloj incorporado.
+
+NOTA
+       Para aquellas zonas con más de dos tipos  de  hora  local,
+       podría  necesitar usar una hora local estándar en el campo
+       AT de la regla del instante de transición primero de todos
+       para  asegurar  que  el  instante de transición primero de
+       todos grabado en el fichero compilado es correcto.
+
+FICHERO
+       /usr/local/etc/zoneinfo directorio estándar usado para los
+       ficheros creados
+
+VÉASE TAMBIÉN
+       newctime(3), tzfile(5), zdump(8)
+
+
+
+                                                           ZIC(8)

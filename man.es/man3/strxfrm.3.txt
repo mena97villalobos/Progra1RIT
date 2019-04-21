@@ -1,0 +1,42 @@
+STRXFRM(3)       Manual del Programador de Linux       STRXFRM(3)
+
+
+
+NOMBRE
+       strxfrm - transformación de cadena de caracteres
+
+SINOPSIS
+       #include <string.h>
+
+       size_t strxfrm(char *dest, const char *orig, size_t n);
+
+DESCRIPCIÓN
+       La  función  strxfrm()  transforma la cadena de caracteres
+       orig a una forma tal que el resultado de llamar a strcmp()
+       sobre  dos  cadenas  que  han  sido transformadas mediante
+       strxfrm() es el mismo que el de llamar a strcoll() en  las
+       dos  cadenas  antes  de  su transformación. Los primeros n
+       caracteres de la cadena transformada se colocan  en  dest.
+       La transformación se basa en la localización en curso para
+       la categoría LC_COLLATE.  (Vea setlocale(3)).
+
+VALOR DEVUELTO
+       La función strxfrm() devuelve el número de bytes  requeri­
+       dos para guardar la cadena transformada en dest excluyendo
+       el carácter terminador '\0'.  Si el valor devuelto es n  o
+       más, los contenidos de dest son indeterminados.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+OBSERVACIONES
+       En  las localizaciones "POSIX" o "C", strxfrm() es equiva­
+       lente a copiar la cadena con strncpy().
+
+VÉASE TAMBIÉN
+       bcmp(3), memcmp(3), strcasecmp(3), strcmp(3),  strcoll(3),
+       setlocale(3)
+
+
+
+GNU                       12 Abril 1993                STRXFRM(3)

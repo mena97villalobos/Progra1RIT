@@ -1,0 +1,63 @@
+PERROR(3)            Funciones de Biblioteca            PERROR(3)
+
+
+
+NOMBRE
+       perror - muestra un mensaje correspondiente a un error del
+       sistema
+
+SINOPSIS
+       #include <stdio.h>
+
+       void perror(const char *s);
+
+       #include <errno.h>
+
+       const char *sys_errlist[];
+       int sys_nerr;
+
+DESCRIPCIÓN
+       La rutina perror() produce un mensaje que va a  la  salida
+       estándar  de  errores, describiendo el último error encon­
+       trado durante una llamada al sistema o a ciertas funciones
+       de biblioteca. La cadena de caracteres s que se  pasa como
+       argumento, se muestra primero, luego un signo de dos  pun­
+       tos  y  un  espacio en blanco; por último, el mensaje y un
+       salto de línea. Para ser de más  utilidad,  la  cadena  de
+       caracteres pasada como argumento debería incluir el nombre
+       de la función que incurrió en  el  error.  El  código  del
+       error  se  toma  de la variable externa errno, que toma un
+       valor cuando ocurre un error pero no es puesta a  cero  en
+       una llamada no errónea.
+
+       Puede utilizarse la lista global de errores sys_errlist[],
+       indexada por errno, para obtener el mensaje del error  sin
+       el  salto de línea.  El número más alto de mensaje propor­
+       cionado en la tabla es sys_nerr -1.  Tenga cuidado  cuando
+       acceda  directamente  a  esta lista porque puede que no se
+       hayan añadido aún nuevos valores de error a sys_errlist[].
+
+       Cuando  una llamada al sistema falla, normalmente devuelve
+       -1 y pone en la variable errno un valor que  describe  qué
+       fue  mal. (Estos valores pueden encontrarse en <errno.h>.)
+       Muchas funciones de biblioteca  también  hacen  esto.   La
+       función  perror() sirve para traducir este código de error
+       a una forma que los humanos puedan entender.  Observe  que
+       errno tiene un valor sin definir tras una llamada exitosa:
+       esta llamada podría muy bien cambiar incluso el  valor  de
+       esta  variable, a pesar de haber acabado bien, por ejemplo
+       porque internamente empleara alguna otra función  de  bib­
+       lioteca  que hubiera fallado.  Así, si una llamada fallida
+       no es seguida inmediatamente por una llamada a perror,  el
+       valor de errno debe guardarse.
+
+
+CONFORME A
+       C ANSI, BSD 4.3, POSIX, X/OPEN
+
+VÉASE TAMBIÉN
+       strerror(3)
+
+
+
+Linux                      5 Marzo 1998                 PERROR(3)

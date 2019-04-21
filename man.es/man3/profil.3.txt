@@ -1,0 +1,42 @@
+PROFIL(3)        Manual del Programador de Linux        PROFIL(3)
+
+
+
+NOMBRE
+       profil - perfil de tiempo de ejecución
+
+SINOPSIS
+       #include <unistd.h>
+
+       int  profil(u_short  *buf,  size_t tambuf, size_t desplto,
+       u_int escala);
+
+DESCRIPCIÓN
+       Esta rutina proporciona un medio  para  averiguar  en  qué
+       partes  su  programa pasa la mayor parte de su tiempo.  El
+       argumento buf apunta a tambuf bytes de  memoria.  Cada  10
+       milisegundos virtuales, se examina el contador de programa
+       del usuario (PC): se resta desplto y el resultado se  mul­
+       tiplica  por  escala  y  se divide por 65536.  Si el valor
+       resultante es menor que tambuf la entrada  correspondiente
+       de buf se incrementa.
+
+       Si buf es un puntero nulo, el perfil se desactiva.
+
+VALOR DEVUELTO
+       Siempre se devuelve cero.
+
+FALLOS
+       profil no puede emplearse en un programa que también util­
+       ice contadores incrementales ITIMER_PROF.
+
+       Un verdadero análisis de  perfil  del  núcleo  proporciona
+       resultados  más  exactos.  Libc 4.4 contiene un parche del
+       núcleo que proporciona una llamada al sistema profil.
+
+VÉASE TAMBIÉN
+       gprof(1), setitimer(2), signal(2), sigaction(2)
+
+
+
+Linux 2.0                 27 Agosto 1997                PROFIL(3)

@@ -1,0 +1,22 @@
+SETSID(8)        Manual del Programador de Linux        SETSID(8)
+
+
+
+NOMBRE
+       setsid - lanza un programa en una nueva sesión
+
+SINOPSIS
+       setsid programa [ arg ... ]
+
+DESCRIPCIÓN
+       setsid ejecuta un programa en una nueva sesión.
+
+VÉASE TAMBIÉN
+       setsid(2)
+
+AUTOR
+       Rick Sladkey <jrs@world.std.com>
+
+
+
+Linux 0.99              20 Noviembre 1993               SETSID(8)

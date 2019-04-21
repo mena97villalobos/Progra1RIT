@@ -1,0 +1,36 @@
+SYNC(2)          Manual del Programador de Linux          SYNC(2)
+
+
+
+NOMBRE
+       sync - entrega el búfer caché al disco
+
+SINOPSIS
+       #include <unistd.h>
+
+       int sync(void);
+
+DESCRIPCIÓN
+       sync  primero  entrega  los nodos-í a los búferes, y luego
+       éstos al disco.
+
+VALOR DEVUELTO
+       sync siempre devuelve 0.
+
+CONFORME A
+       SVr4, SVID, X/OPEN, BSD 4.3
+
+FALLOS
+       De acuerdo con la especificación  del  estándar  (p.  ej.,
+       SVID),  sync() planifica las escrituras, pero puede regre­
+       sar antes de que  la  escritura  real  tenga  lugar.   Sin
+       embargo,  desde  la  versión 1.3.20, Linux sí espera real­
+       mente.  (Esto aún no garantiza la integridad de los datos:
+       los discos modernos tienen grandes cachés.)
+
+VÉASE TAMBIÉN
+       bdflush(2), fsync(2), fdatasync(2), update(8), sync(8)
+
+
+
+Linux 1.3.88             27 Octubre 1996                  SYNC(2)

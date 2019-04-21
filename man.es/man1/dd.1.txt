@@ -1,0 +1,165 @@
+DD(1)                                                       DD(1)
+
+
+
+NOMBRE
+       dd - convierte y copia un fichero
+
+SINOPSIS
+       dd    [--help]   [--version]   [if=fichero]   [of=fichero]
+       [ibs=bytes] [obs=bytes] [bs=bytes] [cbs=bytes]  [skip=blo­
+       ques] [seek=bloques] [count=bloques] [conv={ascii, ebcdic,
+       ibm, block, unblock, lcase, ucase, swab, noerror, notrunc,
+       sync}]
+
+DESCRIPCIÓN
+       dd  copia  un  fichero (de la entrada estándar a la salida
+       estándar, por omisión) con  un  tamaño  de  bloque  selec­
+       cionable  por  el  usuario,  a  la par que, opcionalmente,
+       realiza sobre él ciertas conversiones.
+
+       Lee de la entrada un bloque cada vez, empleando el  tamaño
+       de bloque especificado para la entrada (el valor predeter­
+       minado es 512 bytes).  Si la opción bs=bytes se dio, y  no
+       se  especificó  una  conversión aparte de sync, noerror, o
+       notrunc, escribe la cantidad de datos leídos  (que  podría
+       ser  menor  de la pedida) en un bloque de salida separado.
+       Este bloque de salida tiene precisamente la misma longitud
+       que  cuando  se  leyó  a menos que se haya especificado la
+       conversión sync, en cuyo caso los datos  se  rellenan  con
+       NULos (o espacios, vea más abajo).
+
+       De  otro  modo,  la  entrada, leída un bloque cada vez, se
+       procesa y la salida resultante se recoge y se  escribe  en
+       bloques  del tamaño especificado para el bloque de salida.
+       El bloque de salida final puede ser más corto.
+
+       Las opciones de más abajo con valores numéricos  (bytes  y
+       bloques)  pueden  ir seguidas por un factor multiplicador:
+       `k'=1024, `b'=512, `w'=2, `c'=1 (`w' y `c' son extensiones
+       de  GNU; `w' nunca debería utilizarse: significa 2 en Sys­
+       tem V y 4 en 4.2BSD).  Dos  o  más  de  tales  expresiones
+       numéricas  pueden  multiplicarse  poniendo  una `x' (equis
+       minúscula) entre ellas.
+
+OPCIONES
+       if=fichero
+              Lee desde fichero en vez de desde la entrada están­
+              dar.
+
+       of=fichero
+              Escribe  a fichero en vez de en la salida estándar.
+              A menos que se haya dado  conv=notrunc,  dd  trunca
+              fichero  a cero bytes (o al tamaño especificado con
+              seek=).
+
+       ibs=bytes
+              Lee bytes bytes de una vez. El valor predeterminado
+              es 512.
+
+       obs=bytes
+              Escribe  bytes bytes de una vez. El valor predeter­
+              minado es 512.
+
+       bs=bytes
+              Lee y escribe bytes bytes de una vez.  Esto  susti­
+              tuye  a ibs y a obs.  (Y poner bs no es equivalente
+              a poner ibs y obs a su mismo valor, al menos si  no
+              se  ha  especificado una conversión aparte de sync,
+              noerror y notrunc, puesto  que  estipula  que  cada
+              bloque de entrada será copiado en la salida como un
+              solo bloque sin agregar bloques cortos.)
+
+       cbs=bytes
+              Especifica el tamaño de bloque de  conversión  para
+              block y unblock.
+
+       skip=bloques
+              Se  salta bloques bloques de tamaño en bytes deter­
+              minado por ibs del fichero de entrada antes  de  la
+              copia.
+
+       seek=bloques
+              Se  salta bloques bloques de tamaño en bytes deter­
+              minado por obs en el fichero de salida antes de  la
+              copia.
+
+       count=bloques
+              Copia  bloques  bloques de tamaño en bytes determi­
+              nado por ibs del fichero de entrada, en vez de todo
+              hasta el final del fichero.
+
+       conv=CONVERSIÓN[,CONVERSIÓN]...
+              Convierte  el fichero según se haya especificado en
+              el o los argumentos  CONVERSIÓN.   (No  se  permite
+              ningún espacio al lado de ninguna coma.)
+
+              Conversiones:
+
+
+              ascii  Convierte EBCDIC a ASCII.
+
+              ebcdic Convierte ASCII a EBCDIC.
+
+              ibm    Convierte ASCII a un EBCDIC alternativo.
+
+              block  Para  cada  línea  de  la  entrada, saca cbs
+                     bytes, reemplazando el salto de línea de  la
+                     entrada  con un espacio y rellenando con más
+                     espacios si fuera menester.
+
+              unblock
+                     Reemplaza espacios del final en cada  bloque
+                     de entrada de tamaño determinado por cbs por
+                     un salto de línea.
+
+              lcase  Cambia las letras mayúsculas a minúsculas.
+
+              ucase  Cambia las letras minúsculas a mayúsculas.
+
+              swab   Intercambia cada par de bytes de la entrada.
+                     dd  de  GNU,  no  como  el de otros sistemas
+                     Unix, funciona cuando se lee un número impar
+                     de  bytes:  el  último, simplemente se copia
+                     (puesto que no tiene a nadie con quien  cam­
+                     biarse).
+
+              noerror
+                     Continúa  después  de  producirse errores de
+                     lectura.
+
+              notrunc
+                     No trunca el fichero de salida.
+
+              sync   Rellena cada  bloque  de  entrada  hasta  el
+                     tamaño determinado por ibs con bytes cero al
+                     final.
+
+OPCIONES ESTÁNDARES DE GNU
+       --help Muestra un mensaje en la salida estándar  sobre  el
+              modo de empleo y acaba con código de éxito.
+
+       --version
+              Muestra  en la salida estándar información sobre la
+              versión y luego acaba con código de éxito.
+
+       --     Termina la lista de opciones.
+
+ENTORNO
+       Las variables LANG, LC_ALL, LC_CTYPE y LC_MESSAGES  tienen
+       los significados usuales.
+
+CONFORME A
+       POSIX 1003.2
+
+OBSERVACIONES
+       Esta  página  describe dd según se encuentra en el paquete
+       fileutils-3.16; otras versiones pueden  diferir  un  poco.
+       Envíe  por  correo  electrónico correcciones y adiciones a
+       las direcciones aeb@cwi.nl,  aw@mail1.bet1.puv.fi  y  rag­
+       nar@lightside.ddns.org.   Informe de fallos en el programa
+       a fileutils-bugs@gnu.ai.mit.edu.
+
+
+
+GNU fileutils 3.16         Agosto 1998                      DD(1)

@@ -1,0 +1,60 @@
+PROTOCOLS(5)     Manual del Programador de Linux     PROTOCOLS(5)
+
+
+
+NOMBRE
+       protocols - el fichero de definición de protocolos
+
+DESCRIPCIÓN
+       Éste  es un fichero ASCII plano que describe los distintos
+       protocolos DARPA para Internet que están disponibles en el
+       subsistema  TCP/IP.  Se  debería consultar este fichero en
+       vez de usar los números de los ficheros de cabecera  ARPA,
+       o,  peor aún, adivinarlos. Estos números se incluyen en el
+       campo de protocolo de cualquier cabecera IP.
+
+       Este fichero no  se  debe  modificar  porque  los  cambios
+       pueden  producir  paquetes  IP  incorrectos. Los números y
+       nombres de los protocolos se definen  en  el  DDN  Network
+       Information Center.
+
+       Cada línea tiene el siguiente formato:
+
+              protocolo número alias ...
+
+       donde  los  campos  se  delimitan por espacios o TABs. Las
+       líneas vacías y las  que  comienzan  con  un  '#'  no  son
+       tenidas en cuenta.
+
+       Las descripciones de los campos son las siguientes:
+
+
+       protocolo
+              el  nombre  nativo  del protocolo. Por ejemplo: ip,
+              tcp o udp.
+
+       número el número oficial para este protocolo tal como  irá
+              en la cabecera IP.
+
+       alias  alias  o  nombres alternativos opcionales para este
+              protocolo.
+
+
+       Este fichero se puede distribuir en una red usando  servi­
+       cios de nombre como Yellow Pages/NIS o BIND/Hesiod.
+
+
+FICHEROS
+       /etc/protocols
+              El fichero de definición de protocolos.
+
+VÉASE TAMBIÉN
+       getprotoent(3)
+
+       Guía del Servicio NIS (Páginas Amarillas)
+
+       Guía del Servicio BIND/Hesiod
+
+
+
+Linux                    18 Octubre 1995             PROTOCOLS(5)

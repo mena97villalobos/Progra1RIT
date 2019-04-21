@@ -1,0 +1,44 @@
+BSEARCH(3)       Manual del Programador de Linux       BSEARCH(3)
+
+
+
+NOMBRE
+       bsearch - búsqueda binaria en un arreglo (array) ordenado
+
+SINOPSIS
+       #include <stdlib.h>
+
+       void *bsearch(const void *key, const void *base, size_t nmemb,
+              size_t size, int (*compar)(const void *, const void *));
+
+DESCRIPCIÓN
+       La  función bsearch() busca en un arreglo de nmemb elemen­
+       tos, donde el primer elemento está apuntado por  base,  un
+       elemento  que coincida con el objecto apuntado por key. El
+       tamaño de cada elementos del arreglo es  especificado  por
+       size.
+
+       El  contenido  del  arreglo  debe  estar ordenado en orden
+       ascendente según la función  de  comparación  referenciada
+       por compar. Se espera que la rutina compar tenga dos argu­
+       mentos que apunten al objeto  key  y  a  un  elemento  del
+       arreglo,  en  ese  orden, y debe devolver un entero menor,
+       igual o mayor que cero si resulta que  el  objeto  key  es
+       menor, igual o mayor (respectivamente) que el elemento del
+       arreglo.
+
+VALOR DEVUELTO
+       La función bsearch() devuelve un puntero al  elemento  del
+       arreglo  que  coincide,  o NULL si no hay coincidencia. Si
+       hay múltiples elementos que coinciden  con  la  clave,  el
+       elemento devuelto está sin determinar.
+
+CONFORME A
+       SVID 3, BSD 4.3, ISO 9899
+
+VÉASE TAMBIÉN
+       qsort(3)
+
+
+
+GNU                     23 Diciembre 1995              BSEARCH(3)

@@ -1,0 +1,24 @@
+ISSUE(5)         Manual del Programador de Linux         ISSUE(5)
+
+
+
+NOMBRE
+       issue  -  Mensaje  pre-entrada y fichero de identificación
+       del sistema
+
+DESCRIPTIÓN
+       El fichero /etc/issue es un fichero de texto que  contiene
+       un  mensaje  o  identificación  del sistema que se imprime
+       antes del indicador de entrada (login).   Si  getty(1)  lo
+       soporta,  el  fichero  puede  contener diversas secuencias
+       @letra y \letra.
+
+FICHEROS
+       /etc/issue
+
+VÉASE TAMBIÉN
+       getty(1), motd(5)
+
+
+
+Linux                  24 de Julio de 1993               ISSUE(5)

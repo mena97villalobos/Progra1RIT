@@ -1,0 +1,36 @@
+STRDUP(3)        Manual del Programador de Linux        STRDUP(3)
+
+
+
+NOMBRE
+       strdup - duplica una cadena de caracteres
+
+SINOPSIS
+       #include <string.h>
+
+       char *strdup(const char *s);
+
+DESCRIPCIÓN
+       La función strdup() devuelve un puntero a una nueva cadena
+       de caracteres que es un duplicado de  la  cadena  apuntada
+       por  s.   La  memoria  para  la  nueva  cadena  se obtiene
+       automáticamente con malloc(3), y puede (y debe)  liberarse
+       con free(3).
+
+VALOR DEVUELTO
+       La función strdup() devuelve un puntero a la cadena dupli­
+       cada, o NULL si no había bastante memoria.
+
+ERRORES
+       ENOMEM Memoria  insuficiente  disponible  para  alojar  la
+              cadena duplicada.
+
+CONFORME A
+       SVID 3, BSD 4.3
+
+VÉASE TAMBIÉN
+       calloc(3), malloc(3), realloc(3), free(3)
+
+
+
+GNU                       11 Marzo 1998                 STRDUP(3)

@@ -1,0 +1,771 @@
+ld(1)           Herramientas de Desarrollo de GNU           ld(1)
+
+
+
+NOMBRE
+       ld - el enlazador de GNU
+
+
+SINOPSIS
+       ld     [-o salida] fichobj...
+              [-Aarquitectura] [-b formato-entrada] [-Bstatic]
+              [-Bdynamic] [-Bsymbolic] [-c fichórdenes] [--cref]
+              [-d|-dc|-dp]
+              [-defsym símbolo = expresión] [-e entrada]
+              [-embedded-relocs] [-E] [-export-dynamic]
+              [-f nombre] [--auxiliary nombre] [-F nombre]
+              [--filter nombre] [-format formato-entrada] [-g]
+              [-G tamaño] [-h nombre] [-soname nombre] [--help]
+              [-i] [-lar] [-Ldirbúsqueda] [-M] [-Map fichmapa]
+              [-m emulación] [-n|-N] [-noinhibit-exec]
+              [-no-keep-memory] [-no-warn-mismatch]
+              [-oformat formato-salida] [-R nombrefichero]
+              [-relax] [-r|-Ur] [-rpath directorio]
+              [-rpath-link directorio] [-S] [-s] [-shared]
+              [-sort-common] [-split-by-reloc número]
+              [-split-by-file] [-T fichórdenes] [-Ttext textorg]
+              [-Tdata dataorg] [-Tbss bssorg] [-t] [-u sím] [-V]
+              [-v] [--verbose] [--version] [-warn-common]
+              [-warn-constructors] [-warn-multiple-gp]
+              [-warn-once] [-warn-section-align]
+              [--whole-archive] [--no-whole-archive]
+              [--wrap símbolo] [-X] [-x]
+
+DESCRIPCIÓN
+       ld combina un número de ficheros objeto y archivos, reubi­
+       ca sus datos y enlaza referencias de símbolos. A menudo el
+       último paso en el proceso de construcción de un nuevo pro­
+       grama compilado para su ejecución es una llamada a ld.
+
+       ld acepta ficheros de Lenguaje  de  Órdenes  de  Enlazador
+       para  proporcionar control explícito y total sobre el pro­
+       ceso de enlazado. Esta página del Manual  no  describe  el
+       lenguaje  de  órdenes; consulte la entrada de menú `ld' en
+       `Info', o el manual ld: El Enlazador de GNU ,  para  todos
+       los  detalles  sobre  el lenguaje de órdenes y sobre otros
+       aspectos del enlazador de GNU.
+
+       Esta versión de ld emplea las bibliotecas BFD de propósito
+       general  para operar sobre ficheros objeto. Esto permite a
+       ld leer, combinar y escribir ficheros  objetos  en  varios
+       formatos diferentes: por ejemplo, COFF o a.out.  Se pueden
+       enlazar juntos formatos diferentes para producir cualquier
+       clase disponible de fichero objeto. Uno puede emplear `ob­
+       jdump -i' para obtener una lista de los formatos  soporta­
+       dos en varias arquitecturas; consulte objdump(1).
+
+       Aparte de su flexibilidad, el enlazador de GNU es más útil
+       que otros enlazadores en la tarea de proporcionar informa­
+       ción  de diagnóstico. Muchos enlazadores abandonan la eje­
+       cución inmediatamente cuando encuentran un error; mientras
+       sea posible, ld continúa ejecutándose, permitiéndole iden­
+       tificar otros errores (o, en  algunos  casos,  obtener  un
+       fichero de salida a pesar del error).
+
+
+       El enlazador de GNU ld está diseñado para cubrir un amplio
+       rango de situaciones, y para ser tan compatible  como  sea
+       posible con otros enlazadores. Como resultado de esto, uno
+       tiene muchas opciones para controlar su  comportamiento  a
+       través de la línea de órdenes, y mediante variables de en­
+       torno.
+
+
+OPCIONES
+       La enorme cantidad de opciones  de  la  línea  de  órdenes
+       puede  parecer  intimidatoria,  pero  en  la práctica real
+       pocas de ellas se emplean en cualquier  contexto  particu­
+       lar.  Por  ejemplo,  un  uso  frecuente  de  ld es enlazar
+       ficheros objetos normales de Unix en un sistema Unix  nor­
+       mal  y   con  soporte.  En  tal  sistema,  para enlazar un
+       fichero hola.o:
+
+       $ ld -o salida /lib/crt0.o hola.o -lc
+
+       Esto le dice a ld que produzca un fichero  llamado  salida
+       como  resultado  de enlazar el fichero /lib/crt0.o con ho­
+       la.o y la biblioteca libc.a que vendrá de los  directorios
+       de búsqueda normales.
+
+       Las opciones de la línea de órdenes de ld se pueden dar en
+       cualquier orden, y pueden repetirse a  voluntad.  Para  la
+       mayor  parte de ellas, repetir una opción con un argumento
+       diferente no tendrá ningún efecto posterior, o  sustituirá
+       a otras ocurrencias anteriores (aquéllas más a la izquier­
+       da en la línea de mandato) de la opción.
+
+       Las excepciones (que pueden emplearse más de una  vez  con
+       sentido)  son -A, -b (o su sinónimo -format), -defsym, -L,
+       -l, -R, y -u.
+
+       La lista de ficheros objetos a  enlazar  juntos,  mostrada
+       como fichobj, puede seguir, preceder, o mezclarse, con las
+       opciones de la línea de órdenes; salvo  que  un  argumento
+       fichobj  no  puede  ponerse entre una letra de opción y su
+       argumento.
+
+       Usualmente el enlazador se llama con al menos  un  fichero
+       objeto, pero también se pueden especificar otras formas de
+       ficheros de entrada binarios con -l, -R,  y  el  guión  de
+       lenguaje  de  órdenes.  Si  no  se  especifica en absoluto
+       ningún fichero binario como entrada, el enlazador no  pro­
+       duce ninguna salida, y genera el mensaje `No input files',
+       o sea, `ningún fichero de entrada'.
+
+       Los argumentos de opciones pueden seguir a la letra de  la
+       opción  sin  ningún  espacio  en blanco en medio, o pueden
+       darse como argumentos separados que siguen  inmediatamente
+       a la opción que los requiere.
+
+
+       -Aarquitectura
+              En  la  distribución actual de ld, esta opción sólo
+              es de utilidad para la familia de arquitecturas In­
+              tel  960.  En esa configuración de ld, el argumento
+              arquitectura es uno de los nombres  de  dos  letras
+              que  identifican  a  miembros de la familia 960; la
+              opción especifica el objetivo de salida deseado,  y
+              avisos  sobre culaquier instrucción incompatible en
+              los ficheros de entrada.  También modifica  la  es­
+              trategia de búsqueda del enlazador para archivos de
+              biblioteca, para soportar el empleo de  bibliotecas
+              específicas  a  cada  arquitectura  particular, in­
+              cluyendo en el bucle de búsqueda nombres con  sufi­
+              jos que identifican a la arquitectura.
+
+              Por ejemplo, si su línea de órdenes de ld incluyera
+              `-ACA' así como `-lprobar', el  enlazador  buscaría
+              (en sus caminos de búsqueda incorporados, y en cua­
+              lesquiera otros que Ud.  hubiera  especificado  con
+              -L) una biblioteca con los nombres
+
+              probar
+              libprobar.a
+              probarca
+              libprobarca.a
+
+
+              Las  primeras dos posibilidades se considerarían en
+              cualquier caso; las dos últimas son debidas al  em­
+              pleo de `-ACA'.
+
+              Versiones  futuras  de ld podrían soportar una fun­
+              cionalidad similar para otras familias de arquitec­
+              turas.
+
+              Uno puede usar con sentido -A más de una vez en una
+              línea de órdenes, si una  familia  de  arquitectura
+              permite  la combinación de arquitecturas objetivos;
+              cada uso añadirá otro par de variantes de nombres a
+              buscar para cuando -l especifique una biblioteca.
+
+
+       -b formato-entrada
+              Especifica el formato binario para los ficheros ob­
+              jeto de entrada que sigan a esta opción en la línea
+              de órdenes. Uno normalmente no necesita especificar
+              esto, puesto que ld está configurado  para  esperar
+              como formato de entrada predeterminado el más usual
+              en cada máquina. formato-entrada es una  cadena  de
+              texto,  el nombre de un formato particular admitido
+              por las bibliotecas BDF.   -format  formato-entrada
+              tiene  el  mismo efecto, así como la orden de guión
+              TARGET.  Uno puede querer emplear  esta  opción  si
+              está  enlazando  ficheros con un formato de binario
+              no usual. Uno también puede emplear -b para cambiar
+              entre  formatos  explícitamente  (cuando se enlacen
+              ficheros objeto de formatos diferentes), incluyendo
+              -b  formato-entrada antes de cada grupo de ficheros
+              objeto en un formato particular.
+
+              El formato predeterminado se toma de la variable de
+              entorno  GNUTARGET.   Uno  también  pude definir el
+              formato de entrada desde un guión, empleando la or­
+              den TARGET.
+
+
+       -Bstatic
+              No enlazar contra bibliotecas compartidas. Esto só­
+              lo tiene sentido en plataformas que  soporten  bib­
+              liotecas compartidas.
+
+
+       -Bdynamic
+              Enlaza  contra  bibliotecas  dinámicas.   Esto sólo
+              tiene sentido en plataformas que soporten bibliote­
+              cas compartidas. Esta opción normalmente es la pre­
+              determinada en tales plataformas.
+
+
+       -Bsymbolic
+              Cuando se cree una biblioteca  compartida,  enlazar
+              referencias  a  símbolos  globales  a la definición
+              dentro de la biblioteca compartida, si hay. Normal­
+              mente,  para  un  programa enlazado contra una bib­
+              lioteca compartida es posible sustituir la  defini­
+              ción  dentro  de la biblioteca compartida. Esta op­
+              ción sólo tiene sentido en plataformas ELF que  ad­
+              mitan bibliotecas compartidas.
+
+
+       -c fichórdenes
+              Hace  que  ld  lea  órdenes  de  enlazado  desde el
+              fichero  fichórdenes.   Estas  órdenes  sustituirán
+              completamente al formato predeterminado de enlazado
+              de ld (en vez de añadir); fichórdenes debe  especi­
+              ficar  todo  lo necesario para describir el formato
+              objetivo.
+
+              Uno puede también incluir un guión  de  órdenes  de
+              enlazado directamente en la línea de órdenes encer­
+              rándolo entre llaves `{' y `}' .
+
+
+       --cref Muestra una tabla de referencias  cruzadas.  Si  se
+              está  generando  un fichero de mapa de enlazado, la
+              tabla de referencias  cruzadas  se  imprime  en  el
+              fichero de mapa. Si no, en la salida estándar.
+
+
+       -d
+
+       -dc
+
+       -dp    Estas  tres  opciones  son equivalentes; se admiten
+              las varias formas por compatibilidad con otros  en­
+              lazadores.  Use  cualquiera de ellas para hacer que
+              ld asigne espacio para símbolos comunes incluso  si
+              se especifica un fichero de salida reubicable (-r).
+              La orden de guión FORCE_COMMON_ALLOCATION tiene  el
+              mismo efecto.
+
+
+       -defsym símbolo = expresión
+              Crea  un  símbolo  global  en el fichero de salida,
+              conteniendo la dirección absoluta dada  por  expre­
+              sión.   Uno  puede emplear esta opción tantas veces
+              como sea necesario para definir múltiples  símbolos
+              en la línea de órdenes. Se entienden unas pocas op­
+              eraciones aritméticas en la expresión en este  con­
+              texto: uno puede dar una constante hexadecimal o el
+              nombre de un símbolo existente, o  emplear  +  y  -
+              para  añadir  o sustraer constantes hexadecimales o
+              símbolos. Si uno necesita  expresiones  más  elabo­
+              radas,  considere el empleo del lenguaje de órdenes
+              del enlazador desde un guión.
+
+
+       -e entrada
+               Usar entrada como el  símbolo  explícito  para  el
+              comienzo de la ejecución de su programa, en vez del
+              punto de entrada predeterminado.
+
+
+       -embedded-relocs
+              Esta opción sólo tiene  sentido  cuando  se  enlaza
+              código  MIPS  con PIC empotrado generado por la op­
+              ción -membedded-pic del compilador y ensamblador de
+              GNU. Hace que el enlazador cree una tabla que puede
+              emplearse en  tiempo  de  ejecución  para  reubicar
+              cualquier dato que haya sido inicializado estática­
+              mente a valores puntero. Vea  el  código  en  test­
+              suite/ld-empic para más detalles.
+
+
+       -E
+
+       -export-dynamic
+              Cuando se cree un fichero ELF, añade todos los sím­
+              bolos a la tabla dinámica de símbolos. Normalmente,
+              la  tabla  dinámica  de símbolos contiene solamente
+              los símbolos  que  sean  empleados  por  un  objeto
+              dinámico. Esta opción se necesita para algunos usos
+              de dlopen.
+
+
+       -f nombre
+
+       --auxiliary nombre
+              Cuando se crea un objeto compartido ELF,  establece
+              el campo interno DT_AUXILIARY al nombre especifica­
+              do. Esto le dice al enlazador dinámico que la tabla
+              de símbolos del objeto compartido debería emplearse
+              como un filtro auxiliar en la tabla de símbolos del
+              objeto compartido nombre.
+
+
+       -F nombre
+
+       --filter nombre
+              Cuado  se  crea un objeto compartido ELF, establece
+              el campo interno DT_FILTER al nombre  especificado.
+              Esto  le dice al enlazador dinámico que la tabla de
+              símbolos del objeto  compartido  debería  emplearse
+              como  un  filtro en la tabla de símbolos del objeto
+              compartido nombre.
+
+
+       -format formato-entrada
+              Sinónimo de -b input-format.
+
+
+       -g     Se acepta pero no tiene efecto; se proporciona  por
+              compatibilidad con otras herramientas.
+
+
+       -G tamaño
+              Establece  el  tamaño máximo de objetos a ser opti­
+              mizados empleando el registro GP a tamaño bajo COFF
+              de  MIPS.  Para otros formatos de fichero objeto no
+              tiene efecto.
+
+
+       -h nombre
+
+       -soname nombre
+              Cuando se crea un objeto compartido ELF,  establece
+              el  campo interno DT_SONAME al nombre especificado.
+              Cuando un ejecutable se enlaza con un  objeto  com­
+              partido  que  tiene  un  campo  DT_SONAME, entonces
+              cuando  el  ejecutable  se  ejecuta  el   enlazador
+              dinámico  intentará cargar el objeto compartido es­
+              pecificado en el campo DT_SONAME en vez de  emplear
+              el nombre de fichero dado al enlazador.
+
+
+       --help Muestra  un  resumen de las opciones de la línea de
+              órdenes en la salida estándar y acaba. Esta  opción
+              y  --version empiezan con dos guiones en vez de uno
+              por compatibilidad con otros programas de GNU.  Las
+              otras  opciones empiezan con un solo guión por com­
+              patibilidad con otros enlazadores.
+
+
+       -i     Efectúa un enlazado incremental (lo  mismo  que  la
+              opción -r).
+
+
+       -lar     Añade  un archivo ar a la lista de ficheros a en­
+              lazar. Esta opción puede emplearse cualquier número
+              de  veces.  ld buscará en su lista de caminos ocur­
+              rencias de libar0.a para cada ar especificado.
+
+
+       -Ldirbúsqueda
+              Esta orden añade el camino dirbúsqueda a  la  lista
+              de caminos donde ld buscará archivos de biblioteca.
+              Se puede emplear esta opción  cualquier  número  de
+              veces.
+
+              El conjunto predeterminado de caminos buscados (sin
+              especificar nada con -L) depende de qué modo de em­
+              ulación  esté ld empleando, y en algunos casos tam­
+              bién en cómo haya  sido  configurado.  Los  caminos
+              también pueden especificarse en un guión de enlaza­
+              do con la orden SEARCH_DIR.
+
+
+       -M     Muestra (en el fichero de la  salida  estándar)  un
+              mapa  de enlazado: información de diagnóstico sobre
+              dónde se han asociado los símbolos por ld, e infor­
+              mación  sobre  asignación  de  almacenamiento común
+              global.
+
+
+       -Map fichmapa
+              Imprime en el fichero fichmapa un mapa de  enlazado
+              (vea la opción anterior).
+
+
+       -m emulación
+              Emula el enlazador emulación.  Puede listar las em­
+              ulaciones disponibles con las opciones --verbose  o
+              -V.  Esta opción sustituye a lo predeterminado com­
+              pilado en el enlazador, que es el sistema  para  el
+              que se configuró ld.
+
+
+       -N     especifica legible y modificable para las secciones
+              de texto y datos. Si el formato  de  salida  admite
+              números  mágicos  al  estilo  de Unix, la salida se
+              marca como OMAGIC.
+
+              Cuando uno emplea la opción `-N', el  enlazador  no
+              alinea en páginas el segmento de datos.
+
+
+       -n     establece  que  el segmento de texto sea de lectura
+              exclusiva, y se escribe NMAGIC si es posible.
+
+
+       -noinhibit-exec
+              Normalmente, el enlazador no producirá  un  fichero
+              de  salida  si encuentra errores durante el proceso
+              del enlazado. Con esta opción,  uno  puede  especi­
+              ficar  que  desea  el fichero de salida incluso de­
+              spués de producirse errores no fatales.
+
+
+       -no-keep-memory
+              Normalmente el enlazador optimiza  para  mayor  ve­
+              locidad  en  detrimento del uso de la memoria medi­
+              ante el almacenamiento temporal de  las  tablas  de
+              símbolos de los ficheros de entrada en memoria. Es­
+              ta opción le dice al enlazador que en lugar de  eso
+              optimice  para uso de memoria, releyendo las tablas
+              de símbolos todas las veces que sean precisas. Esto
+              puede  ser  necesario  si el enlazador se queda sin
+              memoria cuando enlace un ejecutable muy grande.
+
+
+       -no-warn-mismatch
+              Normalmente el enlazador dará un error si  uno  in­
+              tenta  enlazar  juntos  ficheros de entrada que por
+              alguna  razón  no  concuerden  entre  ellos,  quizá
+              porque  hayan  sido  compilados  para  procesadores
+              diferentes o para diferente sexo (orden  de  bits).
+              Esta opción le dice al enlazador que debería permi­
+              tir tales errores sin decir nada. Esta opción  sólo
+              debería  emplearse con sumo cuidado, en casos donde
+              uno haya tomado alguna precaución especial que ase­
+              gure  que los errores del enlazador sean inapropia­
+              dos.
+
+
+       -o salida
+              salida es el nombre para el programa producido  por
+              ld;  si  esta  opción no se da, se emplea el nombre
+              `a.out'.  La orden de guión  OUTPUT  también  puede
+              especificar el nombre del fichero de salida.
+
+
+       -oformato formato-salida
+              Especifica el formato binario para el fichero obje­
+              to de salida. Uno usualmente no necesita  especifi­
+              carlo, puesto que ld está configurado para producir
+              como formato de salida predeterminado el más  usual
+              en  cada  máquina.  formato-salida es una cadena de
+              texto, el nombre de un formato particular soportado
+              por  las  bibliotecas  BFD.  La orden de guión OUT­
+              PUT_FORMAT también puede especificar el formato  de
+              salida,  pero  esta  opción tiene preferencia sobre
+              esta orden.
+
+
+       -R nombrefichero
+              Lee nombres de símbolos  y  sus  direcciones  desde
+              nombrefichero,  pero no lo reubica ni lo incluye en
+              la salida. Esto permite que su fichero de salida se
+              refiera  simbólicamente  a localizaciones absolutas
+              de memoria definidas en otros programas.
+
+
+       -relax Una opción con efectos dependientes de la  máquina.
+              Actualmente  esta  opción sólo está soportada en el
+              H8/300.
+
+              En algunas plataformas,  emplee  esta  opción  para
+              efectuar  optimizaciones globales que sean posibles
+              cuando el enlazador resuelva direccionamiento en su
+              programa,  como modos de direccionamiento relajados
+              y síntesis de nuevas instrucciones  en  el  fichero
+              objeto de salida.
+
+              En  plataformas donde esto no esté soportado, `-re­
+              lax' se acepta, pero no tiene efecto.
+
+
+       -r     Genera  salida  reubicable;  esto  es,  genera   un
+              fichero  de  salida  que puede a su vez servir como
+              entrada a ld.  Esto se denomina a  menudo  enlazado
+              parcial.  Como un efecto colateral, en entornos que
+              soporten números mágicos de Unix, esta opción  tam­
+              bién establece el número mágico del fichero de sal­
+              ida a OMAGIC.  Si esta opción no se da, se  produce
+              un fichero absoluto. Cuando se enlazan programas en
+              C++, esta opción no  resuelve  referencias  a  con­
+              structores; -Ur es una alternativa.
+
+              Esta opción hace lo mismo que -i.
+
+
+       -rpath directorio
+              Añade  un  directorio  a los caminos de búsqueda de
+              las bibliotecas en tiempo de ejecución. Esto se em­
+              plea cuando se enlaza un ejecutable ELF con objetos
+              compartidos. Todos los argumentos -rpath se  conca­
+              tenan  y  se pasan al enlazador de tiempo de ejecu­
+              ción, que los usa para  localizar  objetos  compar­
+              tidos en tiempo de ejecución. La opción -rpath tam­
+              bién se emplea cuando se localizan objetos  compar­
+              tidos  que  son necesitados por objetos compartidos
+              incluidos explícitamente en el enlace; vea  la  de­
+              scripción  de  la opción -rpath-link.  Si -rpath no
+              se emplea cuando se enlace un  ejecutable  ELF,  se
+              usarán  los  contenidos  de  la variable de entorno
+              LD_RUN_PATH si está definida.
+
+              La opción -rpath tamibén se puede usar en SunOS. De
+              forma  predeterminada,  en SunOS, el enlazador for­
+              mará un camino de búsqueda en tiempo de ejecución a
+              partir  de  todas las opciones -L que se le den. Si
+              se emplea una opción -rpath, el camino de  búsqueda
+              en  tiempo  de  ejecución se formará exclusivamente
+              empleando las opciones -rpath, sin tener en  cuenta
+              las opciones -L.  Esto puede ser de utilidad cuando
+              se utilice gcc, que añade muchas  opciones  -L  que
+              pueden estar en sistemas montados por NFS.
+
+
+       -rpath-link directorio
+              Cuando  se usa ELF en SunOS, una biblioteca compar­
+              tida puede requerir otra. Esto sucede cuando un en­
+              lazado  con  ld -shared incluye una biblioteca com­
+              partida como uno de los ficheros de entrada.
+
+              Cuando el enlazador encuentra una dependencia  como
+              ésta cuando está haciendo un enlazado no compartido
+              ni reubicable, automáticamente tratará de localizar
+              la  biblioteca  compartida requerida e incluirla en
+              el enlace, si no se incluye explícitamente. En  tal
+              caso,  la  opción  -rpath-link especifica el primer
+              conjunto  de  directorios  a  buscar.   La   opción
+              -rpath-link puede especificar una secuencia de nom­
+              bres de directorio bien especificando una lista  de
+              nombres  separados  por  dos  puntos, o apareciendo
+              varias veces.
+
+              Si la biblioteca compartida requerida no se  halla,
+              el enlazador mostrará un aviso y seguirá con el en­
+              lazado.
+
+
+       -S     Omite información de símbolos (pero  no  de  todos)
+              para el depurador en el fichero de salida.
+
+
+       -s     Omite toda la información de símbolos en el fichero
+              de salida (``strip'').
+
+
+       -shared
+              Crea una biblioteca  compartida.  Esto  actualmente
+              sólo  se  soporta  en  plataformas  ELF y SunOS (en
+              SunOS no se requiere, puesto que el  enlazador  au­
+              tomáticamente   creará  una  biblioteca  compartida
+              cuando haya símbolos no definidos y no  se  use  la
+              opción -e).
+
+
+       -sort-common
+              Normalmente,  cuando  ld pone los símbolos globales
+              comunes en las secciones de salida apropiadas,  las
+              ordena  por tamaño. Primero pone todos los símbolos
+              de un byte, luego todos los de dos  bytes,  después
+              todos  los  de cuatro bytes, y por último todos los
+              demás. Esto es para prevenir huecos entre los  sím­
+              bolos  debidos a impedimentos de alineamiento. Esta
+              opción deshabilita esa ordenación.
+
+
+       -split-by-reloc núm
+              Intenta crear secciones extra en el fichero de sal­
+              ida  de  forma  que  ninguna  sección  simple en el
+              fichero contenga más de núm reubicaciones.  Esto es
+              útil  cuando  se  genere  un reubicable enorme para
+              descargarlo a ciertos núcleos de tiempo real con el
+              formato  de fichero objeto COFF, puesto que COFF no
+              puede representar más de 65535 reubicaciones en una
+              sola  sección.   Observe que esto no funcionará con
+              formatos de fichero objeto que no admitan secciones
+              arbitrarias.  El enlazador no dividirá secciones de
+              entrada individuales  para  la  redistribución,  de
+              forma  que  si una sola sección de entrada contiene
+              más de núm reubicaciones una sección de salida con­
+              tendrá esas mismas reubicaciones.
+
+
+       -split-by-file
+              Similar  a -split-by-reloc pero crea una nueva sec­
+              ción de salida para cada fichero de entrada.
+
+
+       -Tbss org
+
+       -Tdata org
+
+       -Ttext org
+              Usa org como la dirección de  comienzo  para  --re­
+              spectivamente--  el segmento de bss, datos, o el de
+              texto  del fichero de salida.  org debe ser un  en­
+              tero hexadecimal.
+
+
+       -T fichórdenes
+              Equivalente a -c fichórdenes; admitido por compati­
+              bilidad con otras herramientas.
+
+
+       -t     Muestra los nombres de los ficheros de entrada  tan
+              pronto como ld los procesa.
+
+
+       -u sím Fuerza a que sím entre en el fichero de salida como
+              un símbolo no definido.  Esto puede,  por  ejemplo,
+              activar  el  enlazado  de módulos adicionales desde
+              las bibliotecas estándar. -u  puede  repetirse  con
+              diferentes argumentos opciones para introducir sím­
+              bolos no definidos adicionales.
+
+
+       -Ur    Para programas no C++, esta opción equivale  a  -r:
+              genera  salida  reubicable;  esto es, un fichero de
+              salida que puede a su vez servir de entrada  a  ld.
+              Cuando  se  enlazan  programas  en  C++, -Ur sí re­
+              solverá referencias a constructores, no como -r.
+
+
+       --verbose
+              Muestra el número de versión de ld y lista las emu­
+              laciones  soportadas.   Muestra qué ficheros de en­
+              trada pueden y no pueden abrirse.
+
+
+       -v, -V Muestra el número de versión de ld.  La  opción  -V
+              también lista las emulaciones soportadas.
+
+
+       --version
+              Muestra el número de versión de ld y acaba.
+
+
+       -warn-common
+              Avisa  cuando  un símbolo común se combina con otro
+              símbolo común o con una definición de símbolo.  Los
+              enlazadores  de  Unix  permiten  esta práctica algo
+              discutible, pero los de otros  sistemas  operativos
+              no.  Esta opción le permite encontrar problemas po­
+              tenciales provenientes de combinar  símbolos  glob­
+              ales.
+
+
+       -warn-constructors
+              Avisa  si  se emplea algún constructor global. Esto
+              sólo es de utilidad para  unos  pocos  formatos  de
+              ficheros  objeto. Para formatos como COFF o ELF, el
+              enlazador no puede detectar el empleo de  construc­
+              tores globales.
+
+
+       -warn-multiple-gp
+              Avisa  si  el  fichero de salida requiere múltiples
+              valores de  punteros  globales.  Esta  opción  sólo
+              tiene  sentido en ciertos procesadores, como en los
+              Alpha.
+
+
+       -warn-once
+              Sólo avisa una vez para cada símbolo indefinido, en
+              lugar de una vez por cada módulo que lo referencia.
+
+
+       -warn-section-align
+              Avisa si la dirección de una sección de salida cam­
+              bia  debido  al alineamiento. Normalmente, el alin­
+              eamiento se establecerá por medio de una sección de
+              entrada.  La  dirección cambiará solamente si no se
+              especifica explícitamente; esto  es,  si  la  orden
+              SECTIONS  no  especifica  una dirección de comienzo
+              para la sección.
+
+
+       --whole-archive
+              Para cada archivo mencionado en la línea de órdenes
+              tras   la   opción  --whole-archive,  incluye  cada
+              fichero objeto en el archivo en el enlazado, en vez
+              de  buscar  en  el  archivo los ficheros objeto re­
+              queridos. Esto se emplea normalmente para convertir
+              un  fichero  archivo  en una biblioteca compartida,
+              forzando la inclusión de cada  objeto  en  la  bib­
+              lioteca compartida resultante.
+
+
+       --no-whole-archive
+              Desactiva  el  efecto  de la opción --whole-archive
+              para archivos que aparecen después en la  línea  de
+              órdenes.
+
+
+       --wrap símbolo
+              Usa una función envoltorio para símbolo.  Cualquier
+              referencia indefinida  a  símbolo  se  resolverá  a
+              __wrap_símbolo.   Cualquier referencia indefinida a
+              __real_símbolo se resolverá a símbolo.
+
+
+       -X     Borra todos los símbolos locales  temporales.  Para
+              la mayoría de objetivos, éstos son todos los símbo­
+              los locales cuyos nombres empiecen por `L'.
+
+
+       -x     Borra todos los símbolos locales.
+
+
+
+
+ENTORNO
+       Uno puede cambiar el comportamiento de ld con la  variable
+       de entorno GNUTARGET.
+
+       GNUTARGET  determina  el formato del fichero objeto de en­
+       trada si uno no emplea -b (o  su  sinónimo  -format).   Su
+       valor  debería ser uno de los nombres BFD de un formato de
+       entrada. Si no existe GNUTARGET en el entorno,  ld  emplea
+       el  formato  natural  del  anfitrión.  Si GNUTARGET se es­
+       tablece al valor default, entonces BFD  intenta  descubrir
+       el  formato  examinando  los ficheros binarios de entrada;
+       este método a menudo tiene éxito,  pero  hay  ambigüedades
+       potenciales,  puesto que no hay ningún método que nos ase­
+       gure que el número mágico empleado para marcar formatos de
+       ficheros  objeto  sea único. Sin embargo, el procedimiento
+       de configuración para BFD en cada sistema pone el  formato
+       convencional  para ese sistema en primer lugar en la lista
+       de búsqueda, de forma que las ambigüedades se resuelvan  a
+       favor del convenio.
+
+
+
+
+VÉASE TAMBIÉN
+       objdump(1)
+       `ld' y `binutils' en Info
+       ld: el enlazador de GNU, Steve Chamberlain y Roland Pesch;
+       Las Utilidades Binarias de GNU, Roland H. Pesch.
+
+
+DERECHOS DE COPIA
+       Copyright (c) 1991, 1992 Free Software Foundation, Inc.
+
+       Permission is granted  to  make  and  distribute  verbatim
+       copies  of  this  manual provided the copyright notice and
+       this permission notice are preserved on all copies.
+
+       Permission is granted to copy and distribute modified ver­
+       sions  of  this  manual  under the conditions for verbatim
+       copying, provided that the entire resulting  derived  work
+       is  distributed  under  the  terms  of a permission notice
+       identical to this one.
+
+       Permission is granted to copy and distribute  translations
+       of this manual into another language, under the above con­
+       ditions for modified versions, except that this permission
+       notice  may  be  included  in translations approved by the
+       Free Software Foundation instead of in  the  original  En­
+       glish.
+
+       N.  del T.: Sólo tiene validez legal el aviso de copyright
+       original.
+
+
+
+Cygnus support         17 de Agosto de 1992                 ld(1)

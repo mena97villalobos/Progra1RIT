@@ -1,0 +1,341 @@
+FILE(1)                                                   FILE(1)
+
+
+
+NOMBRE
+       file - determina el tipo de ficheros
+
+SINOPSIS
+       file  [ -vbczL ] [ -f nombrefichero ] [ -m ficheromágico ]
+       fichero ...
+
+DESCRIPCIÓN
+       Esta página del Manual documenta la  versión  3.26  de  la
+       orden  file .  File comprueba cada argumento en un intento
+       de clasificarlo.  Hay tres conjuntos de  pruebas,  efectu­
+       adas en este orden: pruebas de sistemas de ficheros, prue­
+       bas de  números  mágicos,  y  pruebas  de  lenguajes.   La
+       primera prueba que tenga éxito hace que se muestre el tipo
+       del fichero.
+
+       El tipo mostrado contendrá usualmente una de las  palabras
+       text  (texto:  el  fichero  contiene  solamente caracteres
+       ASCII y probablemente es seguro  leerlo  en  una  terminal
+       ASCII  ),  executable  (ejecutable: el fichero contiene el
+       resultado de la compilación de un programa  en  una  forma
+       comprensible  para algún núcleo UNIX), o data (datos), que
+       significa cualquier otra cosa (los datos  son  normalmente
+       `binarios' o no imprimibles). Las excepciones son los for­
+       matos de ficheros bien  conocidos  (volcados  de  memoria,
+       archivos de tar) que se sabe que contienen datos binarios.
+       Cuando modifique el  fichero  /usr/share/misc/magic  o  el
+       propio   programa,  conserve  estas  palabras  reservadas.
+       Muchos programas dependen de que file  muestre  todos  los
+       ficheros   legibles   de  un  directorio  con  la  palabra
+       ``text''.  No haga como hicieron en la versión  de  Berke­
+       ley,  que  cambiaron  ``shell  commands  text'' (texto con
+       órdenes del shell) a ``shell script'' (guión del shell).
+
+       Las pruebas de sistemas de ficheros se basan en un  examen
+       de  la  devolución  de una llamada al sistema stat(2).  El
+       programa comprueba si el  fichero  está  vacío,  o  si  es
+       alguna  clase  de  fichero  especial.   Cualquier  tipo de
+       fichero apropiado al  sistema  donde  se  esté  (enchufes,
+       enlaces simbólicos, o tuberías con nombre (FIFOs) en aque­
+       llos sistemas que  las  implementen)  se  intuye  si  está
+       definido en el fichero de cabecera del sistema sys/stat.h.
+
+       Las pruebas de números mágicos se emplean  para  comprobar
+       ficheros  con  datos dispuestos en formatos fijos particu­
+       lares.  El ejemplo canónico de esto  es  un  fichero  eje­
+       cutable  binario  (programa compilado) a.out, cuyo formato
+       se describe en a.out.h y  posiblemente  en  exec.h  en  el
+       directorio normal de ficheros de cabecera.  Estos ficheros
+       tienen un `número mágico' guardado en una posición partic­
+       ular  cerca del principio del fichero, que le dice al sis­
+       tema operativo UNIX que el  fichero  es  un  binario  eje­
+       cutable,  y de qué tipo de entre unos cuantos. El concepto
+       de `número mágico' se ha aplicado por extensión a ficheros
+       de  datos.   Cualquier  fichero  con  algún  identificador
+       invariante en una posición fija y cercana al principio  en
+       el fichero puede normalmente describirse de esta forma. La
+       información de estos ficheros se lee del `fichero  mágico'
+       /usr/share/misc/magic.
+
+       Si un argumento resulta ser un fichero ASCII, file intenta
+       adivinar el lenguaje en el que está escrito.  Las  pruebas
+       de lenguaje buscan cadenas de caracteres particulares (cf.
+       names.h) que pueden aparecer en cualquier lugar dentro  de
+       los  primeros bloques de un fichero.  Por ejemplo, la pal­
+       abra clave .br indica que el fichero es con  mucha  proba­
+       bilidad un fichero de entrada de troff(1), mientras que la
+       palabra struct puede indicar  un  programa  en  C.   Estas
+       pruebas  son  menos  confiables  que las de los dos grupos
+       anteriores, de forma que se realizan en último lugar.  Las
+       rutinas  de  pruebas  de  lenguajes  también hacen algunas
+       otras comprobaciones (como buscar archivos  de  tar(1))  y
+       determinan  si el mensaje para un fichero desconocido debe
+       ser `ascii text' (texto ASCII) o `data' (datos).
+
+OPCIONES
+       -v      Muestra la versión del programa y acaba.
+
+       -m lista
+               Especifica una lista alternativa de  ficheros  que
+               contienen  números  mágicos. Ésta puede constar de
+               un solo fichero, o de una lista de ficheros  sepa­
+               rados por signos de dos puntos.
+
+       -z      Intenta mirar dentro de ficheros comprimidos.
+
+       -b      No precede las líneas de salida con los nombres de
+               los ficheros (modo breve).
+
+       -c      Produce un listado de  comprobación  de  la  forma
+               analizada  del fichero mágico. Normalmente esto se
+               emplea en conjunción con -m para depurar un  nuevo
+               fichero mágico antes de instalarlo.
+
+       -f nombrefichero
+               Lee  los  nombres de los ficheros a examinar desde
+               nombrefichero (uno por línea) antes de la lista de
+               argumentos.   O  bien  nombrefichero o bien por lo
+               menos un argumento que sea un nombre  de  fichero,
+               debe  estar  presente;  para  comprobar la entrada
+               estándar, emplee `-' como un argumento  de  nombre
+               de fichero.
+
+       -L      Esta opción hace que se sigan los enlaces simbóli­
+               cos, como la opción del mismo nombre de ls(1)  (en
+               sistemas que admitan enlaces simbólicos).
+
+FICHEROS
+       /usr/share/misc/magic  -  lista  predeterminada de números
+       mágicos
+
+ENTORNO
+       La  variable  de  entorno  MAGIC  se  puede  emplear  para
+       establecer  los ficheros predeterminados con números mági­
+       cos.
+
+VÉASE TAMBIÉN
+       magic(4) - descripción del formato del fichero mágico.
+       strings(1), od(1), hexdump(1) - herramientas para examinar
+       ficheros que no son de texto.
+
+CONFORMANCIA CON ESTÁNDARES
+       Se  cree  que  este  programa  excede en comportamiento al
+       descrito por SVID  en  FILE(CMD),  tanto  como  uno  pueda
+       deducir  del  vago  lenguaje contenido en dicho documento.
+       Su comportamiento es mayormente compatible con el programa
+       de  System  V  del  mismo nombre. Esta versión sabe de más
+       números mágicos, sin embargo, por  lo  que  producirá  una
+       salida diferente (si bien más acertada) en muchos casos.
+
+       La  diferencia más significante entre esta versión y la de
+       System V es que esta versión trata  cualquier  espacio  en
+       blanco  como  un delimitador, de forma que los espacios en
+       cadenas de patrones deben ser protegidos. Por ejemplo,
+       >10  string    language impress    (imPRESS data)
+       en un fichero mágico existente tendría que cambiarse a
+       >10  string    language\ impress   (imPRESS data)
+       Además, en esta versión, si una cadena patrón contiene una
+       barra inclinada invertida, debe ser protegida. Por ejemplo
+       0    string         \begindata     Andrew Toolkit document
+       en un fichero mágico existente tendría que cambiarse a
+       0    string         \\begindata    Andrew Toolkit document
+
+       SunOS en distribuciones 3.2 y siguientes, de Sun Microsys­
+       tems,  incluye  una orden file(1) derivada de la de System
+       V, pero con algunas extensiones.  Mi versión difiere de la
+       de  Sun  sólo en pequeñas cosas.  Incluye la extensión del
+       operador `&', empleado como, por ejemplo,
+       >16  long&0x7fffffff     >0        not stripped
+
+DIRECTORIO MÁGICO
+       Las entradas del fichero mágico han sido tomadas de varias
+       fuentes,  principalmente de USENET, y han contribuido var­
+       ios autores.   Christos  Zoulas  (su  dirección  está  más
+       abajo)  recogerá  entradas  adicionales  o  corregidas del
+       fichero mágico.  Se distribuirá periódicamente una consol­
+       idación de las entradas del fichero mágico.
+
+       El  orden  de  las entradas en el fichero mágico es signi­
+       ficativo.  Dependiendo del sistema que esté Ud. usando, el
+       orden en el que estén puestas juntas puede ser incorrecto.
+       Si su vieja orden file emplea un fichero mágico,  mantenga
+       el  viejo  fichero  mágico  por  ahí para comparación (por
+       ejemplo, renómbrelo a /usr/local/share/magic.orig).
+
+HISTORIA
+       Ha habido una orden file en cada UNIX desde  al  menos  la
+       Versión  6 de Investigación (estando fechada la página del
+       Manual en Enero de 1975).  La versión de System  V  intro­
+       dujo  un cambio importante significativo: la lista externa
+       de tipos con números mágicos.  Esto  ralentizaba  algo  el
+       programa pero lo hacía mucho más flexible.
+
+       Este  programa,  basado en la versión de System V, ha sido
+       escrito por Ian Darwin  sin  mirar  el  código  fuente  de
+       nadie.
+
+       John  Gilmore  revisó  extensamente  el código, haciéndolo
+       mejor que la  primera  versión.   Geoff  Collyer  encontró
+       algunas  cosas  inadecuadas y proporcionó algunas entradas
+       del fichero mágico.  Desde entonces  el  programa  ha  ido
+       evolucionando continuamente.
+
+AUTORES
+       Escrito  por  Ian  F.  Darwin,  dirección  UUCP  {utzoo  |
+       ihnp4}!darwin!ian, dirección Internet  ian@sq.com,  direc­
+       ción  postal:  P.O.  Box 603, Station F, Toronto, Ontario,
+       CANADÁ M4Y 2L8.
+
+       Alterado por Rob McMahon,  cudcv@warwick.ac.uk,  en  1989,
+       para  extender  el  operador `&' de un simple `x&y != 0' a
+       `x&y op z'.
+
+       Alterado por Guy Harris, guy@netapp.com, en 1993, para:
+
+              poner el operador `&' ``al viejo estilo'' de  nuevo
+              como  estaba,  porque  1)  el cambio de Rob McMahon
+              rompió con el estilo de uso anterior, 2)  el  oper­
+              ador  al  ``nuevo  estilo''  `&' de SunOS, que esta
+              versión de file también admite, ya  maneja  también
+              `x&y  op  z', y 3) el cambio de Rob no estaba docu­
+              mentado en ningún caso;
+
+              añadir múltiples niveles de `>';
+
+              añadir las palabras clave ``beshort'', ``leshort'',
+              etc., para buscar números en el fichero en un orden
+              de bytes específico, en vez de en el orden de bytes
+              nativo del proceso que esté ejecutando a file.
+
+       Cambios  por  Ian  Darwin  y  varios  autores incluyendo a
+       Christos Zoulas (christos@astron.com), 1990-1997.
+
+ADVERTENCIA LEGAL
+       Derechos de copia © Ian F. Darwin, Toronto, Canadá,  1986,
+       1987, 1988, 1989, 1990, 1991, 1992, 1993.
+
+       Este  software no está sujeto y no puede hacerse estarlo a
+       cualquier licencia de la Cía. AT&T, Sun Microsystems Inc.,
+       Digital  Equipment  Co.  Inc.  (Compaq), Lotus Development
+       Inc., los Regentes de la  Universidad  de  California,  el
+       Consorcio  X  ni  MIT,  ni  la FSF (Fundación del Software
+       Libre).
+
+       Este software no está  sujeto  a  ninguna  restricción  de
+       exportación  del  Departamento  de  Comercio  de EE.UU., y
+       puede exportarse a cualquier país o planeta.
+
+       Se permite a cualquiera usar este software para  cualquier
+       propósito  en  cualquier sistema computador, y alterarlo y
+       redistribuirlo  libremente,  sujeto   a   las   siguientes
+       restricciones:
+
+       1. El autor no es responsable de las consecuencias del uso
+       de este software, sin importar cuán malas fueren,  incluso
+       si sobrevienen a causa de defectos en él.
+
+       2.  El origen de este software no debe ser malinterpretado
+       o alterado, bien sea explícitamente o por omisión.  Puesto
+       que  son  pocos  los  usuarios  que  alguna  vez  leen los
+       fuentes, los créditos deben aparecer en la  documentación.
+
+       3.  Las  versiones alteradas deben marcarse explícitamente
+       como tales, y no pueden hacerse aparecer como si fueran el
+       software  original.  Puesto que son pocos los usuarios que
+       alguna vez leen los fuentes, los créditos  deben  aparecer
+       en la documentación.
+
+       4.  Esta nota no puede ser quitada ni alterada (espero que
+       sí pueda ser traducida, N. del T. :-).
+
+       Unos pocos ficheros de soporte (getopt, strtok) distribui­
+       dos  con este paquete son de Henry Spencer y están sujetos
+       a los mismos términos que los de arriba.
+
+       Unos pocos ficheros simples de  soporte  (strtol,  strchr)
+       distribuidos con este paquete están en el dominio público;
+       así quedan marcados.
+
+       Los ficheros tar.h e is_tar.c  fueron  escritos  por  John
+       Gilmore  a partir de su programa tar de dominio público, y
+       no están cubiertos por las restricciones de antes.
+
+FALLOS
+       Debe haber una forma mejor de automatizar la  construcción
+       del  fichero  Magic  a  partir de todo lo de Magdir. ¿Cuál
+       será?  Aún mejor, el fichero mágico debería  compilarse  a
+       forma  binaria (digamos, ndbm(3) o, mejor todavía, cadenas
+       ASCII de longitud fija para su empleo en entornos  de  red
+       heterogéneos)  para  un  arranque  más rápido. Entonces el
+       programa se ejecutaría tan rápido como el de la Versión  7
+       del mismo nombre, con la flexibilidad de la versión System
+       V.
+
+       File emplea algunos algoritmos que  favorecen  la  rapidez
+       sobre  el  acierto, de modo que puede equivocarse al adiv­
+       inar los contenidos de ficheros ASCII.
+
+       El soporte para ficheros ASCII (sobre todo para  lenguajes
+       de  programación)  es  simplista,  ineficiente, y requiere
+       recompilación para actualizarse.
+
+       Debería haber una cláusula ``else'' para seguir una  serie
+       de líneas de continuación.
+
+       El  fichero  mágico  y las palabras clave deberían admitir
+       expresiones regulares.  Su empleo del TAB  ASCII  como  un
+       delimitador  de  campo  es  feo  y hace difícil editar los
+       ficheros, pero es inamovible.
+
+       Podría ser interesante permitir letras mayúsculas  en  las
+       palabras  clave;  por  ejemplo,  órdenes troff(1) frente a
+       macros de páginas man.  El soporte  de  expresiones  regu­
+       lares haría esto más fácil.
+
+       Al  programa  no  le  gusta FORTRAN.  Debería ser capaz de
+       figurarse si el fichero es un programa en FORTRAN   viendo
+       algunas  palabras  reservadas  que  aparezcan sangradas al
+       principio de la línea.  El soporte  de  expresiones  regu­
+       lares haría esto más fácil.
+
+       La  lista de palabras clave de ascmagic probablemente deba
+       pertenecer al fichero Magic.  Esto podría  hacerse  usando
+       alguna  palabra  clave como `*' para el valor de desplaza­
+       miento.
+
+       Otra mejora sería ordenar el fichero mágico  de  modo  que
+       podamos  simplemente  ejecutar  todas  las pruebas para el
+       primer byte, primera palabra, primera palabra larga, etc.,
+       una  vez que la hayamos cogido. Protestar de conflictos en
+       las entradas del fichero mágico. ¿Construir una regla para
+       que   las  entradas  mágicas  se  ordenen  basadas  en  el
+       desplazamiento dentro del fichero en vez de en la posición
+       dentro del fichero mágico?
+
+       El programa podría proporcionar una forma de dar una esti­
+       mación de ``cuán buena'' es una estimación.  Acabamos qui­
+       tando  adivinaciones  (p.ej. ``From '' como los 5 primeros
+       caracteres de un fichero) porque no eran tan  buenas  como
+       otras tentativas (p. ej. ``Newsgroups:'' frente a "Return-
+       Path:"). Pero aún, si las otras no fueran buenas,  debería
+       ser posible utilizar la primera adivinación.
+
+       Este programa es más lento que algunas órdenes file comer­
+       ciales.
+
+       Esta página del Manual, y particularmente esta sección, es
+       demasiado larga.
+
+DISPONIBILIDAD
+       Se  puede  obtener  la  última  versión original del autor
+       mediante FTP  anónimo  en  ftp.astron.com  en  el  archivo
+       /pub/file/file-X.YY.tar.gz.
+
+
+
+                  Con © pero se puede distribuir          FILE(1)

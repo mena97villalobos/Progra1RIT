@@ -1,0 +1,21 @@
+INTRO(8)         Manual del Programador de Linux         INTRO(8)
+
+
+
+NOMBRE
+       intro - Introducción a las órdenes administrativas y priv­
+       iligiadas
+
+DESCRIPCIÓN
+       Este capítulo describe las órdenes que puedan ser  o  sean
+       exclusivas  del  superusuario,  por  ejemplo,  demonios  y
+       órdenes relacionadas con el ordenador o periféricos.
+
+AUTORES
+       Los autores y derechos  de  autor  están  escritos  en  el
+       encabezamiento  de  cada página. ¡Nótese que estos cambian
+       de página en página!.
+
+
+
+Linux                     24 Julio 1993                  INTRO(8)

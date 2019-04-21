@@ -1,0 +1,47 @@
+J0(3)            Manual del Programador de Linux            J0(3)
+
+
+
+NOMBRE
+       j0, j1, jn, y0, y1, yn - funciones de Bessel
+
+SINOPSIS
+       #include <math.h>
+
+       double j0(double x);
+
+       double j1(double x);
+
+       double jn(int n, double x);
+
+       double y0(double x);
+
+       double y1(double x);
+
+       double yn(int n, double x);
+
+DESCRIPCIÓN
+       Las  funciones  j0()  y  j1()  devuelven  las funciones de
+       Bessel de x de primera clase de órdenes 0 y 1, respectiva­
+       mente.  La función jn() devuelve la función de Bessel de x
+       de primera clase de orden n.
+
+       Las funciones y0()  e  y1()  devuelven  las  funciones  de
+       Bessel de x de segunda clase de órdenes 0 y 1, respectiva­
+       mente. La función yn() devuelve la función de Bessel de  x
+       de segunda clase de orden n.
+
+       Para  las  funciones y0(), y1() e yn(), el valor de x debe
+       ser positivo. Para valores negativos de x, estas funciones
+       devuelven -HUGE_VAL.
+
+CONFORME A
+       SVID 3, BSD 4.3
+
+FALLOS
+       Hay  errores  de  hasta 2e-16 en los valores devueltos por
+       j0(), j1() y jn() para valores de x entre -8 y 8.
+
+
+
+                        2 de Marzo de 1998                  J0(3)

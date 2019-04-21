@@ -1,0 +1,205 @@
+NSSWITCH.CONF(5) Manual del Programador de Linux NSSWITCH.CONF(5)
+
+
+
+NOMBRE
+       nsswitch.conf  -  Fichero de configuración de las bases de
+       datos del sistema y del "Name Service Switch"
+
+DESCRIPCIÓN
+       Varias funciones de la librería C necesitan  ser  configu­
+       radas  para  trabajar  correctamente  en el entorno local.
+       Tradicionalmente, esto se hacía utilizando ficheros (e.g.,
+       `/etc/passwd'),  pero  otros servicios de nombres (como el
+       NIS (Network Information Service, Servicio de  Información
+       de Red) y el DNS (Domain Name Service, Servicio de Nombres
+       de Dominio) se hicieron populares, y  fueron  introducidos
+       en  la  librería  C, habitualmente en un orden de búsqueda
+       fijo.
+
+       La librería Linux libc5 con soporte NYS, y la librería GNU
+       C  2.x (libc.so.6) proporcionan una solución limpia a este
+       problema. Esto se ha diseñado a raíz  de  un  método  uti­
+       lizado por Sun Microsystems en la librería C de Solaris 2.
+       Seguimos su nomenclatura y llamamos  a  este  esquema  NSS
+       ("Name  Service  Switch").  Las fuentes para las "bases de
+       datos" y su orden de búsqueda se especifican en el fichero
+       /etc/nsswitch.conf
+
+
+       Las siguientes bases de datos están disponibles en el NSS:
+
+       aliases
+              Alias de correo, utilizados por sendmail(8)
+
+       ethers Números Ethernet
+
+       group  Grupos de usuarios, utilizados por  funciones  get­
+              grent(3)
+
+       hosts  Nombres  y  números  de  hosts, utilizados por fun­
+              ciones como gethostbyname(3)
+
+       netgroup
+              Lista de hosts y usuarios, usada por las reglas  de
+              acceso
+
+       network
+              Números  y nombres de red, usados por las funciones
+              getnetent(3) functions.
+
+       passwd Password de usuarios, usados por las funciones get­
+              pwent(3)
+
+       protocols
+              Protocolos de red, usados por las funciones getpro­
+              toent(3)
+
+       publickey
+              Claves públicas y privadas para  secure_rpc  usadas
+              por NIS+ y NFS.
+
+       rpc    Números  y  nombres del Remote procedure call (lla­
+              mada a procedimiento remoto), usadas por  getrpcby­
+              name(3) y funciones similares.
+
+       services
+              Servicios  de red, usados por las funciones getser­
+              vent(3)
+
+       shadow Shadow passwords de  usuarios,  usadas  por  getsp­
+              nam(3)
+
+       Un  fichero de ejemplo /etc/nsswitch.conf podría ser simi­
+       lar (éste es también el usado por  defecto  si  no  existe
+       /etc/nsswitch.conf ):
+
+       passwd:         compat
+       group:          compat
+       shadow:         compat
+
+       hosts:          dns [!UNAVAIL=return] files
+       networks:       nis [NOTFOUND=return] files
+       ethers:         nis [NOTFOUND=return] files
+       protocols:      nis [NOTFOUND=return] files
+       rpc:            nis [NOTFOUND=return] files
+       services:       nis [NOTFOUND=return] files
+
+       La  primera  columna  es  la  base de datos, como se puede
+       adivinar observando la tabla  superior.  El  resto  de  la
+       línea  especifica cómo funciona el proceso de búsqueda. Se
+       puede especificar la forma en la que cada  base  de  datos
+       trabaja individualmente.
+
+       La especificación de configuración para cada base de datos
+       puede contener dos elementos diferenciados:
+       * La especificación del servicio, tal como `files',  `db',
+       o `nis'.
+       * La respuesta al  resultado  de  la  búsqueda,  tal  como
+       `[NOTFOUND=return]'.
+
+       Para la libc5 con NYS, la especificaciones permitidas  son
+       `files',  `nis' y `nisplus'. Para hosts, puede especificar
+       como servicio extra `dns' y para passwd y group  `compat',
+       pero no para shadow.
+
+
+       Para  la  librería  GNU  C,  debe haber un fichero llamado
+       /lib/libnss_SERVICE.so.1 por  cada  SERVICE  que  se  esté
+       usando.  En  una  instalación  estándar se podría utilizar
+       `files', `db', `nis'  y  `nisplus'.  Para  los  hosts,  se
+       podría especificar 'dns' como servicio extra, para passwd,
+       group y shadow `compat'. Estos servicios no son utilizados
+       por la libc5 con NYS.
+
+       El  segundo  elemento  en la especificación proporciona al
+       usuario un control mucho más preciso sobre el  proceso  de
+       búsqueda. Los elementos de acción se sitúan entre dos nom­
+       bres de servicio y se  ponen  entre  corchetes.  La  forma
+       genérica es
+
+       `[' ( `!'? STATUS `=' ACTION )+ `]'
+
+       donde
+
+       STATUS => success | notfound | unavail | tryagain
+       ACTION => return | continue
+
+       No influye el ponerlo en mayúsculas o minúsculas. Los val­
+       ores de STATUS son los resultados de una llamada a la fun­
+       ción de búsqueda de un servicio específico. Significados:
+
+       success
+              No se ha producido ningún error y se ha devuelto la
+              entrada  solicitada.  La  acción  por  defecto   es
+              `return'.
+
+       notfound
+              El proceso de búsqueda funciona bien, pero el valor
+              que se necesita no se ha encontrado. La acción  por
+              defecto es `continue'.
+
+       unavail
+              El  servicio  está  permanentemente  no disponible.
+              Esto puede significar, bien que el fichero  que  se
+              necesita no está disponible, bien -para DNS- que el
+              servidor no está disponible o que no  acepta  peti­
+              ciones. La acción por defecto es `continue'.
+
+       tryagain
+              El  servicio está temporalmente no disponible. Esto
+              podría significar que un fichero está  bloqueado  o
+              que un servidor no puede aceptar más peticiones. La
+              acción por defecto es `continue'.
+
+
+   Interacción con la sintaxis +/- syntax (modo compat)
+       La libc5 sin NYS no tiene el 'switch' del servicio de nom­
+       bres,  pero permite al usuario una cierta política de con­
+       trol. En /etc/passwd se pueden encontrar entradas del tipo
+       +user  o  +@netgroup  (incluir al usuario especificado del
+       mapa de passwords del NIS), -user o -@netgroup (excluir al
+       usuario  especificado)  y + (incluir a todos los usuarios,
+       exceptuando a los excluídos, del  mapa  de  passwords  del
+       NIS).  Debido  a que es habitual poner simplemente un + al
+       final del /etc/passwd para incluir a todos los del NIS, el
+       switch  proporciona  una  alternativa más rápida para este
+       caso (`passwd: files nis') que no requiere la entrada sim­
+       ple  + en /etc/passwd, /etc/group y /etc/shadow.  Si no es
+       suficiente,  el  servicio  NSS  `compat'  proporciona  una
+       semántica  completa  +/-. Por defecto, la fuente es `nis',
+       pero se puede especificar `nisplus' como fuente  para  las
+       pseudo-bases   de   datos  passwd_compat,  group_compat  y
+       shadow_compat.   Estas   pseudo-bases   de   datos   están
+       disponibles solamente en la librería GNU C.
+
+FICHEROS
+       El  servicio  llamado SERVICIO se implementa por una libr­
+       ería compartida llamada libnss_SERVICIO.so.1, y  se  ubica
+       en /lib.
+
+       /etc/nsswitch.conf       fichero de configuración
+       /lib/libnss_compat.so.1  implementa   la  fuente  `compat'
+                                para la GNU C Library 2.x
+       /lib/libnss_db.so.1      implementa la fuente `db' para la
+                                GNU C Library 2.x
+       /lib/libnss_dns.so.1     implementa  la  fuente `dns' para
+                                la GNU C Library 2.x
+       /lib/libnss_files.so.1   implementa la fuente `files' para
+                                la GNU C Library 2.x
+       /lib/libnss_hesoid.so.1  implementa   la  fuente  `hesoid'
+                                para la GNU C Library 2.x
+       /lib/libnss_nis.so.1     implementa la fuente  `nis'  para
+                                la GNU C Library 2.x
+       /lib/libnss_nisplus.so.1 implementa  la  fuente  `nisplus'
+                                para la GNU C Library 2.x
+NOTAS
+       Por cada proceso que  usa  nsswitch.conf,  el  fichero  es
+       leído solamente una vez; si se modifica posteriormente, el
+       proceso continuará utilizando la configuración vieja.
+       Con Solaris no es posible enlazar programas usando estáti­
+       camente el servicio NSS. Con Linux, esto no es problema.
+
+
+
+Linux                     11 Enero 1998          NSSWITCH.CONF(5)

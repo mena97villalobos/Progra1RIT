@@ -1,0 +1,38 @@
+SLEEP(3)         Manual del Programador de Linux         SLEEP(3)
+
+
+
+NOMBRE
+       sleep - Duerme durante el número de segundos especificado
+
+SINOPSIS
+       #include <unistd.h>
+
+       unsigned int sleep(unsigned int segundos);
+
+DESCRIPCIÓN
+       sleep()  hace  que el proceso en curso se duerma hasta que
+       hayan transcurrido segundos segundos o  hasta  que  llegue
+       una señal que sea tenida en cuenta.
+
+VALOR DEVUELTO
+       Cero  si el tiempo pedido ha pasado, o el número de segun­
+       dos que quedan de sueño.
+
+CONFORME A
+       POSIX.1
+
+FALLOS
+       sleep() puede estar implementada con SIGALRM; mezclar lla­
+       madas a alarm() y a sleep() es una mala idea.
+
+       Utilizar  longjmp()  desde un manejador de señales o modi­
+       ficar el manejo de SIGALRM  mientras  se  está  durmiento,
+       producirá resultados no definidos.
+
+VÉASE TAMBIÉN
+       signal(2), alarm(2)
+
+
+
+GNU                        9 Marzo 1998                  SLEEP(3)

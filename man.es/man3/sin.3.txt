@@ -1,0 +1,28 @@
+SIN(3)           Manual del Programador de Linux           SIN(3)
+
+
+
+NOMBRE
+       sin - función seno
+
+SINOPSIS
+       #include <math.h>
+
+       double sin(double x);
+
+DESCRIPCIÓN
+       La función sin() devuelve el seno de x, en donde x se pro­
+       porciona en radianes.
+
+VALOR DEVUELTO
+       La función sin() devuelve un valor entre -1 y 1.
+
+CONFORME A
+       SVID 3, POSIX, BSD 4.3, ISO 9899
+
+VEA TAMBIÉN
+       acos(3), asin(3), atan(3), atan2(3), cos(3), tan(3)
+
+
+
+                        8 de Junio de 1993                 SIN(3)

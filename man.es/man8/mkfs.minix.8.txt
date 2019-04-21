@@ -1,0 +1,84 @@
+MKFS(8)     Manual del Administrador del Sistema Linux    MKFS(8)
+
+
+
+NOMBRE
+       mkfs - construye un sistema de ficheros MINIX en Linux
+
+SINOPSIS
+       mkfs  [  -c | -l nombrefichero ] [ -nlongitudnombre ] [ -i
+       numeronodosi ] [ -v ] dispositivo [ tamañoenbloques ]
+
+DESCRIPCIÓN
+       mkfs crea un sistema de ficheros MINIX en Linux  sobre  un
+       dispositivo (usualmente una partición de disco).
+
+       El dispositivo es normalmente de la forma siguiente:
+
+              /dev/hda[1-8] (primer disco IDE)
+              /dev/hdb[1-8] (segundo disco IDE)
+              /dev/sda[1-8] (primer disco SCSI)
+              /dev/sdb[1-8] (segundo disco SCSI)
+
+       El parámetro tamañoenbloques es el tamaño deseado del sis­
+       tema de  ficheros,  en  bloques.  Esta  información  puede
+       determinarse  con el programa fdisk(8) o cfdisk(8).  Si se
+       omite, se determinará automáticamente.  Sólo  se  permiten
+       números de bloques estrictamente mayores de 10 y estricta­
+       mente menores de 65536.
+
+OPCIONES
+       -c     Antes de crear el sistema de ficheros se miran  los
+              bloques  malos  del  dispositivo.  Si se encuentran
+              algunos, se muestran cuántos.
+
+       -nlongitudnombre
+              Especifica la longitud máxima  de  los  nombres  de
+              ficheros.  No se permite ningún espacio entre el -n
+              y longitudnombre.  En  la  actualidad,  los  únicos
+              valores permitidos son 14 y 30.  30 es el predeter­
+              minado.
+
+       -i numeronodosi
+              Especifica el número de nodos-índice para  el  sis­
+              tema de ficheros.
+
+       -l nombrefichero
+              Lee la lista de bloques malos de nombrefichero.  El
+              fichero tendrá un número de  bloque  malo  en  cada
+              renglón. Se muestra el número de bloques malos.
+
+       -v     Construye un sistema de ficheros Minix versión 2.
+
+CÓDIGOS DE SALIDA
+       El  código de salida devuelto por mkfs.minix es uno de los
+       siguientes:
+
+       0      Ningún error.
+
+       8      Error operativo.
+
+       16     Error de sintaxis o de modo de empleo.
+
+VÉASE TAMBIÉN
+       fsck(8), mkefs(8), efsck(8), reboot(8)
+
+AUTORES
+       Linus Benedictus Torvalds (torvalds@cs.helsinki.fi).
+       Valores  de  los  códigos   de   error   por   Rik   Faith
+       (faith@cs.unc.edu)
+       Característica  de  petición  de nodos-í por Scott Heavner
+       (sdh@po.cwru.edu)
+       Soporte para la bandera de validez del sistema de ficheros
+       por el Dr. Wettstein (greg%wind.uucp@plains.nodak.edu)
+       Comprobación  para  prevenir  mkfs en sistemas de ficheros
+       montados y la limpieza del sector de arranque  por  Daniel
+       Quinlan (quinlan@yggdrasil.com)
+       Soporte     de     Minix    v2    por    Andreas    Schwab
+       (schwab@issan.informatik.uni-dortmund.de), actualizado por
+       Nicolai Langfeldt (janl@math.uio.no)
+       Parche de transportabilidad por Russell King.
+
+
+
+Util-linux 2.6             2 Julio 1996                   MKFS(8)

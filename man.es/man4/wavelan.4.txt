@@ -1,0 +1,116 @@
+WAVELAN(4)                                             WAVELAN(4)
+
+
+
+NOMBRE
+       wavelan - controlador del dispositivo AT&T GIS WaveLAN ISA
+
+SINOPSIS
+       insmod wavelan_cs.o [io=B,B..] [ irq=I,I..] [name=N,N..]
+
+DESCRIPCIÓN
+       wavelan es el controlador de  dispositivo  de  bajo  nivel
+       para  el adaptador Ethernet inalámbrico WaveLAN ISA de NCR
+       / AT&T / Lucent y RoamAbout DS  de  Digital  (DEC).   Este
+       controlador está disponible como módulo o puede compilarse
+       en el núcleo. Este controlador admite varias  tarjetas  en
+       ambas  formas  (hasta 4) y asigna el siguiente controlador
+       Ethernet disponible (eth0..eth#)  para  cada  tarjeta  que
+       encuentra,  a  menos  que se especifique explícitamente un
+       nombre de dispositivo (vea más abajo). Este nombre de dis­
+       positivo  será  registrado  en  el fichero de registro del
+       núcleo con la dirección física (MAC),  NWID  y  frecuencia
+       empleada por la tarjeta.
+
+PARÁMETROS
+       Esta sección se aplica al módulo (parámetros pasados en la
+       línea de  orden  de  insmod(8)).   Si  el  controlador  se
+       incluye en el núcleo, emplee la sintaxis ether=IRQ,IO,NAME
+       en la línea de órdenes del núcleo.
+
+       io     Especifica la lista de direcciones  de  base  donde
+              buscar  tarjetas Wavelan (se establece por medio de
+              un interruptor en la tarjeta). Si no se  especifica
+              ninguna  dirección io, el controlador rastreará las
+              direcciones 0x390 y 0x3E0,  que  pueden  entrar  en
+              conflicto con otro hardware...
+
+       irq    Establece la lista de interrupciones (IRQ) que cada
+              tarjeta Wavelan podría utilizar (el valor se guarda
+              en almacenamiento permanente para un uso futuro).
+
+       name   Establece  la  lista de nombres que serán empleados
+              para  cada  dispositivo  tarjeta  Wavelan  (nombres
+              empleados por ifconfig(8)).
+
+EXTENSIONES INALÁMBRICAS
+       Emplee  iwconfig(8)  para manipular extensiones inalámbri­
+       cas.
+
+   NWID (o dominio)
+       Establece la ID de red [0 a FFFF] o la  inhabilita  [off].
+       Como el NWID se almacena en el Área de Almacenamiento Per­
+       manente de la tarjeta, será reutilizado en cualquier  lla­
+       mada posterior del controlador.
+
+   Frecuencia y canales
+       Para  el  hardware 2.00 a 2,4 GHz, Ud. puede establecer la
+       frecuencia especificando uno de los 10  canales  definidos
+       (2.412,  2.422, 2.425, 2.4305, 2.432, 2.442, 2.452, 2.460,
+       2.462 o 2.484) o directamente su valor. La  frecuencia  se
+       cambia  inmediata  y permanentemente. La disponibilidad de
+       la frecuencia depende de los reglamentos y regulaciones...
+
+   Estadísticas de espía
+       Establece  una  lista  de direcciones Ethernet (MAC) en el
+       dispositivo (hasta 8)  y  obtiene  la  última  calidad  de
+       enlace para cada una de ellas (vea iwspy(8)).
+
+   /proc/net/wireless
+       status  es  el  estado según informa el módem.  Calidad de
+       enlace informa de la calidad de la modulación en  el  aire
+       (espectro  extendido  de  secuencia  directa)  [max = 16].
+       Level y Noise se refieren al nivel de  señal  y  nivel  de
+       ruido  [max = 64 ].  Los contadores crypt discarded packet
+       y misc discarded packet no están implementados.
+
+IOCTL PRIVADO
+       Ud. puede utilizar iwpriv(8) para  manipular  ioctls  pri­
+       vadas.
+
+   Umbral de Calidad y Nivel
+       Le  permite  definir el umbral de calidad y nivel empleado
+       por el módem (un  paquete  por  debajo  de  ese  nivel  es
+       descartado).
+
+   Histograma
+       Esta  funcionalidad permite establecer un número de inter­
+       valos de nivel de señal y contar  el  número  de  paquetes
+       recibidos  en cada uno de estos intervalos definidos. Esta
+       distribución podría emplearse para calcular el valor medio
+       y la desviación estándar del nivel de señal.
+
+OBSERVACIONES ESPECÍFICAS
+       Este controlador fallará en la detección de algunas tarje­
+       tas Wavelan no de NCR/ATT&T/Lucent.  Si éste es  su  caso,
+       Ud.  debe mirar en el código fuente cómo añadir su tarjeta
+       en la rutina de detección.
+
+       Algunas de las características mencionadas son opcionales.
+       Ud.  puede  habilitarlas  o  inhabilitarlas cambiando con­
+       stantes en el fichero de cabecera del controlador y recom­
+       pilando.
+
+AUTOR
+       Bruce Janson - bruce@cs.usyd.edu.au
+       Jean Tourrilhes - jt@hplb.hpl.hp.com
+       (+ otros - vea el código fuente para más detalles)
+
+VÉASE TAMBIÉN
+       wavelan_cs(4),    ifconfig(8),   insmod(8),   iwconfig(8),
+       iwspy(8), iwpriv(8).
+
+
+
+
+Univ. de Sydney (Dpto. CC. C.2B2a/sXs/e9r6)                  WAVELAN(4)

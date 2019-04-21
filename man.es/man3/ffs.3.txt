@@ -1,0 +1,29 @@
+FFS(3)           Manual del Programador de Linux           FFS(3)
+
+
+
+NOMBRE
+       ffs - encuentra el primer bit puesto a 1 en una palabra
+
+SINOPSIS
+       #include <string.h>
+
+       int ffs(int i);
+
+DESCRIPCIÓN
+       La  función  ffs()  devuelve  la  posición  del primer bit
+       puesto a 1 en la palabra i.  El bit menos significativo es
+       el  de la posición 1 y el más significativo el de la posi­
+       ción 32.
+
+VALOR DEVUELTO
+       La función ffs()  devuelve  la  posición  del  primer  bit
+       puesto a 1, ó 0 si no hay ningún bit puesto a 1.
+
+
+CONFORME A
+       BSD 4.3
+
+
+
+BSD                    12 de Enero de 1998                 FFS(3)

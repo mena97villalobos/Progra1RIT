@@ -1,0 +1,27 @@
+HYPOT(3)         Manual del Programador de Linux         HYPOT(3)
+
+
+
+NOMBRE
+       hypot - Función de distancia euclídea
+
+SINOPSIS
+       #include <math.h>
+
+       double hypot(double x, double y);
+
+DESCRIPCIÓN
+       La  función  hypot()  devuelve  el resultado de sqrt(x*x +
+       y*y). Este valor es la longitud de  la  hipotenusa  de  un
+       triángulo rectángulo cuyos lados miden x e y, o la distan­
+       cia del punto (x, y) al origen.
+
+CONFORME A
+       SVID 3, BSD 4.3
+
+VÉASE TAMBIÉN
+       sqrt(3)
+
+
+
+Linux                     25 Junio 1993                  HYPOT(3)

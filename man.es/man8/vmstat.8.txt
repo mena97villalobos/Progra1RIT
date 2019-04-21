@@ -1,0 +1,103 @@
+VMSTAT(8)        Manual del Programador de Linux        VMSTAT(8)
+
+
+
+NOMBRE
+       vmstat - Proporciona datos sobre la memoria virtual
+
+SINOPSIS
+       vmstat [-n] [intervalo [ número]]
+       vmstat[-V]
+
+DESCRIPCIÓN
+       vmstat da información sobre procesos, memoria, paginación,
+       E/S de bloque, trampas, y actividad de la CPU.
+
+       El primer informe producido  da  medias  desde  el  último
+       arranque. Los adicionales dan información en un período de
+       muestreo de longitud  intervalo.  En  cualquier  caso  los
+       informes de proceso y memoria son instantáneos.
+
+
+   Opciones
+       La opción -n hace que la cabecera se muestre solamente una
+       vez en lugar de periódicamente.
+
+       intervalo es el período entre actualizaciones,  en  segun­
+       dos.  Si no se especifica ninguno, solamente se muestra un
+       informe con los valores medios desde el arranque.
+
+       número es el número de actualizaciones. Si no  se  especi­
+       fica  ninguno,  pero sí un intervalo, número se asume como
+       infinito.
+
+       La opción -V resulta en mostrar información sobre la  ver­
+       sión, simplemente.
+
+
+DESCRIPCIONES DE LOS CAMPOS
+   Procs
+       r: El número de procesos esperando su tiempo de ejecución.
+       b: El número de procesos en espera ininterrumpible.
+       w: El número de procesos en espacio de trasiego pero sin embargo
+          ejecutables. Este campo se calcula, pero Linux nunca hace trasiego
+          desesperado.
+
+
+   Memory
+       swpd: la cantidad de memoria virtual empleada (kB).
+       free: la cantidad de memoria inactiva (kB).
+       buff: la cantidad de memoria empleada como búferes (kB).
+
+
+   Swap
+       si: Cantidad de memoria traída del espacio de trasiego desde disco (kB/s).
+       so: Cantidad de memoria trasegada al disco (kB/s).
+
+
+   IO
+       bi: Bloques enviados a un dispositivo de bloques (bloques/s).
+       bo: Bloques recibidos desde un dispositivo de bloques (bloques/s).
+
+
+   System
+       in: El número de interrupciones por segundo, incluyendo al reloj.
+       cs: El número de cambios de contexto por segundo.
+
+   CPU
+       Éstos son porcentajes de tiempo total de CPU.
+       us: tiempo de usuario
+       sy: tiempo de sistema
+       id: tiempo de inactividad
+
+OBSERVACIONES
+       vmstat no requiere permisos especiales.
+
+       Estos  informes  se  entienden  para  ayudar a identificar
+       cuellos de botella. El vmstat de Linux no se cuenta  a  sí
+       mismo como un proceso en ejecución.
+
+       Todos  los  bloques de Linux son, al día de la fecha, de 1
+       kB, excepto para bloques de CD-ROM, que son de 2 kB.
+
+
+FICHEROS
+       /proc/meminfo
+       /proc/stat
+       /proc/*/stat
+
+
+VÉASE TAMBIÉN
+       ps(1), top(1), free(1)
+
+
+FALLOS
+       No tabula la E/S  de  bloques  por  cada  dispositivo,  ni
+       cuenta el número de llamadas al sistema.
+
+AUTOR
+       Escrito por Henry Ware <al172@yfn.ysu.edu>.
+
+
+
+Throatwobbler Ginkgo Labs 27 Julio 1994                 VMSTAT(8)

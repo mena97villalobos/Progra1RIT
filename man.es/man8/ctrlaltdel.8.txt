@@ -1,0 +1,40 @@
+CTRLALTDEL(8)    Manual del Programador de Linux    CTRLALTDEL(8)
+
+
+
+NOMBRE
+       ctrlaltdel  - establece la función de la combinación Ctrl-
+       Alt-Supr
+
+SINOPSIS
+       ctrlaltdel hard | soft
+
+DESCRIPCIÓN
+       Examinando el código en linux/kernel/sys.c, está claro que
+       la  secuencia  Ctrl-Alt-Supr  puede realizar dos funciones
+       distintas soportadas; un rearranque  duro,  que  rearranca
+       inmediatamente  el  computador  sin llamar a sync(2) y sin
+       ninguna otra preparación,  y  un  rearranque  blando,  que
+       envía  la señal SIGINT (interrumpir) al proceso init (éste
+       es siempre el proceso  con  PID  1).  Si  se  emplea  esta
+       opción, el programa init (8) debe admitir esta caracterís­
+       tica. Puesto que ahora hay varios programas init (8) en la
+       comunidad  Linux,  haga  el  favor  de  consultar la docu­
+       mentación para la versión que Ud. esté utilizando  actual­
+       mente.
+
+       ctrlaltdel    se   emplea   usualmente   en   el   fichero
+       /etc/rc.local o similar.
+
+FICHEROS
+       /etc/rc.local
+
+VÉASE TAMBIÉN
+       simpleinit(8), init(8)
+
+AUTOR
+       Peter Orbaek (poe@daimi.aau.dk)
+
+
+
+Linux 1.2                25 Octubre 1993            CTRLALTDEL(8)

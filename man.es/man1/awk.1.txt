@@ -1,0 +1,1701 @@
+GAWK(1)                Órdenes de Utilidad                GAWK(1)
+
+
+
+NOMBRE
+       gawk - lenguaje de análisis y procesamiento de patrones
+
+SINOPSIS
+       gawk  [  opciones  del estilo POSIX o GNU ] -f fichero-de-
+       programa [ -- ] fichero ...
+       gawk [ opciones del estilo POSIX o GNU ] [ -- ] texto-del-
+       programa fichero ...
+
+DESCRIPCIÓN
+       Gawk es la implementación del Proyecto GNU del lenguaje de
+       programación AWK.  Está conforme  con  la  definición  del
+       lenguaje en el POSIX 1003.2 Command Language And Utilities
+       Standard.  Esta versión está  basada,  a  su  vez,  en  la
+       descripción  de  The AWK Programming Language, escrito por
+       Aho, Kernighan, y Weinberger, con las características adi­
+       cionales  que  aparecen en la versión del System V de UNIX
+       awk.  Gawk igualmente provee de las recientes  extensiones
+       del awk de Bell Labs, y algunas extensiones específicas de
+       GNU.
+
+       La línea de orden consiste en opciones para el propio gawk
+       ,  el texto del programa AWK (si no se provee mediante las
+       opciones -f o --file ), y  los  valores  que  deben  estar
+       disponibles  en  las  variables predefinidas de AWK ARGC y
+       ARGV .
+
+FORMATO DE LAS OPCIONES
+       Las opciones de Gawk pueden seguir tanto el estilo  tradi­
+       cional  de opciones de una letra de POSIX , como el estilo
+       GNU de opciones largas. Las opciones POSIX  comienzan  con
+       un  solo  ''-'', mientras que las opciones largas lo hacen
+       con ''--''.  Se ofrecen opciones  largas  tanto  para  las
+       características  específicas  de  GNU como para las carac­
+       terísticas definidas por POSIX.
+
+       Siguiendo el estándar POSIX, las opciones  específicas  de
+       gawk  se proveen vía argumentos con la opción -W .  Pueden
+       añadirse múltiples opciones -W .  Cada una de las opciones
+       -W  tienen  su correspondiente opción larga, tal y como de
+       detalla más  adelante.  Los  argumentos  de  las  opciones
+       largas  deben estar unidas a la opción mediante un signo =
+       , sin espacios en blanco, o pueden proveerse en  el  sigu­
+       iente argumento de la línea de orden.  Las opciones largas
+       pueden ser abreviadas, siempre y cuando la abreviatura sea
+       única.
+
+OPCIONES
+       Gawk acepta las siguientes opciones.
+
+       -F fs
+       --field-separator fs
+              Use  fs  para  definir el separador de campos de la
+              entrada (el valor de la variable predefinida FS  ).
+
+       -v var=val
+       --assign var=val
+              Asigna  el  valor  val, a la variable var, antes de
+              que la ejecución del programa comience.  Estos val­
+              ores  de  variable  están  disponibles en el bloque
+              BEGIN de un programa AWK.
+
+       -f fichero-de-programa
+       --file fichero-de-programa
+              Leer  el  fuente  del  programa  AWK  del   fichero
+              fichero-de-programa, en vez de obtenerlo del primer
+              argumento de la  línea  de  orden.   Pueden  usarse
+              múltiples opciones -f (o --file).
+
+       -mf NNN
+       -mr NNN
+              Definir varios límites de memoria al valor NNN.  El
+              indicador f define el máximo número de campos, y el
+              indicador r define el tamaño máximo de un registro.
+              Estos dos indicadores y la opción -m son de la ver­
+              sión  de  awk  para  UNIX de la versión de investi­
+              gación de Bell Labs.  Son ignoradas  por  gawk,  ya
+              que gawk no tiene límites predefinidos.
+
+       -W traditional
+       -W compat
+       --traditional
+       --compat
+              Ejecutar  en  el  modo de compatibilidad .  En este
+              modo de funcionamiento,  gawk  funciona  de  manera
+              idéntica  al  awk  de  UNIX ; ninguna de las exten­
+              siones específicas  de  GNU  son  reconocidas.   Es
+              preferible  el uso de la forma --traditional en vez
+              de las otras formas de  esta  opción.   Vea  EXTEN­
+              SIONES  DE GNU, más adelante, para más información.
+
+       -W copyleft
+       -W copyright
+       --copyleft
+       --copyright
+              Imprime una versión corta del mensaje  de  informa­
+              ción  sobre  derechos  de copia de GNU en la salida
+              estándar, y termina de forma correcta.
+
+       -W help
+       -W usage
+       --help
+       --usage
+              Imprime  un  resumen  relativamente  corto  de  las
+              opciones   disponibles   por  la  salida  estándar.
+              (Siguiendo los GNU Coding Standards, estas opciones
+              causan una salida satisfactoria inmediata.)
+
+       -W lint
+       --lint Genera mensajes de advertencia sobre construcciones
+              que son dudosas o no portables  para  otras  imple­
+              mentaciones de AWK.
+
+       -W lint-old
+       --lint-old
+              Genera mensajes de advertencia sobre construcciones
+              que no son portables a la versión original de Unix.
+              awk.
+
+       -W posix
+       --posix
+              Esta  opción activa el modo de compatibilidad , con
+              las siguientes restricciones adicionales:
+
+              · \x las secuencias de escape no son reconocidas.
+
+              · Solo los espacios y los tabuladores  actúan  como
+                separadores  de campo cuando FS contiene un único
+                espacio, y no los saltos de línea.
+
+              · El sinónimo func para la palabra  clave  function
+                no es reconocido.
+
+              · Los  operadores  ** y **= no pueden ser usados en
+                vez de ^ y ^=.
+
+              · La función fflush() no está disponible.
+
+       -W re-interval
+       --re-interval
+              Activa el uso de las expresiones de  intervalos  en
+              el ajuste de expresiones regulares (vea Expresiones
+              Regulares,  más  adelante).   Las  expresiones   de
+              intervalos  no eran soportadas tradicionalmente por
+              el lenguaje AWK. El estándar POSIX las añadió, para
+              hacer  que  awk  y  egrep fueran consistentes entre
+              ellos.  De cualquier modo, es probable que  su  uso
+              entorpezca  el  uso  de programas AWK antiguos, por
+              este motivo gawk solo las  provee  si  son  pedidas
+              mediante  esta  opción,  o  si  se  ha especificado
+              --posix .
+
+       -W source texto-del-programa
+       --source texto-del-programa
+              Usar program-text como el código  fuente  del  pro­
+              grama  AWK.  Esta opción permite la fácil mezcla de
+              funciones de librería (usadas mediante las opciones
+              -f  y  --file  )  con  código fuente entrado por la
+              línea de orden.  Se  ha  propuesto  primordialmente
+              como un medio para agrandar programas AWK usados en
+              scripts de shell.
+
+       -W version
+       --version
+              Imprime información sobre la versión de esta  copia
+              de  gawk  en particular por la salida estándar.  Es
+              útil principalmente para saber si la  copia  actual
+              de  gawk  en  su  sistema  está al día respecto con
+              cualquier cosa que la Free Software Foundation esté
+              distribuyendo.   También  es  útil  para dar avisos
+              sobre fallos.  (Siguiendo los GNU Coding Standards,
+              estas  opciones  causan  una  salida  satisfactoria
+              inmediata.)
+
+       --     Señala el final de las opciones. Es útil para  per­
+              mitir que los futuros argumentos al propio programa
+              AWK puedan comenzar también por un  ``-''.  Esto es
+              principalmente  para  mantener  la consistencia con
+              las convenciones de análisis de  argumentos  usados
+              por la mayoría de los restantes programas POSIX.
+
+       En el modo compatibilidad, cualquier otra opción será mar­
+       cada como ilegal, aunque  sean  ignoradas.   En  operación
+       normal, mientras el texto del programa haya sido incluido,
+       las opciones no reconocidas son pasadas al programa AWK en
+       la tabla ARGV para ser procesadas. Es particularmente útil
+       para ejecutar  programas  AWK  mediante  el  mecanismo  de
+       intérprete de ejecutables ''#!''.
+
+EJECUCIÓN DE UN PROGRAMA AWK
+       Un  programa  AWK  consiste en una secuencia de sentencias
+       tipo patrón-acción y definiciones de función opcionales.
+
+              patrón    { sentencias de acción }
+              function nombre(lista de parámetros) { sentencias }
+
+       Gawk  primero  lee  el fuente del programa a partir de los
+       fichero(s)-de-programa si se han especificado, a partir de
+       los  argumentos  de  --source, o a partir del primer argu­
+       mento que no sea una opción de la  línea  de  orden.   Las
+       opciones -f y --source pueden ser usadas más de una vez en
+       una línea de orden.  Gawk leerá el texto del programa como
+       si todos los fichero(s)-de-programa y textos fuentes de la
+       línea de orden hubieran sido concatenados.  Esto  es  útil
+       para  construir  librerías  de funciones AWK, sin tener la
+       necesidad de incluirlos en cada uno de los nuevos  progra­
+       mas AWK que las use. Además ofrece la capacidad de mezclar
+       funciones de librería con programas de la línea de  orden.
+
+       La  variable  de  entorno  AWKPATH especifica un camino de
+       búsqueda para ser usado  cuando  se  busque  los  ficheros
+       indicados  con  la  opción  -f  .   Si  esta  variable  no
+       existiera,     el     camino     por     defecto     sería
+       ".:/usr/local/share/awk".   (El  directorio  actual  puede
+       variar, dependiendo de desde donde se  compiló  e  instaló
+       gawk  .)   Si  un  fichero dado a la opción -f contiene un
+       carácter ''/'', no se realiza ningún tipo de búsqueda.
+
+       Gawk ejecuta los programas  AWK  en  el  siguiente  orden.
+       Primero, todas las asignaciones de variables especificadas
+       mediante la opción -v se realizan.  A  continuación,  gawk
+       compila  el programa en un formato interno.  Después, gawk
+       ejecuta el  código  del/los  bloque(s)  BEGIN  (si  existe
+       alguno),  y  a continuación procede a leer cada uno de los
+       ficheros nombrados en la tabla ARGV .  Si no existe ningún
+       nombre  de  fichero  en  la línea de orden, gawk lee de la
+       entrada estándar.
+
+       Si el nombre de un fichero en la línea de orden  tiene  la
+       forma  var=val  será  tratado como una asignación de vari­
+       able. Se asignará a la variable var el valor  val.   (Esto
+       ocurre  después de que cualquier bloque(s) BEGIN haya sido
+       ejecutado.)  Las asignaciones en la línea de orden es útil
+       sobre  todo  para  asignar valores de forma dinámica a las
+       variables que AWK usa para controlar cómo es  troceada  la
+       entrada  en  campos y registros. Es también útil para con­
+       trolar el estado si son necesarios múltiples  pasos  sobre
+       el mismo fichero de datos.
+
+       Si  el  valor  de  alguno de los elementos particulares de
+       ARGV está vacío (""), gawk se lo salta.
+
+       Para cada registro de la entrada, gawk prueba si es  posi­
+       ble  ajustarlo  con  alguno de los patrones en el programa
+       AWK.  Para cada patrón con el cual el registro  concuerde,
+       se  ejecuta la acción asociada.  Los patrones son probados
+       en el orden en que aparecen en el programa.
+
+       Finalmente, después de que toda la entrada  se  ha  termi­
+       nado,  gawk  ejecuta el código en el/los bloque(s) END (si
+       existiera alguno).
+
+VARIABLES, REGISTROS Y CAMPOS
+       Las variables AWK son dinámicas;  su  existencia  comienza
+       cuando son usadas por primera vez. Sus valores son números
+       de coma flotante o cadenas de caracteres, o ambos,  depen­
+       diendo  de  cómo son usadas. AWK también dispone de tablas
+       unidimensionales; las tablas multidimensionales pueden ser
+       simuladas. Varias variables predefinidas se definen cuando
+       un programa comienza a ejecutarse; serán descritas  cuando
+       convenga y serán resumidas más adelante.
+
+   Registros
+       Normalmente,  los  registros  se separan por caracteres de
+       salto de línea.  Puede controlar cómo  son  separados  los
+       registros  asignando valores a la variable predefinida RS.
+       Si RS tiene un único carácter, ese carácter  separará  los
+       registros.   De  otro  modo,  RS  se  considerará como una
+       expresión regular. El texto de la  entrada  que  concuerde
+       con  esa  expresión  regular será el que separará los reg­
+       istros.  De todas maneras, en el modo compatibilidad, solo
+       el  primer  carácter de esa cadena será usado para separar
+       registros.  Si RS contiene la cadena vacía,  entonces  los
+       registros  serán separados por espacios en blanco.  Cuando
+       RS contiene la cadena vacía, el carácter de salto de línea
+       siempre  actúa  como  separador  de  campos, añadiéndose a
+       cualquier valor que FS pudiera tener.
+
+   Campos
+       Conforme cada registro de entrada es leído, gawk divide el
+       registro en campos, usando el valor de la variable FS como
+       separados de campos.  Si FS tiene un único  carácter,  los
+       campos  serán  separados por ese carácter.  Si FS contiene
+       la cadena vacía, entonces cada carácter individual se con­
+       vierte en separador de campo.  De otro modo, se espera que
+       FS sea una expresión regular completa.  En el  caso  espe­
+       cial  de  que  FS  tuviera un único espacio en blanco, los
+       campos serían separados por tiras de  espacios  y/o  tabu­
+       ladores  y/o  saltos  de  línea.   (Vea la discusión sobre
+       --posix, más adelante).  Nótese que el valor de IGNORECASE
+       (vea  más  adelante) afectará también a cómo son divididos
+       los registros en el caso de que  FS  fuera  una  expresión
+       regular, y a cómo son separados cuando RS fuera una expre­
+       sión regular.
+
+       Si la variable FIELDWIDTHS está definida como una lista de
+       número  separados  por  espacios, se espera que cada campo
+       tenga ancho fijo, y gawk dividiría el registro usando  los
+       anchos  especificados.  El valor de FS es ignorado es este
+       caso.  Asignar un nuevo valor a FS haría saltarse  el  uso
+       de FIELDWIDTHS, y volver a la forma de actuar por defecto.
+
+       Cada campo en el registro de entrada puede ser  referenci­
+       ado  por su posición, $1, $2, etc.  $0 es el registro com­
+       pleto. El valor de un campo puede  ser  también  asignado.
+       Los campos no necesitan ser referenciados por constantes:
+
+              n = 5
+              print $n
+
+       imprime el quinto campo del registro de entrada.  La vari­
+       able NF se define con el número total de campos en el reg­
+       istro de entrada.
+
+       Las  referencias  a campos que no existen (por ejemplo los
+       campos por detrás de $NF) producen  la  cadena  vacía.  De
+       todas maneras, la asignación de un campo no existente (por
+       ejemplo, $(NF+2) = 5) incrementaría el valor de  NF,  cre­
+       ando  los  campos  que  intervienen como cadenas vacías, y
+       causando que el valor de $0 fuera recalculado, siendo sep­
+       arados  los campos mediante el valor de OFS.  Las referen­
+       cias a campos con  numeración  negativa  causan  un  error
+       fatal.   Decrementar  NF  causa que el valor de los campos
+       que pasen del nuevo número se pierda, y el valor de $0 sea
+       recalculado, siendo separados los campos mediante el valor
+       de OFS.
+
+   Variables Predefinidas
+       Las variables predefinidas de gawk son:
+
+
+       ARGC        EL número de argumentos en la línea  de  orden
+                   (no  incluye  las  opciones  para  gawk,  o el
+                   fuente del programa).
+
+       ARGIND      El índice en ARGV del fichero que  actualmente
+                   se está procesando.
+
+       ARGV        Tabla con los argumentos de la línea de orden.
+                   La tabla está indexada desde el 0 hasta ARGC -
+                   1.   Cambiando  dinámicamente  el contenido de
+                   ARGV permite  controlar  los  ficheros  usados
+                   para datos.
+
+       CONVFMT     El  formato  de  conversión  para  números,por
+                   defecto "%.6g".
+
+       ENVIRON     Una tabla conteniendo los valores del  entorno
+                   actual.  La tabla se encuentra indexada por el
+                   nombre de las  variables  de  entorno,  siendo
+                   cada  elemento el valor para esa variable (por
+                   ejemplo,    ENVIRON["HOME"]     podría     ser
+                   /home/arnold).   Cambiar  esta tabla no afecta
+                   al entorno de los programas que  gawk  ejecuta
+                   vía redirección o la función system() .  (Esto
+                   podría cambiar en una futura versión de gawk.)
+
+       ERRNO       Si  ocurre  algún  error  de sistema tanto por
+                   hacer una redirección con getline, durante una
+                   lectura  con  getline,  o  durante un close(),
+                   entonces ERRNO contendrá una cadena de  carac­
+                   teres describiendo el error.
+
+       FIELDWIDTHS Una  lista  de  anchos  de campo separados por
+                   espacios. Cuando esté definida,  gawk  analiza
+                   la  entrada como campos de tamaño fijo, en vez
+                   de usando el valor de la variable FS como sep­
+                   arador de campo.  La capacidad de trabajar con
+                   anchos de campo fijos es todavía experimental;
+                   las  semánticas  podrían cambiar conforme gawk
+                   se vaya desarrollando en el tiempo.
+
+       FILENAME    El nombre del fichero de entrada  actual.   Si
+                   no  se  ha  especificado  ningún fichero en la
+                   línea de orden,  el  valor  de  FILENAME  será
+                   ``-''.   De  todos  modos,  FILENAME  no  está
+                   definida dentro de un bloque BEGIN .
+
+       FNR         El número de registro de entrada en el fichero
+                   de entrada actual.
+
+       FS          El  separador  de campo de entrada, un espacio
+                   por defecto. Vea Fields, más arriba.
+
+       IGNORECASE  Controla la sensibilidad a mayúsculas de todas
+                   las  expresiones  regulares  y operaciones con
+                   cadenas. Si IGNORECASE tiene un  valor  difer­
+                   ente de cero, entonces las comparaciones entre
+                   cadenas y las comprobaciones  de  patrones  en
+                   las  reglas,  la división de campos con FS, la
+                   separación de registros  con  RS,  la  compro­
+                   bación  de expresiones regulares con ~ y !~, y
+                   las funciones predefinidas  gensub(),  gsub(),
+                   index(),  match(),  split(), y sub() ignorarán
+                   la diferencia entre  minúsculas  y  mayúsculas
+                   cuando  realicen  operaciones  con expresiones
+                   regulares.  De este modo, si IGNORECASE no  es
+                   igual  a  cero,  /aB/  concuerda con todas las
+                   cadenas "ab", "aB", "Ab", y  "AB".   Como  con
+                   todas  las  otras  variables  de AWK, el valor
+                   inicial de IGNORECASE  es  cero,  por  lo  que
+                   todas  las  operaciones  con expresiones regu­
+                   lares y cadenas son  normalmente  sensibles  a
+                   las  mayúsculas.   Bajo  Unix,  el conjunto de
+                   caracteres ISO 8859-1 Latin-1 es usado  cuando
+                   se ignoran las mayúsculas.  NOTA: En versiones
+                   de gawk anteriores a la 3.0,  IGNORECASE  solo
+                   afectaba  a  las  operaciones  con expresiones
+                   regulares. Ahora también afecta a las compara­
+                   ciones de cadenas.
+
+       NF          El  número de campos en el registro de entrada
+                   actual.
+
+       NR          El número total de registros  de  entrada  que
+                   han aparecido desde el principio.
+
+       OFMT        El  formato  de  salida  para los números, por
+                   defecto es  "%.6g".
+
+       OFS         El separador de campos de salida,  un  espacio
+                   por defecto.
+
+       ORS         El  separador  de  registros  de  salida,  por
+                   defecto un salto de línea.
+
+       RS          El separador  de  registros  de  entrada,  por
+                   defecto un salto de línea.
+
+       RT          El  terminador  de los registros.  Gawk define
+                   RT con el texto de entrada que concordó con el
+                   carácter  o expresión regular especificada por
+                   RS.
+
+       RSTART      El índice del primer carácter  concordado  por
+                   match(); 0 si no concordó ninguno.
+
+       RLENGTH     La   longitud  de  la  cadena  concordada  por
+                   match(); -1 si no concordó ninguna.
+
+       SUBSEP      El carácter usado para separar múltiples  sub­
+                   índices   en  elementos  de  tipo  tabla,  por
+                   defecto "\034".
+
+   Tablas
+       Las  tablas  se  indexan  mediante  una  expresión   entre
+       corchetes ([ y ]).  Si la expresión es una lista de expre­
+       siones (expr, expr ...)  entonces el índice de la tabla es
+       una  cadena de caracteres resultado de la concatenación de
+       los valores (cadenas) de cada una de las expresiones, sep­
+       arados  por  el valor de la variable SUBSEP Esta capacidad
+       se utiliza para simular tablas de  múltiples  dimensiones.
+       Por ejemplo:
+
+              i = "A"; j = "B"; k = "C"
+              x[i, j, k] = "hola, mundo\n"
+
+       asigna la cadena "hola, mundo\n" al elemento de la tabla x
+       que está indexado por la cadena "A\034B\034C".  Todas  las
+       tablas  en  AWK  son  asociativas, es decir, indexadas por
+       valores de tipo cadena.
+
+       El operador especial in puede ser usado en las órdenes  if
+       o  while  para  comprobar  si una tabla contiene un índice
+       consistente en un valor particular.
+
+              if (val in tabla)
+                   print tabla[val]
+
+       Si la tabla tiene múltiples  subíndices,  use  (i,  j)  in
+       tabla.
+
+       La  construcción in también puede usarse en bucles de tipo
+       for para iterar sobre todos los elementos de una tabla.
+
+       Un elemento puede ser eliminado de  una  tabla  usando  la
+       orden  delete La orden delete puede ser usada también para
+       borrar completamente los contenidos de una tabla,  simple­
+       mente  especificando  el  nombre  de  la  tabla sin ningún
+       índice.
+
+   Tipado de Variables y Conversiones
+       Las variables y los campos pueden  ser  números  (de  coma
+       flotante), o cadenas de caracteres, o ambos. Dependerá del
+       contexto cómo será interpretado el valor de una  variable.
+       Si  se  usa  en  una expresión numérica, será tratado como
+       número, si se usa como una cadena será  tratada  como  una
+       cadena.
+
+       Para  forzar  que una variable sea tratada como un número,
+       sumele un 0; para forzar que sea tratada como una  cadena,
+       concaténela con la cadena vacía.
+
+       Cuando una cadena debe ser convertida a número, la conver­
+       sión se realiza usando atof(3).  Un número  es  convertido
+       en  cadena  usando el valor de CONVFMT como cadena de for­
+       mato para sprintf(3), con el valor numérico de la variable
+       como  el  argumento.   De  todas maneras, aunque todos los
+       números en AWK son reales de coma  flotante,  los  valores
+       enteros  son siempre convertidos como enteros. De tal man­
+       era que, dados
+
+              CONVFMT = "%2.2f"
+              a = 12
+              b = a ""
+
+       la variable b contendrá el valor de tipo cadena "12" y  no
+       "12.00".
+
+       Gawk  realiza comparaciones tal y como sigue: Si dos vari­
+       ables son numéricas, son comparadas numéricamente.  Si  un
+       valor  es numérico y el otro tiene un valor de tipo cadena
+       que es un ``cadena numérica'', entonces las  comparaciones
+       se hacen numéricamente. En otro caso, el valor numérico es
+       traducido a cadena y se comparan en forma de cadena.   Dos
+       cadenas se comparan, por supuesto, en forma de cadena.  De
+       acuerdo con el estándar POSIX, si dos cadenas fueran cade­
+       nas numéricas debería realizarse una comparación numérica.
+       De todas maneras, esto es claramente incorrecto, y gawk no
+       lo hace así.
+
+       Nótese  que  las  constantes de tipo cadena, como "57", no
+       son cadenas numéricas, sino constantes de cadena. La  idea
+       de  ``cadena  numérica''  solo  se  aplica  a  los campos,
+       entradas con getline , los elementos de FILENAMEy  ARGV  ,
+       elementos  de  ENVIRON y los elementos de una tabla creada
+       mediante split()  que  son  cadenas  numéricas.   La  idea
+       básica es que las entradas de usuario, y solo las entradas
+       de usuario, que parezcan numéricas, serán tratadas de esta
+       manera.
+
+       Las  variables sin inicializar tendrán el valor numérico 0
+       y la cadena "" (cadena nula o vacía).
+
+PATRONES Y ACCIONES
+       AWK es un lenguaje orientado a la línea. Primero se indica
+       el  patrón,  y  luego  la  acción.  Las  sentencias de las
+       acciones se engloban mediante { y }.  Puede  no  indicarse
+       el patrón o la acción, pero por supuesto, no ambos.  Si no
+       se especifica el patrón, la acción será ejecutada por cada
+       uno de los registros individuales de la entrada.  Si no se
+       especifica la acción es equivalente a escribir la acción
+
+              { print }
+
+       la cual imprime el registro completo.
+
+       Los comentarios comienzan con el carácter  ``#'',  y  con­
+       tinúan  hasta  el final de la línea.  Pueden usarse líneas
+       en blanco para separar sentencias.  Normalmente, una  sen­
+       tencia termina con un salto de línea, aunque este no es el
+       caso de las líneas que finalizan con un ``,'',  {,  ?,  :,
+       &&,  o  ||.  Las líneas que terminan con do o else también
+       se considera que continúan en la siguiente línea. En otros
+       casos,  una  línea  podrá  ser  continuada en la siguiente
+       poniendo al final un ``\'', en cuyo caso  se  ignorará  el
+       salto de línea.
+
+       Se  pueden  poner  múltiples  sentencias en la misma línea
+       separándolos mediante un ``;''.  Esto se aplica tanto para
+       las  sentencias  que  componen la parte de la acción de un
+       par patrón-acción (el  caso  más  usual),  como  para  las
+       propias sentencias patrón-acción.
+
+   Patrones
+       Los patrones de AWK pueden ser uno de los siguientes:
+
+              BEGIN
+              END
+              /expresión regular/
+              expresión relacional
+              patrón && patrón
+              patrón || patrón
+              patrón ? patrón : patrón
+              (patrón)
+              ! patrón
+              patrón1, patrón2
+
+       BEGIN  y  END son dos patrones de tipo especial que no son
+       utilizados  para  comprobarlos  contra  la  entrada.   Las
+       acciones  de  todos  los  patrones BEGIN se juntan como si
+       todas las sentencias hubieran sido escritas  en  un  único
+       bloque BEGIN .  Son ejecutadas antes de que se lea algo de
+       la entrada. De forma análoga, todos  los  bloques  END  se
+       juntan,  y  son  ejecutados  cuando  se ha agotado toda la
+       entrada (o cuando se ejecuta una sentencia  exit  ).   Los
+       patrones  BEGIN  y  END no pueden ser combinados con otros
+       patrones en expresiones de patrón.  Los patrones  BEGIN  y
+       END no pueden tener vacía la parte de la acción.
+
+       Para los patrones con /expresiones regulares/ , la senten­
+       cia asociada se ejecuta para cada registro de entrada  que
+       concuerde con la expresión regular.  Las expresiones regu­
+       lares son las mismas que las  usadas  en  egrep(1),  y  se
+       encuentran resumidas más adelante.
+
+       Una  expresión  relacional  puede  usar  cualquiera de los
+       operadores definidos en la parte de acciones de esta  sec­
+       ción. Estas generalmente comprueban si ciertos campos con­
+       cuerdan con una cierta expresión regular.
+
+       Los operadores &&, ||, y !  son respectivamente la Y  lóg­
+       ica, la O lógica, y la NO lógica, como en C.  Hacen evalu­
+       aciones de circuito corto, también como en C,  y  se  usan
+       para  combinar  varias  expresiones  de patrón primitivas.
+       Como en la mayoría de los lenguajes, pueden usarse  parén­
+       tesis para cambiar el orden de la evaluación.
+
+       El  operador ?: es igual que el mismo operador en C. Si el
+       primer patrón es cierto el patrón usado para las comproba­
+       ciones  es el segundo, en caso contrario es el tercero. De
+       entre el segundo y el tercer patrón, solo es evaluado  uno
+       de ellos.
+
+       La  forma  patrón1,  patrón2  para una expresión recibe el
+       nombre de rango de patrones.  Concuerda con todos los reg­
+       istros  de  la  entrada  que existan entre el registro que
+       concuerde con patrón1, y el  registro  que  concuerde  con
+       patrón2,  inclusive.  No  combina  con ningún otro tipo de
+       expresión de patrón.
+
+   Expresiones Regulares
+       Las expresiones regulares corresponden con el tipo  exten­
+       dido usado en egrep.  Están compuestas por caracteres como
+       sigue:
+
+       c          concuerda con el carácter c(nometacarácter).
+
+       \c         concuerda con el carácter literal c.
+
+       .          concuerda con cualquier carácter incluyendo  el
+                  salto de línea.
+
+       ^          concuerda con el principio de una cadena.
+
+       $          concuerda con el fin de una cadena.
+
+       [abc...]   lista  de  caracteres, concuerda con cualquiera
+                  de los caracteres abc....
+
+       [^abc...]  lista  negada  de  caracteres,  concuerda   con
+                  cualquier carácter excepto abc....
+
+       r1|r2      alternativa: concuerda con r1 o r2.
+
+       r1r2       concatenación:  concuerda con r1, y después con
+                  r2.
+
+       r+         concuerda con una o más apariciones de r.
+
+       r*         concuerda con cero o más apariciones de r.
+
+       r?         concuerda con cero o una aparición de r.
+
+       (r)        agrupación: concuerda con r.
+
+       r{n}
+       r{n,}
+       r{n,m}     Uno o dos  números  entre  llaves  denotan  una
+                  expresión de intervalo.  Si hay un número entre
+                  llaves, la expreg. precedente  r  se  repite  n
+                  veces.  Si  hay  dos  números separados por una
+                  coma, r se repite de n a m veces.   Si  hay  un
+                  número  seguido  de  una  coma,  entonces  r se
+                  repite como mínimo n veces.
+                  Las  expresiones  de   intervalo   solo   están
+                  disponibles   si   se   especifica   --posix  o
+                  --re-interval en la línea de orden.
+
+       \y         concuerda con la cadena vacía tanto en el prin­
+                  cipio como en el final de una palabra.
+
+       \B         concuerda  con  la  cadena  vacía dentro de una
+                  palabra.
+
+       \<         concuerda con la cadena vacía al  principio  de
+                  una palabra.
+
+       \>         concuerda  con  la cadena vacía al final de una
+                  palabra.
+
+       \w         concuerda con cualquier  carácter  constitutivo
+                  de palabra (letra, dígito, o subrayado.)
+
+       \W         concuerda con cualquier carácter que no es con­
+                  stitutivo de palabra.
+
+       \`         concuerda con la cadena vacía al  principio  de
+                  un búfer (cadena).
+
+       \'         concuerda  con  la  cadena vacía al final de un
+                  búfer.
+
+       Las secuencias de escape que son válidas en las constantes
+       de  cadena  (vea  abajo) son también legales en las expre­
+       siones regulares.
+
+       Las clases de  caracteres  son  una  nueva  característica
+       introducida  en el estándar POSIX. Una clase de caracteres
+       es una notación especial para describir listas  de  carac­
+       teres  que  tienen  un atributo específico, pero donde los
+       caracteres en sí mismos pueden variar entre países  difer­
+       entes y/o entre juegos de caracteres diferentes. Por ejem­
+       plo, la noción de  lo  que  es  un  carácter  alfanumérico
+       difiere entre los EEUU y Francia.
+
+       Una  clase de caracteres solo es válida en una expreg den­
+       tro de las llaves de una lista de caracteres.  Las  clases
+       de  caracteres  consisten  en  [:,  una  palabra clave que
+       denota la clase, y :].  Estas son las clases de caracteres
+       definidas por el estándar POSIX.
+
+       [:alnum:]
+              Caracteres alfanuméricos.
+
+       [:alpha:]
+              Caracteres alfabéticos.
+
+       [:blank:]
+              Espacio en blanco o tabulador.
+
+       [:cntrl:]
+              Caracteres de control.
+
+       [:digit:]
+              Caracteres numéricos.
+
+       [:graph:]
+              Caracteres  que son imprimibles y visibles al mismo
+              tiempo.  (Un espacio en blanco es imprimible,  pero
+              no visible, mientras que una a es las dos cosas.)
+
+       [:lower:]
+              Caracteres alfabéticos en minúscula.
+
+       [:print:]
+              Caracteres imprimibles (aquellos que no tienen car­
+              acteres de control.)
+
+       [:punct:]
+              Caracteres  de  puntuación  (aquellos  que  no  son
+              letras,  dígitos,  caracteres  de control, o carac­
+              teres de espaciado.)
+
+       [:space:]
+              Caracteres de espaciado (como el espacio en blanco,
+              el  tabulador,  y  el  salto de página, por nombrar
+              algunos.)
+
+       [:upper:]
+              Caracteres alfabéticos en mayúscula.
+
+       [:xdigit:]
+              Caracteres que son dígitos hexadecimales.
+
+       Por ejemplo, antes del estándar POSIX, para concordar car­
+       acteres   alfanuméricos,   tendría   que   haber   escrito
+       /[A-Za-z0-9]/.  Si su juego de caracteres  contiene  otros
+       caracteres alfabéticos, esta especificación no los hubiera
+       recogido. Usando las clases de caracteres de POSIX,  puede
+       escribir  /[[:alnum:]]/,  y esto concordaría con todos los
+       caracteres alfabéticos y numéricos de su juego  de  carac­
+       teres.
+
+       Adicionalmente en las listas de caracteres pueden aparecer
+       dos secuencias especiales. Esto se aplica a los juegos  de
+       caracteres  no  ASCII, los cuales pueden contener símbolos
+       (llamados elementos equivalentes) los cuales son represen­
+       tados  por  más de un carácter, al igual que varios carac­
+       teres que son equivalentes para propósitos de  comparación
+       u  ordenación.  (Por ejemplo, en Español, una ``e'' normal
+       y una con tilde "á" son equivalentes.)
+
+       Símbolos Equivalentes
+              Un símbolo equivalente es un elemento  formado  por
+              más  de  un carácter englobado entre [.  y .].  Por
+              ejemplo, si ch es un elemento equivalente, entonces
+              [[.ch.]]   es  una  expresión regular que se ajusta
+              con este elemento equivalente, mientras que [ch] es
+              una expresión regular que se ajusta con una c o con
+              una h.
+
+       Clases de Equivalencia
+              Una clase de quivalencia es un  nombre  (específico
+              para  una  localización determinada) para una lista
+              de caracteres que son equivalentes.  El  nombre  se
+              engloba  entre  [=  y =].  Por ejemplo, el nombre e
+              puede ser utilizado para representar a todos estos:
+              ``e,'' ``è,'' y ``é.''  En este caso, [[=e]] es una
+              expresión regular que se ajusta con
+               .BR e ,
+               .BR è , o
+               .BR é .
+
+       Estas características son especialmente  útiles  para  las
+       localizaciones  de  habla  no  inglesa.   Las funciones de
+       librería que usa gawk para el ajuste de expresiones  regu­
+       lares  solo  reconoce  las  clases de caracteres POSIX; no
+       reconocen ni los símbolos equivalentes ni  las  clases  de
+       equivalencia.
+
+       Los  operadores  \y,  \B,  \<,  \>,  \w,  \W, \`, y \' son
+       específicos para gawk;  son  extensiones  basadas  en  las
+       capacidades  de  las librerías de expresiones regulares de
+       GNU.
+
+       Varias opciones de la línea de ordenes controlan cómo gawk
+       interpreta los caracteres en las expresiones regulares.
+
+       Sin opciones
+              En  el  caso  por defecto, gawk provee de todas las
+              posibilidades de las expresiones regulares de POSIX
+              y  los  operadores  de expresiones regulares de GNU
+              descritos anteriormente.   Aun  con  todo,  no  son
+              soportadas las expresiones de intervalo.
+
+       --posix
+              Solo se aceptan las expresiones regulares de POSIX,
+              los operadores de GNU  no  son  considerados  espe­
+              ciales.   (Por ejemplo, \w concuerda con el literal
+              w).  Las expresiones regulares están permitidas.
+
+       --traditional
+              Se aceptan las expresiones regulares de  la  imple­
+              mentación  tradicional  de  awk  de Unix. Los oper­
+              adores de GNU no se consideran  especiales,  no  se
+              permiten  las  expresiones de intervalo, ni tampoco
+              las clases de caracteres de POSIX ([[:alnum:]] y el
+              resto.)   Los caracteres descritos mediante secuen­
+              cias de escape en octal o hexadecimal son  tratados
+              literalmente, incluso si representan metacaracteres
+              de expresiones regulares.
+
+       --re-interval
+              Permiten las expresiones de intervalo en las expre­
+              siones  regulares, aunque se haya indicado --tradi­
+              tional
+
+   Acciones
+       Las sentencias de las acciones se engloban entre llaves, {
+       y  }.   Las  sentencias  de  las acciones consisten en las
+       habituales  sentencias  de  asignación,  condicionales   y
+       bucles que pueden encontrarse en la mayoría de los lengua­
+       jes. Los operadores, sentencias de control,  y  sentencias
+       de  entrada/salida disponibles son parecidas a las equiva­
+       lentes de C.
+
+   Operadores
+       Los operadores en AWK, en orden decreciente  de  preceden­
+       cia, son
+
+
+       (...)       Agrupación.
+
+       $           Referencia a campo.
+
+       ++ --       Incremento  y  decremento, tanto en forma pre­
+                   fija como sufija.
+
+       ^           Exponenciación (también puede usarse  **  ,  y
+                   **= para el operador de asignación.)
+
+       + - !       Más y menos unarios, y negación lógica.
+
+       * / %       Multiplicación, división, y resto de división.
+
+       + -         Suma y resta.
+
+       space       Concatenación de cadenas.
+
+       < >
+       <= >=
+       != ==       Operadores de relación tradicionales.
+
+       ~ !~        Cotejo de expresión  regular,  cotejo  negado.
+                   NOTA:  No  use una expresión regular constante
+                   (/pepe/) en la parte izquierda de una ~ o  una
+                   !~.  Sólo usela en la parte derecha. La expre­
+                   sión /pepe/ ~ exp tiene el  mismo  significado
+                   que (($0 ~ /foo/) ~ exp).  Esto normalmente no
+                   es lo que se pretendía.
+
+       in          Pertenencia a una tabla.
+
+       &&          Y lógica.
+
+       ||          O lógica.
+
+       ?:          Expresión condicional de  C.  Tiene  la  forma
+                   expr1  ? expr2 : expr3. Si expr1 es cierta, el
+                   valor de la expresión es expr2, en  caso  con­
+                   trario  es expr3.  Solo uno de los dos ( expr2
+                   y expr3 ) son evaluados.
+
+       = += -=
+       *= /= %= ^= Asignación. Tanto las  asignaciones  absolutas
+                   (var  =  valor) como las asignaciones de oper­
+                   ador (las otras formas) son aceptadas.
+
+   Sentencias de control
+       Las sentencias de control son las siguientes:
+
+              if (condición) sentencia [ else sentencia ]
+              while (condición) sentencia
+              do sentencia while (condición)
+              for (expr1; expr2; expr3) sentencia
+              for (var in tabla) sentencia
+              break
+              continue
+              delete tabla[índice]
+              delete tabla
+              exit [ expresión ]
+              { sentencias }
+
+   Sentencias de E/S
+       Las sentencias de entrada/salida son las siguientes:
+
+
+       close(fichero)         Cerrar fichero (o tubería, vea  más
+                              abajo.)
+
+       getline                Asignar  a $0 el siguiente registro
+                              de entrada; modifica NF, NR, FNR.
+
+       getline <fichero       Asignar a $0 el siguiente  registro
+                              de fichero; modifica NF.
+
+       getline var            Asignar a var el siguiente registro
+                              de entrada; modifica NR, FNR.
+
+       getline var <fichero   Asignar a var el siguiente registro
+                              de fichero.
+
+       next                   Parar  el procesado del registro de
+                              entrada actual. Se lee el siguiente
+                              registro  de entrada y el procesado
+                              vuelve a  comenzar  con  el  primer
+                              patrón  del  programa  AWK.  Si  se
+                              llega al  final  de  los  datos  de
+                              entrada,  el/los bloque(s) END , si
+                              existen, son ejecutados.
+
+       nextfile               Parar el procesado del  fichero  de
+                              entrada  actual.  La siguiente lec­
+                              tura de un registro de  entrada  se
+                              obtiene  del  siguiente  fichero de
+                              entrada.  Se modifican  FILENAME  y
+                              ARGIND , FNR se actualiza a 1, y el
+                              procesado comienza de nuevo por  el
+                              primer  patrón del programa AWK. Si
+                              se llega al final de los  datos  de
+                              entrada,  el/los bloque(s) END , si
+                              existen,  son  ejecutados.    NOTA:
+                              Versiones  antiguas  de gawk usaban
+                              next  file,  como   dos   palabras.
+                              Aunque   esta   forma  se  reconoce
+                              todavía,  genera  un   mensaje   de
+                              alerta  y será eliminado en futuras
+                              versiones.
+
+       print                  Imprime  el  registro  actual.   El
+                              registro  de  salida se termina con
+                              el valor de la variable ORS .
+
+       print lista-expr       Imprime expresiones.   Cada  expre­
+                              sión  se  separa por el valor de la
+                              variable OFS .  El registro de sal­
+                              ida  se  termina con el valor de la
+                              variable ORS .
+
+       print lista-expr >fichero
+                              Imprime  expresiones  en   fichero.
+                              Cada  expresión  se  separa  por el
+                              valor de la variable OFS .  El reg­
+                              istro  de  salida se termina con el
+                              valor de la variable ORS .
+
+       printf fmt, lista-expr Dar formato e imprimir.
+
+       printf fmt, lista-expr >fichero
+                              Dar formato e imprimir en  fichero.
+
+       system(línea-de-orden) Ejecutar la orden línea-de-orden, y
+                              devuelve el valor de salida.  (Esto
+                              puede  no  estar disponible en sis­
+                              temas no POSIX .)
+
+       fflush([fichero])      Descargar cualquier búfer  asociado
+                              con  el fichero o tubería de salida
+                              abierto.   Si  no   se   especifica
+                              fichero  ,  entonces se descarga la
+                              salida estándar.  Si fichero es  la
+                              cadena  vacía,  entonces  todos los
+                              búfers de los ficheros  y  tuberías
+                              de salida abiertos son descargados.
+
+       También se permiten redirecciones de entrada/salida.  Para
+       print y printf, >>fichero añade la salida a fichero, mien­
+       tras que | orden escribe en una tubería.  De  forma  simi­
+       lar,  orden | getline escribe mediante una tubería en get­
+       line.  La orden  getline  retornará  0  en  el  final  del
+       fichero, y -1 en caso de error.
+
+   La sentencia printf
+       Las  versiones  AWK de la sentencia printf y de la función
+       sprintf() (véase  a  continuación)  aceptan  la  siguiente
+       especificación para formatos de conversión:
+
+       %c     Un  carácter ASCII .  Si el argumento usado para %c
+              es numérico, es tratado como un carácter e  imprim­
+              ido. De otro modo, el argumento se asume que es una
+              cadena, y solo se imprime el primer carácter de esa
+              cadena.
+
+       %d
+       %i     Un número decimal (la parte entera).
+
+       %e
+       %E     Un  número  real  de  coma  flotante  de  la  forma
+              [-]d.dddddde[+-]dd.  El formato %E usa E en vez  de
+              e.
+
+       %f     Un  número  real  de  coma  flotante  de  la  forma
+              [-]ddd.dddddd.
+
+       %g
+       %G     Usese la conversión %e o %f , la que sea más corta,
+              suprimiendo  los  ceros no significativos.  El for­
+              mato %G usa %E en vez de %e.
+
+       %o     Un número sin signo en octal (entero.)
+
+       %s     Una cadena de caracteres.
+
+       %x
+       %X     Un número sin signo en  hexadecimal  (entero.)   El
+              formato %X usa ABCDEF en vez de abcdef.
+
+       %%     Un carácter % ; no se utiliza ningún argumento.
+
+       Estos  son  parámetros opcionales que pueden ponerse entre
+       el % y la letra de control:
+
+       -      La expresión debe ser justificada por la  izquierda
+              dentro de su campo.
+
+       espacio
+              Para  conversiones  numéricas,  pone  un espacio en
+              blanco como prefijo en los valores positivos, y  un
+              signo negativo en los valores negativos.
+
+       +      EL  signo  más,  usado  antes  del  modificador  de
+              anchura (vea más adelante), indica que siempre debe
+              ponerse  el  signo  en  las conversiones numéricas,
+              aunque el dato a dar formato  sea  positivo.  El  +
+              anula el modificador de espacio.
+
+       #      Usa  una  ``forma alternativa'' para ciertas letras
+              de control.  Para %o, añade un cero inicial.   Para
+              %x,  y %X, añade un 0x o 0X inicial para resultados
+              diferentes de cero.  Para %e, %E, y %f,  El  resul­
+              tado  contendrá siempre un punto decimal.  Para %g,
+              y %G, Los ceros al final no  serán  eliminados  del
+              resultado.
+
+       0      Un  0 (cero) inicial actúa como una bandera, indica
+              que la salida debe ser rellenada con ceros  en  vez
+              de  con  espacios.  Esto se aplica también para los
+              formatos de salida no numéricos. Esta bandera  solo
+              tiene  efecto  cuando la anchura del campo es mayor
+              que el valor a imprimir.
+
+       anchura
+              El campo tiene que ser rellenado hasta alcanzar  la
+              anchura  indicada.  El  campo normalmente será rel­
+              lenado con  espacios.  Si  la  bandera  0  se  está
+              usando, será rellenado con ceros.
+
+       .prec  Un número que especifica la precisión a usar cuando
+              se imprima.  Para los formatos %e, %E, y %f ,  esto
+              especifica  el  número  de dígitos que desea que se
+              impriman a la derecha del punto decimal.  Para  los
+              formatos  %g, y %G , especifica el número máximo de
+              dígitos significativos. Para los formatos  %d,  %o,
+              %i,  %u,  %x, y %X , especifica el número mínimo de
+              dígitos a imprimir. Para una cadena, especifica  el
+              número  máximo de caracteres de la cadena que deben
+              ser imprimidos.
+
+       Las características de anchura y  prec  dinámicas  de  las
+       rutinas  printf() del ANSI C también son soportadas.  Un *
+       en el lugar de las especificaciones de anchura o  de  prec
+       causará  que sus valores sean tomados a partir de la lista
+       de argumentos de printf o sprintf().
+
+   Nombres especiales de ficheros
+       Cuando se realiza redirección de la E/S tanto desde  print
+       como  de printf en un fichero, o mediante getline a partir
+       de un fichero, gawk reconoce internamente ciertos  nombres
+       especiales de ficheros. Estos nombres de ficheros permiten
+       acceder a descriptores de ficheros abiertos heredados  del
+       proceso  padre de gawk (normalmente el shell.)  Otros nom­
+       bres especiales proveen acceso a información sobre la eje­
+       cución del proceso gawk Los nombres de ficheros son:
+
+       /dev/pid    Leer  de  este fichero devuelve el ID del pro­
+                   ceso actual,  en  decimal,  terminado  con  un
+                   salto de línea.
+
+       /dev/ppid   Leer  de  este fichero devuelve el ID del pro­
+                   ceso padre del  actual  proceso,  en  decimal,
+                   terminado con un salto de línea.
+
+       /dev/pgrpid Leer  de este fichero devuelve el ID del grupo
+                   del proceso actual, en decimal, terminado  con
+                   un salto de línea.
+
+       /dev/user   Leer  de  este  fichero  devuelve  un registro
+                   terminado con un salto de línea. Los campos se
+                   separan  por  espacios  en  blanco.   $1 el el
+                   valor de la llamada a sistema getuid(2)  ,  $2
+                   es el valor de la llamada a sistema geteuid(2)
+                   , $3 es el valor de la llamada a sistema  get­
+                   gid(2) , y $4 es el valor de la llamada a sis­
+                   tema getegid(2) Si hay campos adicionales, son
+                   los  IDs  de grupo devueltos por getgroups(2).
+                   No todos los sistemas soportan múltiples  gru­
+                   pos.
+
+       /dev/stdin  La entrada estándar.
+
+       /dev/stdout La salida estándar.
+
+       /dev/stderr La salida de error estándar.
+
+       /dev/fd/n   El  fichero  asociado  con  el  descriptor  de
+                   fichero abierto n.
+
+       Son particularmente útiles para los mensajes de error. Por
+       ejemplo:
+
+              print "¡ Error !" > "/dev/stderr"
+
+       donde, de otra manera, tendría que haber usado
+
+              print "¡ Error !" | "cat 1>&2"
+
+       Estos nombres de fichero pueden usarse también en la línea
+       de orden para nombrar ficheros de datos.
+
+   Funciones numéricas
+       AWK dispone de las siguientes funciones  aritméticas  pre­
+       definidas:
+
+
+       atan2(y, x)   devuelve el arcotangente de y/x en radianes.
+
+       cos(expr)     devuelve el coseno de expr, la cual está  en
+                     radianes.
+
+       exp(expr)     la función exponencial.
+
+       int(expr)     truncado a entero.
+
+       log(expr)     logaritmo natural.
+
+       rand()        devuelve un número aleatorio entre 0 y 1.
+
+       sin(expr)     retorna  el  seno  de  expr, la cual está en
+                     radianes.
+
+       sqrt(expr)    raíz cuadrada.
+
+       srand([expr]) usa expr como la nueva semilla para el  gen­
+                     erador  de  números  aleatorios.  Si  no  se
+                     indica expr , se usa la hora  del  día.   El
+                     valor  de retorno es la anterior semilla del
+                     generador.
+
+   Funciones de cadena
+       Gawk dispone de las siguientes funciones predefinidas para
+       cadenas:
+
+
+       gensub(r, s, h [, t])   buscar  en la cadena objetivo t si
+                               hay ajustes de la expresión  regu­
+                               lar  r.   Si  h  es una cadena que
+                               comienza por g o G, entonces reem­
+                               plazar  todos los ajustes de r por
+                               s.  De otro modo, h es  un  número
+                               indicando cual de los ajustes de r
+                               debe reemplazarse. Si no se indica
+                               t  , se usa $0 .  Dentro del texto
+                               de reemplazo s,  puede  usarse  la
+                               secuencia \n, donde n es un dígito
+                               de 1 a 9,  para  indicar  solo  el
+                               texto  que  se  ha ajustado con la
+                               subexpresión    con     paréntesis
+                               n'ésima.   La  secuencia \0 repre­
+                               senta el texto ajustado  completo,
+                               al  igual  que  el  carácter &.  A
+                               diferencia de sub() y  gsub(),  la
+                               cadena modificada se devuelve como
+                               resultado  de  la  función,  y  la
+                               cadena  objetivo  original  no  es
+                               modificada.
+
+       gsub(r, s [, t])        para cada subcadena que ajuste con
+                               la   expresión  regular  r  en  la
+                               cadena t, substituye la cadena  s,
+                               y  devuelve  el número de sustitu­
+                               ciones.  Si no se ha indicado t  ,
+                               se  usa  $0.   Un & en el texto de
+                               reemplazo  es  sustituido  por  el
+                               texto  que ha sido ajustado en ese
+                               momento.  Use \& para obtener un &
+                               literal. Vea AWK Language Program­
+                               ming  para  una  descripción   más
+                               detallada  sobre  las  reglas para
+                               los & y las barras  invertidas  en
+                               el  texto  de  reemplazo de sub(),
+                               gsub(), y gensub().
+
+       index(s, t)             devuelve el índice de la cadena  t
+                               en  la  cadena  s,  o  0  si  t no
+                               aparece.
+
+       length([s])             devuelve la longitud de la  cadena
+                               s,  o  la  longitud de $0 si no se
+                               indica s .
+
+       match(s, r)             devuelve la posición  en  s  donde
+                               aparece la expresión regular r , o
+                               0 si r no aparece, y modifica  los
+                               valores de RSTART y RLENGTH.
+
+       split(s, a [, r])       divide  la  cadena s en la tabla a
+                               en  la  expresión  regular  r,   y
+                               devuelve  el  número de campos. Si
+                               se omite r , se usa FS .  La tabla
+                               a   se   borra  al  principio.  La
+                               división funciona de  forma  idén­
+                               tica  a  la  división  de  campos,
+                               descrita anteriormente.
+
+       sprintf(fmt, lista-expr)
+                               imprime lista-expr de acuerdo  con
+                               fmt,  y  devuelve la cadena resul­
+                               tante.
+
+       sub(r, s [, t])         igual que  gsub(),  pero  solo  se
+                               reemplaza la primera subcadena que
+                               ajusta.
+
+       substr(s, i [, n])      retorna  la  subcadena  de  s  que
+                               comience  por  i  y que tenga como
+                               mucho n caracteres.  Si se omite n
+                               , se usa el resto de s .
+
+       tolower(cad)            devuelve  una  copia  de la cadena
+                               cad, con todos los  caracteres  en
+                               mayúscula de cad cambiados por sus
+                               correspondientes en minúscula. Los
+                               caracteres  no  alfabéticos no son
+                               modificados.
+
+       toupper(cad)            devuelve una copia  de  la  cadena
+                               cad,  con  todos los caracteres en
+                               minúscula de cad cambiados por sus
+                               correspondientes en mayúscula. Los
+                               caracteres no alfabéticos  no  son
+                               modificados.
+
+   Funciones de tiempo
+       Teniendo  en cuenta que uno de los principales usos de los
+       programas AWK es el procesamiento de ficheros de  registro
+       (log  files)  que  contienen  información  de  registro de
+       tiempo, gawk proporciona  las  siguientes  funciones  para
+       obtener registros de tiempo y darles formato.
+
+
+       systime() devuelve  la  hora del día actual como el número
+                 de segundos desde la Época (Medianoche UTC del 1
+                 Enero de 1970 en sistemas POSIX).
+
+       strftime([formato [, timestamp]])
+                 da formato a timestamp de acuerdo con la especi­
+                 ficación en formato.  El timestamp debe tener la
+                 misma  forma que el retornado por systime().  Si
+                 no aparece timestamp , se utiliza  la  hora  del
+                 día  actual.  Si no aparece formato , se utiliza
+                 un formato por defecto equivalente a  la  salida
+                 de date(1).  Vea la especificación de la función
+                 strftime() en ANSI C para estar  seguro  de  las
+                 conversiones  de  formato  que  se garantiza que
+                 existen.  Una  versión  de  dominio  público  de
+                 strftime(3)  y la correspondiente página de man­
+                 ual se distribuyen con gawk; si se usó esa  ver­
+                 sión para compilar gawk, entonces todas las con­
+                 versiones descritas  en  esa  página  de  manual
+                 estarán disponibles para gawk.
+
+   Constantes de cadena
+       Las  constantes  de cadena en AWK son secuencias de carac­
+       teres entre dobles comillas ( " ).  Dentro de las cadenas,
+       se  reconocen  determinadas secuencias de escape , como en
+       C. Son las siguientes:
+
+
+       \\   Una barra invertida literal.
+
+       \a   El carácter de  ``alerta'';  usualmente  el  carácter
+            ASCII BEL .
+
+       \b   carácter de borrado.
+
+       \f   salto de página.
+
+       \n   salto de línea.
+
+       \r   retorno de carro.
+
+       \t   tabulador horizontal.
+
+       \v   tabulador vertical
+
+       \xdígitos hexadecimales
+            El  carácter  representado  por  la cadena de dígitos
+            hexadecimales que sigue a la \x.   Como  en  ANSI  C,
+            todos los dígitos hexadecimales siguientes se consid­
+            eran como parte de la  secuencia  de  escape.   (Esta
+            característica nos debería dar una idea sobre el dis­
+            eño de lenguajes del comité.)  Por ejemplo, "\x1B" es
+            el carácter ASCII ESC (escape).
+
+       \ddd El carácter representado por la secuencia de 1, 2 o 3
+            dígitos en octal. Por ejemplo . "\033" es el carácter
+            ASCII ESC (escape).
+
+       \c   El carácter c literal.
+
+       Las  secuencias  de escape pueden usarse también dentro de
+       constantes    de     expresiones     regulares     (p.ej.,
+       /[ \t\f\n\r\v]/ se ajusta con espacios en blanco).
+
+       En el modo de compatibilidad, los caracteres representados
+       por secuencias de escape en octal o hexadecimal son trata­
+       dos  literalmente cuando son usados en contantes de expre­
+       siones regulares. Así, /a\52b/ es equivalente a /a\*b/.
+
+FUNCIONES
+       La funciones en AWK se definen de la siguiente manera:
+
+              function nombre(lista de parámetros) { sentencias }
+
+       Las funciones se ejecutan cuando son llamadas desde dentro
+       de las expresiones tanto desde patrones  o  acciones.  Los
+       parámetros  reales  usados  en  la llamada a la función se
+       usan para instanciar los parámetros formales declarados en
+       la  función. Las tablas se pasan por referencia, las otras
+       variables se pasan por valor.
+
+       Ya que las funciones no formaban parte  originalmente  del
+       lenguaje AWK, el uso de variables locales es un tanto cha­
+       pucero: Son declaradas como parámetros extra en  la  lista
+       de  parámetros.  Por  costumbre  se  separan las variables
+       locales de los parámetros reales por  espacios  en  blanco
+       adicionales en la lista de parámetros. Por ejemplo:
+
+              function  f(p, q,     a, b)   # a & b son locales
+              {
+                   .....
+              }
+
+              /abc/     { ... ; f(1, 2) ; ... }
+
+       Es  necesario que el paréntesis izquierdo en una llamada a
+       función siga inmediatamente al nombre de la  función,  sin
+       añadir  ningún  espacio  en blanco. Esto es necesario para
+       evitar ambigüedades sintácticas con el  operador  de  con­
+       catenación.  Esta restricción no se aplica a las funciones
+       predefinidas listadas anteriormente.
+
+       Las funciones pueden llamarse  las  unas  a  las  otras  y
+       pueden  ser  recursivas.  Los parámetros usados como vari­
+       ables locales son inicializados con una cadena vacía y  el
+       número cero en la invocación de la función.
+
+       Si  se  indicó  --lint  , gawk generará mensajes de alarma
+       sobre llamadas a  funciones  no  definidas  en  tiempo  de
+       análisis,  en vez de en tiempo de ejecución.  Llamar a una
+       función no definida en tiempo de  ejecución  es  un  error
+       fatal.
+
+       Puede usarse la palabra func en vez de function.
+
+EJEMPLOS
+       Imprimir y ordenar los nombres de ingreso de todos los usuarios:
+
+            BEGIN     { FS = ":" }
+                 { print $1 | "sort" }
+
+       Contar las líneas de un fichero:
+
+                 { nlines++ }
+            END  { print nlines }
+
+       Añadir el número de línea al principio de cada una en el fichero:
+
+            { print FNR, $0 }
+
+       Concatenar y número de línea (una variación del ejercicio):
+
+            { print NR, $0 }
+
+VÉASE TAMBIÉN
+       egrep(1),  getpid(2),  getppid(2),  getpgrp(2), getuid(2),
+       geteuid(2), getgid(2), getegid(2), getgroups(2)
+
+       The AWK Programming Language,  Alfred  V.  Aho,  Brian  W.
+       Kernighan, Peter J. Weinberger, Addison-Wesley, 1988. ISBN
+       0-201-07981-X.
+
+       AWK Language Programming, Edition 1.0,  published  by  the
+       Free Software Foundation, 1995.
+
+COMPATIBILIDAD POSIX
+       Un  objetivo principal de gawk es la compatibilidad con el
+       estándar POSIX, y a su vez la compatibilidad con la última
+       versión  del awk de UNIX .  Hasta la fecha, gawk incorpora
+       las siguientes capacidades  para  el  usuario  que  no  se
+       describen  en el libro de AWK, pero que forman parte de la
+       versión de Bell Labs de awk, y se encuentran en el  están­
+       dar POSIX .
+
+       La  opción -v para asignar variables antes de la ejecución
+       del programa es nueva.  El libro dice que las asignaciones
+       de  variables de la línea de órdenes ocurrirían cuando awk
+       abriera el argumento como un fichero, lo cual es antes  de
+       ejecutar el bloque BEGIN .  De todos modos, en implementa­
+       ciones más  modernas,  cuando  una  asignación  como  esta
+       aparece  antes que ningún nombre de fichero, la asignación
+       ocurriría antes de que el bloque  BEGIN  fuera  ejecutado.
+       Las  aplicaciones  acostumbran a depender de esta ``carac­
+       terística.''  Cuando awk fue modificado para acomodarse  a
+       su  documentación,  se  añadió esta opción para acomodar a
+       las aplicaciones que dependen de  esta  vieja  caracterís­
+       tica.   (Esta  característica  fue  aceptada tanto por los
+       desarrolladores de AT&T como por los de GNU.)
+
+       La  opción  -W  para  implementación  de   características
+       específicas pertenece al estándar POSIX.
+
+       Durante  el  procesado  de  argumentos, gawk usa la opción
+       especial ``--'' para señalar el final de  los  argumentos.
+       En modo compatibilidad, las opciones no definidas darán un
+       mensaje de alerta, pero de todos modos son ignoradas.   En
+       operación normal, estos argumentos son pasados al programa
+       AWK para que sean procesados.
+
+       El libro de AWK no define el valor de retorno de  srand().
+       El  estándar POSIX hace que devuelva la semilla que estaba
+       usando, para permitir seguir la pista de las secuencias de
+       números  aleatorios.   Por  este  motivo,  srand() en gawk
+       devuelve igualmente la semilla actual.
+
+       Otras características nuevas  son:  El  uso  de  múltiples
+       opciones  -f (a partir de MKS awk); la tabla ENVIRON ; las
+       secuencias de escape \a, y \v (implementadas originalmente
+       en  gawk  y añadidas en la versión de AT&T); las funciones
+       predefinidas tolower() y toupper() (a partir de  AT&T);  y
+       las  especificaciones  de  conversión  de ANSI C en printf
+       (implementadas por primera vez en la versión de AT&T).
+
+EXTENSIONES DE GNU
+       Gawk contiene una serie de extensiones del awk  de  POSIX.
+       Se  describen  en  esta  sección.  Las  extensiones que se
+       describen aquí pueden desactivarse llamando a gawk con  la
+       opción --traditional .
+
+       Las siguientes capacidades de gawk no están disponibles en
+       el awk de POSIX.
+
+              · La secuencia de escape  \x  .   (Desactivada  con
+                --posix.)
+
+              · La función fflush() .  (Desactivada con --posix.)
+
+              · Las funciones systime(), strftime(), y gensub() .
+
+              · Los  nombres  de fichero especiales para redirec­
+                ción de E/S no son reconocidos.
+
+              · Las variables ARGIND, ERRNO, y RT  no  son  espe­
+                ciales.
+
+              · La  variable  IGNORECASE  y  sus efectos no están
+                disponibles.
+
+              · La variable FIELDWIDTHS y la división  de  campos
+                de ancho fijo.
+
+              · El uso de RS como una expresión regular.
+
+              · La  habilidad  de dividir caracteres individuales
+                usando la cadena vacía como valor para FS, y como
+                tercer argumento para split().
+
+              · No   se  realiza  búsqueda  de  camino  para  los
+                ficheros nombrados mediante la opción -f  .   Por
+                ello,  la variable de entorno AWKPATH no es espe­
+                cial.
+
+              · El uso de nextfile para  abandonar  el  procesado
+                del fichero de entrada actual.
+
+              · El  uso  de delete tabla para borrar todo el con­
+                tenido de una tabla.
+
+       El libro de AWK no define el valor de retorno de  la  fun­
+       ción  close()  .   El close() de gawk devuelve el valor de
+       fclose(3), o pclose(3), cuando se esté cerrando un fichero
+       o una tubería, respectivamente.
+
+       Cuando  se  invoca a gawk con la opción --traditional , si
+       el argumento fs para la opción -F es  ``t'',  entonces  se
+       asignará  a FS el carácter tabulador.  Nótese que escribi­
+       endo gawk -F\t ...  simplemente se provoca que el shell lo
+       cambie  por el literal ``t'', y no pase ``\t'' a la opción
+       -F .  Dado que es un caso un  tanto  especial  y  bastante
+       desagradable,  esta no es la manera por defecto de actuar.
+       Tampoco se actúa de esta  manera  si  se  ha  especificado
+       --posix  .   Para  tener  un  tabulador  como separador de
+       campo, es mejor usar el entrecomillado: gawk -F'\t' ....
+
+CAPACIDADES HISTÓRICAS
+       Hay dos características de implementaciones históricas  de
+       AWK  que  gawk  soporta.   Primera, es posible llamar a la
+       función predefinida length() no solamente  sin  argumento,
+       ¡sino incluso sin paréntesis!  Por eso,
+
+              a = length
+
+       es igual que las siguientes
+
+              a = length()
+              a = length($0)
+
+       Esta  característica  se  tilda  de  ``censurable''  en el
+       estándar POSIX, y gawk generará un mensaje de alerta sobre
+       su uso si se especifica --lint en la línea de orden.
+
+       La  otra  característica  es el uso de las sentencias con­
+       tinue o break fuera del cuerpo de un bucle while,  for,  o
+       do  .   Las  implementaciones  tradicionales  de  AWK  han
+       tratado este uso de forma equivalente a la sentencia  next
+       .   Gawk soportará este uso si se especifica --traditional
+       en la línea de orden.
+
+VARIABLES DE ENTORNO
+       Si POSIXLY_CORRECT existe en  el  entorno,  entonces  gawk
+       actúa  exactamente como si se hubiera especificado --posix
+       en la línea de orden.  Si se hubiera especificado --lint ,
+       gawk generaría un mensaje de alerta.
+
+       La variable de entorno AWKPATH puede usarse para proveer a
+       gawk de una lista de directorios  en  la  que  buscar  los
+       ficheros nombrados mediante las opciones -f y --file .
+
+FALLOS
+       La opción -F no es necesaria dada la característica de las
+       asignaciones de  variables  por  la  línea  de  orden;  se
+       mantiene por compatibilidad.
+
+       Si su sistema dispone de soporte para el fichero /dev/fd y
+       los asociados /dev/stdin,  /dev/stdout,  y  /dev/stderr  ,
+       puede  obtener diferente salida desde gawk a la que podría
+       obtener en un sistema  sin  estos  ficheros.  Cuando  gawk
+       interpreta estos ficheros internamente, sincroniza la sal­
+       ida a la salida estándar  con  la  salida  a  /dev/stdout,
+       mientras  que  en un sistema con estos ficheros, la salida
+       realmente se envía ficheros abiertos diferentes.
+
+       Los programas de un solo carácter  sintácticamente  incor­
+       rectos tienden a sobrepasar la pila del analizador sintác­
+       tico, generando un mensaje bastante poco útil. Sorprenden­
+       temente,  estos programas son difíciles de diagnosticas en
+       el caso general, y el esfuerzo para hacerlo  realmente  no
+       merece la pena.
+
+INFORMACIÓN DE LA VERSIÓN
+       Esta  página de manual documenta la versión 3.0.2 de gawk.
+
+AUTORES
+       La versión original de awk para UNIX fue diseñada e imple­
+       mentada   por   Alfred  Aho,  Peter  Weinberger,  y  Brian
+       Kernighan de AT&T Bell Labs. Brian Kernighan continúa  con
+       su mantenimiento y mejora.
+
+       Paul Rubin y Jay Fenlason, de la Free Software Foundation,
+       escribió gawk, para ser compatible con la versión original
+       de  awk  distribuida  en  UNIX Seventh Edition. John Woods
+       contribuyó arreglando algunos fallos.  David Trueman,  con
+       contribuciones de Arnold Robbins, hizo que gawk fuera com­
+       patible con la nueva versión del awk de UNIX.  Arnold Rob­
+       bins es el actual mantenedor.
+
+       La versión original para DOS fue realizada por Conrad Kwok
+       y Scott Garfinkle.  Scott Deifik es el  mantenedor  actual
+       para  DOS.   Pat  Rankin  realizó  el paso a VMS, y Michal
+       Jaegermann hizo el paso al Atari ST.  El paso  a  OS/2  lo
+       realizó  Kai  Uwe  Rommel,  con contribuciones y ayudas de
+       Darrel Hankerson.  Fred Fish aportó soporte para el Amiga.
+
+INFORME DE FALLOS
+       Si encontrara algún fallo en gawk, envíe por favor un men­
+       saje electrónico a bug-gnu-utils@prep.ai.mit.edu, con  una
+       copia  de  carbón  a  arnold@gnu.ai.mit.edu.   Por  favor,
+       incluya su sistema operativo y su revisión, la versión  de
+       gawk,  qué  compilador de C usó para compilarlo, y el pro­
+       grama de prueba y los datos  mínimos  para  reproducir  el
+       problema.
+
+       Antes  de  enviar un informe de fallos, haga por favor dos
+       cosas. Primero, verifique que dispone de la última versión
+       de gawk.  Muchos fallos (normalmente bastante sutiles) son
+       arreglados en cada nueva versión, y si la suya está  obso­
+       leta, el problema podría estar ya arreglado.  Segundo, por
+       favor lea detenidamente tanto esta página de  manual  como
+       el manual de referencia para estar seguro que lo que usted
+       piensa que es un fallo realmente lo sea,  en  vez  de  una
+       mala interpretación del lenguaje.
+
+       Sea  lo que sea que haga, NO remita un informe de fallo en
+       comp.lang.awk.  Aunque los desarrolladores  de  gawk  leen
+       este   grupo  de  noticias  de  forma  ocasional,  remitir
+       informes de fallos en dicho grupo  no  es  una  forma  muy
+       segura de hacerlo. Utilice preferiblemente las direcciones
+       de correo electrónico anteriores.
+
+RECONOCIMIENTOS
+       Brian Kernighan de Bell Labs proveyó de una valiosa  asis­
+       tencia  durante las pruebas y la eliminación de fallos. Le
+       damos las gracias.
+
+PERMISOS DE COPIA
+       Copyright © 1996 Free Software Foundation, Inc.
+
+       Se concede permiso para hacer  y  distribuir  copias  lit­
+       erales  de  esta página de manual siempre que se preserven
+       tanto la nota de copyright como esta nota de  permisos  en
+       todas las copias.
+
+       Se concede permiso para copiar y distribuir versiones mod­
+       ificadas de esta página de manual bajo las condiciones  de
+       la copia literal, siendo los resultados completos del tra­
+       bajo derivado distribuidos bajo los términos de  una  nota
+       de permisos idéntica a esta.
+
+       Se  concede  permiso para copiar y distribuir traducciones
+       de esta página de manual a otros idiomas, bajo las anteri­
+       ores  condiciones  para versiones modificadas, exceptuando
+       que esta nota de permisos debe manifestarse  mediante  una
+       traducción aprobada por la Fundación.
+
+       Nota del traductor: Dado que la traducción de esta nota no
+       está aprobada por la Free Software Foundation, se añade la
+       nota original en Inglés.
+
+COPYING PERMISSIONS
+       Copyright © 1996 Free Software Foundation, Inc.
+
+       Permission  is  granted  to  make  and distribute verbatim
+       copies of this manual page provided the  copyright  notice
+       and this permission notice are preserved on all copies.
+
+       Permission  is  granted to process this file through troff
+       and print the results, provided the printed document  car­
+       ries  copying  permission  notice  identical  to  this one
+       except for the removal of this paragraph  (this  paragraph
+       not being relevant to the printed manual page).
+
+       Permission is granted to copy and distribute modified ver­
+       sions of this manual page under the conditions for  verba­
+       tim  copying,  provided  that the entire resulting derived
+       work is distributed under the terms of a permission notice
+       identical to this one.
+
+       Permission  is granted to copy and distribute translations
+       of this manual page into another language, under the above
+       conditions for modified versions, except that this permis­
+       sion notice may be stated in a translation approved by the
+       Foundation.
+
+
+
+Free Software Foundation   19 Dic 1996                    GAWK(1)

@@ -1,0 +1,328 @@
+LOGROTATE(8)                                         LOGROTATE(8)
+
+
+
+NOMBRE
+       Logrotate  -  cambia, comprime y envía por correo archivos
+       de registro del sistema.
+
+SINOPSIS
+       logrotate [-dv] [-s|--archivo de  estado]  archivo_de_con­
+       figuración+
+
+DESCRIPCIÓN
+       Logrotate  ha  sido  diseñado  para  facilitar la adminis­
+       tración de sistemas que generan gran cantidad de  archivos
+       de registro (logs). El programa permite el cambio, compre­
+       sión, eliminación y envío automático  por  correo  de  los
+       archivos  de  registro.  Cada  archivo  puede  ser tratado
+       diariamente, semanalmente, mensualmente o siempre  que  se
+       haga demasiado grande.
+
+       Normalmente,  logrotate  se  ejecuta  como tarea diaria de
+       tipo cron. El programa no modificará un archivo  repetidas
+       veces a no ser que el criterio para ese archivo se base en
+       el tamaño del mismo y logrotate se ejecute varias veces al
+       día.
+
+       En  la línea de comandos pueden indicarse un número ilimi­
+       tado  de  archivos  de  configuración.  Más  tarde,  estos
+       archivos  de  configuración  pueden invalidar las opciones
+       dadas en archivos  de  configuración  anteriores,  por  lo
+       tanto,  el orden en que se listan los archivos de configu­
+       ración  de  logrotate  es  muy  importante.   Normalmente,
+       debería  usarse  un  sólo  archivo  de  configuración  que
+       incluya tantos otros archivos de configuración  como  sean
+       necesarios. Véase más abajo cómo usar la directiva include
+       para conseguirlo. Si se proporciona un nombre de  directo­
+       rio  en la línea de comandos, cada uno de los archivos que
+       se encuentren en ese directorio se usará como  archivo  de
+       configuración.
+
+
+OPCIONES
+       -d     Activa  el modo de depuración e implica -v. En modo
+              de depuración, no se efectuará ningún cambio a  los
+              archivos  de  registro  ni  al archivo de estado de
+              logrotate.
+
+
+       --usage
+              Muestra un pequeño mensaje de uso, versión y  copy­
+              right.
+
+
+ARCHIVO DE CONFIGURACIÓN
+       logrotate  lee  toda  la  información  necesaria sobre los
+       archivos de registro que  debe  manejar  de  la  serie  de
+       archivos  de configuración que se especifiquen en la línea
+       de comandos. Cada archivo de configuración puede  estable­
+       cer  opciones  globales (las definiciones locales anulan a
+       las globales, y aquellas definiciones efectuadas en último
+       lugar  anulan  siempre  a las anteriores) y especificar el
+       archivo de registro que se ha de cambiar.  Un  archivo  de
+       configuración simple sería el siguiente:
+
+       # sample logrotate configuration file
+       errors sysadmin@my.org
+       compress
+
+       /var/log/messages {
+           rotate 5
+           weekly
+           postrotate
+                                     /sbin/killall -HUP syslogd
+           endscript
+       }
+
+       /var/log/httpd/access.log {
+           rotate 5
+           mail www@my.org
+           errors www@my.org
+           size=100k
+           postrotate
+                                     /sbin/killall -HUP httpd
+           endscript
+       }
+
+       /var/log/news/* {
+           monthly
+           rotate 2
+           errors newsadmin@my.org
+           postrotate
+                                     kill -HUP `cat /var/run/inn.pid`
+           endscript
+           nocompress
+       }
+
+
+       Las   primeras   líneas   establecen   opciones  globales;
+       cualquier error que ocurra durante el procesamiento de los
+       archivos  de registro se envía por correo a sysadmin.org y
+       los archivos de registro se comprimen después de ser  cam­
+       biados.   Nótese   que   pueden  aparecer  comentarios  en
+       cualquier parte del archivo  de  configuración  siempre  y
+       cuando el primer espacio que no está en blanco en la línea
+       sea un #.
+
+       La siguiente sección del archivo de configuración  especi­
+       fica  la  acción  a  realizar sobre el archivo de registro
+       /var/log/messages. El archivo sufrirá cinco  cambios  sem­
+       anales  antes  de ser eliminado. Después de que el archivo
+       ha sido modificado (pero antes de  haberse  comprimido  la
+       versión   antigua  del  mismo)  se  ejecutará  el  comando
+       /sbin/killall -HUP syslogd.
+
+       La   siguiente   sección   define   los   parámetros    de
+       /var/log/http/access.log.  Éste se cambia siempre y cuando
+       excede los 100k de tamaño,  y  los  archivos  de  registro
+       antiguos se envían (sin comprimir) a www@my.org después de
+       haber sufrido cinco cambios, en vez de ser eliminados. Del
+       mismo  modo,  cualquier error que pueda ocurrir durante el
+       procesamiento  del  archivo  de  registro   se   envía   a
+       www@my.org (anulando así la directiva global errors)
+
+       La  última  sección  define  los  parámetros para todos lo
+       archivos en /var/log/news. Cada archivo se cambia mensual­
+       mente  y  los errores se envían a newsadmin@my.org.Ésta se
+       considera una directiva de cambio simple y  si  ocurre  un
+       error para más de un archivo se envía en un único mensaje.
+       En este caso, los archivos de registro no se  comprimirán.
+
+       A  continuación  se  proporciona más información sobre las
+       directivas que se pueden incluir en un archivo de configu­
+       ración de logrotate:
+
+
+       compress
+              Las  versiones antiguas de los archivos de registro
+              se comprimen con gzip. Véase también nocompress.
+
+
+       copytruncate
+              Trunca el archivo de registro original en el  lugar
+              en el que se encuentre tras crear una copia, en vez
+              de mover el  archivo  antiguo  y  crear  una  nuevo
+              opcionalmente.  Se  puede  usar cuando a algún pro­
+              grama no se le puede ordenar que cierre su  archivo
+              de  registro  y por lo tanto podría seguir escribi­
+              endo (añadiendo) continuamente  en  el  archivo  de
+              registro  anterior. Nótese que transcurre una frac­
+              ción de tiempo muy pequeña  entre  el  copiado  del
+              archivo y su truncado, por lo que se podrían perder
+              algunos datos.  Cuando se usa esta opción, no  ten­
+              drá  efecto  la  opción create, dado que el archivo
+              antiguo permanecerá en su lugar.
+
+
+       create mode owner group
+              Se crea el archivo de registro (con el mismo nombre
+              del  archivo  de  registro  que  se acaba de rotar)
+              inmediatamente después del cambio (antes de que  se
+              ejecute  el  script postrotate). mode especifica el
+              modo del archivo de registro en octal (al igual que
+              chmod  (2)), owner especifica el nombre del usuario
+              al que pertenecerá el archivo de registro, y  group
+              especifica  el grupo al que pertenecerá el archivo.
+              Se puede omitir cualquiera  de  los  atributos  del
+              archivo de registro, en cuyo caso, el nuevo archivo
+              usará los valores del archivo antiguo para aquellos
+              atributos  que  se  hayan  omitido.  Esta opción se
+              puede anular usando la opción nocreate.
+
+
+       daily  Los archivos de registro se cambian diariamente.
+
+
+       delaycompress
+              Pospone la compresión del archivo de registro ante­
+              rior  hasta  el  siguiente  ciclo de rotación. Sólo
+              tiene efecto cuando se usa en combinación con  com­
+              press.  Se  puede usar cuando no se puede ordenar a
+              un programa que cierre su  archivo  de  registro  y
+              podría  continuar  escribiendo  en él durante algún
+              tiempo.
+
+
+       errors address
+              Cualquier error que ocurra durante el procesamiento
+              de  los  registros  se  enviará  a  la dirección de
+              correo que se especifique.
+
+
+       ifempty
+              Cambia el  archivo  de  registro  incluso  si  está
+              vacío,  anulando  la  opción notifempty (opción por
+              defecto).
+
+
+       include file_or_directory
+              Lee el archivo  dado  como  argumento  como  si  se
+              incluyese donde aparece la directiva include. Si se
+              da un directorio, la mayoría  de  los  archivos  se
+              leen  antes  de  que  continúe el procesamiento del
+              archivo en el que se incluyen. Los únicos  archivos
+              que  se  ignoran son archivos que no son corrientes
+              (tales como directorios y pipes con nombre) y aque­
+              llos archivos cuyos nombres terminan con una de las
+              extensiones tabú según se especifica en  la  direc­
+              tiva tabooext. La directiva include puede no apare­
+              cer en la definición de un archivo de registro.
+
+       monthly
+              Los archivos de registro se cambian la primera  vez
+              que  se ejecuta logrotate en un mes (normalmente el
+              primer día del mes).
+
+
+       nocompress
+              Las versiones antiguas de los archivos de  registro
+              no se comprimen con gzip. Véase también compress.
+
+
+       nocopytruncate
+              No  trunca  el  archivo  de registro original en el
+              lugar en el que se encuentre tras crear una  copia.
+              (Esto anula la opción copytruncate).
+
+
+       nocreate
+              No se crean archivos de registro nuevos (esto anula
+              la opción create).
+
+
+       nodelaycompress
+              No pospone la compresión del  archivo  de  registro
+              anterior  hasta  el  próximo  ciclo de cambio (esto
+              anula la opción delaycompress).
+
+
+       nomail No envían  los  archivos  de  registro  antiguos  a
+              ninguna dirección de correo.
+
+
+       noolddir
+              Los  archivos  se cambian en el mismo directorio en
+              el que el archivo reside normalmente (esto anula la
+              opción olddir).
+
+
+       notifempty
+              No  rota el archivo de registro si está vacío (esto
+              anula la opción ifempty).
+
+
+       olddir directory
+              Los archivos de registro se mueven a directory para
+              su  rotación.  El  directory debe encontrarse en el
+              mismo dispositivo físico que el archivo de registro
+              que  se  va  a  cambiar. Cuando se usa esta opción,
+              todas las versiones antiguas del  archivo  de  reg­
+              istro  van  a  parar a directory. Esta opción puede
+              anularse por medio de la opción noolddir.
+
+
+       postrotate/endscript
+              Las líneas  entre  postrotate  y  endscript  (ambas
+              deben  aparecer en líneas por separado) se ejecutan
+              una vez que el archivo de registro ha sido  rotado.
+              Estas directivas sólo pueden aparecer dentro de una
+              definición de archivo de registro.   Véase  también
+              prerotate.
+
+
+       prerotate/endscript
+              Las líneas entre prerotate y endscript (ambas deben
+              aparecer en líneas por separado)  se  ejecutan  una
+              vez  que  el  archivo  de  registro ha sido rotado.
+              Estas directivas sólo pueden aparecer dentro de una
+              definición  de  archivo de registro.  Véase también
+              postrotate.
+
+
+       rotate count
+              Los archivos de registro se cambian  <count>  veces
+              antes  de  ser eliminados o enviados a la dirección
+              especificada en una directiva mail. Si count es  0,
+              las  versiones antiguas se eliminarán en vez de ser
+              cambiadas.
+
+
+       size size
+              Los archivos de registro se cambian cuando  superan
+              el  tamaño  de size bytes. Si a size le sigue M, se
+              asume que se está indicando el tamaño en megabytes.
+              Si  se  usa  k, el tamaño será en kilobytes. Por lo
+              tanto son válidos tanto size 100 como size  100k  y
+              size 100M.
+
+
+       tabooext [+] list
+              Se  cambia  la  lista  actual  de  extensiones tabú
+              (véase la directiva include si se desea información
+              sobre  las extensiones tabú).  Si un + precede a la
+              lista de extensiones, la  lista  actual  de  exten­
+              siones  tabú se aumenta, de otro modo se reemplaza.
+              Al comienzo, la lista de extensiones tabú  contiene
+              .rpmorig, .rpmsave, ,v y ~.
+
+
+       weekly Los archivos de registro se cambian si el día de la
+              semana actual es menor que el día de la semana  del
+              último  cambio  o  si  ha  pasado más de una semana
+              desde el último cambio.  Normalmente,  esto  es  lo
+              mismo  que cambiar los archivos el primer día de la
+              semana, pero funciona mejor si logrotate no se eje­
+              cuta todas las noches.
+
+
+VÉASE TAMBIÉN
+       gzip(1)
+
+
+AUTOR
+       Erik Troan <ewt@redhat.com>
+
+
+
+                      Jueves 27 febrero 1997         LOGROTATE(8)
